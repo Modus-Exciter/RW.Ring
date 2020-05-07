@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Fixture.Conch
 {
-  public class Class1
+  public class FormManager
   {
   }
 }
