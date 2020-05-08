@@ -59,6 +59,7 @@ namespace Notung.Configuration
 
     public ProductVersionConfigFileFinder() : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly) { }
 
+    // TODO: Assembly analysis is needed for another purposes. It should be selected into a special service
     private string GetPath(string basePath, bool version = true)
     {
       var company = m_product_assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
