@@ -9,6 +9,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notung", "Notung\Notung.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notung.Helm", "Notung.Helm\Notung.Helm.csproj", "{23C8DC0F-B1CE-4F21-A5BE-AF05B27F7492}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notung.libs", "Notung.libs", "{5F05621F-620D-47F7-9F5C-D7221AD40677}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helm", "Helm", "{79C446DC-9735-4F07-88F5-E03AA0A8CA49}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Special", "Special", "{3C7B3476-85E6-4698-9D2B-AE2962E9F2E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,5 +70,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACB28711-7615-48EF-8096-4BE678E22E19} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
+		{23C8DC0F-B1CE-4F21-A5BE-AF05B27F7492} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
+		{4BE5DB67-00E0-4E7F-A34C-A112337E9CBE} = {79C446DC-9735-4F07-88F5-E03AA0A8CA49}
+		{D08E1588-14AE-473E-A714-207AB84B3DB4} = {3C7B3476-85E6-4698-9D2B-AE2962E9F2E9}
 	EndGlobalSection
 EndGlobal
