@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Notung.Log;
 using Notung.Properties;
 
 namespace Notung.Configuration
@@ -9,6 +10,8 @@ namespace Notung.Configuration
   [DataContract]
   public abstract class ConfigurationSection : IValidator
   {
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ConfigurationSection));
+    
     protected ConfigurationSection()
     {
       LoadDefaults();
@@ -21,9 +24,9 @@ namespace Notung.Configuration
       {
         LoadDefaults();
       }
-      catch
+      catch (Exception ex)
       {
-        // TODO: log error
+        _log.Error("OnDeserializing: exception", ex);
       }
     }
 
@@ -31,6 +34,7 @@ namespace Notung.Configuration
     private void OnDeserialized(StreamingContext context)
     {
       var buffer = new InfoBuffer();
+
       try
       {
         ValidateAndRepair(buffer);
@@ -39,7 +43,9 @@ namespace Notung.Configuration
       {
         buffer.Add(ex);
       }
-      // TODO: log buffer contents
+
+      for (int i = 0; i < buffer.Count; i++)
+        _log.Alert(buffer[i]);
     }
 
     [OnSerializing]
@@ -83,7 +89,7 @@ namespace Notung.Configuration
       {
         ret = false;
         buffer.Add(ex);
-        // TODO: log error
+        _log.Error("ValidateAndRepair: exception", ex);
       }
 
       if (!ret)
@@ -97,7 +103,7 @@ namespace Notung.Configuration
 
     public void RestoreDefaults()
     {
-      // TODO: log restoring defaults
+      _log.Debug(Resources.SETTINGS_RESTORE);
       LoadDefaults(this);
     }
 
