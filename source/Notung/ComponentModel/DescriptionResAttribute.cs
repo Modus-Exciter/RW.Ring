@@ -2,20 +2,19 @@
 using System.ComponentModel;
 using System.Resources;
 
-namespace Notung
+namespace Notung.ComponentModel
 {
   /// <summary>
-  /// Локализуемая метка для свойства, элемента перечисления или типа
+  /// Локализуемое описание типа данных
   /// </summary>
-  [AttributeUsage(AttributeTargets.Enum | AttributeTargets.Struct | AttributeTargets.Field | AttributeTargets.Class | AttributeTargets.Property)]
-  public sealed class DisplayNameResAttribute : DisplayNameAttribute
+  public sealed class DescriptionResAttribute : DescriptionAttribute
   {
     /// <summary>
     /// Инициализирует новую метку
     /// </summary>
     /// <param name="resourceName">Имя ресурса</param>
     /// <param name="targetType">Тип, к которому применён атрибут, находящийся в той же сборке, что и ресурс</param>
-    public DisplayNameResAttribute(string resourceName, Type targetType)
+    public DescriptionResAttribute(string resourceName, Type targetType)
       : base(resourceName)
     {
       if (targetType == null)
@@ -32,7 +31,7 @@ namespace Notung
     /// <summary>
     /// Если ресурс найден, возвращает локализованный ресурс. Иначе, возвращает имя ресурса
     /// </summary>
-    public override string DisplayName
+    public override string Description
     {
       get
       {
@@ -44,13 +43,13 @@ namespace Notung
             string base_name = resourceRoot.Replace(".resources", "");
             if (base_name.EndsWith("." + this.TargetType.Name) || base_name == this.TargetType.Name)
             {
-              return new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DisplayNameValue);
+              return new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DescriptionValue);
             }
           }
           foreach (string resourceRoot in resourceNames)
           {
             string base_name = resourceRoot.Replace(".resources", "");
-            string resource = new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DisplayNameValue);
+            string resource = new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DescriptionValue);
             if (resource != null)
             {
               return resource;
@@ -58,7 +57,7 @@ namespace Notung
           }
         }
         catch { }
-        return base.DisplayNameValue;
+        return base.DescriptionValue;
       }
     }
 
@@ -78,13 +77,13 @@ namespace Notung
     /// <returns>True, если переданный объект является таким же</returns>
     public override bool Equals(object obj)
     {
-      DisplayNameResAttribute res = obj as DisplayNameResAttribute;
+      DescriptionResAttribute res = obj as DescriptionResAttribute;
       if (res == this)
         return true;
 
       if (res != null)
       {
-        return (res.DisplayNameValue == this.DisplayNameValue) && (res.TargetType == this.TargetType);
+        return (res.DescriptionValue == this.DescriptionValue) && (res.TargetType == this.TargetType);
       }
       return false;
     }
@@ -95,7 +94,7 @@ namespace Notung
     /// <returns>Числовой идентификатор из имени ресурса и типа, к которому применён атрибут</returns>
     public override int GetHashCode()
     {
-      return this.DisplayNameValue.GetHashCode() ^ this.TargetType.GetHashCode();
+      return this.DescriptionValue.GetHashCode() ^ this.TargetType.GetHashCode();
     }
   }
 }

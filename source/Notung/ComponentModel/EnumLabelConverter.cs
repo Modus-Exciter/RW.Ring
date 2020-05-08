@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace Notung
+namespace Notung.ComponentModel
 {
   /// <summary>
   /// Конвертер для локализации перечислений
@@ -13,7 +13,7 @@ namespace Notung
     /// <summary>
     /// Инициализирует новый экземпляр конвертера
     /// </summary>
-    /// <param name="type"></param>
+    /// <param name="type">Тип перечисления</param>
     public EnumLabelConverter(Type type)
       : base(type)
     {

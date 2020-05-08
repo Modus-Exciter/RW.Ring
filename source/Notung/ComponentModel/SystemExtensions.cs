@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Notung
+namespace Notung.ComponentModel
 {
   public static class SystemExtensions
   {
