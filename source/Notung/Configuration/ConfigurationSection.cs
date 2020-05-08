@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using Notung.Properties;
 
 namespace Notung.Configuration
 {
@@ -32,15 +30,16 @@ namespace Notung.Configuration
     [OnDeserialized]
     private void OnDeserialized(StreamingContext context)
     {
+      var buffer = new InfoBuffer();
       try
       {
-        // TODO: do something with InfoBuffer
-        ValidateAndRepair(new InfoBuffer());
+        ValidateAndRepair(buffer);
       }
-      catch
+      catch(Exception ex)
       {
-        // TODO: log error
-      }    
+        buffer.Add(ex);
+      }
+      // TODO: log buffer contents
     }
 
     [OnSerializing]
@@ -80,15 +79,16 @@ namespace Notung.Configuration
       {
         ret = Validate(buffer);
       }
-      catch
+      catch(Exception ex)
       {
         ret = false;
+        buffer.Add(ex);
         // TODO: log error
       }
 
       if (!ret)
       {
-        // TODO: log repairing defaults
+        buffer.Add(Resources.SETTINGS_RESTORE, InfoLevel.Debug);
         ret = Repair(buffer);
       }
 
