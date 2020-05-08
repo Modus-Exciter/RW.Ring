@@ -61,11 +61,65 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug message.
+        /// </summary>
+        internal static string DEBUG {
+            get {
+                return ResourceManager.GetString("DEBUG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string ERROR {
+            get {
+                return ResourceManager.GetString("ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error.
+        /// </summary>
+        internal static string FATAL {
+            get {
+                return ResourceManager.GetString("FATAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Information.
+        /// </summary>
+        internal static string INFO {
+            get {
+                return ResourceManager.GetString("INFO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info level.
+        /// </summary>
+        internal static string INFO_LEVEL {
+            get {
+                return ResourceManager.GetString("INFO_LEVEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings restore started.
         /// </summary>
         internal static string SETTINGS_RESTORE {
             get {
                 return ResourceManager.GetString("SETTINGS_RESTORE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        internal static string WARNING {
+            get {
+                return ResourceManager.GetString("WARNING", resourceCulture);
             }
         }
     }

@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DEBUG" xml:space="preserve">
-    <value>Debug message</value>
+    <value>Отладочное сообщение</value>
   </data>
   <data name="ERROR" xml:space="preserve">
-    <value>Error</value>
+    <value>Ошибка</value>
   </data>
   <data name="FATAL" xml:space="preserve">
-    <value>Fatal error</value>
+    <value>Фатальная ошибка</value>
   </data>
   <data name="INFO" xml:space="preserve">
-    <value>Information</value>
+    <value>Информация</value>
   </data>
   <data name="INFO_LEVEL" xml:space="preserve">
-    <value>Info level</value>
+    <value>Уровень сообщения</value>
   </data>
   <data name="SETTINGS_RESTORE" xml:space="preserve">
-    <value>Settings restore started</value>
+    <value>Запущено восстановление настроек</value>
   </data>
   <data name="WARNING" xml:space="preserve">
-    <value>Warning</value>
+    <value>Предупреждение</value>
   </data>
 </root>

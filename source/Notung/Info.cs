@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using Notung.Properties;
 
 namespace Notung
 {
@@ -9,6 +11,7 @@ namespace Notung
   {
     private readonly InfoBuffer m_inner_messages = new InfoBuffer();
     private SerializeCondition<object> m_details;
+    private string m_details_string;
 
     /// <summary>
     /// Инициализирует новый экземпляр сообщения
@@ -40,6 +43,7 @@ namespace Notung
         m_inner_messages.Add(inf);
         inner = inner.InnerException;
       }
+      // TODO: AggregateException, ValidationFailException
     }
 
     /// <summary>
@@ -65,18 +69,35 @@ namespace Notung
     /// </summary>
     public object Details
     {
-      get { return m_details.Value; }
-      set { m_details.Value = value; }
+      get { return m_details.Value ?? m_details_string; }
+      set
+      {
+        m_details.Value = value;
+
+        if (value != null)
+          m_details_string = value.ToString();
+      }
+    }
+
+    public override string ToString()
+    {
+      return string.Format("{0}: {1}", this.Level, this.Message);
     }
   }
 
-  // TODO: DisplayNameRes, TypeConverter
+  [DisplayNameRes("INFO_LEVEL", typeof(Resources))]
+  [TypeConverter(typeof(EnumLabelConverter))]
   public enum InfoLevel
   {
+    [DisplayNameRes("DEBUG", typeof(Resources))]
     Debug = 0,
+    [DisplayNameRes("INFO", typeof(Resources))]
     Info = 1,
+    [DisplayNameRes("WARNING", typeof(Resources))]
     Warning = 2,
+    [DisplayNameRes("ERROR", typeof(Resources))]
     Error = 3,
+    [DisplayNameRes("FATAL", typeof(Resources))]
     Fatal = 4
   }
   
@@ -172,6 +193,9 @@ namespace Notung
     #endregion
   }
 
+  /// <summary>
+  /// Интерфейс объекта, поддерживающего проверку
+  /// </summary>
   public interface IValidator
   {
     bool Validate(InfoBuffer buffer);

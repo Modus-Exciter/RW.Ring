@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace Notung
@@ -16,7 +13,7 @@ namespace Notung
   {
     static SerializeCondition()
     {
-      if (typeof(T).IsClass && typeof(T).GetCustomAttributes(typeof(SerializableAttribute), false).Length == 0)
+      if (typeof(T).IsClass && !typeof(T).IsDefined(typeof(SerializableAttribute), false))
         throw new SerializationException(string.Format(
           "Type '{0}' in Assembly '{1}' is not marked as serializable.", typeof(T), typeof(T).Assembly));
     }
@@ -35,8 +32,7 @@ namespace Notung
     {
       T value = this.Value;
 
-      if (value == null || (value.GetType() != typeof(T) &&
-          value.GetType().GetCustomAttributes(typeof(SerializableAttribute), false).Length == 0))
+      if (value == null || !value.GetType().IsDefined(typeof(SerializableAttribute), false))
         info.AddValue("Value", null);
       else
         info.AddValue("Value", this.Value);
