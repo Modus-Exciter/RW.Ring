@@ -41,6 +41,7 @@
     <Compile Include="AppManager.cs" />
     <Compile Include="Configuration\ConfigurationSection.cs" />
     <Compile Include="Configuration\IConfigurator.cs" />
+    <Compile Include="IValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

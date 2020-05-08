@@ -9,6 +9,8 @@ namespace Notung.Configuration
   {
     TSection GetSection<TSection>() where TSection : ConfigurationSection, new();
 
+    void ApplySettings();
+
     void SaveSettings();
   }
 }
