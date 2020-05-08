@@ -70,6 +70,15 @@ namespace Notung {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (empty).
+        /// </summary>
+        internal static string NULL {
+            get {
+                return ResourceManager.GetString("NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         internal static string YES {

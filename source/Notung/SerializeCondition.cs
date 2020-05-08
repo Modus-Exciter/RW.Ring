@@ -32,7 +32,7 @@ namespace Notung
     {
       T value = this.Value;
 
-      if (value == null || !value.GetType().IsDefined(typeof(SerializableAttribute), false))
+      if (!CanSerialize)
         info.AddValue("Value", null);
       else
         info.AddValue("Value", this.Value);
@@ -66,6 +66,11 @@ namespace Notung
         return typeof(T).GetHashCode();
       else
         return value.GetHashCode();
+    }
+
+    public bool CanSerialize
+    {
+      get { return Value != null && Value.GetType().IsDefined(typeof(SerializableAttribute), false); }
     }
 
     public T Value { get; set; }

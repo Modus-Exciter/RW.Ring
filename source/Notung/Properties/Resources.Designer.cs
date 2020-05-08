@@ -106,6 +106,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection.
+        /// </summary>
+        internal static string INVALID_CONFIG_SECTION_TYPE {
+            get {
+                return ResourceManager.GetString("INVALID_CONFIG_SECTION_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings restore started.
         /// </summary>
         internal static string SETTINGS_RESTORE {

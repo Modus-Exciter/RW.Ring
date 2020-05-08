@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Notung.Properties;
 using Notung.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace Notung
 {
@@ -45,6 +46,20 @@ namespace Notung
         inner = inner.InnerException;
       }
       // TODO: AggregateException, ValidationFailException
+    }
+
+    [OnSerializing]
+    private void OnSerializing(StreamingContext context)
+    {
+      if (m_details.CanSerialize)
+        m_details_string = null;
+    }
+
+    [OnSerialized]
+    private void OnSerialized(StreamingContext context)
+    {
+      if (m_details.Value != null && m_details_string == null)
+        m_details_string = m_details.Value.ToString();
     }
 
     /// <summary>

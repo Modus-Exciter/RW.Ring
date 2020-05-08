@@ -42,6 +42,8 @@
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />
     <Compile Include="Configuration\ConfigurationSection.cs" />
+    <Compile Include="Configuration\ConfigurationFile.cs" />
+    <Compile Include="Configuration\IConfigFileFinder.cs" />
     <Compile Include="Configuration\IConfigurator.cs" />
     <Compile Include="ComponentModel\DescriptionResAttribute.cs" />
     <Compile Include="ComponentModel\DisplayNameResAttribute.cs" />
@@ -62,6 +64,8 @@
     </Compile>
     <Compile Include="SerializeCondition.cs" />
     <Compile Include="ComponentModel\SystemExtensions.cs" />
+    <Compile Include="Threading\LockSource.cs" />
+    <Compile Include="Threading\ThreadField.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CoreResources.resx">

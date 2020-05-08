@@ -132,6 +132,9 @@
   <data name="INFO_LEVEL" xml:space="preserve">
     <value>Info level</value>
   </data>
+  <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
+    <value>Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection</value>
+  </data>
   <data name="SETTINGS_RESTORE" xml:space="preserve">
     <value>Settings restore started</value>
   </data>

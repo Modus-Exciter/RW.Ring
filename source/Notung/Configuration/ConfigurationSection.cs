@@ -140,5 +140,7 @@ namespace Notung.Configuration
     }
 
     public virtual void ApplySettings() { }
+
+    public virtual void OnError(Exception error) { }
   }
 }

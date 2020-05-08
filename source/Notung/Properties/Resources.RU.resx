@@ -132,6 +132,9 @@
   <data name="INFO_LEVEL" xml:space="preserve">
     <value>Уровень сообщения</value>
   </data>
+  <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
+    <value>Конфигурационная секция должна быть неабстрактным классом с конструктором без параметром, унаследованным от Toolbox.Configuration.ConfigurationSection</value>
+  </data>
   <data name="SETTINGS_RESTORE" xml:space="preserve">
     <value>Запущено восстановление настроек</value>
   </data>

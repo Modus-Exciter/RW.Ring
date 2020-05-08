@@ -38,6 +38,11 @@ namespace NotungTest
     private class Unserializable
     {
       public string Text { get; set; }
+
+      public override string ToString()
+      {
+        return Text ?? base.ToString();
+      }
     }
 
 
@@ -123,6 +128,30 @@ namespace NotungTest
       Assert.IsFalse(sc.Equals("Mime"));
       Assert.IsFalse(sc.Equals(new SerializeCondition<string>()));
       Assert.IsTrue(sc.Equals(new SerializeCondition<string>("Mime")));
+    }
+
+    [TestMethod]
+    public void SerializeInfo()
+    {
+      Info info = new Info("Valhalla", InfoLevel.Info) { Details = new Unserializable { Text = "will burn" } };
+      byte[] data;
+      using (var ms = new MemoryStream())
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(ms, info);
+        data = ms.ToArray();
+      }
+
+      Assert.IsTrue(info.Details is Unserializable);
+      Assert.AreEqual("will burn", info.Details.ToString());
+
+      using (var ms = new MemoryStream(data))
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        info = (Info)bf.Deserialize(ms);
+      }
+      Assert.IsFalse(info.Details is Unserializable);
+      Assert.AreEqual("will burn", info.Details.ToString());
     }
   }
 }
