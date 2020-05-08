@@ -93,7 +93,23 @@ namespace Notung.ComponentModel
 
       return null;
     }
+    /// <summary>
+    /// Возвращает экземпляр атрибута у элемента
+    /// </summary>
+    /// <typeparam name="A">Тип атрибута</typeparam>
+    /// <param name="item">Элемент</param>
+    /// <param name="inherit">Указывает, нужно ли искать атрибут в предках</param>
+    /// <returns>Если имеется единственный экземпляр, то его. Иначе, null</returns>
+    public static A GetCustomAttribute<A>(this Assembly item)
+      where A : Attribute
+    {
+      if (item.IsDefined(typeof(A), false))
+      {
+        return item.GetCustomAttributes(typeof(A), false)[0] as A;
+      }
 
+      return null;
+    }
     /// <summary>
     /// Получает метку у перечисления
     /// </summary>

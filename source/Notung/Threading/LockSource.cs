@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Notung.Threading
@@ -14,8 +11,7 @@ namespace Notung.Threading
     /// <summary>
     /// Устанавливает блокировку на чтение
     /// </summary>
-    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
-    
+    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>   
     public IDisposable ReadLock()
     {
       return new ReadLockImpl(m_lock);
@@ -46,7 +42,8 @@ namespace Notung.Threading
     /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     public void RunInReadLock(Action action, int millisecondsTimeout)
     {
-      if (action == null) throw new ArgumentNullException("action");
+      if (action == null) 
+        throw new ArgumentNullException("action");
 
       if (m_closed)
         return;
@@ -77,7 +74,8 @@ namespace Notung.Threading
     /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     public void RunInWriteLock(Action action, int millisecondsTimeout)
     {
-      if (action == null) throw new ArgumentNullException("action");
+      if (action == null) 
+        throw new ArgumentNullException("action");
 
       if (m_closed)
         return;

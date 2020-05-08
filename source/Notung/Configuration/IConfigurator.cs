@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
-using Notung.Threading;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 using Notung.Log;
 using Notung.Properties;
+using Notung.Threading;
 
 namespace Notung.Configuration
 {
@@ -25,6 +24,8 @@ namespace Notung.Configuration
     void SaveSettings();
 
     void HandleError(Exception error);
+
+    string WorkingPath { get; }
   }
 
   public sealed class DataContractConfigurator : IConfigurator
@@ -32,7 +33,6 @@ namespace Notung.Configuration
     private readonly Dictionary<Type, ConfigurationSection> m_sections = new Dictionary<Type, ConfigurationSection>();
     private readonly LockSource m_lock = new LockSource();
     private readonly ConfigurationFile m_file;
-    private readonly ThreadField<bool> m_disable_log = new ThreadField<bool>();
 
     private readonly ILog _log = LogManager.GetLogger(typeof(DataContractConfigurator));
 
@@ -44,7 +44,9 @@ namespace Notung.Configuration
       m_file = file;
     }
 
-    public DataContractConfigurator(string fileName) : this(new ConfigurationFile()) { }
+    public DataContractConfigurator() : this(new ConfigurationFile()) { }
+
+    public DataContractConfigurator(IConfigFileFinder finder) : this(new ConfigurationFile(finder)) { }
 
     public bool LoadSection(Type sectionType, InfoBuffer buffer)
     {
@@ -74,6 +76,11 @@ namespace Notung.Configuration
       }
 
       return ret;
+    }
+
+    public string WorkingPath
+    {
+      get { return m_file.Finder.WorkingPath; }
     }
 
     public TSection GetSection<TSection>() where TSection : ConfigurationSection, new()

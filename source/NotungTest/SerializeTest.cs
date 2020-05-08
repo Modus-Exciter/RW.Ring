@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Notung;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Notung;
 
 namespace NotungTest
 {
@@ -152,6 +148,31 @@ namespace NotungTest
       }
       Assert.IsFalse(info.Details is Unserializable);
       Assert.AreEqual("will burn", info.Details.ToString());
+    }
+
+    [TestMethod]
+    public void SerializeInfoWithString()
+    {
+      Info info = new Info("Valhalla", InfoLevel.Info) { Details = "will burn"};
+      byte[] data;
+      using (var ms = new MemoryStream())
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(ms, info);
+        data = ms.ToArray();
+      }
+
+      Assert.IsTrue(info.Details is string);
+      Assert.AreEqual("will burn", info.Details);
+
+      using (var ms = new MemoryStream(data))
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        info = (Info)bf.Deserialize(ms);
+      }
+
+      Assert.IsTrue(info.Details is string);
+      Assert.AreEqual("will burn", info.Details);
     }
   }
 }

@@ -26,6 +26,11 @@ namespace Notung.Configuration
 
     public ConfigurationFile() : this(new ProductVersionConfigFileFinder()) { }
 
+    public IConfigFileFinder Finder
+    {
+      get { return m_file_finder; }
+    }
+
     public string this[string section]
     {
       get

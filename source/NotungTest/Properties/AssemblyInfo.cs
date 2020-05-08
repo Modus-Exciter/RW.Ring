@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARI")]
-[assembly: AssemblyProduct("NotungTest")]
+//[assembly: AssemblyProduct("NotungTest")]
 [assembly: AssemblyCopyright("Copyright © ARI 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
