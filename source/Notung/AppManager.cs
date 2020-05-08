@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Notung
 {
-  public class AppManager
+  public static class AppManager
   {
   }
 }
