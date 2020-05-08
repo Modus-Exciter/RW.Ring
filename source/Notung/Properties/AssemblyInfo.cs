@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Fixture.Conch")]
+[assembly: AssemblyTitle("Notung")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARI")]
-[assembly: AssemblyProduct("Fixture.Conch")]
+[assembly: AssemblyProduct("Notung")]
 [assembly: AssemblyCopyright("Copyright © ARI 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1c581b75-2163-40a7-a3c5-dcd9d77c6a4f")]
+[assembly: Guid("59eeb34b-f3b1-488c-91f2-2d210cb0d4dd")]
 
 // Version information for an assembly consists of the following four values:
 //

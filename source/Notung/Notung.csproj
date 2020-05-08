@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{26FAF722-FBF2-4A04-B47C-C431765ADD3C}</ProjectGuid>
+    <ProjectGuid>{ACB28711-7615-48EF-8096-4BE678E22E19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fixture.Conch</RootNamespace>
-    <AssemblyName>Fixture.Conch</AssemblyName>
+    <RootNamespace>Notung</RootNamespace>
+    <AssemblyName>Notung</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,14 +37,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormManager.cs" />
+    <Compile Include="AppManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Fixture\Fixture.csproj">
-      <Project>{DC82D17A-C6A9-45E8-B525-6FD1C01E0028}</Project>
-      <Name>Fixture</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

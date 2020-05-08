@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NDTM.Conch.Properties
+namespace RW.Ring.Helm.Properties
 {
 
 

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace NDTM.Conch
+namespace RW.Ring.Helm
 {
   public partial class MainForm : Form
   {

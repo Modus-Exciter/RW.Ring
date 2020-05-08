@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NDTM.Conch")]
+[assembly: AssemblyTitle("RW.Ring.Helm")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARI")]
-[assembly: AssemblyProduct("NDTM.Conch")]
+[assembly: AssemblyProduct("RW.Ring.Helm")]
 [assembly: AssemblyCopyright("Copyright © ARI 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3d518ac9-5a5c-49a1-8d10-0932ba6d94d4")]
+[assembly: Guid("f1541924-9aa3-4454-b6cb-1775208609f3")]
 
 // Version information for an assembly consists of the following four values:
 //

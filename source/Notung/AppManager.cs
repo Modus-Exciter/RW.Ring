@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Fixture.Conch
+namespace Notung
 {
-  public class FormManager
+  public class AppManager
   {
   }
 }

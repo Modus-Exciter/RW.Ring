@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Fixture
+namespace Notung.Helm
 {
-  class AppManager
+  public class FormManager
   {
-
   }
 }
