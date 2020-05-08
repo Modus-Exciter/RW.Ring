@@ -43,39 +43,28 @@ namespace Notung.Configuration
 
   public sealed class ProductVersionConfigFileFinder : IConfigFileFinder
   {
-    private readonly Assembly m_product_assembly;
+    private readonly ApplicationInfo m_application;
     private readonly string m_working_path;
 
     public const string FILE_NAME = "settings.config";
 
     public ProductVersionConfigFileFinder(Assembly productAssembly)
     {
-      if (productAssembly == null)
-        throw new ArgumentNullException("productAssembly");
-
-      m_product_assembly = productAssembly;
+      m_application = new ApplicationInfo(productAssembly);
       m_working_path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
     }
 
     public ProductVersionConfigFileFinder() : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly) { }
 
-    // TODO: Assembly analysis is needed for another purposes. It should be selected into a special service
     private string GetPath(string basePath, bool version = true)
     {
-      var company = m_product_assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+      if (!string.IsNullOrWhiteSpace(m_application.Company))
+        basePath = Path.Combine(basePath, m_application.Company);
 
-      if (company != null && !string.IsNullOrWhiteSpace(company.Company))
-        basePath = Path.Combine(basePath, company.Company);
-
-      var product = m_product_assembly.GetCustomAttribute<AssemblyProductAttribute>();
-
-      if (product != null && !string.IsNullOrWhiteSpace(product.Product))
-        basePath = Path.Combine(basePath, product.Product);
-      else
-        basePath = Path.Combine(basePath, m_product_assembly.GetName().Name);
+      basePath = Path.Combine(basePath, m_application.Product);
 
       if (version)
-        basePath = Path.Combine(basePath, m_product_assembly.GetName().Version.ToString());
+        basePath = Path.Combine(basePath, m_application.Version.ToString());
 
       return basePath;
     }
@@ -109,7 +98,7 @@ namespace Notung.Configuration
         Version v;
 
         if (Version.TryParse(Path.GetFileName(directory), out v)
-          && v <= m_product_assembly.GetName().Version
+          && v <= m_application.Version
           && File.Exists(Path.Combine(directory, FILE_NAME)))
         {
           if (versions == null)

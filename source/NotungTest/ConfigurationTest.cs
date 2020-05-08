@@ -108,6 +108,13 @@ namespace NotungTest
       Assert.AreEqual(7, section.Number);
       Assert.AreEqual("RW", section.Text);
     }
+
+    [TestMethod]
+    public void AppInfoTest()
+    {
+      var info = new ApplicationInfo(typeof(AppManager).Assembly);
+      Assert.AreEqual("Base application framework for RW.Ring", info.Description);
+    }
   }
 
   public class TestSection : ConfigurationSection

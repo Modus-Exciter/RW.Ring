@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />
