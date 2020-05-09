@@ -103,7 +103,7 @@ namespace Notung.Configuration
           InfoBuffer buffer = new InfoBuffer();
 
           m_sections.Add(typeof(TSection), ret);
-          SaveSettings();
+          PushSection(ret);
         }
       }
 
@@ -119,6 +119,7 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         m_sections[typeof(TSection)] = section;
+        PushSection(section);
       }
     }
 
@@ -146,54 +147,65 @@ namespace Notung.Configuration
       {
         foreach (var kv in m_sections)
         {
-          string section_name;
-          bool data_contract;
-
-          section_name = GetSectionName(kv.Key, out data_contract);
-
-          var sb = new StringBuilder();
-
-          using (var sw = new StringWriter(sb))
-          {
-            using (var writer = new XmlTextWriter(sw) { Formatting = Formatting.Indented, IndentChar = '\t', Indentation = 1, })
-            {
-              if (data_contract)
-              {
-                var sr = new DataContractSerializer(kv.Key);
-                sr.WriteObject(writer, kv.Value);
-              }
-              else
-              {
-                var sr = new XmlSerializer(kv.Key);
-                sr.Serialize(writer, kv.Value);
-              }
-            }
-          }
-          if (data_contract)
-          {
-            m_file[section_name] = sb.ToString();
-          }
-          else
-          {
-            var tmp = sb.ToString();
-
-            if (tmp.StartsWith("<?"))
-            {
-              int idx = tmp.IndexOf("?>");
-
-              if (idx >= 0)
-              {
-                idx += 2;
-                tmp = tmp.Substring(idx);
-              }
-            }
-            m_file[section_name] = tmp;
-          }
+          PushSection(kv.Value);
         }
         m_file.Save();
       }
     }
 
+    private void PushSection(ConfigurationSection section)
+    {
+      string section_name;
+      bool data_contract;
+
+      section_name = GetSectionName(section.GetType(), out data_contract);
+
+      var sb = new StringBuilder();
+
+      using (var sw = new StringWriter(sb))
+      {
+        using (var writer = new XmlTextWriter(sw) { Formatting = Formatting.Indented, IndentChar = '\t', Indentation = 1, })
+        {
+          if (data_contract)
+          {
+            var sr = new DataContractSerializer(section.GetType());
+            sr.WriteObject(writer, section);
+          }
+          else
+          {
+            var sr = new XmlSerializer(section.GetType());
+            sr.Serialize(writer, section);
+          }
+        }
+      }
+
+      sb.AppendLine();
+
+      if (data_contract)
+      {
+        m_file[section_name] = sb.ToString();
+      }
+      else
+      {
+        var tmp = sb.ToString();
+
+        if (tmp.StartsWith("<?"))
+        {
+          int idx = tmp.IndexOf("?>");
+
+          if (idx >= 0)
+          {
+            idx += 2;
+
+            while (char.IsControl(tmp[idx]))
+              idx++;
+
+            tmp = tmp.Substring(idx);
+          }
+        }
+        m_file[section_name] = tmp;
+      }
+    }
 
     private ConfigurationSection CreateSection(Type sectionType)
     {

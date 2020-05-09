@@ -79,7 +79,7 @@ namespace Notung.Configuration
           using (var writer = new XmlTextWriter(fs, Encoding.UTF8) { Formatting = Formatting.Indented, IndentChar = '\t', Indentation = 1, })
           {
             writer.WriteStartDocument();
-            writer.WriteStartElement("Configuration");
+            writer.WriteStartElement("configuration");
 
             foreach (var section in this.Sections.Values)
             {
