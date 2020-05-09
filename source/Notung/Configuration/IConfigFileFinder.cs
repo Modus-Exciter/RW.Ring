@@ -81,27 +81,6 @@ namespace Notung.Configuration
       return basePath;
     }
 
-    public string InputFilePath
-    {
-      get
-      {
-        if (File.Exists(this.OutputFilePath))
-          return this.OutputFilePath;
-
-        var path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), false);
-
-        if (Directory.Exists(path))
-          return FindLastConfigFile(path);
-
-        path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), false);
-
-        if (Directory.Exists(path))
-          return FindLastConfigFile(path);
-
-        return null;
-      }
-    }
-
     private string FindLastConfigFile(string path)
     {
       List<Version> versions = null;
@@ -125,6 +104,27 @@ namespace Notung.Configuration
       }
 
       return null;
+    }
+
+    public string InputFilePath
+    {
+      get
+      {
+        if (File.Exists(this.OutputFilePath))
+          return this.OutputFilePath;
+
+        var path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), false);
+
+        if (Directory.Exists(path))
+          return FindLastConfigFile(path);
+
+        path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), false);
+
+        if (Directory.Exists(path))
+          return FindLastConfigFile(path);
+
+        return null;
+      }
     }
 
     public string OutputFilePath
