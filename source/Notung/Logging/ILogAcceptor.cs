@@ -15,7 +15,6 @@ namespace Notung.Log
   public sealed class FileLogAcceptor : ILogAcceptor
   {
     private string m_working_path;
-    private int m_file_count;
     private int m_file_number;
     private FileInfo m_file_info;
 
@@ -36,12 +35,8 @@ namespace Notung.Log
 
       if (fi.Exists && fi.Length > (1 << 0x10))
       {
-        m_file_count++;
-
-        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, "log.ini")))
-        {
-          sw.WriteLine(m_file_count);
-        }
+        LogSettings.Default.FileCount++;
+        LogSettings.Default.Save();
         
         fi = GetFileInfo();
       }
@@ -52,16 +47,18 @@ namespace Notung.Log
         {
           fs.WriteLine(data[i]);
           fs.WriteLine();
+          fs.WriteLine(LogSettings.Default.Separator);
+          fs.WriteLine();
         }
       }
     }
 
     private FileInfo GetFileInfo()
     {
-      if (m_file_info == null || m_file_number != m_file_count)
+      if (m_file_info == null || m_file_number != LogSettings.Default.FileCount)
       {
-        m_file_info = new FileInfo(Path.Combine(m_working_path, string.Format("{0}.log", m_file_count + 1)));
-        m_file_number = m_file_count;
+        m_file_info = new FileInfo(Path.Combine(m_working_path, string.Format("{0}.log", LogSettings.Default.FileCount + 1)));
+        m_file_number = LogSettings.Default.FileCount;
       }
 
       return m_file_info;
@@ -71,20 +68,11 @@ namespace Notung.Log
     {
       if (!Directory.Exists(m_working_path))
         Directory.CreateDirectory(m_working_path);
-      
-      if (!File.Exists(Path.Combine(m_working_path, "log.ini")))
+
+      if (Directory.GetFiles(m_working_path, "*.log").Length == 0)
       {
-        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, "log.ini")))
-        {
-          sw.WriteLine(0);
-        }
-      }
-      else
-      {
-        using (var sr = new StreamReader(Path.Combine(m_working_path, "log.ini")))
-        {
-          m_file_count = int.Parse(sr.ReadLine());
-        }
+        LogSettings.Default.FileCount = 0;
+        LogSettings.Default.Save();
       }
     }
   }
