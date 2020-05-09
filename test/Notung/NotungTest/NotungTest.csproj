@@ -50,7 +50,7 @@
     <Compile Include="SerializeTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Notung\Notung.csproj">
+    <ProjectReference Include="..\..\..\source\Notung\Notung.csproj">
       <Project>{ACB28711-7615-48EF-8096-4BE678E22E19}</Project>
       <Name>Notung</Name>
     </ProjectReference>
