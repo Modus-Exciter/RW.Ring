@@ -80,18 +80,16 @@ namespace NotungTest
     public void FinderInputPath()
     {
       var finder = new ProductVersionConfigFileFinder(typeof(ProductVersionConfigFileFinder).Assembly);
-      if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0")))
-        Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0"));
 
-      if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0\\settings.config")))
-        File.WriteAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0\\settings.config"), "<Configuration></Configuration>");
+      var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "ARI\\Notung Library\\1.0.0.0");
+      if (!Directory.Exists(directory))
+        Directory.CreateDirectory(directory);
 
-      Assert.AreEqual(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0\\settings.config"), finder.InputFilePath);
+      if (!File.Exists(Path.Combine(directory, ProductVersionConfigFileFinder.DEFAULT_FILE)))
+        File.WriteAllText(Path.Combine(directory, ProductVersionConfigFileFinder.DEFAULT_FILE), "<Configuration></Configuration>");
+
+      Assert.AreEqual(Path.Combine(directory, ProductVersionConfigFileFinder.DEFAULT_FILE), finder.InputFilePath);
     }
 
     [TestMethod]
@@ -99,6 +97,13 @@ namespace NotungTest
     public void NullableConfiguratorInManager()
     {
       AppManager.Configurator = null;
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void WrongChars()
+    {
+      var finder = new ProductVersionConfigFileFinder(@"\/|.xml");
     }
 
     [TestMethod]

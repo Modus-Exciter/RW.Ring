@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using Notung.ComponentModel;
+using Notung.Threading;
 
 namespace Notung
 {
-  // TODO: не создавать лишних экземпляров этого класса
   public sealed class ApplicationInfo
   {
     private readonly Assembly m_product_assembly;
@@ -16,6 +16,9 @@ namespace Notung
     private string m_product;
     private string m_description;
     private Version m_version;
+
+    private static ApplicationInfo _instance;
+    private static object _lock = new object();
 
     public ApplicationInfo(Assembly productAssembly)
     {
@@ -26,6 +29,29 @@ namespace Notung
     }
 
     public ApplicationInfo() : this(Assembly.GetEntryAssembly() ?? typeof(ApplicationInfo).Assembly) { }
+
+    public static ApplicationInfo Instance
+    {
+      get
+      {
+          if (_instance != null)
+            return _instance;
+
+        lock (_lock)
+        {
+          if (_instance != null)
+            return _instance;
+
+          if (Assembly.GetEntryAssembly() != null)
+          {
+            _instance = new ApplicationInfo(Assembly.GetEntryAssembly());
+            return _instance;
+          }
+          else
+            return new ApplicationInfo(typeof(ApplicationInfo).Assembly);
+        }
+      }
+    }
 
     public Assembly ProductAssembly
     {

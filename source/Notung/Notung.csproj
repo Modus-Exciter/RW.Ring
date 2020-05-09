@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CoreResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CoreResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="CoreResources.RU.resx" />

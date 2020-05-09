@@ -141,4 +141,7 @@
   <data name="WARNING" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
+    <value>File name contains wrong symbols</value>
+  </data>
 </root>

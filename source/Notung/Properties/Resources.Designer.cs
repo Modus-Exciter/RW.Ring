@@ -131,5 +131,14 @@ namespace Notung.Properties {
                 return ResourceManager.GetString("WARNING", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File name contains wrong symbols.
+        /// </summary>
+        internal static string WRONG_FILE_SYMBOLS {
+            get {
+                return ResourceManager.GetString("WRONG_FILE_SYMBOLS", resourceCulture);
+            }
+        }
     }
 }

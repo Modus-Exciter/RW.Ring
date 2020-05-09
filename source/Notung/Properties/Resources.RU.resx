@@ -141,4 +141,7 @@
   <data name="WARNING" xml:space="preserve">
     <value>Предупреждение</value>
   </data>
+  <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
+    <value>Имя файла содержит недопустимые знаки</value>
+  </data>
 </root>

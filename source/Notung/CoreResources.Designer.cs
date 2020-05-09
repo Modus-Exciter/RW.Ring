@@ -22,7 +22,7 @@ namespace Notung {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CoreResources {
+    public class CoreResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Notung {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Notung.CoreResources", typeof(CoreResources).Assembly);
@@ -51,7 +51,7 @@ namespace Notung {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Notung {
         /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
-        internal static string NO {
+        public static string NO {
             get {
                 return ResourceManager.GetString("NO", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Notung {
         /// <summary>
         ///   Looks up a localized string similar to (empty).
         /// </summary>
-        internal static string NULL {
+        public static string NULL {
             get {
                 return ResourceManager.GetString("NULL", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Notung {
         /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
-        internal static string YES {
+        public static string YES {
             get {
                 return ResourceManager.GetString("YES", resourceCulture);
             }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Notung.ComponentModel;
 using System.Collections.Generic;
+using Notung.Properties;
 
 namespace Notung.Configuration
 {
@@ -46,15 +48,25 @@ namespace Notung.Configuration
     private readonly ApplicationInfo m_application;
     private readonly string m_working_path;
 
-    public const string FILE_NAME = "settings.config";
+    private readonly string m_file_name;
 
-    public ProductVersionConfigFileFinder(Assembly productAssembly)
+    public const string DEFAULT_FILE = "settings.config";
+
+    public ProductVersionConfigFileFinder(Assembly productAssembly, string fileName = DEFAULT_FILE)
     {
+      if (string.IsNullOrEmpty(fileName))
+        throw new ArgumentNullException("fileName");
+
+      if (Path.GetInvalidFileNameChars().Any(fileName.Contains))
+        throw new ArgumentException(Resources.WRONG_FILE_SYMBOLS);
+
+      m_file_name = fileName;
       m_application = new ApplicationInfo(productAssembly);
       m_working_path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
     }
 
-    public ProductVersionConfigFileFinder() : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly) { }
+    public ProductVersionConfigFileFinder(string fileName = DEFAULT_FILE) 
+      : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly, fileName) { }
 
     private string GetPath(string basePath, bool version = true)
     {
@@ -99,7 +111,7 @@ namespace Notung.Configuration
 
         if (Version.TryParse(Path.GetFileName(directory), out v)
           && v <= m_application.Version
-          && File.Exists(Path.Combine(directory, FILE_NAME)))
+          && File.Exists(Path.Combine(directory, m_file_name)))
         {
           if (versions == null)
             versions = new List<Version>();
@@ -109,7 +121,7 @@ namespace Notung.Configuration
       if (versions != null)
       {
         versions.Sort();
-        return Path.Combine(path, versions[versions.Count - 1].ToString(), FILE_NAME);
+        return Path.Combine(path, versions[versions.Count - 1].ToString(), m_file_name);
       }
 
       return null;
@@ -117,7 +129,7 @@ namespace Notung.Configuration
 
     public string OutputFilePath
     {
-      get { return Path.Combine(this.WorkingPath, FILE_NAME); }
+      get { return Path.Combine(this.WorkingPath, m_file_name); }
     }
 
     public string WorkingPath
