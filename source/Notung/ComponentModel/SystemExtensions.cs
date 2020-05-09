@@ -48,13 +48,11 @@ namespace Notung.ComponentModel
         {
           EnumLabel item = new EnumLabel();
 
-          if (fi.IsDefined(typeof(DisplayNameAttribute), true))
-          {
-            item.Label = (fi.GetCustomAttributes(typeof(DisplayNameAttribute), true)[0]
-              as DisplayNameAttribute).DisplayName;
-          }
+          var name = fi.GetCustomAttribute<DisplayNameAttribute>(true);
 
-          if (string.IsNullOrEmpty(item.Label))
+          if (name != null && !string.IsNullOrEmpty(name.DisplayName))
+            item.Label = name.DisplayName;
+          else
             item.Label = fi.Name;
 
           item.Value = fi.GetValue(null);

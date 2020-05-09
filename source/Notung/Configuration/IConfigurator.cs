@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
+using Notung.ComponentModel;
 using Notung.Log;
 using Notung.Properties;
 using Notung.Threading;
@@ -259,17 +260,15 @@ namespace Notung.Configuration
         section_name = new XsdDataContractExporter().GetRootElementName(sectionType).Name;
       }
       else
-        if (sectionType.IsDefined(typeof(XmlRootAttribute), false))
-        {
-          var root = (XmlRootAttribute)sectionType.GetCustomAttributes(typeof(XmlRootAttribute), false)[0];
+      {
+        var root = sectionType.GetCustomAttribute<XmlRootAttribute>(false);
 
-          section_name = root.ElementName;
-
-          if (string.IsNullOrEmpty(section_name))
-            section_name = sectionType.Name;
-        }
-        else
+        if (root == null || string.IsNullOrEmpty(root.ElementName))
           section_name = sectionType.Name;
+        else
+          section_name = root.ElementName;
+      }
+
       return section_name;
     }
   }
