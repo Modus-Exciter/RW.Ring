@@ -7,6 +7,8 @@ namespace Notung.Log
   /// </summary> 
   public static class LogManager
   {
+    private static readonly LogProcess _process = new LogProcess();
+    
     public static ILog GetLogger(string source)
     {
       if (string.IsNullOrEmpty(source))
@@ -18,6 +20,11 @@ namespace Notung.Log
     public static ILog GetLogger(Type type)
     {
       return new Logger(type.FullName);
+    }
+
+    public static void AddAcceptor(ILogAcceptor acceptor)
+    {
+      _process.AddAcceptor(acceptor);
     }
 
     #region Extensions
@@ -113,7 +120,7 @@ namespace Notung.Log
 
       public void WriteLog(string message, InfoLevel level, object data)
       {
-        // TODO: for async logs knowing of main thread is required
+        _process.WriteMessage(new LoggingData(m_source, message, level, data));
       }
     }
   }

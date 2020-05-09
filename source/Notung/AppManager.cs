@@ -9,6 +9,7 @@ namespace Notung
   public static class AppManager
   {
     private static IConfigurator _configurator = new DataContractConfigurator();
+    private static IAppInstance _app_instance = new AppInstance(new ProcessAppInstanceView());
 
     public static IConfigurator Configurator
     {
@@ -19,6 +20,18 @@ namespace Notung
           throw new ArgumentNullException();
 
         _configurator = value;
+      }
+    }
+
+    public static IAppInstance Instance
+    {
+      get { return _app_instance; }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+
+        _app_instance = value;
       }
     }
   }

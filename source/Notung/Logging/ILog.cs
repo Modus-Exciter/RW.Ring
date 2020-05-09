@@ -38,12 +38,29 @@ namespace Notung.Log
 
     public readonly string Source;
 
+    private readonly static string _template1 = @"[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}";
+    private readonly static string _template2 = @"[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}";
+    private readonly static string _template3 = @"[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}
+{3}";
+    private readonly static string _template4 = @"[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}
+{4}";
+
     public override string ToString()
     {
-      if (!string.IsNullOrWhiteSpace(this.Source))
-        return string.Format("{0}: {1}: {2}", this.Source, this.Level, this.Message);
+      if (this.Data == null)
+      {
+        if (string.IsNullOrWhiteSpace(this.Source))
+          return string.Format(_template1, this.LoggingDate, this.Level, this.Message);
+        else
+          return string.Format(_template2, this.LoggingDate, this.Level, this.Source, this.Message);
+      }
       else
-        return string.Format("{0}: {1}", this.Level, this.Message);
+      {
+        if (string.IsNullOrWhiteSpace(this.Source))
+          return string.Format(_template3, this.LoggingDate, this.Level, this.Message, this.Data);
+        else
+          return string.Format(_template4, this.LoggingDate, this.Level, this.Source, this.Message, this.Data);
+      }
     }
   }
 }

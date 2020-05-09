@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung;
 using Notung.Configuration;
+using Notung.Helm;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -75,6 +76,8 @@ namespace ConfiguratorGraphicalTest
     public Form1()
     {
       InitializeComponent();
+
+      //AppManager.Instance = new AppInstance(new MainFormAppInstanceView(this));
       
       innerDefault.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDefault>();
       innerContract.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDataContract>();

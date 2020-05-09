@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung.Configuration;
+using System.Windows;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -16,9 +17,18 @@ namespace ConfiguratorGraphicalTest
     [STAThread]
     static void Main()
     {
+      SplashScreen scr = new SplashScreen("splashscreen.jpg");
+      scr.Show(false);
+      RunApp(scr);
+    }
+
+    private static void RunApp(SplashScreen scr)
+    {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new Form1());
+      var frm = new Form1();
+      frm.Shown += (e, args) => scr.Close(new TimeSpan(0,0, 1));
+      Application.Run(frm);
     }
   }
 
