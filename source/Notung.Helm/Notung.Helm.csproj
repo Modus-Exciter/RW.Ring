@@ -46,6 +46,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WinAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notung\Notung.csproj">

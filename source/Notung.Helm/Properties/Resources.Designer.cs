@@ -59,5 +59,14 @@ namespace Notung.Helm.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode..
+        /// </summary>
+        internal static string NO_LINK_MESSAGE_CODE {
+            get {
+                return ResourceManager.GetString("NO_LINK_MESSAGE_CODE", resourceCulture);
+            }
+        }
     }
 }

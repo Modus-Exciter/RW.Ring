@@ -37,6 +37,10 @@ namespace Notung
     /// </summary>
     string StartupPath { get; }
 
+    //uint StringArgsMessageCode { get; }
+
+    string WorkingPath { get; }
+
     event EventHandler Exit;
 
     /// <summary>
@@ -58,11 +62,9 @@ namespace Notung
     private volatile bool m_terminating;
     private volatile bool m_restarting;
     private readonly bool m_is_admin;
-    private readonly string m_startup_path;
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
     private readonly string m_main_module_file_name = GetMainModuleFileName();
-    private readonly AppDomain m_main_domain;
     
     private static readonly ILog _log = LogManager.GetLogger(typeof(AppInstance));
 
@@ -71,15 +73,24 @@ namespace Notung
       if (view == null)
         throw new ArgumentNullException("view");
 
+      var args = Environment.GetCommandLineArgs();
+
+      if (args.Length > 0 && Path.GetFullPath(args[0]) == m_main_module_file_name)
+      {
+        var tmp = new string[args.Length - 1];
+
+        for (int i = 0; i < tmp.Length; i++)
+          tmp[i] = args[i + 1];
+
+        args = tmp;
+      }
+
       m_view = view;
-      m_args = Array.AsReadOnly(Environment.GetCommandLineArgs());
+      m_args = Array.AsReadOnly(args);
       m_is_admin = m_apartment_wrapper.Invoke(new Func<bool>(APIHelper.IsUserAnAdmin)); // TODO: уточнить, можно ли изменить это в ходе работы программы
 
       if (m_view is ProcessAppInstanceView)
         m_main_thread = Thread.CurrentThread;
-
-      m_startup_path = Path.GetDirectoryName(m_main_module_file_name);
-      m_main_domain = AppDomain.CurrentDomain;
     }
     
     public System.ComponentModel.ISynchronizeInvoke Invoker
@@ -129,7 +140,25 @@ namespace Notung
 
     public string StartupPath
     {
-      get { return m_startup_path; }
+      get { return m_main_module_file_name; }
+    }
+
+    public uint StringArgsMessageCode
+    {
+      get { return 0xA146; }
+    }
+
+    public string WorkingPath
+    {
+      get
+      {
+        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+        if (!string.IsNullOrWhiteSpace(ApplicationInfo.Instance.Company))
+          basePath = Path.Combine(basePath, ApplicationInfo.Instance.Company);
+
+        return Path.Combine(basePath, ApplicationInfo.Instance.Product);
+      } 
     }
 
     public event EventHandler Exit
@@ -156,7 +185,7 @@ namespace Notung
       if (m_mutex_thread != null)
         m_mutex_thread.Join();
 
-      m_view.Restart(m_args);
+      m_view.Restart(m_main_module_file_name, m_args);
     }
 
     private void MutexBlockingThread()
@@ -169,12 +198,15 @@ namespace Notung
       {
         if (!new_instance)
         {
-          _log.Debug("CreateBlockingMutexImpl(): exit");         
+          _log.Debug("CreateBlockingMutexImpl(): exit");
           mutex.Close();
 
-          // TODO: отправка сообщения другой копии приложения
           if (m_args.Count > 0)
           {
+            if (m_view.SendMessageToPreviousProcess(m_args))
+              _log.Debug("CreateBlockingMutexImpl(): message to previous application copy sent");
+            else
+              _log.Debug("CreateBlockingMutexImpl(): previous application copy not responding");
           }
 
           m_terminating = true;
@@ -190,6 +222,7 @@ namespace Notung
         }
       }
     }
+
 
     private string GetMutexName()
     {
@@ -226,23 +259,13 @@ namespace Notung
 
   public interface IAppInstanceView : ISynchronizeProvider
   {
-    void Restart(IList<string> args);
+    void Restart(string startPath, IList<string> args);
+
+    bool SendMessageToPreviousProcess(IList<string> args);
   }
 
   public class ProcessAppInstanceView : SynchronizeProviderStub, IAppInstanceView
   {
-    private readonly string m_main_module_file_name = GetMainModuleFileName();
-
-    private static string GetMainModuleFileName()
-    {
-      using (var process = Process.GetCurrentProcess())
-      {
-        return process.MainModule.FileName;
-      }
-    }
-
-    #region IAppInstanceView Members
-
     private static string CreatePathArgs(IList<string> args)
     {
       StringBuilder sb = new StringBuilder();
@@ -265,21 +288,18 @@ namespace Notung
       return sb.ToString();
     }
 
-    public string StartupPath
+    public bool SendMessageToPreviousProcess(IList<string> args)
     {
-      get { return Path.GetDirectoryName(m_main_module_file_name); }
+      return false;
     }
 
-    public void Restart(IList<string> args)
+    public void Restart(string startPath, IList<string> args)
     {
       if (args == null) throw new ArgumentNullException("args");
 
-      using (Process.Start(m_main_module_file_name, CreatePathArgs(args))) { }
+      using (Process.Start(startPath, CreatePathArgs(args))) { }
 
       Environment.Exit(0);
     }
-
-    #endregion
-
   }
 }

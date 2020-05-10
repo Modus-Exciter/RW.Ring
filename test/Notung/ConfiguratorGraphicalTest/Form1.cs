@@ -115,5 +115,16 @@ namespace ConfiguratorGraphicalTest
     {
       AppManager.Instance.Restart();
     }
+
+    protected override void WndProc(ref Message msg)
+    {
+      base.WndProc(ref msg);
+
+      if (msg.Msg == MainFormAppInstanceView.StringArgsMessageCode)
+      {
+        string[] fileNames = MainFormAppInstanceView.GetStringArgs(msg);
+        this.Text = string.Join(" ", fileNames);
+      }
+    }
   }
 }
