@@ -7,6 +7,8 @@ using Notung.Configuration;
 using System.IO;
 using System.ComponentModel;
 using Notung;
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
 
 namespace NotungTest
 {
@@ -120,6 +122,13 @@ namespace NotungTest
       var info = new ApplicationInfo(typeof(AppManager).Assembly);
       Assert.AreEqual("Base application framework for RW.Ring", info.Description);
     }
+    [TestMethod]
+    [ExpectedException(typeof(SerializationException))]
+    public void DuplicateElementName()
+    {
+      AppManager.Configurator.GetSection<TestSection>();
+      AppManager.Configurator.GetSection<TestSection2>();
+    }
   }
 
   public class TestSection : ConfigurationSection
@@ -129,5 +138,16 @@ namespace NotungTest
 
     [DefaultValue("RW")]
     public string Text { get; set; }
+  }
+
+  [XmlRoot(ElementName = "TestSection")]
+  public class TestSection2 : ConfigurationSection
+  {
+    [DefaultValue(7)]
+    public int Number { get; set; }
+
+    [DefaultValue("RW")]
+    public string Text { get; set; }
+
   }
 }

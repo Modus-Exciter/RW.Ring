@@ -115,29 +115,11 @@ namespace Notung.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delegate type {0} is not recognized as EventHandler&lt;{1}&gt;.
-        /// </summary>
-        internal static string INVALID_EVENT_HANDLER {
-            get {
-                return ResourceManager.GetString("INVALID_EVENT_HANDLER", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Settings restore started.
         /// </summary>
         internal static string SETTINGS_RESTORE {
             get {
                 return ResourceManager.GetString("SETTINGS_RESTORE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Stream flush.
-        /// </summary>
-        internal static string STREAM_FLUSH {
-            get {
-                return ResourceManager.GetString("STREAM_FLUSH", resourceCulture);
             }
         }
         

@@ -120,6 +120,9 @@
   <data name="DEBUG" xml:space="preserve">
     <value>Отладочное сообщение</value>
   </data>
+  <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
+    <value>Другая конфигурационная секция {0} имеет то же имя, что и {1}</value>
+  </data>
   <data name="ERROR" xml:space="preserve">
     <value>Ошибка</value>
   </data>
