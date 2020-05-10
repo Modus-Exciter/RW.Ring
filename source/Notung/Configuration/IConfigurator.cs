@@ -32,10 +32,11 @@ namespace Notung.Configuration
   public sealed class DataContractConfigurator : IConfigurator
   {
     private readonly Dictionary<Type, ConfigurationSection> m_sections = new Dictionary<Type, ConfigurationSection>();
+    private readonly Dictionary<string, Type> m_section_names = new Dictionary<string, Type>();
     private readonly LockSource m_lock = new LockSource();
     private readonly ConfigurationFile m_file;
 
-    private readonly ILog _log = LogManager.GetLogger(typeof(DataContractConfigurator));
+    private static readonly ILog _log = LogManager.GetLogger(typeof(DataContractConfigurator));
 
     public DataContractConfigurator(ConfigurationFile file)
     {
@@ -218,6 +219,15 @@ namespace Notung.Configuration
 
       section_name = GetSectionName(sectionType, out data_contract);
 
+      if (m_section_names.ContainsKey(section_name))
+      {
+        if (m_section_names[section_name] != sectionType)
+          throw new SerializationException(string.Format(Resources.DUPLICATE_SECTION_NAME, 
+            m_section_names[section_name], sectionType));
+      }
+      else
+        m_section_names[section_name] = sectionType;
+
       string section_xml = null;
 
       if (m_file.TryGetSection(section_name, out section_xml))
@@ -267,7 +277,7 @@ namespace Notung.Configuration
 
       string section_name;
       data_contract = sectionType.IsDefined(typeof(DataContractAttribute), false);
-      if (sectionType.IsDefined(typeof(DataContractAttribute), false))
+      if (data_contract)
       {
         section_name = new XsdDataContractExporter().GetRootElementName(sectionType).Name;
       }
@@ -280,7 +290,6 @@ namespace Notung.Configuration
         else
           section_name = root.ElementName;
       }
-
       return section_name;
     }
   }

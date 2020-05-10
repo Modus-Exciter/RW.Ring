@@ -120,6 +120,9 @@
   <data name="DEBUG" xml:space="preserve">
     <value>Debug message</value>
   </data>
+  <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
+    <value>Another configuration section {0} already has the same name as {1}</value>
+  </data>
   <data name="ERROR" xml:space="preserve">
     <value>Error</value>
   </data>
