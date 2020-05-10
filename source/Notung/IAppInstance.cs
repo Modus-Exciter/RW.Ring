@@ -203,7 +203,7 @@ namespace Notung
 
           if (m_args.Count > 0)
           {
-            if (m_view.SendMessageToPreviousProcess(m_args))
+            if (m_view.SendArgsToPreviousProcess(m_args))
               _log.Debug("CreateBlockingMutexImpl(): message to previous application copy sent");
             else
               _log.Debug("CreateBlockingMutexImpl(): previous application copy not responding");
@@ -261,7 +261,7 @@ namespace Notung
   {
     void Restart(string startPath, IList<string> args);
 
-    bool SendMessageToPreviousProcess(IList<string> args);
+    bool SendArgsToPreviousProcess(IList<string> args);
   }
 
   public class ProcessAppInstanceView : SynchronizeProviderStub, IAppInstanceView
@@ -288,7 +288,7 @@ namespace Notung
       return sb.ToString();
     }
 
-    public bool SendMessageToPreviousProcess(IList<string> args)
+    public bool SendArgsToPreviousProcess(IList<string> args)
     {
       return false;
     }

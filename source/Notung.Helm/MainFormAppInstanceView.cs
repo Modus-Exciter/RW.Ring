@@ -30,7 +30,7 @@ namespace Notung.Helm
 
     public const int StringArgsMessageCode = 0xA146;
 
-    public bool SendMessageToPreviousProcess(IList<string> args)
+    public bool SendArgsToPreviousProcess(IList<string> args)
     {
       using (var currentProc = Process.GetCurrentProcess())
       {
