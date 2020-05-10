@@ -25,7 +25,7 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}")]
         public string TemplateSimple {
             get {
                 return ((string)(this["TemplateSimple"]));
@@ -34,7 +34,7 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}")]
         public string TemplateSource {
             get {
                 return ((string)(this["TemplateSource"]));
@@ -43,7 +43,7 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}\r\n{3}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}\r\n{3}")]
         public string TemplateData {
             get {
                 return ((string)(this["TemplateData"]));
@@ -52,7 +52,7 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}\r\n{4}")]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}\r\n{4}")]
         public string TemplateSourceData {
             get {
                 return ((string)(this["TemplateSourceData"]));
@@ -71,12 +71,21 @@ namespace Notung {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int FileCount {
+        public uint FileCount {
             get {
-                return ((int)(this["FileCount"]));
+                return ((uint)(this["FileCount"]));
             }
             set {
                 this["FileCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("65536")]
+        public uint LogFileSize {
+            get {
+                return ((uint)(this["LogFileSize"]));
             }
         }
     }

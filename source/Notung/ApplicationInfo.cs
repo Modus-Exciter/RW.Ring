@@ -16,6 +16,7 @@ namespace Notung
     private string m_product;
     private string m_description;
     private Version m_version;
+    private Version m_file_version;
 
     private static ApplicationInfo _instance;
     private static object _lock = new object();
@@ -135,6 +136,21 @@ namespace Notung
       }
     }
 
+    public Version FileVersion
+    {
+      get
+      {
+        if (m_file_version == null)
+        {
+          var attr = m_product_assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
+
+          if (attr == null || string.IsNullOrWhiteSpace(attr.Version) || !Version.TryParse(attr.Version, out m_file_version))
+            m_file_version = this.Version;
+        }
+
+        return m_file_version;
+      }
+    }
     public override string ToString()
     {
       return m_product_assembly.ToString();

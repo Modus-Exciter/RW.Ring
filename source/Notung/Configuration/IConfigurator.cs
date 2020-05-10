@@ -158,6 +158,8 @@ namespace Notung.Configuration
       string section_name;
       bool data_contract;
 
+      _log.DebugFormat("PushSection(): {0}", section.GetType().FullName);
+
       section_name = GetSectionName(section.GetType(), out data_contract);
 
       var sb = new StringBuilder();
@@ -215,6 +217,8 @@ namespace Notung.Configuration
 
       string section_name;
       bool data_contract;
+
+      _log.DebugFormat("CreateSection(): {0}", sectionType.FullName);
 
       section_name = GetSectionName(sectionType, out data_contract);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using Notung.Properties;
 
 namespace Notung.ComponentModel
 {
@@ -130,10 +131,47 @@ namespace Notung.ComponentModel
       }
     }
 
-    // TODO
+    /// <summary>
+    /// Выполнение обработчика события в синхронизированном контексте
+    /// </summary>
+    /// <typeparam name="TArgs">Тип события</typeparam>
+    /// <param name="eventHandler">Обработчик события</param>
+    /// <param name="sender">Источник события</param>
+    /// <param name="args">Событие</param>
     public static void InvokeSynchronized<TArgs>(this Delegate eventHandler, object sender, TArgs args)
       where TArgs : EventArgs
     {
+      if (eventHandler == null)
+        return;
+
+      foreach (var dlgt in eventHandler.GetInvocationList())
+      {
+        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? AppManager.Instance.Invoker;
+
+        if (invoker != null && invoker.InvokeRequired)
+        {
+          invoker.BeginInvoke(dlgt, new object[] { sender, args });
+        }
+        else
+        {
+          var handler = dlgt as EventHandler<TArgs>;
+
+          if (handler != null)
+            handler(sender, args);
+          else
+          {
+            try
+            {
+              dlgt.DynamicInvoke(sender, args);
+            }
+            catch (Exception ex)
+            {
+              throw new ArgumentException(string.Format(Resources.INVALID_EVENT_HANDLER,
+                eventHandler.GetType(), typeof(TArgs)), ex);
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -22,5 +22,15 @@ namespace Notung.Helm
     {
       get { return m_main_form; }
     }
+
+    public string StartupPath
+    {
+      get { return System.Windows.Forms.Application.StartupPath; }
+    }
+
+    public void Restart(IList<string> args)
+    {
+      System.Windows.Forms.Application.Restart();
+    }
   }
 }

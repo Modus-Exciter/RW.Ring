@@ -12,10 +12,10 @@ namespace Notung.Log
     void WriteLog(LoggingData[] data);
   }
 
-  public sealed class FileLogAcceptor : ILogAcceptor
+  internal sealed class FileLogAcceptor : ILogAcceptor
   {
-    private string m_working_path;
-    private int m_file_number;
+    private readonly string m_working_path;
+    private uint m_file_number;
     private FileInfo m_file_info;
 
     public FileLogAcceptor(IConfigFileFinder finder)
@@ -33,7 +33,7 @@ namespace Notung.Log
     {
       FileInfo fi = GetFileInfo();
 
-      if (fi.Exists && fi.Length > (1 << 0x10))
+      if (fi.Exists && fi.Length > LogSettings.Default.LogFileSize)
       {
         LogSettings.Default.FileCount++;
         LogSettings.Default.Save();

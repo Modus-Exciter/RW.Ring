@@ -5,7 +5,7 @@ namespace Notung.Log
   public interface ILog
   {
     void WriteLog(string message, InfoLevel level, object data = null);
-  } 
+  }
 
   /// <summary>
   /// Смысл этой структуры - запомнить всё, что требуется писать в лог 

@@ -116,7 +116,7 @@ namespace Notung.Threading
       private readonly ReaderWriterLockSlim m_lock;
       private readonly bool m_exit_required;
 
-      public ReadLockImpl( ReaderWriterLockSlim source)
+      public ReadLockImpl(ReaderWriterLockSlim source)
       {
         if (source == null)
           throw new ArgumentNullException("source");
@@ -142,7 +142,7 @@ namespace Notung.Threading
       private readonly ReaderWriterLockSlim m_lock;
       private readonly bool m_exit_required;
 
-      public UpgradeableLockImpl( ReaderWriterLockSlim source)
+      public UpgradeableLockImpl(ReaderWriterLockSlim source)
       {
         if (source == null)
           throw new ArgumentNullException("source");

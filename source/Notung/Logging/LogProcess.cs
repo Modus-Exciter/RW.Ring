@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Notung.Log
 {
-  public sealed class LogProcess : IDisposable
+  internal sealed class LogProcess : IDisposable
   {
     private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
-    private volatile bool m_stop;
     private readonly Queue<LoggingData> m_data = new Queue<LoggingData>();
-    private readonly HashSet<ILogAcceptor> m_acceptors = new HashSet<ILogAcceptor>();
+    private readonly HashSet<ILogAcceptor> m_acceptors = new HashSet<ILogAcceptor>();    
+    private volatile bool m_stop;
+    private LoggingData[] m_current_data; // Чтобы не создавать лишних объектов
 
     public LogProcess()
     {
@@ -34,29 +36,36 @@ namespace Notung.Log
         if (m_stop)
           return;
 
-        LoggingData[] list = null; // Не создаём список без необходимости
+        int size = 0;
 
         lock (m_data)
         {
-          if (m_data.Count > 0)
+          size = m_data.Count;
+          if (size > 0)
           {
-            list = new LoggingData[m_data.Count];
+            if (m_current_data == null || m_current_data.Length != size)
+              m_current_data = new LoggingData[m_data.Count];
+
             int i = 0;
 
             while (m_data.Count > 0)
-              list[i++] = m_data.Dequeue();
+              m_current_data[i++] = m_data.Dequeue();
           }
+          else
+            m_current_data = null;
         }
 
-        if (list != null)
+        lock (m_acceptors)
         {
-          lock (m_acceptors)
-          {
-            foreach (var acceptor in m_acceptors)
-              acceptor.WriteLog(list);
-          }
+          if (m_current_data != null)
+            Parallel.ForEach(m_acceptors, this.Accept);
         }
       }
+    }
+
+    private void Accept(ILogAcceptor acceptor)
+    {
+      acceptor.WriteLog(m_current_data);
     }
 
     public void AddAcceptor(ILogAcceptor acceptor)
@@ -80,6 +89,19 @@ namespace Notung.Log
     {
       m_stop = true;
       m_signal.Set();
+
+      lock (m_acceptors)
+      {
+        foreach (var acceptor in m_acceptors)
+        {
+          var disposable = acceptor as IDisposable;
+
+          if (disposable != null)
+            disposable.Dispose();
+        }
+
+        m_acceptors.Clear();
+      }
     }
   }
 }

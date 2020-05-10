@@ -3,24 +3,27 @@
   <Profiles />
   <Settings>
     <Setting Name="TemplateSimple" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}</Value>
+      <Value Profile="(Default)">[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}</Value>
     </Setting>
     <Setting Name="TemplateSource" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}</Value>
+      <Value Profile="(Default)">[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}</Value>
     </Setting>
     <Setting Name="TemplateData" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}
+      <Value Profile="(Default)">[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}
 {3}</Value>
     </Setting>
     <Setting Name="TemplateSourceData" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">[{0:dd.MM.yyyy hh:mm:ss}] [{1}] {2}: {3}
+      <Value Profile="(Default)">[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}
 {4}</Value>
     </Setting>
     <Setting Name="Separator" Type="System.String" Scope="Application">
       <Value Profile="(Default)">===============================================</Value>
     </Setting>
-    <Setting Name="FileCount" Type="System.Int32" Scope="User">
+    <Setting Name="FileCount" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LogFileSize" Type="System.UInt32" Scope="Application">
+      <Value Profile="(Default)">65536</Value>
     </Setting>
   </Settings>
 </SettingsFile>
