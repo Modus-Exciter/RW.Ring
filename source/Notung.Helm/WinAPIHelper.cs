@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Windows.Forms;
+using System.Text;
 
 
 namespace Notung.Helm
@@ -280,6 +281,18 @@ namespace Notung.Helm
     /// <returns></returns>
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern IntPtr SendMessage(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll")]
+    public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    internal static extern ushort GlobalAddAtom(string lpString);
+
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    internal static extern uint GlobalGetAtomName(ushort nAtom, StringBuilder lpBuffer, int nSize);
+
+    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+    internal static extern ushort GlobalDeleteAtom(ushort nAtom);
 
     #endregion
   }

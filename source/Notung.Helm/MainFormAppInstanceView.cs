@@ -44,25 +44,28 @@ namespace Notung.Helm
             continue;
 
           Random rd = new Random();
-          int handle = rd.Next(10000, 20000);
+          string sendee = string.Join("\n", args);
+          ushort handle = WinAPIHelper.GlobalAddAtom(sendee);
 
-          string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
-          File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
+          //string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
+          //File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
 
           try
           {
             var result = WinAPIHelper.SendMessage(proc.MainWindowHandle,
-              StringArgsMessageCode, new IntPtr(proc.Id), new IntPtr(handle));
+              StringArgsMessageCode, new IntPtr(sendee.Length + 1), new IntPtr(handle));
 
             if (result != IntPtr.Zero)
             {
+              WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
               return true;
             }
           }
           finally
           {
-            if (File.Exists(fileName))
-              File.Delete(fileName);
+            //if (File.Exists(fileName))
+            //  File.Delete(fileName);
+            WinAPIHelper.GlobalDeleteAtom(handle);
           }
         }
       }
@@ -80,11 +83,15 @@ namespace Notung.Helm
       if (message.Msg != StringArgsMessageCode)
         throw new ArgumentException(string.Format(Resources.NO_LINK_MESSAGE_CODE, message.Msg, MethodInfo.GetCurrentMethod().DeclaringType));
 
-      string linkFile = Path.Combine(AppManager.Instance.WorkingPath,
+      /*string linkFile = Path.Combine(AppManager.Instance.WorkingPath,
         message.LParam.ToInt32().ToString() + ".link");
 
       if (File.Exists(linkFile))
-        return File.ReadAllLines(linkFile, Encoding.UTF8);
+        return File.ReadAllLines(linkFile, Encoding.UTF8);*/
+      StringBuilder sb = new StringBuilder(message.WParam.ToInt32());
+
+      if (WinAPIHelper.GlobalGetAtomName((ushort)message.LParam, sb, message.WParam.ToInt32()) != 0)
+        return sb.ToString().Split('\n');
 
       return new string[0];
     }
