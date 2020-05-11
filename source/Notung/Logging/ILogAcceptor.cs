@@ -18,17 +18,12 @@ namespace Notung.Log
     private uint m_file_number;
     private FileInfo m_file_info;
 
-    public FileLogAcceptor(IConfigFileFinder finder)
+    public FileLogAcceptor()
     {
-      if (finder == null)
-        throw new ArgumentNullException("finder");
-
-      m_working_path = Path.Combine(Path.GetDirectoryName(finder.WorkingPath), "Logs");
+      m_working_path = Path.Combine(AppManager.Instance.WorkingPath, "Logs");
       InitializeCounter();
     }
-
-    public FileLogAcceptor() : this(new ProductVersionConfigFileFinder("log.ini")) { }
-
+    
     public void WriteLog(LoggingData[] data)
     {
       FileInfo fi = GetFileInfo();

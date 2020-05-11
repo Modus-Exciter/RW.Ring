@@ -33,18 +33,22 @@ namespace Notung
     bool Terminating { get; }
 
     /// <summary>
-    /// Путь к директории, из которой стартовало приложение
+    /// Путь к файлу, который запустил приложение
     /// </summary>
     string StartupPath { get; }
 
-    //uint StringArgsMessageCode { get; }
-
+    /// <summary>
+    /// Путь к директории, которая используется для хранения данных приложения
+    /// </summary>
     string WorkingPath { get; }
 
+    /// <summary>
+    /// Происходит в момент выхода из приложения
+    /// </summary>
     event EventHandler Exit;
 
     /// <summary>
-    /// Создание объекта блокировки приложения для предотвращения запуска нескольких копий
+    /// Этот метод следует вызвать при старте приложения, если можно запускать только одну копию
     /// </summary>
     void CreateBlockingMutex();
 
@@ -222,7 +226,6 @@ namespace Notung
         }
       }
     }
-
 
     private string GetMutexName()
     {

@@ -87,8 +87,6 @@ namespace Notung.Helm
         });
     }
 
-    #region Import
-
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern ushort GlobalAddAtom(string lpString);
 
@@ -97,7 +95,5 @@ namespace Notung.Helm
 
     [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
     private static extern ushort GlobalDeleteAtom(ushort nAtom);
-
-    #endregion
   }
 }

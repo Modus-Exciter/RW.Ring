@@ -84,10 +84,10 @@ namespace ConfiguratorGraphicalTest
     }
     public Form1()
     {
-      InitializeComponent();
-
       AppManager.Instance = new AppInstance(new MainFormAppInstanceView(this));
       AppManager.Instance.CreateBlockingMutex();
+
+      InitializeComponent();
 
       if (AppManager.Instance.CommandLineArgs.Count != 0)
         this.Text = string.Join(" ", AppManager.Instance.CommandLineArgs);
