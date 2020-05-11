@@ -97,7 +97,7 @@ namespace Notung.Helm
       if (File.Exists(linkFile))
         return File.ReadAllLines(linkFile, Encoding.UTF8);*/
 
-      using (var atom = new Atom((ushort)message.LParam, message.WParam.ToInt32()))
+      using (var atom = new Atom(message.LParam, message.WParam.ToInt32()))
       {
         if (atom.Text != null)
           return atom.Text.Split('\n');

@@ -17,21 +17,24 @@ namespace Notung.Helm
         throw new ArgumentNullException("text");
 
       m_handle = GlobalAddAtom(text);
-      m_text = text;
 
       if (m_handle != 0)
       {
         m_buffer_size = text.Length + 1;
         m_created_new = true;
+        m_text = text;
       }
       else
         GC.SuppressFinalize(this);
     }
 
-    public Atom(ushort handle, int bufferSize)
+    public Atom(IntPtr handle, int bufferSize)
     {
-      m_handle = handle;
-      m_buffer_size = (int)bufferSize;
+      if (bufferSize < 1)
+        throw new ArgumentOutOfRangeException("bufferSize");
+      
+      m_handle = (ushort)handle;
+      m_buffer_size = bufferSize;
       var m_buffer = new StringBuilder(m_buffer_size);
 
       if (GlobalGetAtomName(m_handle, m_buffer, m_buffer_size) != 0)
@@ -48,9 +51,9 @@ namespace Notung.Helm
       get { return new IntPtr(m_handle); }
     }
 
-    public uint BufferSize
+    public int BufferSize
     {
-      get { return (uint)m_buffer_size; }
+      get { return m_buffer_size; }
     }
 
     public string Text
