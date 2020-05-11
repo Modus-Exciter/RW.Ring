@@ -148,11 +148,6 @@ namespace Notung
       get { return m_main_module_file_name; }
     }
 
-    public uint StringArgsMessageCode
-    {
-      get { return 0xA146; }
-    }
-
     public string WorkingPath
     {
       get
@@ -208,7 +203,7 @@ namespace Notung
 
           if (m_args.Count > 0)
           {
-            if (m_view.SendArgsToPreviousProcess(m_args))
+            if (m_view.SupportSendingArgs && this.SendArgsToPreviousProcess())
               _log.Debug("CreateBlockingMutexImpl(): message to previous application copy sent");
             else
               _log.Debug("CreateBlockingMutexImpl(): previous application copy not responding");
@@ -226,6 +221,26 @@ namespace Notung
           mutex.ReleaseMutex();
         }
       }
+    }
+
+    private bool SendArgsToPreviousProcess()
+    {
+      using (var currentProc = Process.GetCurrentProcess())
+      {
+        var procList = Process.GetProcessesByName(currentProc.ProcessName);
+        foreach (var proc in procList)
+        {
+          if (proc.Id == currentProc.Id)
+            continue;
+
+          if (proc.StartInfo.UserName != currentProc.StartInfo.UserName)
+            continue;
+
+          return m_view.SendArgsToProcess(proc, m_args);
+        }
+      }
+
+      return false;
     }
 
     private string GetMutexName()
@@ -265,7 +280,9 @@ namespace Notung
   {
     void Restart(string startPath, IList<string> args);
 
-    bool SendArgsToPreviousProcess(IList<string> args);
+    bool SupportSendingArgs { get; }
+
+    bool SendArgsToProcess(Process previous, IList<string> args);
   }
 
   public class ProcessAppInstanceView : SynchronizeProviderStub, IAppInstanceView
@@ -292,7 +309,12 @@ namespace Notung
       return sb.ToString();
     }
 
-    public bool SendArgsToPreviousProcess(IList<string> args)
+    public bool SupportSendingArgs
+    {
+      get { return false; }
+    }
+
+    public bool SendArgsToProcess(Process previous, IList<string> args)
     {
       return false;
     }

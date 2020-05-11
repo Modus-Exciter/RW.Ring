@@ -26,59 +26,51 @@ namespace Notung.Helm
 
     public const int StringArgsMessageCode = 0xA146;
 
-    public bool SendArgsToPreviousProcess(IList<string> args)
+    public bool SupportSendingArgs
     {
-      using (var currentProc = Process.GetCurrentProcess())
+      get { return true; }
+    }
+
+    public bool SendArgsToProcess(Process previous, IList<string> args)
+    {
+      using (var atom = new Atom(string.Join("\n", args)))
       {
-        var procList = Process.GetProcessesByName(currentProc.ProcessName);
-        foreach (var proc in procList)
+        if (atom.IsValid)
         {
-          if (proc.Id == currentProc.Id)
-            continue;
-
-          if (proc.StartInfo.UserName != currentProc.StartInfo.UserName)
-            continue;
-
-          Random rd = new Random();
-
-          using (var atom = new Atom(string.Join("\n", args)))
+          if (WinAPIHelper.SendMessage(previous.MainWindowHandle, StringArgsMessageCode,
+              new IntPtr(atom.BufferSize), atom.Handle) != IntPtr.Zero)
           {
-            if (atom.IsValid)
-            {
-              if (WinAPIHelper.SendMessage(proc.MainWindowHandle, StringArgsMessageCode,
-                  new IntPtr(atom.BufferSize), atom.Handle) != IntPtr.Zero)
-              {
-                WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
-                return true;
-              }
-            }
+            WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
+            return true;
           }
-
-          /*
-          string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
-          File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
-
-          try
-          {
-            var result = WinAPIHelper.SendMessage(proc.MainWindowHandle,
-              StringArgsMessageCode, new IntPtr(sendee.Length + 1), new IntPtr(handle));
-
-            if (result != IntPtr.Zero)
-            {
-              WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
-              return true;
-            }
-          }
-          finally
-          {
-            if (File.Exists(fileName))
-              File.Delete(fileName);
-          }
-          */
         }
       }
 
       return false;
+
+      /*
+      Random rd = new Random();
+
+      string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
+      File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
+
+      try
+      {
+        var result = WinAPIHelper.SendMessage(proc.MainWindowHandle,
+          StringArgsMessageCode, new IntPtr(sendee.Length + 1), new IntPtr(handle));
+
+        if (result != IntPtr.Zero)
+        {
+          WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
+          return true;
+        }
+      }
+      finally
+      {
+        if (File.Exists(fileName))
+          File.Delete(fileName);
+      }
+      */
     }
 
     public void Restart(string startPath, IList<string> args)
