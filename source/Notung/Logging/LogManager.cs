@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Notung.Log
 {
@@ -7,8 +9,14 @@ namespace Notung.Log
   /// </summary> 
   public static class LogManager
   {
-    private static LogProcess _process;
+    private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>();
+    private static ILogProcess _process = new SyncLogProcess(_acceptors);
     private static readonly object _lock = new object();
+
+    static LogManager()
+    {
+      _acceptors.Add(new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.WorkingPath, "Logs")));
+    }
     
     public static ILog GetLogger(string source)
     {
@@ -25,39 +33,26 @@ namespace Notung.Log
 
     public static void AddAcceptor(ILogAcceptor acceptor)
     {
-      lock (_lock)
-      {
-        if (_process != null)
-          _process.AddAcceptor(acceptor);
-      }
+      if (acceptor == null)
+        throw new ArgumentNullException("acceptor");
+
+      lock (_acceptors)
+        _acceptors.Add(acceptor);
     }
 
-    public static void Start(ILogBaseSettings settings)
+    public static void Start(IMainThreadInfo settings)
     {
-      lock (_lock)
-      {
-        if (_process != null)
-          _process.Dispose();
-
-        _process = new LogProcess(settings);
-      }
-    }
-
-    internal static void StartIfNotRunning(ILogBaseSettings settings)
-    {
-      if (IsRunning)
-        return;
-      
       lock (_lock)
       {
         if (_process != null && !_process.Stopped)
-          return;
-
-        _process = new LogProcess(settings);
+            _process.Dispose();
+        
+        _process = settings.ReliableThreading ? new AsyncLogProcess(settings, _acceptors) 
+          : (ILogProcess)new SyncLogProcess(_acceptors);
       }
     }
 
-    public static void WaitUntilStop()
+    public static void Stop()
     {
       lock (_lock)
       {
@@ -154,6 +149,13 @@ namespace Notung.Log
     }
 
     #endregion
+
+    internal interface ILogProcess : IDisposable
+    {
+      bool Stopped { get; }
+      void WaitUntilStop();
+      void WriteMessage(LoggingData data);
+    }
 
     private class Logger : ILog
     {

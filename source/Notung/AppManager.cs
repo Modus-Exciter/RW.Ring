@@ -23,18 +23,13 @@ namespace Notung
 
     public static IAppInstance Instance
     {
-      get
-      {
-        LogManager.StartIfNotRunning(_app_instance);
-        return _app_instance;
-      }
+      get { return _app_instance; }
       set
       {
         if (value == null)
           throw new ArgumentNullException();
 
         _app_instance = value;
-        LogManager.Start(_app_instance);
       }
     }
   }

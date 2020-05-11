@@ -12,7 +12,7 @@ using Notung.Threading;
 
 namespace Notung
 {
-  public interface IAppInstance : ISynchronizeProvider, ILogBaseSettings
+  public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
   {
     bool IsUserAnAdmin { get; }
 
@@ -86,7 +86,9 @@ namespace Notung
       m_args = Array.AsReadOnly(args);
       m_is_admin = m_apartment_wrapper.Invoke(new Func<bool>(APIHelper.IsUserAnAdmin)); // TODO: уточнить, можно ли изменить это в ходе работы программы
 
-      if (m_view is ProcessAppInstanceView)
+      if (m_view.ReliableThreading)
+        LogManager.Start(this);
+      else
         m_main_thread = Thread.CurrentThread;
     }
     
@@ -108,6 +110,10 @@ namespace Notung
         else
           return Thread.CurrentThread;
       }
+    }
+    public bool ReliableThreading
+    {
+      get { return m_view.ReliableThreading; }
     }
 
     public bool IsUserAnAdmin 
@@ -140,20 +146,7 @@ namespace Notung
       get { return m_main_module_file_name; }
     }
 
-    public string WorkingPath
-    {
-      get
-      {
-        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-        if (!string.IsNullOrWhiteSpace(ApplicationInfo.Instance.Company))
-          basePath = Path.Combine(basePath, ApplicationInfo.Instance.Company);
-
-        return Path.Combine(basePath, ApplicationInfo.Instance.Product);
-      } 
-    }
-
-    public event EventHandler Exit
+        public event EventHandler Exit
     {
       add { AppDomain.CurrentDomain.ProcessExit += value; }
       remove { AppDomain.CurrentDomain.ProcessExit -= value; }
@@ -203,7 +196,7 @@ namespace Notung
 
           m_terminating = true;
 
-          LogManager.WaitUntilStop();
+          LogManager.Stop();
 
           Environment.Exit(2);
         }

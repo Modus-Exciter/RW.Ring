@@ -12,6 +12,11 @@ namespace Notung.Threading
     /// Объект синхронизации
     /// </summary>
     ISynchronizeInvoke Invoker { get; }
+
+    /// <summary>
+    /// Является ли объект синхронизации реальным или заглушкой
+    /// </summary>
+    bool ReliableThreading { get; }
   }
 
   /// <summary>
@@ -57,6 +62,11 @@ namespace Notung.Threading
     public ISynchronizeInvoke Invoker
     {
       get { return m_synchronizer; }
+    }
+
+    public bool ReliableThreading
+    {
+      get { return false; }
     }
 
     #endregion

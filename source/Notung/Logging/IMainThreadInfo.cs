@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace Notung.Log
 {
   /// <summary>
-  /// Базовые параметры текущего процесса, необходимые для работы логов
+  /// Информация о главном потоке, необходимая для работы логов
   /// </summary>
-  public interface ILogBaseSettings
+  public interface IMainThreadInfo
   {
     /// <summary>
     /// Ссылка на главный поток приложения, чтобы отслеживать его завершение
@@ -16,31 +16,76 @@ namespace Notung.Log
     Thread MainThread { get; }
 
     /// <summary>
-    /// Директория, в которой программа хранит свои данные
+    /// Надёжна ли информация о главном потоке
     /// </summary>
-    string WorkingPath { get; }
+    bool ReliableThreading { get; }
   }
-  
-  internal sealed class LogProcess : IDisposable
+
+  internal sealed class SyncLogProcess : LogManager.ILogProcess
+  {
+    private readonly HashSet<ILogAcceptor> m_acceptors;
+    private readonly LoggingData[] m_data = new LoggingData[1];
+    private volatile bool m_stop;
+
+    public SyncLogProcess(HashSet<ILogAcceptor> acceptors)
+    {
+      if (acceptors == null)
+        throw new ArgumentNullException("acceptors");
+
+      m_acceptors = acceptors;
+    }
+
+    public bool Stopped
+    {
+      get { return m_stop; }
+    }
+
+    public void WaitUntilStop()
+    {
+      this.Dispose();
+    }
+
+    public void WriteMessage(LoggingData data)
+    {
+      if (m_stop)
+        return;
+
+      lock (m_acceptors)
+      {
+        m_data[0] = data;
+        foreach (var acceptor in m_acceptors)
+          acceptor.WriteLog(m_data);
+      }
+    }
+
+    public void Dispose()
+    {
+      m_stop = true;
+    }
+  }
+
+  internal sealed class AsyncLogProcess : LogManager.ILogProcess
   {
     private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
     private readonly Queue<LoggingData> m_data = new Queue<LoggingData>();
-    private readonly HashSet<ILogAcceptor> m_acceptors = new HashSet<ILogAcceptor>();
-    private readonly ILogBaseSettings m_settings;
+    private readonly HashSet<ILogAcceptor> m_acceptors;
+    private readonly IMainThreadInfo m_info;
     private readonly Thread m_work_thread;
     private volatile bool m_stop;
     private volatile bool m_shutdown;
     private LoggingData[] m_current_data; // Чтобы не создавать лишних объектов
 
-    public LogProcess(ILogBaseSettings settings)
+    public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAcceptor> acceptors)
     {
-      if (settings == null)
-        throw new ArgumentNullException("settings");
+      if (info == null)
+        throw new ArgumentNullException("info");
 
-      m_settings = settings;
+      if (acceptors == null)
+        throw new ArgumentNullException("acceptors");
 
-      m_acceptors.Add(new FileLogAcceptor(System.IO.Path.Combine(m_settings.WorkingPath, "Logs")));
-      
+      m_info = info;
+      m_acceptors = acceptors;
+
       (m_work_thread = new Thread(this.Process)).Start();
       new Thread(this.Watch).Start();
     }
@@ -52,7 +97,7 @@ namespace Notung.Log
 
     private void Watch()
     {
-      while (m_settings.MainThread.IsAlive)
+      while (m_info.MainThread.IsAlive)
         Thread.Sleep(512);
       
       this.Dispose();
@@ -120,15 +165,6 @@ namespace Notung.Log
       acceptor.WriteLog(m_current_data);
     }
 
-    public void AddAcceptor(ILogAcceptor acceptor)
-    {
-      if (acceptor == null)
-        throw new ArgumentNullException("acceptor");
-
-      lock (m_acceptors)
-        m_acceptors.Add(acceptor);
-    }
-
     public void WriteMessage(LoggingData data)
     {
       if (m_shutdown)
@@ -142,22 +178,12 @@ namespace Notung.Log
 
     public void Dispose()
     {
+      if (m_stop)
+        return;
+
       m_stop = true;
       m_shutdown = true;
       m_signal.Set();
-
-      lock (m_acceptors)
-      {
-        foreach (var acceptor in m_acceptors)
-        {
-          var disposable = acceptor as IDisposable;
-
-          if (disposable != null)
-            disposable.Dispose();
-        }
-
-        m_acceptors.Clear();
-      }
     }
   }
 }

@@ -63,7 +63,7 @@
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\ILogAcceptor.cs" />
-    <Compile Include="Logging\ILogBaseSettings.cs" />
+    <Compile Include="Logging\IMainThreadInfo.cs" />
     <Compile Include="Logging\LogStreamWriter.cs" />
     <Compile Include="LogSettings.Designer.cs">
       <AutoGen>True</AutoGen>

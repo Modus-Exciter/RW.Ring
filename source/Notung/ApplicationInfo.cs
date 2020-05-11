@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Notung.ComponentModel;
+using System.IO;
 
 namespace Notung
 {
@@ -147,6 +148,20 @@ namespace Notung
         return m_file_version;
       }
     }
+
+    public string WorkingPath
+    {
+      get
+      {
+        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+        if (!string.IsNullOrWhiteSpace(this.Company))
+          basePath = Path.Combine(basePath, this.Company);
+
+        return Path.Combine(basePath, this.Product);
+      }
+    }
+
     public override string ToString()
     {
       return m_product_assembly.ToString();

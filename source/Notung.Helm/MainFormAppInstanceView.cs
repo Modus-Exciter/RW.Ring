@@ -26,6 +26,11 @@ namespace Notung.Helm
 
     public const int StringArgsMessageCode = 0xA146;
 
+    public bool ReliableThreading
+    {
+      get { return true; }
+    }
+
     public bool SupportSendingArgs
     {
       get
