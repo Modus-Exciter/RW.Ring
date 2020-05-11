@@ -4,6 +4,10 @@ using System.Text;
 
 namespace Notung.Helm
 {
+  /// <summary>
+  /// Обёртка над объектом Windows для передачи текстовых
+  /// сообщений размером до 255 байт между приложениями
+  /// </summary>
   public sealed class Atom : IDisposable
   {
     private volatile ushort m_handle;
@@ -11,23 +15,39 @@ namespace Notung.Helm
     private readonly string m_text;
     private readonly bool m_created_new;
 
+    /// <summary>
+    /// Создание объекта операционной системы на передающей стороне
+    /// </summary>
+    /// <param name="text">Текст, который требуется передать</param>
     public Atom(string text)
     {
       if (string.IsNullOrEmpty(text))
         throw new ArgumentNullException("text");
 
-      m_handle = GlobalAddAtom(text);
+      bool new_required = true;
+
+      m_handle = GlobalFindAtom(text);
+
+      if (m_handle == 0)
+        m_handle = GlobalAddAtom(text);
+      else
+        new_required = false;
 
       if (m_handle != 0)
       {
         m_buffer_size = text.Length + 1;
-        m_created_new = true;
+        m_created_new = new_required;
         m_text = text;
       }
       else
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Создание объекта операционной системы на принимающей стороне
+    /// </summary>
+    /// <param name="handle">Дескриптор объекта в операционной системе</param>
+    /// <param name="bufferSize">Длина передаваемой строки</param>
     public Atom(IntPtr handle, int bufferSize)
     {
       if (bufferSize < 1)
@@ -41,21 +61,33 @@ namespace Notung.Helm
         m_text = m_buffer.ToString();
     }
 
+    /// <summary>
+    /// Удалось ли создать объект
+    /// </summary>
     public bool IsValid
     {
       get { return m_handle != 0; }
     }
 
+    /// <summary>
+    /// Дескриптор объекта в операционной системе
+    /// </summary>
     public IntPtr Handle
     {
       get { return new IntPtr(m_handle); }
     }
 
+    /// <summary>
+    /// Длина передаваемой строки
+    /// </summary>
     public int BufferSize
     {
       get { return m_buffer_size; }
     }
 
+    /// <summary>
+    /// Текст, передаваемый от одного приложения к другому
+    /// </summary>
     public string Text
     {
       get { return m_text; }
@@ -77,18 +109,14 @@ namespace Notung.Helm
       if (m_handle == 0 || !m_created_new) // Taras Bulba
         return;
 
+      GlobalDeleteAtom(m_handle);
+
       if (disposing)
-      {
-        GlobalDeleteAtom(m_handle);
         m_handle = 0;
-      }
-      else
-        AppManager.Instance.ApartmentWrapper.Invoke(delegate()
-        { 
-          GlobalDeleteAtom(m_handle);
-          m_handle = 0;
-        });
     }
+
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+    private static extern ushort GlobalFindAtom(string lpString);
 
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern ushort GlobalAddAtom(string lpString);

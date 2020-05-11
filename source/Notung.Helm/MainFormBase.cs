@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Notung.Helm
@@ -22,10 +16,14 @@ namespace Notung.Helm
 
       if (msg.Msg == MainFormAppInstanceView.StringArgsMessageCode)
       {
-        AcceptStringArgs(MainFormAppInstanceView.GetStringArgs(msg));
+        if (AcceptStringArgs(MainFormAppInstanceView.GetStringArgs(msg)))
+          msg.Result = new IntPtr(1);
       }
     }
 
-    protected virtual void AcceptStringArgs(string[] args) { }
+    protected virtual bool AcceptStringArgs(string[] args)
+    {
+      return false;
+    }
   }
 }

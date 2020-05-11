@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.IO;
-using Notung.Configuration;
 
 namespace Notung.Log
 {
@@ -18,12 +14,23 @@ namespace Notung.Log
     private uint m_file_number;
     private FileInfo m_file_info;
 
-    public FileLogAcceptor()
+    public FileLogAcceptor(string workingPath)
     {
-      m_working_path = Path.Combine(AppManager.Instance.WorkingPath, "Logs");
-      InitializeCounter();
+      if (string.IsNullOrEmpty(workingPath))
+        throw new ArgumentNullException("workingPath");
+
+      m_working_path = workingPath;
+
+      if (!Directory.Exists(m_working_path))
+        Directory.CreateDirectory(m_working_path);
+
+      if (Directory.GetFiles(m_working_path, "*.log").Length == 0)
+      {
+        LogSettings.Default.FileCount = 0;
+        LogSettings.Default.Save();
+      }
     }
-    
+
     public void WriteLog(LoggingData[] data)
     {
       FileInfo fi = GetFileInfo();
@@ -32,18 +39,21 @@ namespace Notung.Log
       {
         LogSettings.Default.FileCount++;
         LogSettings.Default.Save();
-        
+
         fi = GetFileInfo();
       }
 
-      using (var fs = fi.AppendText())
+      using (var fs = fi.Open(FileMode.Append, FileAccess.Write, FileShare.Write))
       {
-        for (int i = 0; i < data.Length; i++)
+        using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8))
         {
-          fs.WriteLine(data[i]);
-          fs.WriteLine();
-          fs.WriteLine(LogSettings.Default.Separator);
-          fs.WriteLine();
+          for (int i = 0; i < data.Length; i++)
+          {
+            writer.WriteLine(data[i]);
+            writer.WriteLine();
+            writer.WriteLine(LogSettings.Default.Separator);
+            writer.WriteLine();
+          }
         }
       }
     }
@@ -57,18 +67,6 @@ namespace Notung.Log
       }
 
       return m_file_info;
-    }
-
-    private void InitializeCounter()
-    {
-      if (!Directory.Exists(m_working_path))
-        Directory.CreateDirectory(m_working_path);
-
-      if (Directory.GetFiles(m_working_path, "*.log").Length == 0)
-      {
-        LogSettings.Default.FileCount = 0;
-        LogSettings.Default.Save();
-      }
     }
   }
 }

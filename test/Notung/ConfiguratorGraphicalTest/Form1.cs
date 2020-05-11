@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
-using System.Linq;
+using System.Drawing;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung;
 using Notung.Configuration;
 using Notung.Helm;
-using System.Drawing;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -125,6 +124,7 @@ namespace ConfiguratorGraphicalTest
       {
         string[] fileNames = MainFormAppInstanceView.GetStringArgs(msg);
         this.Text = string.Join(" ", fileNames);
+        msg.Result = new System.IntPtr(1);
       }
     }
 

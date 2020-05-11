@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using System.Windows;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung.Configuration;
-using System.Windows;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -26,8 +26,9 @@ namespace ConfiguratorGraphicalTest
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
+
       var frm = new Form1();
-      frm.Shown += (e, args) => scr.Close(new TimeSpan(0,0, 1));
+      frm.Shown += (e, args) => scr.Close(TimeSpan.FromMilliseconds(300));
       Application.Run(frm);
     }
   }

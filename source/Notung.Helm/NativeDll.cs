@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
-using System.Threading;
-using Notung.ComponentModel;
 
 namespace Notung.Helm
 {
@@ -24,7 +19,7 @@ namespace Notung.Helm
         throw new FileNotFoundException();
 
       m_path = path;
-      m_handle = new HandleRef(this, LoadLibrary(path));
+      m_handle = new HandleRef(new object(), LoadLibrary(path));
 
       if (m_handle.Handle == IntPtr.Zero)
         GC.SuppressFinalize(this);
@@ -38,11 +33,6 @@ namespace Notung.Helm
     public IntPtr Handle
     {
       get { return m_handle.Handle; }
-    }
-
-    public void Invoke(string function)
-    {
-      this.GetFunction<Action>(function)();
     }
 
     public string[] GetExportList()

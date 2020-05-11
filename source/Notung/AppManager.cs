@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Notung.Configuration;
+using Notung.Log;
 
 namespace Notung
 {
@@ -25,13 +23,18 @@ namespace Notung
 
     public static IAppInstance Instance
     {
-      get { return _app_instance; }
+      get
+      {
+        LogManager.StartIfNotRunning(_app_instance);
+        return _app_instance;
+      }
       set
       {
         if (value == null)
           throw new ArgumentNullException();
 
         _app_instance = value;
+        LogManager.Start(_app_instance);
       }
     }
   }

@@ -7,7 +7,8 @@ namespace Notung.Log
   /// </summary> 
   public static class LogManager
   {
-    private static readonly LogProcess _process = new LogProcess();
+    private static LogProcess _process;
+    private static readonly object _lock = new object();
     
     public static ILog GetLogger(string source)
     {
@@ -24,7 +25,57 @@ namespace Notung.Log
 
     public static void AddAcceptor(ILogAcceptor acceptor)
     {
-      _process.AddAcceptor(acceptor);
+      lock (_lock)
+      {
+        if (_process != null)
+          _process.AddAcceptor(acceptor);
+      }
+    }
+
+    public static void Start(ILogBaseSettings settings)
+    {
+      lock (_lock)
+      {
+        if (_process != null)
+          _process.Dispose();
+
+        _process = new LogProcess(settings);
+      }
+    }
+
+    internal static void StartIfNotRunning(ILogBaseSettings settings)
+    {
+      if (IsRunning)
+        return;
+      
+      lock (_lock)
+      {
+        if (_process != null && !_process.Stopped)
+          return;
+
+        _process = new LogProcess(settings);
+      }
+    }
+
+    public static void WaitUntilStop()
+    {
+      lock (_lock)
+      {
+        if (_process == null)
+          return;
+
+        _process.WaitUntilStop();
+        _process = null;
+      }
+    }
+
+    public static bool IsRunning
+    {
+      get
+      {
+        var process = _process;
+        return process != null && !process.Stopped;
+      }
     }
 
     #region Extensions
@@ -120,7 +171,10 @@ namespace Notung.Log
 
       public void WriteLog(string message, InfoLevel level, object data)
       {
-        _process.WriteMessage(new LoggingData(m_source, message, level, data));
+        var process = _process;
+
+        if (process != null)
+          process.WriteMessage(new LoggingData(m_source, message, level, data));
       }
     }
   }

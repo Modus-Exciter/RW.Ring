@@ -28,7 +28,11 @@ namespace Notung.Helm
 
     public bool SupportSendingArgs
     {
-      get { return true; }
+      get
+      {
+        return m_main_form.GetType().GetMethod("WndProc", 
+          BindingFlags.Instance | BindingFlags.NonPublic).DeclaringType != typeof(Form);
+      }
     }
 
     public bool SendArgsToProcess(Process previous, IList<string> args)

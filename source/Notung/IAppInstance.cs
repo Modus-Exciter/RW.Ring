@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Notung.Threading;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using Notung.Log;
-using Notung.ComponentModel;
+using Notung.Threading;
 
 namespace Notung
 {
-  public interface IAppInstance : ISynchronizeProvider
+  public interface IAppInstance : ISynchronizeProvider, ILogBaseSettings
   {
-    Thread MainThread { get; }
-
     bool IsUserAnAdmin { get; }
 
     ReadOnlyCollection<string> CommandLineArgs { get; }
@@ -37,11 +34,6 @@ namespace Notung
     /// Путь к файлу, который запустил приложение
     /// </summary>
     string StartupPath { get; }
-
-    /// <summary>
-    /// Путь к директории, которая используется для хранения данных приложения
-    /// </summary>
-    string WorkingPath { get; }
 
     /// <summary>
     /// Происходит в момент выхода из приложения
@@ -210,6 +202,8 @@ namespace Notung
           }
 
           m_terminating = true;
+
+          LogManager.WaitUntilStop();
 
           Environment.Exit(2);
         }
