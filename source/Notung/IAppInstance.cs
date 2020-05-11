@@ -9,6 +9,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Text;
 using Notung.Log;
+using Notung.ComponentModel;
 
 namespace Notung
 {
@@ -111,7 +112,7 @@ namespace Notung
 
         if (m_view.Invoker.InvokeRequired)
           return m_main_thread = (Thread)m_view.Invoker.Invoke(
-            new Func<Thread>(APIHelper.GetCurrentThread), new object[0]);
+            new Func<Thread>(APIHelper.GetCurrentThread), ArrayExtensions.Empty<object>());
         else
           return Thread.CurrentThread;
       }

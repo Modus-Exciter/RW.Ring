@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using System.Threading;
+using Notung.ComponentModel;
 
 namespace Notung.Threading
 {
@@ -90,7 +91,6 @@ namespace Notung.Threading
   public sealed class SynchronizeOperationWrapper : IOperationWrapper
   {
     private readonly ISynchronizeInvoke m_invoker;
-    private static readonly object[] _empty_parameters = new object[0];
 
     public SynchronizeOperationWrapper(ISynchronizeInvoke invoker, bool callProcedureAsync = false)
     {
@@ -114,7 +114,7 @@ namespace Notung.Threading
         return default(TType);
 
       if (m_invoker.InvokeRequired)
-        return (TType)m_invoker.Invoke(action, _empty_parameters);
+        return (TType)m_invoker.Invoke(action, ArrayExtensions.Empty<object>());
       else
         return action();
     }
@@ -127,9 +127,9 @@ namespace Notung.Threading
       if (m_invoker.InvokeRequired)
       {
         if (this.CallProceduresAsync)
-          m_invoker.BeginInvoke(action, _empty_parameters);
+          m_invoker.BeginInvoke(action, ArrayExtensions.Empty<object>());
         else
-          m_invoker.Invoke(action, _empty_parameters);
+          m_invoker.Invoke(action, ArrayExtensions.Empty<object>());
       }
       else
         action();

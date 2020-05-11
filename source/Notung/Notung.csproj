@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
+    <Compile Include="ArrayExtensions.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />

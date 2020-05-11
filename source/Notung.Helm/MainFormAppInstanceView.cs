@@ -102,7 +102,7 @@ namespace Notung.Helm
         if (atom.Text != null)
           return atom.Text.Split('\n');
         else 
-          return new string[0];
+          return ArrayExtensions.Empty<string>();
       }
     }
   }

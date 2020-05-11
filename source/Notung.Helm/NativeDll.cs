@@ -1,8 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Diagnostics;
+using System.Threading;
+using Notung.ComponentModel;
 
 namespace Notung.Helm
 {
@@ -10,6 +15,8 @@ namespace Notung.Helm
   {
     private readonly string m_path;
     private HandleRef m_handle;
+
+    private static List<string> _strings = null;
 
     public NativeDll(string path)
     {
@@ -55,16 +62,20 @@ namespace Notung.Helm
         if (!SymLoadModule(procId, 0, m_path, null, m_handle.Handle, 0))
           return null;
 
-        
         try
         {
+          _strings = new List<string>();
           IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(LoadSymbolImpl));
-          var builder = new StringBuilder(1<<12);
 
-          if (!SymEnumerateSymbols(procId, m_handle.Handle, collector, builder))
-            return null;
+          if (!SymEnumerateSymbols(procId, m_handle.Handle, collector, IntPtr.Zero))
+            _strings = null;
 
-          return builder.ToString().Split(' ');
+          var strings = _strings;
+
+          if (strings != null)
+            return strings.ToArray();
+          else
+            return ArrayExtensions.Empty<string>();
         }
         finally
         {
@@ -90,12 +101,10 @@ namespace Notung.Helm
       return (TDelegate)(object)Marshal.GetDelegateForFunctionPointer(funcPtr, typeof(TDelegate));
     }
 
-    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, StringBuilder context)
+    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
     {
-      if (context.Length == 0)
-        context.Append(name);
-      else
-        context.AppendFormat(" {0}", name);
+      if (_strings != null)
+        _strings.Add(name);
 
       return true;
     }
@@ -135,10 +144,10 @@ namespace Notung.Helm
       SYMOPT_DEBUG = 0x80000000
     }
 
-    private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder context);
+    private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
 
     [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
-    private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder context);
+    private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, IntPtr context);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr LoadLibrary(string libname);
