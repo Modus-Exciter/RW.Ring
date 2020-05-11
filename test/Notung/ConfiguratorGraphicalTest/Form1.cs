@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -124,6 +125,24 @@ namespace ConfiguratorGraphicalTest
       {
         string[] fileNames = MainFormAppInstanceView.GetStringArgs(msg);
         this.Text = string.Join(" ", fileNames);
+      }
+    }
+
+    private void buttonDLL_Click(object sender, System.EventArgs e)
+    {
+      using (var dlg = new OpenFileDialog())
+      {
+        dlg.Filter = "Dll files|*.dll";
+
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          using (var dll = new NativeDll(dlg.FileName))
+          {
+            this.Text = string.Join(", ", dll.GetExportList());
+          }            
+          //this.Text = string.Join(", ", WinAPIHelper.GetDllExportList(dlg.FileName).OfType<string>());
+
+        }
       }
     }
   }

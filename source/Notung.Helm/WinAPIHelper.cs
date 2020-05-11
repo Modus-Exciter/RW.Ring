@@ -66,7 +66,7 @@ namespace Notung.Helm
 
     #region Load library helper
 
-    private class SymbolLoader
+    /*private class SymbolLoader
     {
       private readonly StringCollection m_strings = new StringCollection();
 
@@ -75,12 +75,17 @@ namespace Notung.Helm
         get { return m_strings; }
       }
 
-      public bool LoadSymbol(string name, IntPtr symbolAddress, uint size, IntPtr context)
-      {
-        m_strings.Add(name);
-        return true;
-      }
+
+    }*/
+    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
+    {
+      if (_strings != null)
+        _strings.Add(name);
+
+      return true;
     }
+
+    private static StringCollection _strings = null;
 
     private enum SymSetOptionsType : uint
     {
@@ -98,7 +103,7 @@ namespace Notung.Helm
     private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
 
     [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
-    private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, object context);
+    private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, IntPtr context);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr LoadLibrary(string libname);
@@ -131,7 +136,7 @@ namespace Notung.Helm
     /// <returns>Список имён функций</returns>
     public static StringCollection GetDllExportList(string fileName)
     {
-      var loader = new SymbolLoader();
+     // var loader = new SymbolLoader();
 
       IntPtr procId = new IntPtr(Process.GetCurrentProcess().Id);
 
@@ -154,10 +159,15 @@ namespace Notung.Helm
 
           try
           {
-            IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(loader.LoadSymbol));
+            _strings = new StringCollection();
+            IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(LoadSymbolImpl));
 
-            if (!SymEnumerateSymbols(procId, lib, collector, null))
-              return null;
+            if (!SymEnumerateSymbols(procId, lib, collector, IntPtr.Zero))
+            {
+              _strings = null;
+            }
+            
+            return _strings;
           }
           finally
           {
@@ -173,8 +183,6 @@ namespace Notung.Helm
       {
         SymCleanup(procId);
       }
-
-      return loader.Strings;
     }
 
     /// <summary>
@@ -288,5 +296,7 @@ namespace Notung.Helm
     public static extern bool SetForegroundWindow(IntPtr hWnd);
 
     #endregion
+
+    private static LoadSymbolDelegate LoadSymbol { get; set; }
   }
 }
