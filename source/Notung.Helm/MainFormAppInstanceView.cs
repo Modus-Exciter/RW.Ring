@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using Notung.Helm.Properties;
 
@@ -44,11 +40,23 @@ namespace Notung.Helm
             continue;
 
           Random rd = new Random();
-          string sendee = string.Join("\n", args);
-          ushort handle = WinAPIHelper.GlobalAddAtom(sendee);
 
-          //string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
-          //File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
+          using (var atom = new Atom(string.Join("\n", args)))
+          {
+            if (atom.IsValid)
+            {
+              if (WinAPIHelper.SendMessage(proc.MainWindowHandle, StringArgsMessageCode,
+                  new IntPtr(atom.BufferSize), atom.Handle) != IntPtr.Zero)
+              {
+                WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
+                return true;
+              }
+            }
+          }
+
+          /*
+          string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
+          File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
 
           try
           {
@@ -63,10 +71,10 @@ namespace Notung.Helm
           }
           finally
           {
-            //if (File.Exists(fileName))
-            //  File.Delete(fileName);
-            WinAPIHelper.GlobalDeleteAtom(handle);
+            if (File.Exists(fileName))
+              File.Delete(fileName);
           }
+          */
         }
       }
 
@@ -88,12 +96,14 @@ namespace Notung.Helm
 
       if (File.Exists(linkFile))
         return File.ReadAllLines(linkFile, Encoding.UTF8);*/
-      StringBuilder sb = new StringBuilder(message.WParam.ToInt32());
 
-      if (WinAPIHelper.GlobalGetAtomName((ushort)message.LParam, sb, message.WParam.ToInt32()) != 0)
-        return sb.ToString().Split('\n');
-
-      return new string[0];
+      using (var atom = new Atom((ushort)message.LParam, message.WParam.ToInt32()))
+      {
+        if (atom.Text != null)
+          return atom.Text.Split('\n');
+        else 
+          return new string[0];
+      }
     }
   }
 }

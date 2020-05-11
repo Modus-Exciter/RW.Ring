@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Atom.cs" />
     <Compile Include="MainFormAppInstanceView.cs" />
     <Compile Include="MainFormBase.cs">
       <SubType>Form</SubType>

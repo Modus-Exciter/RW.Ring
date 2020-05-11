@@ -258,7 +258,9 @@ namespace Notung.Helm
 
     #endregion
 
-    #region User security helper
+    #region Message helper
+
+    public const uint WM_COPYDATA = 0x004A;
 
     /// <summary>
     /// Вызов функции Win API для асинхронного посылания собщения окну
@@ -284,15 +286,6 @@ namespace Notung.Helm
 
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    internal static extern ushort GlobalAddAtom(string lpString);
-
-    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-    internal static extern uint GlobalGetAtomName(ushort nAtom, StringBuilder lpBuffer, int nSize);
-
-    [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-    internal static extern ushort GlobalDeleteAtom(ushort nAtom);
 
     #endregion
   }
