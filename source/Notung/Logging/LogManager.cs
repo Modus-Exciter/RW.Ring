@@ -7,7 +7,7 @@ namespace Notung.Log
   /// <summary>
   /// Пока не решил, использовать log4net или свои асинхронные логи, частично дублируем его API
   /// </summary> 
-  public static class LogManager
+  public static partial class LogManager
   {
     private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>
     {

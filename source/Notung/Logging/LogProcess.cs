@@ -5,168 +5,176 @@ using System.Threading.Tasks;
 
 namespace Notung.Log
 {
-  internal abstract class LogProcess
+  partial class LogManager
   {
-    protected readonly HashSet<ILogAcceptor> m_acceptors;
-    protected volatile bool m_stop;
-
-    public LogProcess(HashSet<ILogAcceptor> acceptors)
+    private abstract class LogProcess
     {
-      if (acceptors == null)
-        throw new ArgumentNullException("acceptors");
+      protected readonly HashSet<ILogAcceptor> m_acceptors;
+      protected volatile bool m_stop;
 
-      m_acceptors = acceptors;
-    }
-
-    public bool Stopped
-    {
-      get { return m_stop; }
-    }
-
-    public abstract void WaitUntilStop();
-    public abstract void WriteMessage(LoggingData data);
-    public abstract void Stop();
-  }
-  
-  internal sealed class SyncLogProcess : LogProcess
-  {
-    private readonly LoggingData[] m_data = new LoggingData[1];
-
-    public SyncLogProcess(HashSet<ILogAcceptor> acceptors) : base(acceptors) { }
-
-    public override void WaitUntilStop()
-    {
-      this.Stop();
-    }
-
-    public override void WriteMessage(LoggingData data)
-    {
-      if (m_stop)
-        return;
-
-      lock (m_acceptors)
+      public LogProcess(HashSet<ILogAcceptor> acceptors)
       {
-        m_data[0] = data;
-        foreach (var acceptor in m_acceptors)
-          acceptor.WriteLog(m_data);
+#if DEBUG
+        if (acceptors == null)
+          throw new ArgumentNullException("acceptors");
+#endif
+        m_acceptors = acceptors;
+      }
+
+      public bool Stopped
+      {
+        get { return m_stop; }
+      }
+
+      public abstract void WaitUntilStop();
+
+      public abstract void WriteMessage(LoggingData data);
+
+      public abstract void Stop();
+    }
+
+    private sealed class SyncLogProcess : LogProcess
+    {
+      private readonly LoggingData[] m_data = new LoggingData[1];
+
+      public SyncLogProcess(HashSet<ILogAcceptor> acceptors) : base(acceptors) { }
+
+      public override void WaitUntilStop()
+      {
+        this.Stop();
+      }
+
+      public override void WriteMessage(LoggingData data)
+      {
+        if (m_stop)
+          return;
+
+        lock (m_acceptors)
+        {
+          m_data[0] = data;
+          foreach (var acceptor in m_acceptors)
+            acceptor.WriteLog(m_data);
+        }
+      }
+
+      public override void Stop()
+      {
+        m_stop = true;
       }
     }
 
-    public override void Stop()
+    private sealed class AsyncLogProcess : LogProcess
     {
-      m_stop = true;
-    }
-  }
+      private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
+      private readonly Queue<LoggingData> m_data = new Queue<LoggingData>();
+      private readonly IMainThreadInfo m_info;
+      private readonly Thread m_work_thread;
+      private volatile bool m_shutdown;
+      private LoggingData[] m_current_data; // Чтобы не создавать лишних объектов
 
-  internal sealed class AsyncLogProcess : LogProcess
-  {
-    private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
-    private readonly Queue<LoggingData> m_data = new Queue<LoggingData>();
-    private readonly IMainThreadInfo m_info;
-    private readonly Thread m_work_thread;
-    private volatile bool m_shutdown;
-    private LoggingData[] m_current_data; // Чтобы не создавать лишних объектов
+      public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAcceptor> acceptors)
+        : base(acceptors)
+      {
+#if DEBUG
+        if (info == null)
+          throw new ArgumentNullException("info");
+#endif
+        m_info = info;
 
-    public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAcceptor> acceptors) : base(acceptors)
-    {
-      if (info == null)
-        throw new ArgumentNullException("info");
+        (m_work_thread = new Thread(this.Process)).Start();
+        new Thread(this.Watch).Start();
+      }
 
-      m_info = info;
+      private void Watch()
+      {
+        while (m_info.MainThread.IsAlive)
+          Thread.Sleep(512);
 
-      (m_work_thread = new Thread(this.Process)).Start();
-      new Thread(this.Watch).Start();
-    }
+        this.Stop();
+      }
 
-    private void Watch()
-    {
-      while (m_info.MainThread.IsAlive)
-        Thread.Sleep(512);
+      public override void WaitUntilStop()
+      {
+        if (m_stop)
+          return;
 
-      this.Stop();
-    }
+        m_shutdown = true;
 
-    public override void WaitUntilStop()
-    {
-      if (m_stop)
-        return;
+        while (m_data.Count > 0)
+          m_signal.Set();
 
-      m_shutdown = true;
+        this.Stop();
 
-      while (m_data.Count > 0)
+        m_work_thread.Join();
+      }
+
+      private void Process()
+      {
+        using (m_signal)
+        {
+          while (m_signal.WaitOne(Timeout.Infinite))
+          {
+            if (m_stop)
+              return;
+
+            this.ProcessPendingEvents();
+          }
+        }
+      }
+
+      private void ProcessPendingEvents()
+      {
+        int size = 0;
+
+        lock (m_data)
+        {
+          size = m_data.Count;
+          if (size > 0)
+          {
+            if (m_current_data == null || m_current_data.Length != size)
+              m_current_data = new LoggingData[m_data.Count];
+
+            int i = 0;
+
+            while (m_data.Count > 0)
+              m_current_data[i++] = m_data.Dequeue();
+          }
+          else
+            m_current_data = null;
+        }
+
+        lock (m_acceptors)
+        {
+          if (m_current_data != null)
+            Parallel.ForEach(m_acceptors, this.Accept);
+        }
+      }
+
+      private void Accept(ILogAcceptor acceptor)
+      {
+        acceptor.WriteLog(m_current_data);
+      }
+
+      public override void WriteMessage(LoggingData data)
+      {
+        if (m_shutdown)
+          return;
+
+        lock (m_data)
+          m_data.Enqueue(data);
+
         m_signal.Set();
-
-      this.Stop();
-
-      m_work_thread.Join();
-    }
-
-    private void Process()
-    {
-      using (m_signal)
-      {
-        while (m_signal.WaitOne(Timeout.Infinite))
-        {
-          if (m_stop)
-            return;
-
-          this.ProcessPendingEvents();
-        }
-      }
-    }
-
-    private void ProcessPendingEvents()
-    {
-      int size = 0;
-
-      lock (m_data)
-      {
-        size = m_data.Count;
-        if (size > 0)
-        {
-          if (m_current_data == null || m_current_data.Length != size)
-            m_current_data = new LoggingData[m_data.Count];
-
-          int i = 0;
-
-          while (m_data.Count > 0)
-            m_current_data[i++] = m_data.Dequeue();
-        }
-        else
-          m_current_data = null;
       }
 
-      lock (m_acceptors)
+      public override void Stop()
       {
-        if (m_current_data != null)
-          Parallel.ForEach(m_acceptors, this.Accept);
+        if (m_stop)
+          return;
+
+        m_stop = true;
+        m_shutdown = true;
+        m_signal.Set();
       }
-    }
-
-    private void Accept(ILogAcceptor acceptor)
-    {
-      acceptor.WriteLog(m_current_data);
-    }
-
-    public override void WriteMessage(LoggingData data)
-    {
-      if (m_shutdown)
-        return;
-
-      lock (m_data)
-        m_data.Enqueue(data);
-
-      m_signal.Set();
-    }
-
-    public override void Stop()
-    {
-      if (m_stop)
-        return;
-
-      m_stop = true;
-      m_shutdown = true;
-      m_signal.Set();
     }
   }
 }
