@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DLL_FUNCTIONS_ENUM_FAIL" xml:space="preserve">
+    <value>Library failed to load. Unable to enumerate functions</value>
+  </data>
   <data name="NO_LINK_MESSAGE_CODE" xml:space="preserve">
     <value>Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode.</value>
   </data>

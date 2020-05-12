@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Notung.Helm.Properties;
 
 namespace Notung.Helm
 {
@@ -81,7 +82,7 @@ namespace Notung.Helm
     public TDelegate GetFunction<TDelegate>(string function) where TDelegate : class
     {
       if (m_handle.Handle == IntPtr.Zero)
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(Resources.DLL_FUNCTIONS_ENUM_FAIL);
 
       IntPtr funcPtr = GetProcAddress(m_handle, function);
 

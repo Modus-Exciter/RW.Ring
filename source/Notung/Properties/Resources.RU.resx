@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
+    <value>Ключ '{0}' зарезервирован</value>
+  </data>
   <data name="DEBUG" xml:space="preserve">
     <value>Отладочное сообщение</value>
   </data>
   <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
     <value>Другая конфигурационная секция {0} имеет то же имя, что и {1}</value>
+  </data>
+  <data name="EMPTY_DEFAULT_LOGGER" xml:space="preserve">
+    <value>Логгер по умолчанию не может быть пустым или состоять только из пробельных символов</value>
   </data>
   <data name="ERROR" xml:space="preserve">
     <value>Ошибка</value>
@@ -149,6 +155,9 @@
   </data>
   <data name="STREAM_FLUSH" xml:space="preserve">
     <value>Сообщение потока</value>
+  </data>
+  <data name="THREAD_CONTEXT_MISMATCH" xml:space="preserve">
+    <value>Контекст потока может быть изменён только из того потока, где он был создан</value>
   </data>
   <data name="WARNING" xml:space="preserve">
     <value>Предупреждение</value>

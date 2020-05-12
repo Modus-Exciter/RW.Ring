@@ -21,7 +21,7 @@ namespace Notung.Log
     public static ILog GetLogger(string source)
     {
       if (string.IsNullOrEmpty(source))
-        throw new ArgumentNullException("name");
+        source = LogSettings.Default.DefaultLogger;
 
       lock (_source_loggers)
       {

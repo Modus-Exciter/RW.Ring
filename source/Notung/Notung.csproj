@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
@@ -43,7 +44,10 @@
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
+    <Compile Include="Logging\LogStringBuilder.cs" />
+    <Compile Include="LogSettings.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />

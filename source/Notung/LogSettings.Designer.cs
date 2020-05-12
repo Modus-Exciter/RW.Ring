@@ -25,37 +25,10 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}")]
-        public string TemplateSimple {
+        [global::System.Configuration.DefaultSettingValueAttribute("[{Date:dd.MM.yyyy HH:mm:ss}] [{Level}] {Source}: {Message}")]
+        public string MessageTemplate {
             get {
-                return ((string)(this["TemplateSimple"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}")]
-        public string TemplateSource {
-            get {
-                return ((string)(this["TemplateSource"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}\r\n{3}")]
-        public string TemplateData {
-            get {
-                return ((string)(this["TemplateData"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{0:dd.MM.yyyy HH:mm:ss}] [{1}] {2}: {3}\r\n{4}")]
-        public string TemplateSourceData {
-            get {
-                return ((string)(this["TemplateSourceData"]));
+                return ((string)(this["MessageTemplate"]));
             }
         }
         
@@ -74,6 +47,15 @@ namespace Notung {
         public uint LogFileSize {
             get {
                 return ((uint)(this["LogFileSize"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<<- - - - - - ->>")]
+        public string DefaultLogger {
+            get {
+                return ((string)(this["DefaultLogger"]));
             }
         }
     }

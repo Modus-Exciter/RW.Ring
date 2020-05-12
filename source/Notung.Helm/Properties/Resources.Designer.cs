@@ -61,6 +61,15 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Library failed to load. Unable to enumerate functions.
+        /// </summary>
+        internal static string DLL_FUNCTIONS_ENUM_FAIL {
+            get {
+                return ResourceManager.GetString("DLL_FUNCTIONS_ENUM_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode..
         /// </summary>
         internal static string NO_LINK_MESSAGE_CODE {

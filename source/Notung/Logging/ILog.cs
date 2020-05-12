@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 
 namespace Notung.Log
 {
@@ -26,6 +28,8 @@ namespace Notung.Log
       this.Level = level;
       this.Data = data;
       this.LoggingDate = DateTime.Now;
+
+      m_thread_context = LoggingContext.Thread;
     }
     
     public readonly string Message;
@@ -38,22 +42,40 @@ namespace Notung.Log
 
     public readonly string Source;
 
+    private readonly IThreadLoggingContext m_thread_context;
+
+    public object this[string key]
+    {
+      get
+      {
+        if (m_thread_context != null)
+          return m_thread_context[key] ?? LoggingContext.Global[key];
+        else
+          return LoggingContext.Global[key];
+      }
+    }
+
+    public bool Contains(string key)
+    {
+      if (string.IsNullOrWhiteSpace(key))
+        return false;
+
+      if (m_thread_context != null)
+        return m_thread_context.Contains(key) || LoggingContext.Global.Contains(key);
+      else
+        return LoggingContext.Global.Contains(key);
+    }
+
     public override string ToString()
     {
-      if (this.Data == null)
+      var builder = new StringBuilder(256);
+
+      using (var writer = new StringWriter(builder))
       {
-        if (string.IsNullOrWhiteSpace(this.Source))
-          return string.Format(LogSettings.Default.TemplateSimple, this.LoggingDate, this.Level, this.Message);
-        else
-          return string.Format(LogSettings.Default.TemplateSource, this.LoggingDate, this.Level, this.Source, this.Message);
+        LogSettings.Default.BuildString(writer, this);
       }
-      else
-      {
-        if (string.IsNullOrWhiteSpace(this.Source))
-          return string.Format(LogSettings.Default.TemplateData, this.LoggingDate, this.Level, this.Message, this.Data);
-        else
-          return string.Format(LogSettings.Default.TemplateSourceData, this.LoggingDate, this.Level, this.Source, this.Message, this.Data);
-      }
+
+      return builder.ToString();
     }
   }
 }

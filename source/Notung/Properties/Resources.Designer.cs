@@ -61,6 +61,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Key &apos;{0}&apos; is reserved.
+        /// </summary>
+        internal static string CONTEXT_KEY_RESERVED {
+            get {
+                return ResourceManager.GetString("CONTEXT_KEY_RESERVED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug message.
         /// </summary>
         internal static string DEBUG {
@@ -75,6 +84,15 @@ namespace Notung.Properties {
         internal static string DUPLICATE_SECTION_NAME {
             get {
                 return ResourceManager.GetString("DUPLICATE_SECTION_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default logger cannot be empty or whitespace.
+        /// </summary>
+        internal static string EMPTY_DEFAULT_LOGGER {
+            get {
+                return ResourceManager.GetString("EMPTY_DEFAULT_LOGGER", resourceCulture);
             }
         }
         
@@ -156,6 +174,15 @@ namespace Notung.Properties {
         internal static string STREAM_FLUSH {
             get {
                 return ResourceManager.GetString("STREAM_FLUSH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thread context can be edited only in thread where it was created.
+        /// </summary>
+        internal static string THREAD_CONTEXT_MISMATCH {
+            get {
+                return ResourceManager.GetString("THREAD_CONTEXT_MISMATCH", resourceCulture);
             }
         }
         
