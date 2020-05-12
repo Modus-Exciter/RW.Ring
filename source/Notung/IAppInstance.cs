@@ -62,7 +62,7 @@ namespace Notung
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
     private readonly string m_main_module_file_name = GetMainModuleFileName();
-    
+
     private static readonly ILog _log = LogManager.GetLogger(typeof(AppInstance));
 
     public AppInstance(IAppInstanceView view)
@@ -93,7 +93,7 @@ namespace Notung
     }
 
     internal AppInstance() : this(new ProcessAppInstanceView()) { }
-    
+
     public System.ComponentModel.ISynchronizeInvoke Invoker
     {
       get { return m_view.Invoker; }
@@ -119,7 +119,7 @@ namespace Notung
       get { return m_view.ReliableThreading; }
     }
 
-    public bool IsUserAnAdmin 
+    public bool IsUserAnAdmin
     {
       get { return m_is_admin; }
     }
@@ -149,7 +149,7 @@ namespace Notung
       get { return m_main_module_file_name; }
     }
 
-        public event EventHandler Exit
+    public event EventHandler Exit
     {
       add { AppDomain.CurrentDomain.ProcessExit += value; }
       remove { AppDomain.CurrentDomain.ProcessExit -= value; }
@@ -321,7 +321,7 @@ namespace Notung
 
     public void Restart(string startPath, IList<string> args)
     {
-      if (args == null) 
+      if (args == null)
         throw new ArgumentNullException("args");
 
       using (Process.Start(startPath, CreatePathArgs(args))) { }
