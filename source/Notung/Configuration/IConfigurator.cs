@@ -33,7 +33,7 @@ namespace Notung.Configuration
   {
     private readonly Dictionary<Type, ConfigurationSection> m_sections = new Dictionary<Type, ConfigurationSection>();
     private readonly Dictionary<string, Type> m_section_names = new Dictionary<string, Type>();
-    private readonly LockSource m_lock = new LockSource(false);
+    private readonly SharedLock m_lock = new SharedLock(false);
     private readonly ConfigurationFile m_file;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(DataContractConfigurator));
@@ -46,7 +46,7 @@ namespace Notung.Configuration
       m_file = file;
     }
 
-    public DataContractConfigurator() : this(new ConfigurationFile()) { }
+    internal DataContractConfigurator() : this(new ConfigurationFile()) { }
 
     public DataContractConfigurator(IConfigFileFinder finder) : this(new ConfigurationFile(finder)) { }
 
@@ -70,7 +70,7 @@ namespace Notung.Configuration
 
         if (!m_sections.TryGetValue(sectionType, out section))
         {
-          section = this.PullSection(sectionType);
+          section = this.ReadSection(sectionType);
           m_sections.Add(sectionType, section);
         }
 
@@ -99,7 +99,7 @@ namespace Notung.Configuration
       {
         if (!m_sections.TryGetValue(typeof(TSection), out ret))
         {
-          ret = PullSection(typeof(TSection));
+          ret = ReadSection(typeof(TSection));
 
           InfoBuffer buffer = new InfoBuffer();
 
@@ -122,7 +122,7 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         m_sections[typeof(TSection)] = section;
-        PushSection(section);
+        WriteSection(section);
       }
     }
 
@@ -149,18 +149,18 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         foreach (var kv in m_sections)
-          PushSection(kv.Value);
+          WriteSection(kv.Value);
 
         m_file.Save();
       }
     }
 
-    private void PushSection(ConfigurationSection section)
+    private void WriteSection(ConfigurationSection section)
     {
       string section_name;
       bool data_contract;
 
-      _log.DebugFormat("PushSection(): {0}", section.GetType().FullName);
+      _log.DebugFormat("WriteSection(): {0}", section.GetType().FullName);
 
       section_name = this.GetSectionName(section.GetType(), out data_contract);
 
@@ -211,14 +211,14 @@ namespace Notung.Configuration
       }
     }
 
-    private ConfigurationSection PullSection(Type sectionType)
+    private ConfigurationSection ReadSection(Type sectionType)
     {
       ConfigurationSection ret = null;
 
       string section_name;
       bool data_contract;
 
-      _log.DebugFormat("CreateSection(): {0}", sectionType.FullName);
+      _log.DebugFormat("ReadSection(): {0}", sectionType.FullName);
 
       section_name = this.GetSectionName(sectionType, out data_contract);
 
@@ -239,8 +239,9 @@ namespace Notung.Configuration
               }
               catch (Exception ex)
               {
-                _log.Error("CreateSection(): exception", ex);
+                _log.Error("ReadSection(): exception", ex);
                 ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
+                WriteSection(ret);
               }
             }
             else
@@ -252,8 +253,9 @@ namespace Notung.Configuration
               }
               catch (Exception ex)
               {
-                _log.Error("CreateSection(): exception", ex);
+                _log.Error("ReadSection(): exception", ex);
                 ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
+                WriteSection(ret);
               }
             }
           }
@@ -262,7 +264,7 @@ namespace Notung.Configuration
       else
       {
         ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-        PushSection(ret);
+        WriteSection(ret);
       }
 
       return ret;

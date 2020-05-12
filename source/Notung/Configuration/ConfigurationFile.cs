@@ -11,7 +11,7 @@ namespace Notung.Configuration
   public sealed class ConfigurationFile
   {
     private readonly IConfigFileFinder m_file_finder;
-    private readonly LockSource m_lock = new LockSource();
+    private readonly SharedLock m_lock = new SharedLock();
     private Dictionary<string, string> m_file_cache;
 
     private readonly ILog _log = LogManager.GetLogger(typeof(ConfigurationFile));
@@ -80,20 +80,10 @@ namespace Notung.Configuration
           {
             writer.WriteStartDocument();
             writer.WriteStartElement("configuration");
+            writer.WriteWhitespace(Environment.NewLine);
 
             foreach (var section in this.Sections.Values)
-            {
-              using (var sr = new StringReader(section))
-              {
-                using (var xtr = new XmlTextReader(sr))
-                {
-                  if (section.StartsWith("<?"))
-                    xtr.Read();
-
-                  writer.WriteNode(xtr, true);
-                }
-              }
-            }
+              writer.WriteRaw(section);
 
             writer.WriteEndElement();
           }
@@ -131,26 +121,33 @@ namespace Notung.Configuration
       if (string.IsNullOrEmpty(file_name) || !File.Exists(file_name))
         return;
 
-      using (FileStream fs = new FileStream(file_name, FileMode.Open, FileAccess.Read))
+      try
       {
-        using (XmlTextReader reader = new XmlTextReader(fs))
+        using (FileStream fs = new FileStream(file_name, FileMode.Open, FileAccess.Read))
         {
-          while (reader.Read())
+          using (XmlTextReader reader = new XmlTextReader(fs))
           {
-            if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
-              break;
+            while (reader.Read())
+            {
+              if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
+                break;
+            }
+
+            while (!reader.EOF)
+            {
+              if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
+                m_file_cache.Add(reader.Name, reader.ReadOuterXml());
+              else
+                reader.Read();
+            }
           }
 
-          while (!reader.EOF)
-          {
-            if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
-              m_file_cache.Add(reader.Name, reader.ReadOuterXml());
-            else
-              reader.Read();
-          }
+          _log.DebugFormat("LoadFile(): {0}", file_name);
         }
-
-        _log.DebugFormat("LoadFile(): {0}", file_name);
+      }
+      catch (Exception ex)
+      {
+        _log.Error("LoadFile(): exception", ex);
       }
     }
   }

@@ -91,6 +91,8 @@ namespace Notung
       else
         m_main_thread = Thread.CurrentThread;
     }
+
+    internal AppInstance() : this(new ProcessAppInstanceView()) { }
     
     public System.ComponentModel.ISynchronizeInvoke Invoker
     {
@@ -269,6 +271,8 @@ namespace Notung
 
   public interface IAppInstanceView : ISynchronizeProvider
   {
+    bool ReliableThreading { get; }
+
     void Restart(string startPath, IList<string> args);
 
     bool SupportSendingArgs { get; }
@@ -300,6 +304,11 @@ namespace Notung
       return sb.ToString();
     }
 
+    public bool ReliableThreading
+    {
+      get { return false; }
+    }
+
     public bool SupportSendingArgs
     {
       get { return false; }
@@ -312,7 +321,8 @@ namespace Notung
 
     public void Restart(string startPath, IList<string> args)
     {
-      if (args == null) throw new ArgumentNullException("args");
+      if (args == null) 
+        throw new ArgumentNullException("args");
 
       using (Process.Start(startPath, CreatePathArgs(args))) { }
 

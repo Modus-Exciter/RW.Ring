@@ -43,6 +43,7 @@
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="SerializeCondition.cs" />
     <Compile Include="ComponentModel\SystemExtensions.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
-    <Compile Include="Threading\LockSource.cs" />
+    <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
   </ItemGroup>
   <ItemGroup>

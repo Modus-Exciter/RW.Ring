@@ -11,24 +11,48 @@ namespace Notung.Log
   internal sealed class FileLogAcceptor : ILogAcceptor
   {
     private readonly string m_working_path;
+    private uint m_file_count;
     private uint m_file_number;
     private FileInfo m_file_info;
+    private const string COUNTER = "counter.dat";
 
-    public FileLogAcceptor(string workingPath)
+    public FileLogAcceptor()
     {
-      if (string.IsNullOrEmpty(workingPath))
-        throw new ArgumentNullException("workingPath");
-
-      m_working_path = workingPath;
+      m_working_path = Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs");
 
       if (!Directory.Exists(m_working_path))
         Directory.CreateDirectory(m_working_path);
 
-      if (Directory.GetFiles(m_working_path, "*.log").Length == 0)
+      InitializeCounter();
+    }
+
+    private void InitializeCounter()
+    {
+      if (!File.Exists(Path.Combine(m_working_path, COUNTER)))
       {
-        LogSettings.Default.FileCount = 0;
-        LogSettings.Default.Save();
+        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
+        {
+          sw.WriteLine(0);
+        }
       }
+      else
+      {
+        using (var sr = new StreamReader(Path.Combine(m_working_path, COUNTER)))
+        {
+          m_file_count = uint.Parse(sr.ReadLine());
+        }
+      }
+    }
+
+    private FileInfo GetFileInfo()
+    {
+      if (m_file_info == null || m_file_number != m_file_count)
+      {
+        m_file_info = new FileInfo(Path.Combine(m_working_path, string.Format("{0}.log", m_file_count + 1)));
+        m_file_number = m_file_count;
+      }
+
+      return m_file_info;
     }
 
     public void WriteLog(LoggingData[] data)
@@ -37,8 +61,12 @@ namespace Notung.Log
 
       if (fi.Exists && fi.Length > LogSettings.Default.LogFileSize)
       {
-        LogSettings.Default.FileCount++;
-        LogSettings.Default.Save();
+        m_file_count++;
+
+        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
+        {
+          sw.WriteLine(m_file_count);
+        }
 
         fi = GetFileInfo();
       }
@@ -56,17 +84,6 @@ namespace Notung.Log
           }
         }
       }
-    }
-
-    private FileInfo GetFileInfo()
-    {
-      if (m_file_info == null || m_file_number != LogSettings.Default.FileCount)
-      {
-        m_file_info = new FileInfo(Path.Combine(m_working_path, string.Format("{0}.log", LogSettings.Default.FileCount + 1)));
-        m_file_number = LogSettings.Default.FileCount;
-      }
-
-      return m_file_info;
     }
   }
 }

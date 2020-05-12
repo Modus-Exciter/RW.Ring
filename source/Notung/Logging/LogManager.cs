@@ -11,27 +11,49 @@ namespace Notung.Log
   {
     private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>
     {
-      new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs"))
+      new FileLogAcceptor()
     };
-    private static ILogProcess _process = new SyncLogProcess(_acceptors);
+    private static LogProcess _process = new SyncLogProcess(_acceptors);
     private static readonly object _lock = new object();
-
-    /*static LogManager()
-    {
-      _acceptors.Add(new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs")));
-    }*/
-    
+    private static readonly Dictionary<string, ILog> _source_loggers = new Dictionary<string, ILog>();
+    private static readonly Dictionary<Type, ILog> _type_loggers = new Dictionary<Type, ILog>();
+  
     public static ILog GetLogger(string source)
     {
       if (string.IsNullOrEmpty(source))
         throw new ArgumentNullException("name");
 
-      return new Logger(source);
+      lock (_source_loggers)
+      {
+        ILog ret;
+
+        if (!_source_loggers.TryGetValue(source, out ret))
+        {
+          ret = new Logger(source);
+          _source_loggers.Add(source, ret);
+        }
+
+        return ret;
+      }
     }
 
     public static ILog GetLogger(Type type)
     {
-      return new Logger(type.FullName);
+      if (type == null)
+        throw new ArgumentNullException("type");
+      
+      lock (_type_loggers)
+      {
+        ILog ret;
+
+        if (!_type_loggers.TryGetValue(type, out ret))
+        {
+          ret = new Logger(type.FullName);
+          _type_loggers.Add(type, ret);
+        }
+
+        return ret;
+      }
     }
 
     public static void AddAcceptor(ILogAcceptor acceptor)
@@ -51,7 +73,7 @@ namespace Notung.Log
       lock (_lock)
       {
         if (_process != null && !_process.Stopped)
-          _process.Dispose();
+          _process.Stop();
 
         _process = new AsyncLogProcess(info, _acceptors);
       }
@@ -154,13 +176,6 @@ namespace Notung.Log
     }
 
     #endregion
-
-    internal interface ILogProcess : IDisposable
-    {
-      bool Stopped { get; }
-      void WaitUntilStop();
-      void WriteMessage(LoggingData data);
-    }
 
     private class Logger : ILog
     {
