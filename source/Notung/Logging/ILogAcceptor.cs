@@ -77,7 +77,7 @@ namespace Notung.Log
         {
           for (int i = 0; i < data.Length; i++)
           {
-            writer.WriteLine(data[i]);
+            LogSettings.Default.BuildString(writer, data[i]); 
             writer.WriteLine();
             writer.WriteLine(LogSettings.Default.Separator);
             writer.WriteLine();
