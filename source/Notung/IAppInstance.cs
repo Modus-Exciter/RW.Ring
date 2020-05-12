@@ -164,6 +164,10 @@ namespace Notung
       if (m_terminating)
         return;
 
+      _log.Debug("Restart()");
+
+      LogManager.Stop();
+
       m_terminating = true;
       m_restarting = true;
 
