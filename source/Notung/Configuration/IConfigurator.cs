@@ -33,7 +33,7 @@ namespace Notung.Configuration
   {
     private readonly Dictionary<Type, ConfigurationSection> m_sections = new Dictionary<Type, ConfigurationSection>();
     private readonly Dictionary<string, Type> m_section_names = new Dictionary<string, Type>();
-    private readonly LockSource m_lock = new LockSource();
+    private readonly LockSource m_lock = new LockSource(false);
     private readonly ConfigurationFile m_file;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(DataContractConfigurator));
@@ -70,7 +70,7 @@ namespace Notung.Configuration
 
         if (!m_sections.TryGetValue(sectionType, out section))
         {
-          section = this.CreateSection(sectionType);
+          section = this.PullSection(sectionType);
           m_sections.Add(sectionType, section);
         }
 
@@ -99,12 +99,11 @@ namespace Notung.Configuration
       {
         if (!m_sections.TryGetValue(typeof(TSection), out ret))
         {
-          ret = CreateSection(typeof(TSection));
+          ret = PullSection(typeof(TSection));
 
           InfoBuffer buffer = new InfoBuffer();
 
           m_sections.Add(typeof(TSection), ret);
-          PushSection(ret);
         }
       }
 
@@ -116,6 +115,9 @@ namespace Notung.Configuration
     {
       if (section == null)
         throw new ArgumentNullException("section");
+
+      if (section.GetType() != typeof(TSection))
+        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE, typeof(TSection), section.GetType()));
 
       using (m_lock.WriteLock())
       {
@@ -147,9 +149,8 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         foreach (var kv in m_sections)
-        {
           PushSection(kv.Value);
-        }
+
         m_file.Save();
       }
     }
@@ -161,7 +162,7 @@ namespace Notung.Configuration
 
       _log.DebugFormat("PushSection(): {0}", section.GetType().FullName);
 
-      section_name = GetSectionName(section.GetType(), out data_contract);
+      section_name = this.GetSectionName(section.GetType(), out data_contract);
 
       var sb = new StringBuilder();
 
@@ -210,10 +211,8 @@ namespace Notung.Configuration
       }
     }
 
-    private ConfigurationSection CreateSection(Type sectionType)
+    private ConfigurationSection PullSection(Type sectionType)
     {
-      if (sectionType == null) throw new ArgumentNullException("sectionType");
-
       ConfigurationSection ret = null;
 
       string section_name;
@@ -221,16 +220,7 @@ namespace Notung.Configuration
 
       _log.DebugFormat("CreateSection(): {0}", sectionType.FullName);
 
-      section_name = GetSectionName(sectionType, out data_contract);
-
-      if (m_section_names.ContainsKey(section_name))
-      {
-        if (m_section_names[section_name] != sectionType)
-          throw new SerializationException(string.Format(Resources.DUPLICATE_SECTION_NAME, 
-            m_section_names[section_name], sectionType));
-      }
-      else
-        m_section_names[section_name] = sectionType;
+      section_name = this.GetSectionName(sectionType, out data_contract);
 
       string section_xml = null;
 
@@ -270,15 +260,16 @@ namespace Notung.Configuration
         }
       }
       else
+      {
         ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
+        PushSection(ret);
+      }
 
       return ret;
     }
 
-    private static string GetSectionName(Type sectionType, out bool data_contract)
+    private string GetSectionName(Type sectionType, out bool data_contract)
     {
-      if (sectionType == null) throw new ArgumentNullException("sectionType");
-
       string section_name;
       data_contract = sectionType.IsDefined(typeof(DataContractAttribute), false);
       if (data_contract)
@@ -294,6 +285,16 @@ namespace Notung.Configuration
         else
           section_name = root.ElementName;
       }
+
+      if (m_section_names.ContainsKey(section_name))
+      {
+        if (m_section_names[section_name] != sectionType)
+          throw new SerializationException(string.Format(Resources.DUPLICATE_SECTION_NAME,
+            m_section_names[section_name], sectionType));
+      }
+      else
+        m_section_names[section_name] = sectionType;
+
       return section_name;
     }
   }

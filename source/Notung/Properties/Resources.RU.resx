@@ -141,8 +141,14 @@
   <data name="INVALID_EVENT_HANDLER" xml:space="preserve">
     <value>Тип делегата {0} не совпадает с типом EventHandler&lt;{1}&gt;</value>
   </data>
+  <data name="SECTION_TYPE_UNINHERITABLE" xml:space="preserve">
+    <value>Невозможно сохранить унаследованную секцию. Требуется тип {0}, передан {1}</value>
+  </data>
   <data name="SETTINGS_RESTORE" xml:space="preserve">
     <value>Запущено восстановление настроек</value>
+  </data>
+  <data name="STREAM_FLUSH" xml:space="preserve">
+    <value>Сообщение потока</value>
   </data>
   <data name="WARNING" xml:space="preserve">
     <value>Предупреждение</value>

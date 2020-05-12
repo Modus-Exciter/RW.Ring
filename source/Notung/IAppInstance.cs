@@ -87,7 +87,7 @@ namespace Notung
       m_is_admin = m_apartment_wrapper.Invoke(new Func<bool>(APIHelper.IsUserAnAdmin)); // TODO: уточнить, можно ли изменить это в ходе работы программы
 
       if (m_view.ReliableThreading)
-        LogManager.Start(this);
+        LogManager.SetMainThreadInfo(this);
       else
         m_main_thread = Thread.CurrentThread;
     }
@@ -111,6 +111,7 @@ namespace Notung
           return Thread.CurrentThread;
       }
     }
+
     public bool ReliableThreading
     {
       get { return m_view.ReliableThreading; }
@@ -201,7 +202,6 @@ namespace Notung
           m_terminating = true;
 
           LogManager.Stop();
-
           Environment.Exit(2);
         }
         else

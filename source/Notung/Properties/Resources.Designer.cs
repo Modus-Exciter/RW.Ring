@@ -133,6 +133,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to save inherited section. Expected type {0}, actual type {1}.
+        /// </summary>
+        internal static string SECTION_TYPE_UNINHERITABLE {
+            get {
+                return ResourceManager.GetString("SECTION_TYPE_UNINHERITABLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings restore started.
         /// </summary>
         internal static string SETTINGS_RESTORE {

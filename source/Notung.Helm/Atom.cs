@@ -115,6 +115,21 @@ namespace Notung.Helm
         m_handle = 0;
     }
 
+    public override bool Equals(object obj)
+    {
+      var other = obj as Atom;
+
+      if (other == null)
+        return false;
+
+      return m_handle == other.m_handle;
+    }
+
+    public override int GetHashCode()
+    {
+      return m_handle;
+    }
+
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
     private static extern ushort GlobalFindAtom(string lpString);
 

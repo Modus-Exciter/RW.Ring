@@ -1,7 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Notung.ComponentModel;
-using System.IO;
 
 namespace Notung
 {
@@ -149,17 +149,14 @@ namespace Notung
       }
     }
 
-    public string WorkingPath
+    public string GetWorkingPath()
     {
-      get
-      {
-        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        if (!string.IsNullOrWhiteSpace(this.Company))
-          basePath = Path.Combine(basePath, this.Company);
+      if (!string.IsNullOrWhiteSpace(this.Company))
+        basePath = Path.Combine(basePath, this.Company);
 
-        return Path.Combine(basePath, this.Product);
-      }
+      return Path.Combine(basePath, this.Product);
     }
 
     public override string ToString()

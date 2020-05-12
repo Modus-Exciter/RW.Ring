@@ -9,14 +9,17 @@ namespace Notung.Log
   /// </summary> 
   public static class LogManager
   {
-    private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>();
+    private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>
+    {
+      new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs"))
+    };
     private static ILogProcess _process = new SyncLogProcess(_acceptors);
     private static readonly object _lock = new object();
 
-    static LogManager()
+    /*static LogManager()
     {
-      _acceptors.Add(new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.WorkingPath, "Logs")));
-    }
+      _acceptors.Add(new FileLogAcceptor(Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs")));
+    }*/
     
     public static ILog GetLogger(string source)
     {
@@ -40,15 +43,17 @@ namespace Notung.Log
         _acceptors.Add(acceptor);
     }
 
-    public static void Start(IMainThreadInfo settings)
+    public static void SetMainThreadInfo(IMainThreadInfo info)
     {
+      if (info == null || !info.ReliableThreading)
+        return;
+
       lock (_lock)
       {
         if (_process != null && !_process.Stopped)
-            _process.Dispose();
-        
-        _process = settings.ReliableThreading ? new AsyncLogProcess(settings, _acceptors) 
-          : (ILogProcess)new SyncLogProcess(_acceptors);
+          _process.Dispose();
+
+        _process = new AsyncLogProcess(info, _acceptors);
       }
     }
 

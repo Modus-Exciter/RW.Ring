@@ -53,7 +53,7 @@ namespace Notung.Helm
             return true;
           }
         }
-      }
+      } // TODO: Если строку не удалось уместить в атом (Windows сама об этом скажет через IsValid), используем WM_COPYDATA
 
       return false;
 

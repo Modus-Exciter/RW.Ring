@@ -141,6 +141,9 @@
   <data name="INVALID_EVENT_HANDLER" xml:space="preserve">
     <value>Delegate type {0} is not recognized as EventHandler&lt;{1}&gt;</value>
   </data>
+  <data name="SECTION_TYPE_UNINHERITABLE" xml:space="preserve">
+    <value>Unable to save inherited section. Expected type {0}, actual type {1}</value>
+  </data>
   <data name="SETTINGS_RESTORE" xml:space="preserve">
     <value>Settings restore started</value>
   </data>

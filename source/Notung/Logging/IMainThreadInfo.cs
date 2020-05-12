@@ -21,6 +21,21 @@ namespace Notung.Log
     bool ReliableThreading { get; }
   }
 
+  public sealed class CurrentMainThreadInfo : IMainThreadInfo
+  {
+    private readonly Thread m_main_thred = Thread.CurrentThread;
+   
+    public Thread MainThread
+    {
+      get { return m_main_thred; }
+    }
+
+    public bool ReliableThreading
+    {
+      get { return true; }
+    }
+  }
+
   internal sealed class SyncLogProcess : LogManager.ILogProcess
   {
     private readonly HashSet<ILogAcceptor> m_acceptors;

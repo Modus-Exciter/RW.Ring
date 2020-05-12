@@ -6,7 +6,13 @@ namespace Notung.Threading
   public sealed class LockSource
   {
     private readonly ReaderWriterLockSlim m_lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+    private readonly bool m_reenterable;
     private volatile bool m_closed;
+
+    public LockSource(bool reenterable = true)
+    {
+      m_reenterable = reenterable;
+    }
 
     /// <summary>
     /// Устанавливает блокировку на чтение
@@ -14,16 +20,22 @@ namespace Notung.Threading
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>   
     public IDisposable ReadLock()
     {
-      return new ReadLockImpl(m_lock);
+      if (m_reenterable)
+        return new ReenterableReadLock(m_lock);
+      else
+        return new SingleReadLock(m_lock);
     }
 
     /// <summary>
     /// Устанавливает блокировку на запись
     /// </summary>
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
-    public IDisposable WriteLock() 
+    public IDisposable WriteLock()
     {
-      return new WriteLockImpl(m_lock);
+      if (m_reenterable)
+        return new ReenterableWriteLock(m_lock);
+      else
+        return new SingleWriteLock(m_lock);
     }
 
     /// <summary>
@@ -32,7 +44,10 @@ namespace Notung.Threading
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
     public IDisposable UpgradeableLock()
     {
-      return new UpgradeableLockImpl(m_lock);
+      if (m_reenterable)
+        return new ReenterableUpgradeableLock(m_lock);
+      else
+        return new SingleUpgradeableLock(m_lock);
     }
 
     /// <summary>
@@ -111,16 +126,61 @@ namespace Notung.Threading
       m_lock.Dispose();
     }
 
-    private sealed class ReadLockImpl : IDisposable
+    private sealed class SingleReadLock : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public SingleReadLock(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+        m_lock.EnterReadLock();
+      }
+
+      public void Dispose()
+      {
+        m_lock.ExitReadLock();
+      }
+    }
+
+    private sealed class SingleWriteLock : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public SingleWriteLock(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+        m_lock.EnterWriteLock();
+      }
+
+      public void Dispose()
+      {
+        m_lock.ExitWriteLock();
+      }
+    }
+
+    private sealed class SingleUpgradeableLock : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public SingleUpgradeableLock(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+        m_lock.EnterUpgradeableReadLock();
+      }
+
+      public void Dispose()
+      {
+        m_lock.ExitUpgradeableReadLock();
+      }
+    }
+
+    private sealed class ReenterableReadLock : IDisposable
     {
       private readonly ReaderWriterLockSlim m_lock;
       private readonly bool m_exit_required;
 
-      public ReadLockImpl(ReaderWriterLockSlim source)
+      public ReenterableReadLock(ReaderWriterLockSlim source)
       {
-        if (source == null)
-          throw new ArgumentNullException("source");
-
         m_lock = source;
 
         m_exit_required = !m_lock.IsWriteLockHeld
@@ -137,16 +197,13 @@ namespace Notung.Threading
       }
     }
 
-    private sealed class UpgradeableLockImpl : IDisposable
+    private sealed class ReenterableUpgradeableLock : IDisposable
     {
       private readonly ReaderWriterLockSlim m_lock;
       private readonly bool m_exit_required;
 
-      public UpgradeableLockImpl(ReaderWriterLockSlim source)
+      public ReenterableUpgradeableLock(ReaderWriterLockSlim source)
       {
-        if (source == null)
-          throw new ArgumentNullException("source");
-
         var read_held = source.IsReadLockHeld;
         var upgradeable_held = source.IsUpgradeableReadLockHeld;
 
@@ -168,12 +225,12 @@ namespace Notung.Threading
       }
     }
 
-    private sealed class WriteLockImpl : IDisposable
+    private sealed class ReenterableWriteLock : IDisposable
     {
       private readonly ReaderWriterLockSlim m_lock;
       private readonly bool m_exit_required;
 
-      public WriteLockImpl( ReaderWriterLockSlim source)
+      public ReenterableWriteLock( ReaderWriterLockSlim source)
       {
         if (source == null)
           throw new ArgumentNullException("source");
