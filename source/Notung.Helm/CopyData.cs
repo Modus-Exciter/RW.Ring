@@ -32,7 +32,7 @@ namespace Notung.Helm
     /// Создание объекта передачи данных на принимающей стороне
     /// </summary>
     /// <param name="lParam">Идентификатор объекта, полученный из Message.LParam</param>
-    public CopyData(IntPtr lParam, uint expectedTypeCode)
+    public CopyData(IntPtr lParam, uint expectedTypeCode = 0)
     {
       var copyData = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
 
