@@ -36,11 +36,6 @@ namespace Notung.Helm
       get { return m_main_form; }
     }
 
-    public static uint StringArgsMessageCode
-    {
-      get { return _args_code; }
-    }
-
     public bool ReliableThreading
     {
       get { return true; }
@@ -55,26 +50,30 @@ namespace Notung.Helm
       }
     }
 
+    public static uint StringArgsMessageCode
+    {
+      get { return _args_code; }
+    }
+
     public bool SendArgsToProcess(Process previous, IList<string> args)
     {
       var text_to_send = string.Join("\n", args);
 
-      using (var atom = new Atom(text_to_send))
+      /*using (var atom = new Atom(text_to_send))
       {
         if (atom.IsValid && atom.Send(previous.MainWindowHandle, StringArgsMessageCode) != IntPtr.Zero)
         {
           WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
           return true;
         }
-      }
+      }*/
 
-      using (var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode))
+      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
+
+      if (cd.Send(m_main_form.Handle, previous.MainWindowHandle) != IntPtr.Zero)
       {
-        if (cd.IsValid && cd.Send(m_main_form.Handle, previous.MainWindowHandle) != IntPtr.Zero)
-        {
-          WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
-          return true;
-        }
+        WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
+        return true;
       }
 
       return false;
@@ -87,7 +86,7 @@ namespace Notung.Helm
 
     public static string[] GetStringArgs(Message message)
     {
-      if (message.Msg == StringArgsMessageCode)
+      /*if (message.Msg == StringArgsMessageCode)
       {
         _log.Debug("GetStringArgs(): atom recieved");
         using (var atom = new Atom(message.LParam, message.WParam.ToInt32()))
@@ -96,14 +95,14 @@ namespace Notung.Helm
             return atom.Text.Split('\n');
         }
       }
-      else if (message.Msg == WinAPIHelper.WM_COPYDATA)
+      else */if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
         _log.Debug("GetStringArgs(): copy data structure recieved");
-        using (var cd = new CopyData(message.LParam))
-        {
-          if (cd.TypeCode == StringArgsMessageCode && cd.Data != null)
-            return Encoding.Unicode.GetString(cd.Data).Split('\n');
-        }
+
+        var cd = new CopyData(message.LParam, StringArgsMessageCode);
+
+        if (cd.Data != null)
+          return Encoding.Unicode.GetString(cd.Data).Split('\n');
       }
 
       return ArrayExtensions.Empty<string>();
