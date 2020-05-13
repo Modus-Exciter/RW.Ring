@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -9,7 +10,7 @@ namespace Notung.Log
     void WriteLog(string message, InfoLevel level, object data = null);
   }
 
-  public struct LoggingData
+  public struct LoggingData : IEnumerable<LoggingEvent>
   {
     private readonly LoggingEvent[] m_data;
     private readonly int m_length;
@@ -33,7 +34,25 @@ namespace Notung.Log
 
     public LoggingEvent this[int index]
     {
-      get { return m_data[index]; }
+      get
+      {
+#if DEBUG
+        if (m_data == null)
+          throw new IndexOutOfRangeException();
+#endif
+        return m_data[index];
+      }
+    }
+
+    public IEnumerator<LoggingEvent> GetEnumerator()
+    {
+      for (int i = 0; i < m_length; i++)
+        yield return m_data[i];
+    }
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+      return GetEnumerator();
     }
   }
 
