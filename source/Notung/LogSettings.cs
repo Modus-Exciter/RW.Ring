@@ -13,16 +13,6 @@ namespace Notung
   //  The SettingsSaving event is raised before the setting values are saved.
   internal sealed partial class LogSettings
   {
-    private LogStringBuilder m_builder;
-
-    public void BuildString(TextWriter writer, LoggingEvent data)
-    {
-      if (m_builder == null)
-        m_builder = new LogStringBuilder(MessageTemplate);
-
-      m_builder.BuildString(writer, data);
-    }
-
     protected override void OnSettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
     {
       base.OnSettingsLoaded(sender, e);

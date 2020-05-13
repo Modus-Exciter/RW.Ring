@@ -59,10 +59,12 @@ namespace Notung.Helm
 
       if (GlobalGetAtomName(m_handle, m_buffer, m_buffer_size) != 0)
         m_text = m_buffer.ToString();
+      else
+        m_handle = 0;
     }
 
     /// <summary>
-    /// Удалось ли создать объект
+    /// Удалось ли создать объект в системе
     /// </summary>
     public bool IsValid
     {

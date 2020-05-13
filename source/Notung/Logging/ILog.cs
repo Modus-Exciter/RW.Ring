@@ -62,6 +62,8 @@ namespace Notung.Log
   /// </summary>
   public struct LoggingEvent
   {
+    private static readonly LogStringBuilder _builder = new LogStringBuilder("[{Date}][{Level}][{Source}]\n{Message}");
+
     public LoggingEvent(string source, string message, InfoLevel level, object data) : this()
     {
       if (string.IsNullOrEmpty(source))
@@ -130,7 +132,7 @@ namespace Notung.Log
 
       using (var writer = new StringWriter(builder))
       {
-        LogSettings.Default.BuildString(writer, this);
+        _builder.BuildString(writer, this);
       }
 
       return builder.ToString();

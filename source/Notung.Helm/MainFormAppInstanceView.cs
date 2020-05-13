@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
@@ -19,7 +20,7 @@ namespace Notung.Helm
       m_main_form = mainForm;
     }
     
-    public System.ComponentModel.ISynchronizeInvoke Invoker
+    public ISynchronizeInvoke Invoker
     {
       get { return m_main_form; }
     }

@@ -15,9 +15,11 @@ namespace Notung.Log
     private uint m_file_number;
     private FileInfo m_file_info;
     private const string COUNTER = "counter.dat";
+    private readonly LogStringBuilder m_builder;
 
-    public FileLogAcceptor()
+    public FileLogAcceptor(string template)
     {
+      m_builder = new LogStringBuilder(template);
       m_working_path = Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs");
 
       if (!Directory.Exists(m_working_path))
@@ -25,6 +27,8 @@ namespace Notung.Log
 
       InitializeCounter();
     }
+
+    public FileLogAcceptor() : this(LogSettings.Default.MessageTemplate) { }
 
     private void InitializeCounter()
     {
@@ -77,7 +81,7 @@ namespace Notung.Log
         {
           for (int i = 0; i < data.Length; i++)
           {
-            LogSettings.Default.BuildString(writer, data[i]); 
+            m_builder.BuildString(writer, data[i]); 
             writer.WriteLine();
             writer.WriteLine(LogSettings.Default.Separator);
             writer.WriteLine();
