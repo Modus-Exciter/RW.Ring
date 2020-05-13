@@ -82,15 +82,6 @@ namespace Notung.Log
         m_info = info;
 
         (m_work_thread = new Thread(this.Process)).Start();
-        new Thread(this.Watch).Start();
-      }
-
-      private void Watch()
-      {
-        while (m_info.MainThread.IsAlive)
-          Thread.Sleep(512);
-
-        this.Stop();
       }
 
       public override void WaitUntilStop()
@@ -112,14 +103,23 @@ namespace Notung.Log
       {
         using (m_signal)
         {
-          while (m_signal.WaitOne(Timeout.Infinite))
+          using (var timer = new Timer(Watch, m_work_thread, 256, 128))
           {
-            if (m_stop)
-              return;
+            while (m_signal.WaitOne(Timeout.Infinite))
+            {
+              if (m_stop)
+                return;
 
-            this.ProcessPendingEvents();
+              this.ProcessPendingEvents();
+            }
           }
         }
+      }
+
+      private void Watch(object state)
+      {
+        if (!m_info.MainThread.IsAlive)
+          this.Stop();
       }
 
       private void ProcessPendingEvents()
@@ -136,7 +136,7 @@ namespace Notung.Log
 
             int i = 0;
 
-            while (m_data.Count > 0)
+            while (i < size)
               m_current_data[i++] = m_data.Dequeue();
           }
           else

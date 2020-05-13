@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Threading;
 using Notung;
 using Notung.Log;
+using System.Text;
+using System.IO;
 
 namespace NotungTest
 {
@@ -62,6 +64,26 @@ namespace NotungTest
     {
       var bldr = new LogStringBuilder("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR");
       var bldr2 = new LogStringBuilder("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR{Message}");
+
+      Assert.AreEqual("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR{Message}", bldr2.ToString());
+    }
+
+    [TestMethod]
+    public void EmptyFormat()
+    {
+      var builder = new LogStringBuilder("RW = {RW:}.");
+      LoggingContext.Global["RW"] = 123;
+
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+
+      var sb = new StringBuilder();
+
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual("RW = 123.", sb.ToString());
     }
   }
 }
