@@ -10,6 +10,13 @@ namespace Notung.Log
   {
     private readonly IBuildBlock[] m_blocks;
     private readonly ThreadField<char[]> m_date_converter = new ThreadField<char[]>();
+    private static readonly int _pid;
+
+    static LogStringBuilder()
+    {
+      using (var process = System.Diagnostics.Process.GetCurrentProcess())
+        _pid = process.Id;
+    }
 
     public LogStringBuilder(string template)
     {
@@ -18,6 +25,31 @@ namespace Notung.Log
 
       m_blocks = StateMachine(template).ToArray();
     }
+
+    public void BuildString(TextWriter writer, LoggingData data)
+    {
+#if DEBUG
+      if (writer == null)
+        throw new ArgumentNullException("writer");
+#endif
+      InitDateConverter();
+      
+      for (int i = 0; i < m_blocks.Length; i++)
+        m_blocks[i].Build(writer, data);
+
+      if (data.Data != null)
+      {
+        writer.WriteLine();
+        writer.Write(data.Data);
+      }
+    }
+
+    public override string ToString()
+    {
+      return string.Join("", m_blocks.Select(b => b.ToString()));
+    }
+
+    #region Private methods
 
     private List<IBuildBlock> StateMachine(string template)
     {
@@ -79,29 +111,6 @@ namespace Notung.Log
       return blocks;
     }
 
-    public void BuildString(TextWriter writer, LoggingData data)
-    {
-#if DEBUG
-      if (writer == null)
-        throw new ArgumentNullException("writer");
-#endif
-      InitDateConverter();
-      
-      for (int i = 0; i < m_blocks.Length; i++)
-        m_blocks[i].Build(writer, data);
-
-      if (data.Data != null)
-      {
-        writer.WriteLine();
-        writer.Write(data.Data);
-      }
-    }
-
-    public override string ToString()
-    {
-      return string.Join("", m_blocks.Select(b => b.ToString()));
-    }
-
     private void InitDateConverter()
     {
       if (m_date_converter.Instance == null)
@@ -119,7 +128,9 @@ namespace Notung.Log
       }
     }
 
-    #region Implementation
+    #endregion
+
+    #region Implementation types
 
     private enum State
     {
@@ -216,6 +227,20 @@ namespace Notung.Log
         writer.Write(array);
       }
 
+      protected static void WriteThread(TextWriter writer, LoggingData data)
+      {
+        if (data.Thread == null)
+          return;
+
+        writer.Write(data.Thread.ManagedThreadId);
+
+        if (!string.IsNullOrEmpty(data.Thread.Name))
+        {
+          writer.Write(' ');
+          writer.Write(data.Thread.Name);
+        }
+      }
+
       public virtual void Build(TextWriter writer, LoggingData data)
       {
         switch (m_type)
@@ -224,20 +249,33 @@ namespace Notung.Log
             if (!string.IsNullOrEmpty(data.Source))
               writer.Write(data.Source);
             break;
+
           case FieldType.Date:
             WriteDate(writer, data.LoggingDate);
             break;
+
           case FieldType.Message:
             if (!string.IsNullOrEmpty(data.Message))
               writer.Write(data.Message);
             break;
+
           case FieldType.Level:
             writer.Write(data.Level);
             break;
+
           case FieldType.Data:
             if (data.Data != null)
               writer.Write(data.Data);
             break;
+
+          case FieldType.Process:
+            writer.Write(_pid);
+            break;
+
+          case FieldType.Thread:
+            WriteThread(writer, data);
+            break;
+
           default:
             if (data.Contains(m_field))
               writer.Write(data[m_field]);
@@ -261,7 +299,7 @@ namespace Notung.Log
       public override void Build(TextWriter writer, LoggingData data)
       {
         if (m_format == null)
-          m_format = "{0" + Format + "}";
+          m_format = "{0:" + Format + "}";
 
         switch (m_type)
         {
@@ -269,19 +307,31 @@ namespace Notung.Log
             if (!string.IsNullOrEmpty(data.Source))
               writer.Write(data.Source);
             break;
+
           case FieldType.Date:
             if (!string.IsNullOrEmpty(Format))
-              writer.Write(data.LoggingDate.ToString(Format));
+              writer.Write(m_format, data.LoggingDate);
             else
               WriteDate(writer, data.LoggingDate);
             break;
+
+          case FieldType.Process:
+            writer.Write(_pid);
+            break;
+
+          case FieldType.Thread:
+            WriteThread(writer, data);
+            break;
+
           case FieldType.Message:
             if (!string.IsNullOrEmpty(data.Message))
               writer.Write(data.Message);
             break;
+
           case FieldType.Level:
             writer.Write(data.Level);
             break;
+
           case FieldType.Data:
             if (data.Data == null)
               return;
@@ -290,6 +340,7 @@ namespace Notung.Log
             else
               writer.Write(m_format, data.Data);
             break;
+
           default:
             if (!data.Contains(m_field))
               return;

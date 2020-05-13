@@ -8,6 +8,7 @@ using Notung;
 using Notung.Log;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace NotungTest
 {
@@ -146,6 +147,64 @@ namespace NotungTest
       }
 
       Assert.AreEqual(evt.LoggingDate.ToString("dd.MM.yyyy HH:mm:ss.fff"), sb.ToString());
+    }
+
+    [TestMethod]
+    public void CustomDateFormat()
+    {
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      var builder = new LogStringBuilder("{Date:dd.MM.yyyy HH:mm:ss}");
+
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual(evt.LoggingDate.ToString("dd.MM.yyyy HH:mm:ss"), sb.ToString());
+    }
+
+    [TestMethod]
+    public void ProcessAndThread()
+    {
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      var builder = new LogStringBuilder("P:{Process}, T:{Thread}");
+
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual(string.Format("P:{0}, T:{1} {2}", 
+        Process.GetCurrentProcess().Id, 
+        Thread.CurrentThread.ManagedThreadId,
+        Thread.CurrentThread.Name), sb.ToString());
+    }
+
+    [TestMethod]
+    public void ProcessAndThreadWithoutName()
+    {
+      LoggingData evt = default(LoggingData);
+      Thread parallel = new Thread(() =>
+      {
+        evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      });
+
+      parallel.Start();
+      parallel.Join();
+
+      var builder = new LogStringBuilder("P:{Process}, T:{Thread}");
+
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual(string.Format("P:{0}, T:{1}",
+        Process.GetCurrentProcess().Id,
+        parallel.ManagedThreadId), sb.ToString());
     }
   }
 }

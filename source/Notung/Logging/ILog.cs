@@ -44,6 +44,17 @@ namespace Notung.Log
 
     private readonly IThreadLoggingContext m_thread_context;
 
+    public System.Threading.Thread Thread
+    {
+      get
+      {
+        if (m_thread_context == null)
+          return null;
+        else
+          return m_thread_context.CurrentThread;
+      }
+    }
+
     public object this[string key]
     {
       get
