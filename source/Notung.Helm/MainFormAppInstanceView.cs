@@ -15,6 +15,15 @@ namespace Notung.Helm
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
     private readonly Form m_main_form;
+    private static readonly uint _args_code;
+
+    static MainFormAppInstanceView()
+    {
+      _args_code = WinAPIHelper.RegisterWindowMessageA("StringArgsMessageCode");
+
+      if (_args_code == 0)
+        _args_code = 0xA146;
+    }
 
     public MainFormAppInstanceView(Form mainForm)
     {
@@ -29,7 +38,10 @@ namespace Notung.Helm
       get { return m_main_form; }
     }
 
-    public const uint StringArgsMessageCode = 0xA146;
+    public static uint StringArgsMessageCode
+    {
+      get { return _args_code; }
+    }
 
     public bool ReliableThreading
     {
