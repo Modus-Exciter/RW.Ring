@@ -14,7 +14,7 @@ namespace Notung.Helm
     private readonly bool m_is_new;
     
     /// <summary>
-    /// Создание объекта передачи данных на принимающей стороне
+    /// Создание объекта передачи данных на передающей стороне
     /// </summary>
     /// <param name="data">Данные, которые требуется передать другому процессу</param>
     /// <param name="typecode">Идентификатор типа данных для другого процесса</param>
@@ -33,7 +33,7 @@ namespace Notung.Helm
     }
 
     /// <summary>
-    /// Создание объекта передачи данных на передающей стороне
+    /// Создание объекта передачи данных на принимающей стороне
     /// </summary>
     /// <param name="lParam">Идентификатор объекта, полученный из Message.LParam</param>
     public CopyData(IntPtr lParam)

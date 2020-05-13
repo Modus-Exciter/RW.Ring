@@ -20,7 +20,7 @@ namespace Notung.Helm
         throw new FileNotFoundException();
 
       m_path = path;
-      m_handle = new HandleRef(new object(), LoadLibrary(path));
+      m_handle = new HandleRef(this, LoadLibrary(path));
 
       if (m_handle.Handle == IntPtr.Zero)
         GC.SuppressFinalize(this);
