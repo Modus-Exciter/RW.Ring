@@ -35,9 +35,9 @@ namespace Notung.Helm
     /// <param name="lParam">Идентификатор объекта, полученный из Message.LParam</param>
     /// <param name="expectedTypeCode">Ожидаемый идентификатор типа или 0.
     /// Если получен идентификатор типа, отличный от ожидаемого, данные не загружаются</param>
-    public CopyData(IntPtr lParam, uint expectedTypeCode = 0)
+    public unsafe CopyData(IntPtr lParam, uint expectedTypeCode = 0)
     {
-      var copyData = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
+      var copyData = *((COPYDATASTRUCT*)lParam.ToPointer());
       m_type_code = (uint)copyData.dwData.ToInt32();
 
       if (expectedTypeCode == 0 || m_type_code == expectedTypeCode)
