@@ -85,5 +85,43 @@ namespace NotungTest
 
       Assert.AreEqual("RW = 123.", sb.ToString());
     }
+
+    [TestMethod]
+    public void EscapeFormat()
+    {
+      var builder = new LogStringBuilder("RW = {RW:}.\\{MH}");
+      LoggingContext.Global["RW"] = 123;
+      LoggingContext.Global["MH"] = "BERRO";
+
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+
+      var sb = new StringBuilder();
+
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual("RW = 123.{MH}", sb.ToString());
+    }
+
+    [TestMethod]
+    public void UnEscapeFormat()
+    {
+      var builder = new LogStringBuilder("RW = {RW:}.\\{{MH}}");
+      LoggingContext.Global["RW"] = 123;
+      LoggingContext.Global["MH"] = "BERRO";
+
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+
+      var sb = new StringBuilder();
+
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual("RW = 123.{BERRO}", sb.ToString());
+    }
   }
 }
