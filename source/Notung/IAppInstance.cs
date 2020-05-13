@@ -43,7 +43,7 @@ namespace Notung
     /// <summary>
     /// Этот метод следует вызвать при старте приложения, если можно запускать только одну копию
     /// </summary>
-    void CreateBlockingMutex();
+    void AllowOnlyOneInstance();
 
     /// <summary>
     /// Перезагрузка приложения
@@ -155,9 +155,12 @@ namespace Notung
       remove { AppDomain.CurrentDomain.ProcessExit -= value; }
     }
 
-    public void CreateBlockingMutex()
+    public void AllowOnlyOneInstance()
     {
-      m_mutex_thread = new Thread(MutexBlockingThread);
+      if (m_mutex_thread != null)
+        return;
+      
+      m_mutex_thread = new Thread(CreateBlockingMutex);
       m_mutex_thread.SetApartmentState(ApartmentState.STA);
       m_mutex_thread.Start();
     }
@@ -180,7 +183,7 @@ namespace Notung
       m_view.Restart(m_main_module_file_name, m_args);
     }
 
-    private void MutexBlockingThread()
+    private void CreateBlockingMutex()
     {
       if (m_terminating)
         return;
@@ -190,15 +193,15 @@ namespace Notung
       {
         if (!new_instance)
         {
-          _log.Debug("CreateBlockingMutexImpl(): exit");
+          _log.Debug("CreateBlockingMutex(): exit");
           mutex.Close();
 
           if (m_args.Count > 0)
           {
             if (m_view.SupportSendingArgs && this.SendArgsToPreviousProcess())
-              _log.Debug("CreateBlockingMutexImpl(): message to previous application copy sent");
+              _log.Debug("CreateBlockingMutex(): message to previous application copy sent");
             else
-              _log.Debug("CreateBlockingMutexImpl(): previous application copy not responding");
+              _log.Debug("CreateBlockingMutex(): previous application copy not responding");
           }
 
           m_terminating = true;

@@ -30,6 +30,8 @@ namespace Notung.Log
       "Message",
       "Level",
       "Data",
+      "Process",
+      "Thread"
     };
 
     public static ILoggingContext Global

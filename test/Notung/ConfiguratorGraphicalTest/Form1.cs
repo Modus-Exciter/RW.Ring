@@ -85,7 +85,7 @@ namespace ConfiguratorGraphicalTest
     public Form1()
     {
       AppManager.Instance = new AppInstance(new MainFormAppInstanceView(this));
-      AppManager.Instance.CreateBlockingMutex();
+      AppManager.Instance.AllowOnlyOneInstance();
 
       InitializeComponent();
 
@@ -144,6 +144,11 @@ namespace ConfiguratorGraphicalTest
 
         }
       }
+    }
+
+    private void buttonOpenFolder_Click(object sender, System.EventArgs e)
+    {
+      System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath());
     }
   }
 }

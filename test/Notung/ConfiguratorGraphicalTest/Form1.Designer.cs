@@ -42,6 +42,7 @@
       this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
       this.button1 = new System.Windows.Forms.Button();
       this.buttonDLL = new System.Windows.Forms.Button();
+      this.buttonOpenFolder = new System.Windows.Forms.Button();
       this.tableLayoutPanel1.SuspendLayout();
       this.flowLayoutPanel1.SuspendLayout();
       this.SuspendLayout();
@@ -187,6 +188,7 @@
       // 
       this.flowLayoutPanel1.Controls.Add(this.button1);
       this.flowLayoutPanel1.Controls.Add(this.buttonDLL);
+      this.flowLayoutPanel1.Controls.Add(this.buttonOpenFolder);
       this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 502);
       this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -212,6 +214,16 @@
       this.buttonDLL.Text = "Run dll";
       this.buttonDLL.UseVisualStyleBackColor = true;
       this.buttonDLL.Click += new System.EventHandler(this.buttonDLL_Click);
+      // 
+      // buttonOpenFolder
+      // 
+      this.buttonOpenFolder.Location = new System.Drawing.Point(165, 3);
+      this.buttonOpenFolder.Name = "buttonOpenFolder";
+      this.buttonOpenFolder.Size = new System.Drawing.Size(75, 23);
+      this.buttonOpenFolder.TabIndex = 2;
+      this.buttonOpenFolder.Text = "Open folder";
+      this.buttonOpenFolder.UseVisualStyleBackColor = true;
+      this.buttonOpenFolder.Click += new System.EventHandler(this.buttonOpenFolder_Click);
       // 
       // Form1
       // 
@@ -244,6 +256,7 @@
     private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     private System.Windows.Forms.Button button1;
     private System.Windows.Forms.Button buttonDLL;
+    private System.Windows.Forms.Button buttonOpenFolder;
   }
 }
 

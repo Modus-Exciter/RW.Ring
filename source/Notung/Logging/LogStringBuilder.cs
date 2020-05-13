@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Notung.Threading;
 
 namespace Notung.Log
 {
   public class LogStringBuilder
   {
     private readonly IBuildBlock[] m_blocks;
+    private readonly ThreadField<char[]> m_date_converter = new ThreadField<char[]>();
 
     public LogStringBuilder(string template)
     {
@@ -17,7 +19,7 @@ namespace Notung.Log
       m_blocks = StateMachine(template).ToArray();
     }
 
-    private static List<IBuildBlock> StateMachine(string template)
+    private List<IBuildBlock> StateMachine(string template)
     {
       List<IBuildBlock> blocks = new List<IBuildBlock>(0x10);
       
@@ -49,13 +51,13 @@ namespace Notung.Log
         {
           if (template[i] == ':')
           {
-            blocks.Add(new FormatFieldBlock(template.Substring(string_start, i - string_start)));
+            blocks.Add(new FormatFieldBlock(template.Substring(string_start, i - string_start), m_date_converter));
             string_start = i + 1;
             state = State.Format;
           }
           else if (template[i] == '}')
           {
-            blocks.Add(new FieldBlock(template.Substring(string_start, i - string_start)));
+            blocks.Add(new FieldBlock(template.Substring(string_start, i - string_start), m_date_converter));
             string_start = i + 1;
             state = State.Start;
           }
@@ -83,6 +85,8 @@ namespace Notung.Log
       if (writer == null)
         throw new ArgumentNullException("writer");
 #endif
+      InitDateConverter();
+      
       for (int i = 0; i < m_blocks.Length; i++)
         m_blocks[i].Build(writer, data);
 
@@ -96,6 +100,23 @@ namespace Notung.Log
     public override string ToString()
     {
       return string.Join("", m_blocks.Select(b => b.ToString()));
+    }
+
+    private void InitDateConverter()
+    {
+      if (m_date_converter.Instance == null)
+      {
+        var array = new char[23];
+
+        array[2] = '.';
+        array[5] = '.';
+        array[10] = ' ';
+        array[13] = ':';
+        array[16] = ':';
+        array[19] = '.';
+
+        m_date_converter.Instance = array;
+      }
     }
 
     #region Implementation
@@ -117,6 +138,8 @@ namespace Notung.Log
       Message,
       Level,
       Data,
+      Process,
+      Thread,
       Context
     }
 
@@ -152,15 +175,45 @@ namespace Notung.Log
     {
       protected readonly string m_field;
       protected readonly FieldType m_type;
+      private readonly ThreadField<char[]> m_date_converter;
 
-      public FieldBlock(string field)
+      public FieldBlock(string field, ThreadField<char[]> dateConverter)
       {
         m_field = field;
+        m_date_converter = dateConverter;
 
         if (Enum.IsDefined(typeof(FieldType), field))
           m_type = (FieldType)Enum.Parse(typeof(FieldType), field);
         else
           m_type = FieldType.Context;
+      }
+
+      protected void WriteDate(TextWriter writer, DateTime date)
+      {
+        var array = m_date_converter.Instance;
+
+        if (array == null)
+          throw new InvalidOperationException();
+
+        array[0] = (char)('0' + date.Day / 10);
+        array[1] = (char)('0' + date.Day % 10);
+        array[3] = (char)('0' + date.Month / 10);
+        array[4] = (char)('0' + date.Month % 10);
+        array[6] = (char)('0' + date.Year / 1000);
+        array[7] = (char)('0' + (date.Year / 100) % 10);
+        array[8] = (char)('0' + (date.Year / 10) % 10);
+        array[9] = (char)('0' + date.Year % 10);
+        array[11] = (char)('0' + date.TimeOfDay.Hours / 10);
+        array[12] = (char)('0' + date.TimeOfDay.Hours % 10);
+        array[14] = (char)('0' + date.TimeOfDay.Minutes / 10);
+        array[15] = (char)('0' + date.TimeOfDay.Minutes % 10);
+        array[17] = (char)('0' + date.TimeOfDay.Seconds / 10);
+        array[18] = (char)('0' + date.TimeOfDay.Seconds % 10);
+        array[20] = (char)('0' + date.TimeOfDay.Milliseconds / 100);
+        array[21] = (char)('0' + date.TimeOfDay.Milliseconds / 10 % 10);
+        array[22] = (char)('0' + date.TimeOfDay.Milliseconds % 10);
+
+        writer.Write(array);
       }
 
       public virtual void Build(TextWriter writer, LoggingData data)
@@ -172,7 +225,7 @@ namespace Notung.Log
               writer.Write(data.Source);
             break;
           case FieldType.Date:
-            writer.Write(data.LoggingDate.ToString());
+            WriteDate(writer, data.LoggingDate);
             break;
           case FieldType.Message:
             if (!string.IsNullOrEmpty(data.Message))
@@ -203,7 +256,7 @@ namespace Notung.Log
       public string Format;
       private string m_format;
 
-      public FormatFieldBlock(string field) : base(field) { }
+      public FormatFieldBlock(string field, ThreadField<char[]> dateConverter) : base(field, dateConverter) { }
 
       public override void Build(TextWriter writer, LoggingData data)
       {
@@ -220,7 +273,7 @@ namespace Notung.Log
             if (!string.IsNullOrEmpty(Format))
               writer.Write(data.LoggingDate.ToString(Format));
             else
-              writer.Write(data.LoggingDate.ToString());
+              WriteDate(writer, data.LoggingDate);
             break;
           case FieldType.Message:
             if (!string.IsNullOrEmpty(data.Message))

@@ -123,5 +123,29 @@ namespace NotungTest
 
       Assert.AreEqual("RW = 123.{BERRO}", sb.ToString());
     }
+
+    [TestMethod]
+    public void InfoString()
+    {
+      InfoLevel l1 = InfoLevel.Info;
+      InfoLevel l2 = InfoLevel.Info;
+
+      Assert.IsTrue(ReferenceEquals(l1.ToString(), l2.ToString()));
+    }
+
+    [TestMethod]
+    public void DefaultDateFormat()
+    {
+      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      var builder = new LogStringBuilder("{Date}");
+
+      var sb = new StringBuilder();
+      using (var sw = new StringWriter(sb))
+      {
+        builder.BuildString(sw, evt);
+      }
+
+      Assert.AreEqual(evt.LoggingDate.ToString("dd.MM.yyyy HH:mm:ss.fff"), sb.ToString());
+    }
   }
 }
