@@ -266,6 +266,9 @@ namespace Notung.Helm
 
     public const uint WM_COPYDATA = 0x004A;
 
+    [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
+    public static extern uint RegisterWindowMessageA(string lpString);
+
     /// <summary>
     /// Вызов функции Win API для асинхронного посылания собщения окну
     /// </summary>

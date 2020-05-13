@@ -94,6 +94,17 @@ namespace Notung.Helm
     {
       get { return m_text; }
     }
+
+    /// <summary>
+    /// Отправка атома другому приложению
+    /// </summary>
+    /// <param name="destination">Дескриптор главного окна другого приложения</param>
+    /// <param name="messageCode">Тип сообщения, который должно принять другое приложения</param>
+    /// <returns>Отклик от другого приложения</returns>
+    public IntPtr Send(IntPtr destination, uint messageCode)
+    {
+      return WinAPIHelper.SendMessage(destination, messageCode, new IntPtr(m_buffer_size), this.Handle);
+    }
     
     ~Atom()
     {

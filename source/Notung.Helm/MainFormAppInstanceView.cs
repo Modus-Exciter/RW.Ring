@@ -5,11 +5,15 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using Notung.Helm.Properties;
+using System.Runtime.InteropServices;
+using System.Text;
+using Notung.Log;
 
 namespace Notung.Helm
 {
   public class MainFormAppInstanceView : IAppInstanceView
   {
+    private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
     private readonly Form m_main_form;
 
     public MainFormAppInstanceView(Form mainForm)
@@ -25,7 +29,7 @@ namespace Notung.Helm
       get { return m_main_form; }
     }
 
-    public const int StringArgsMessageCode = 0xA146;
+    public const uint StringArgsMessageCode = 0xA146;
 
     public bool ReliableThreading
     {
@@ -43,44 +47,35 @@ namespace Notung.Helm
 
     public bool SendArgsToProcess(Process previous, IList<string> args)
     {
-      using (var atom = new Atom(string.Join("\n", args)))
+      var text_to_send = string.Join("\n", args);
+
+      using (var atom = new Atom(text_to_send))
       {
-        if (atom.IsValid)
+        if (atom.IsValid && atom.Send(previous.MainWindowHandle, StringArgsMessageCode) != IntPtr.Zero)
         {
-          if (WinAPIHelper.SendMessage(previous.MainWindowHandle, StringArgsMessageCode,
-              new IntPtr(atom.BufferSize), atom.Handle) != IntPtr.Zero)
-          {
-            WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
-            return true;
-          }
-        }
-      } // TODO: Если строку не удалось уместить в атом (Windows сама об этом скажет через IsValid), используем WM_COPYDATA
-
-      return false;
-
-      /*
-      Random rd = new Random();
-
-      string fileName = Path.Combine(AppManager.Instance.WorkingPath, string.Format("{0}.link", handle));
-      File.WriteAllLines(fileName, args.ToArray(), Encoding.UTF8);
-
-      try
-      {
-        var result = WinAPIHelper.SendMessage(proc.MainWindowHandle,
-          StringArgsMessageCode, new IntPtr(sendee.Length + 1), new IntPtr(handle));
-
-        if (result != IntPtr.Zero)
-        {
-          WinAPIHelper.SetForegroundWindow(proc.MainWindowHandle);
+          WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
           return true;
         }
       }
-      finally
+
+      using (var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode))
       {
-        if (File.Exists(fileName))
-          File.Delete(fileName);
+        if (cd.IsValid && cd.Send(m_main_form.Handle, previous.MainWindowHandle) != IntPtr.Zero)
+        {
+          WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
+          return true;
+        }
       }
-      */
+
+      return false;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct COPYDATASTRUCT
+    {
+      public IntPtr dwData;
+      public uint cbData;
+      public IntPtr lpData;
     }
 
     public void Restart(string startPath, IList<string> args)
@@ -90,22 +85,30 @@ namespace Notung.Helm
 
     public static string[] GetStringArgs(Message message)
     {
-      if (message.Msg != StringArgsMessageCode)
-        throw new ArgumentException(string.Format(Resources.NO_LINK_MESSAGE_CODE, message.Msg, MethodInfo.GetCurrentMethod().DeclaringType));
-
-      /*string linkFile = Path.Combine(AppManager.Instance.WorkingPath,
-        message.LParam.ToInt32().ToString() + ".link");
-
-      if (File.Exists(linkFile))
-        return File.ReadAllLines(linkFile, Encoding.UTF8);*/
-
-      using (var atom = new Atom(message.LParam, message.WParam.ToInt32()))
+      if (message.Msg == StringArgsMessageCode)
       {
-        if (atom.Text != null)
-          return atom.Text.Split('\n');
-        else 
-          return ArrayExtensions.Empty<string>();
+        _log.Debug("GetStringArgs(): atom recieved");
+        using (var atom = new Atom(message.LParam, message.WParam.ToInt32()))
+        {
+          if (atom.Text != null)
+            return atom.Text.Split('\n');
+          else
+            return ArrayExtensions.Empty<string>();
+        }
       }
+      else if (message.Msg != WinAPIHelper.WM_COPYDATA)
+      {
+        _log.Debug("GetStringArgs(): copy data structure recieved");
+        using (var cd = new CopyData(message.LParam))
+        {
+          if (cd.TypeCode == StringArgsMessageCode && cd.Data != null)
+            return Encoding.Unicode.GetString(cd.Data).Split('\n');
+          else
+            return ArrayExtensions.Empty<string>();
+        }
+      }
+      else
+        throw new ArgumentException(string.Format(Resources.NO_LINK_MESSAGE_CODE, message.Msg, MethodInfo.GetCurrentMethod().DeclaringType));
     }
   }
 }

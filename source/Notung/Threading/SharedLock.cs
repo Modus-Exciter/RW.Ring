@@ -36,7 +36,8 @@ namespace Notung.Threading
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>   
     public IDisposable ReadLock()
     {
-      return m_reader.Enter();
+      m_lock.EnterReadLock();
+      return m_reader;
     }
 
     /// <summary>
@@ -45,7 +46,8 @@ namespace Notung.Threading
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
     public IDisposable WriteLock()
     {
-      return m_writer.Enter();
+      m_lock.EnterWriteLock();
+      return m_writer;
     }
 
     /// <summary>
@@ -54,7 +56,8 @@ namespace Notung.Threading
     /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
     public IDisposable UpgradeableLock()
     {
-      return m_upgrader.Enter();
+      m_lock.EnterUpgradeableReadLock();
+      return m_upgrader;
     }
 
     /// <summary>
@@ -131,12 +134,6 @@ namespace Notung.Threading
         m_lock = source;
       }
 
-      public IDisposable Enter()
-      {
-        m_lock.EnterReadLock();
-        return this;
-      }
-
       public void Dispose()
       {
         m_lock.ExitReadLock();
@@ -152,12 +149,6 @@ namespace Notung.Threading
         m_lock = source;
       }
 
-      public IDisposable Enter()
-      {
-        m_lock.EnterWriteLock();
-        return this;
-      }
-
       public void Dispose()
       {
         m_lock.ExitWriteLock();
@@ -171,12 +162,6 @@ namespace Notung.Threading
       public UpgradeableLockHandle(ReaderWriterLockSlim source)
       {
         m_lock = source;
-      }
-
-      public IDisposable Enter()
-      {
-        m_lock.EnterUpgradeableReadLock();
-        return this;
       }
 
       public void Dispose()

@@ -121,6 +121,6 @@
     <value>Library failed to load. Unable to enumerate functions</value>
   </data>
   <data name="NO_LINK_MESSAGE_CODE" xml:space="preserve">
-    <value>Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode.</value>
+    <value>Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode or WM_COPYDATA.</value>
   </data>
 </root>

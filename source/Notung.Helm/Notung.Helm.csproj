@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Atom.cs" />
+    <Compile Include="CopyData.cs" />
     <Compile Include="MainFormAppInstanceView.cs" />
     <Compile Include="MainFormBase.cs">
       <SubType>Form</SubType>
