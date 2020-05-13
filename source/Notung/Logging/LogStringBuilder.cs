@@ -10,6 +10,7 @@ namespace Notung.Log
   {
     private readonly IBuildBlock[] m_blocks;
     private readonly ThreadField<char[]> m_date_converter = new ThreadField<char[]>();
+    private volatile bool m_data_included;
     private static readonly int _pid;
 
     static LogStringBuilder()
@@ -37,7 +38,7 @@ namespace Notung.Log
       for (int i = 0; i < m_blocks.Length; i++)
         m_blocks[i].Build(writer, data);
 
-      if (data.Data != null)
+      if (!m_data_included && data.Data != null)
       {
         writer.WriteLine();
         writer.Write(data.Data);
@@ -83,13 +84,23 @@ namespace Notung.Log
         {
           if (template[i] == ':')
           {
-            blocks.Add(new FormatFieldBlock(template.Substring(string_start, i - string_start), m_date_converter));
+            var block = new FormatFieldBlock(template.Substring(string_start, i - string_start), m_date_converter);
+
+            if (block.Type == FieldType.Data)
+              m_data_included = true;
+
+            blocks.Add(block);
             string_start = i + 1;
             state = State.Format;
           }
           else if (template[i] == '}')
           {
-            blocks.Add(new FieldBlock(template.Substring(string_start, i - string_start), m_date_converter));
+            var block = new FieldBlock(template.Substring(string_start, i - string_start), m_date_converter);
+
+            if (block.Type == FieldType.Data)
+              m_data_included = true;
+
+            blocks.Add(block);
             string_start = i + 1;
             state = State.Start;
           }
@@ -185,7 +196,7 @@ namespace Notung.Log
     private class FieldBlock : IBuildBlock
     {
       protected readonly string m_field;
-      protected readonly FieldType m_type;
+      public readonly FieldType Type;
       private readonly ThreadField<char[]> m_date_converter;
 
       public FieldBlock(string field, ThreadField<char[]> dateConverter)
@@ -194,9 +205,9 @@ namespace Notung.Log
         m_date_converter = dateConverter;
 
         if (Enum.IsDefined(typeof(FieldType), field))
-          m_type = (FieldType)Enum.Parse(typeof(FieldType), field);
+          Type = (FieldType)Enum.Parse(typeof(FieldType), field);
         else
-          m_type = FieldType.Context;
+          Type = FieldType.Context;
       }
 
       protected void WriteDate(TextWriter writer, DateTime date)
@@ -243,7 +254,7 @@ namespace Notung.Log
 
       public virtual void Build(TextWriter writer, LoggingEvent data)
       {
-        switch (m_type)
+        switch (Type)
         {
           case FieldType.Source:
             if (!string.IsNullOrEmpty(data.Source))
@@ -301,7 +312,7 @@ namespace Notung.Log
         if (m_format == null)
           m_format = "{0:" + Format + "}";
 
-        switch (m_type)
+        switch (Type)
         {
           case FieldType.Source:
             if (!string.IsNullOrEmpty(data.Source))
