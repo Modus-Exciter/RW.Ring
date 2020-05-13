@@ -70,7 +70,7 @@ namespace Notung.Helm
 
       var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
 
-      if (cd.Send(m_main_form.Handle, previous.MainWindowHandle) != IntPtr.Zero)
+      if (cd.Send(previous.MainWindowHandle) != IntPtr.Zero)
       {
         WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
         return true;

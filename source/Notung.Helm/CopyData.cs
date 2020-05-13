@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Notung.Helm.Properties;
 
@@ -32,13 +33,14 @@ namespace Notung.Helm
     /// Создание объекта передачи данных на принимающей стороне
     /// </summary>
     /// <param name="lParam">Идентификатор объекта, полученный из Message.LParam</param>
+    /// <param name="expectedTypeCode">Ожидаемый идентификатор типа или 0.
+    /// Если получен идентификатор типа, отличный от ожидаемого, данные не загружаются</param>
     public CopyData(IntPtr lParam, uint expectedTypeCode = 0)
     {
       var copyData = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
-
       m_type_code = (uint)copyData.dwData.ToInt32();
 
-      if (m_type_code == expectedTypeCode || expectedTypeCode == 0)
+      if (expectedTypeCode == 0 || m_type_code == expectedTypeCode)
       {
         m_data = new byte[copyData.cbData];
         Marshal.Copy(copyData.lpData, m_data, 0, m_data.Length);
@@ -64,13 +66,17 @@ namespace Notung.Helm
     /// <summary>
     /// Отправка данных другому процессу
     /// </summary>
-    /// <param name="source">Дескриптор главного окна текущего процесса</param>
     /// <param name="destination">Дескриптор главного окна процесса, которому надо передать данные</param>
     /// <returns>Результат обработки сообщения принимающей стороной</returns>
-    public unsafe IntPtr Send(IntPtr source, IntPtr destination)
+    public unsafe IntPtr Send(IntPtr destination)
     {
       if (!m_can_send)
         throw new InvalidOperationException(Resources.COPY_DATA_SEND_RECIEVE);
+
+      IntPtr source;
+
+      using (var process = Process.GetCurrentProcess())
+        source = process.MainWindowHandle;
 
       fixed (byte* array = m_data)
       {
@@ -81,12 +87,6 @@ namespace Notung.Helm
 
         return WinAPIHelper.SendMessage(destination, WinAPIHelper.WM_COPYDATA, source, new IntPtr(&copyData));
       }
-    }
-
-    public override string ToString()
-    {
-      return string.Format(m_can_send ? "{0} bytes to send, type code {1}" : "{0} bytes recieved, type code {1}",
-        (m_data ?? ArrayExtensions.Empty<byte>()).Length, m_type_code);
     }
 
     [StructLayout(LayoutKind.Sequential)]
