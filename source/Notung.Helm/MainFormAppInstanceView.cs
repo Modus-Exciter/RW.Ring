@@ -82,14 +82,6 @@ namespace Notung.Helm
       return false;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    private struct COPYDATASTRUCT
-    {
-      public IntPtr dwData;
-      public uint cbData;
-      public IntPtr lpData;
-    }
-
     public void Restart(string startPath, IList<string> args)
     {
       System.Windows.Forms.Application.Restart();
@@ -104,8 +96,6 @@ namespace Notung.Helm
         {
           if (atom.Text != null)
             return atom.Text.Split('\n');
-          else
-            return ArrayExtensions.Empty<string>();
         }
       }
       else if (message.Msg == WinAPIHelper.WM_COPYDATA)
@@ -115,12 +105,10 @@ namespace Notung.Helm
         {
           if (cd.TypeCode == StringArgsMessageCode && cd.Data != null)
             return Encoding.Unicode.GetString(cd.Data).Split('\n');
-          else
-            return ArrayExtensions.Empty<string>();
         }
       }
-      else
-        throw new ArgumentException(string.Format(Resources.NO_LINK_MESSAGE_CODE, message.Msg, MethodInfo.GetCurrentMethod().DeclaringType));
+
+      return ArrayExtensions.Empty<string>();
     }
   }
 }
