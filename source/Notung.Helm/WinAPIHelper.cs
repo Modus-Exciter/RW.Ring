@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-
 namespace Notung.Helm
 {
   /// <summary>

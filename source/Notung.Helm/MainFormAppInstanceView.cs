@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
-using Notung.Helm.Properties;
-using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using Notung.Log;
 
 namespace Notung.Helm
