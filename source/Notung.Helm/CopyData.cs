@@ -37,13 +37,13 @@ namespace Notung.Helm
     /// Если получен идентификатор типа, отличный от ожидаемого, данные не загружаются</param>
     public unsafe CopyData(IntPtr lParam, uint expectedTypeCode = 0)
     {
-      var copyData = *((COPYDATASTRUCT*)lParam.ToPointer());
-      m_type_code = (uint)copyData.dwData.ToInt32();
+      COPYDATASTRUCT* data_pointer = (COPYDATASTRUCT*)lParam.ToPointer();
+      m_type_code = (uint)data_pointer->dwData.ToInt32();
 
       if (expectedTypeCode == 0 || m_type_code == expectedTypeCode)
       {
-        m_data = new byte[copyData.cbData];
-        Marshal.Copy(copyData.lpData, m_data, 0, m_data.Length);
+        m_data = new byte[data_pointer->cbData];
+        Marshal.Copy(data_pointer->lpData, m_data, 0, m_data.Length);
       }
     }
 
