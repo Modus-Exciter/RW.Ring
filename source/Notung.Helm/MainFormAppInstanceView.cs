@@ -96,7 +96,7 @@ namespace Notung.Helm
             return ArrayExtensions.Empty<string>();
         }
       }
-      else if (message.Msg != WinAPIHelper.WM_COPYDATA)
+      else if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
         _log.Debug("GetStringArgs(): copy data structure recieved");
         using (var cd = new CopyData(message.LParam))

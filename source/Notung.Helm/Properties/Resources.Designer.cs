@@ -61,6 +61,15 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This method cannot be called in recieving process.
+        /// </summary>
+        internal static string COPY_DATA_SEND_RECIEVE {
+            get {
+                return ResourceManager.GetString("COPY_DATA_SEND_RECIEVE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Library failed to load. Unable to enumerate functions.
         /// </summary>
         internal static string DLL_FUNCTIONS_ENUM_FAIL {

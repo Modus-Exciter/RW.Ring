@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using Notung.Helm.Properties;
 
 namespace Notung.Helm
 {
@@ -77,6 +78,9 @@ namespace Notung.Helm
     /// <returns></returns>
     public IntPtr Send(IntPtr source, IntPtr destination)
     {
+      if (!m_is_new)
+        throw new InvalidOperationException(Resources.COPY_DATA_SEND_RECIEVE);
+      
       if (m_struct.lpData == IntPtr.Zero)
         return IntPtr.Zero;
 
