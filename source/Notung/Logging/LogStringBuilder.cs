@@ -26,7 +26,7 @@ namespace Notung.Log
       m_blocks = StateMachine(template).ToArray();
     }
 
-    public void BuildString(TextWriter writer, LoggingData data)
+    public void BuildString(TextWriter writer, LoggingEvent data)
     {
 #if DEBUG
       if (writer == null)
@@ -156,7 +156,7 @@ namespace Notung.Log
 
     private interface IBuildBlock
     {
-      void Build(TextWriter writer, LoggingData data);
+      void Build(TextWriter writer, LoggingEvent data);
     }
 
     private class TokenBlock : IBuildBlock
@@ -168,7 +168,7 @@ namespace Notung.Log
         m_token = token;
       }
 
-      public void Build(TextWriter writer, LoggingData data)
+      public void Build(TextWriter writer, LoggingEvent data)
       {
         writer.Write(m_token);
       }
@@ -227,7 +227,7 @@ namespace Notung.Log
         writer.Write(array);
       }
 
-      protected static void WriteThread(TextWriter writer, LoggingData data)
+      protected static void WriteThread(TextWriter writer, LoggingEvent data)
       {
         if (data.Thread == null)
           return;
@@ -241,7 +241,7 @@ namespace Notung.Log
         }
       }
 
-      public virtual void Build(TextWriter writer, LoggingData data)
+      public virtual void Build(TextWriter writer, LoggingEvent data)
       {
         switch (m_type)
         {
@@ -296,7 +296,7 @@ namespace Notung.Log
 
       public FormatFieldBlock(string field, ThreadField<char[]> dateConverter) : base(field, dateConverter) { }
 
-      public override void Build(TextWriter writer, LoggingData data)
+      public override void Build(TextWriter writer, LoggingEvent data)
       {
         if (m_format == null)
           m_format = "{0:" + Format + "}";

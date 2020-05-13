@@ -15,7 +15,7 @@ namespace Notung
   {
     private LogStringBuilder m_builder;
 
-    public void BuildString(TextWriter writer, LoggingData data)
+    public void BuildString(TextWriter writer, LoggingEvent data)
     {
       if (m_builder == null)
         m_builder = new LogStringBuilder(MessageTemplate);

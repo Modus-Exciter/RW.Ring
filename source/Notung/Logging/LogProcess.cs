@@ -28,14 +28,14 @@ namespace Notung.Log
 
       public abstract void WaitUntilStop();
 
-      public abstract void WriteMessage(LoggingData data);
+      public abstract void WriteMessage(LoggingEvent data);
 
       public abstract void Stop();
     }
 
     private sealed class SyncLogProcess : LogProcess
     {
-      private readonly LoggingData[] m_data = new LoggingData[1];
+      private readonly LoggingEvent[] m_data = new LoggingEvent[1];
 
       public SyncLogProcess(HashSet<ILogAcceptor> acceptors) : base(acceptors) { }
 
@@ -44,7 +44,7 @@ namespace Notung.Log
         this.Stop();
       }
 
-      public override void WriteMessage(LoggingData data)
+      public override void WriteMessage(LoggingEvent data)
       {
         if (m_stop)
           return;
@@ -53,7 +53,7 @@ namespace Notung.Log
         {
           m_data[0] = data;
           foreach (var acceptor in m_acceptors)
-            acceptor.WriteLog(m_data);
+            acceptor.WriteLog(new LoggingData(m_data, 1));
         }
       }
 
@@ -66,11 +66,12 @@ namespace Notung.Log
     private sealed class AsyncLogProcess : LogProcess
     {
       private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
-      private readonly Queue<LoggingData> m_data = new Queue<LoggingData>();
+      private readonly Queue<LoggingEvent> m_data = new Queue<LoggingEvent>();
       private readonly IMainThreadInfo m_info;
+      private volatile int m_size = 0;
       private readonly Thread m_work_thread;
       private volatile bool m_shutdown;
-      private LoggingData[] m_current_data; // Чтобы не создавать лишних объектов
+      private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 
       public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAcceptor> acceptors)
         : base(acceptors)
@@ -124,19 +125,18 @@ namespace Notung.Log
 
       private void ProcessPendingEvents()
       {
-        int size = 0;
-
         lock (m_data)
         {
-          size = m_data.Count;
-          if (size > 0)
+          m_size = m_data.Count;
+          if (m_size > 0)
           {
-            if (m_current_data == null || m_current_data.Length != size)
-              m_current_data = new LoggingData[m_data.Count];
+            if (m_current_data == null || m_current_data.Length < m_size 
+              || m_current_data.Length / m_size > 0x100)
+              m_current_data = new LoggingEvent[m_data.Count];
 
             int i = 0;
 
-            while (i < size)
+            while (i < m_size)
               m_current_data[i++] = m_data.Dequeue();
           }
           else
@@ -152,10 +152,10 @@ namespace Notung.Log
 
       private void Accept(ILogAcceptor acceptor)
       {
-        acceptor.WriteLog(m_current_data);
+        acceptor.WriteLog(new LoggingData(m_current_data, m_size));
       }
 
-      public override void WriteMessage(LoggingData data)
+      public override void WriteMessage(LoggingEvent data)
       {
         if (m_shutdown)
           return;

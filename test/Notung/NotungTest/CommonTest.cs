@@ -27,7 +27,7 @@ namespace NotungTest
     {
       LoggingContext.Global["RW"] = "Composer";
 
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
       Assert.AreEqual("Composer", evt["RW"]);
 
       LoggingContext.Thread["RW"] = "Stream";
@@ -44,13 +44,13 @@ namespace NotungTest
     [TestMethod]
     public void SaveContext()
     {
-      LoggingData data = default(LoggingData);
+      LoggingEvent data = default(LoggingEvent);
 
       LoggingContext.Thread["RW"] = "Composer";
 
       Thread parallel = new Thread(() =>
         {
-          data = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+          data = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
           LoggingContext.Thread["RW"] = "Stream";
         });
 
@@ -75,7 +75,7 @@ namespace NotungTest
       var builder = new LogStringBuilder("RW = {RW:}.");
       LoggingContext.Global["RW"] = 123;
 
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
 
       var sb = new StringBuilder();
 
@@ -94,7 +94,7 @@ namespace NotungTest
       LoggingContext.Global["RW"] = 123;
       LoggingContext.Global["MH"] = "BERRO";
 
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
 
       var sb = new StringBuilder();
 
@@ -113,7 +113,7 @@ namespace NotungTest
       LoggingContext.Global["RW"] = 123;
       LoggingContext.Global["MH"] = "BERRO";
 
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
 
       var sb = new StringBuilder();
 
@@ -137,7 +137,7 @@ namespace NotungTest
     [TestMethod]
     public void DefaultDateFormat()
     {
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
       var builder = new LogStringBuilder("{Date}");
 
       var sb = new StringBuilder();
@@ -152,7 +152,7 @@ namespace NotungTest
     [TestMethod]
     public void CustomDateFormat()
     {
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
       var builder = new LogStringBuilder("{Date:dd.MM.yyyy HH:mm:ss}");
 
       var sb = new StringBuilder();
@@ -167,7 +167,7 @@ namespace NotungTest
     [TestMethod]
     public void ProcessAndThread()
     {
-      LoggingData evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
       var builder = new LogStringBuilder("P:{Process}, T:{Thread}");
 
       var sb = new StringBuilder();
@@ -185,10 +185,10 @@ namespace NotungTest
     [TestMethod]
     public void ProcessAndThreadWithoutName()
     {
-      LoggingData evt = default(LoggingData);
+      LoggingEvent evt = default(LoggingEvent);
       Thread parallel = new Thread(() =>
       {
-        evt = new LoggingData("TEST", "MSG", InfoLevel.Info, null);
+        evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
       });
 
       parallel.Start();

@@ -5,7 +5,7 @@ namespace Notung.Log
 {
   public interface ILogAcceptor
   {
-    void WriteLog(LoggingData[] data);
+    void WriteLog(LoggingData data);
   }
 
   internal sealed class FileLogAcceptor : ILogAcceptor
@@ -55,7 +55,7 @@ namespace Notung.Log
       return m_file_info;
     }
 
-    public void WriteLog(LoggingData[] data)
+    public void WriteLog(LoggingData data)
     {
       FileInfo fi = GetFileInfo();
 

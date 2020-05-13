@@ -9,13 +9,41 @@ namespace Notung.Log
     void WriteLog(string message, InfoLevel level, object data = null);
   }
 
+  public struct LoggingData
+  {
+    private readonly LoggingEvent[] m_data;
+    private readonly int m_length;
+
+    public LoggingData(LoggingEvent[] data, int length) : this()
+    {
+#if DEBUG
+      if (data != null && length < 0 || length > data.Length)
+        throw new ArgumentOutOfRangeException("length");
+#endif
+      m_data = data;
+
+      if (m_data != null)
+        m_length = length;
+    }
+
+    public int Length
+    {
+      get { return m_length; }
+    }
+
+    public LoggingEvent this[int index]
+    {
+      get { return m_data[index]; }
+    }
+  }
+
   /// <summary>
   /// Смысл этой структуры - запомнить всё, что требуется писать в лог 
   /// (к стандартному комплекту Info добавляется источник и дата события)
   /// </summary>
-  public struct LoggingData
+  public struct LoggingEvent
   {
-    public LoggingData(string source, string message, InfoLevel level, object data) : this()
+    public LoggingEvent(string source, string message, InfoLevel level, object data) : this()
     {
       if (string.IsNullOrEmpty(source))
         throw new ArgumentNullException("source"); 

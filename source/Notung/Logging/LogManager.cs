@@ -196,7 +196,7 @@ namespace Notung.Log
         var process = _process;
 
         if (process != null)
-          process.WriteMessage(new LoggingData(m_source, message, level, data));
+          process.WriteMessage(new LoggingEvent(m_source, message, level, data));
       }
     }
   }
