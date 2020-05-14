@@ -98,6 +98,12 @@ namespace Notung.Helm
       }
     }
 
+    public override string ToString()
+    {
+      return string.Format("{0} bytes {1}; type code {2} - {3}", (m_data ?? ArrayExtensions.Empty<byte>()).Length,
+        m_can_send ? "to send" : "recieved", m_type_code, this.TypeCode);
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     private struct COPYDATASTRUCT
     {

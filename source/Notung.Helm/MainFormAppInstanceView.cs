@@ -99,10 +99,9 @@ namespace Notung.Helm
       }
       else */if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
-        _log.Debug("GetStringArgs(): copy data structure recieved");
-
         var cd = new CopyData(message.LParam, new DataTypeCode(StringArgsMessageCode));
 
+        _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
         if (cd.Data != null)
           return Encoding.Unicode.GetString(cd.Data).Split('\n');
       }
