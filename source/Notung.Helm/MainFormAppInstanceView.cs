@@ -70,7 +70,7 @@ namespace Notung.Helm
         }
       }*/
 
-      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), new DataTypeCode(StringArgsMessageCode));
+      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), (DataTypeCode)StringArgsMessageCode);
 
       if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
       {
@@ -99,7 +99,7 @@ namespace Notung.Helm
       }
       else */if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
-        var cd = new CopyData(message.LParam, new DataTypeCode(StringArgsMessageCode));
+        var cd = new CopyData(message.LParam, (DataTypeCode)StringArgsMessageCode);
 
         _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
         if (cd.Data != null)

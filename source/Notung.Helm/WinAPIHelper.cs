@@ -271,7 +271,6 @@ namespace Notung.Helm
     public const uint SMTO_NOTIMEOUTIFNOTHUNG = 0x0008;
     public const uint SMTO_ERRORONEXIT = 0x0020;
 
-
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
     public static extern uint RegisterWindowMessageA(string lpString);
 
@@ -297,6 +296,17 @@ namespace Notung.Helm
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern IntPtr SendMessage(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+    /// <summary>
+    /// Отправка сообщения окну с указанием времени ожидания до того, как функция вернёт управление
+    /// </summary>
+    /// <param name="hwnd">Дескриптор окна</param>
+    /// <param name="Msg">Код сообщения</param>
+    /// <param name="wParam">wParam</param>
+    /// <param name="lParam">lParam</param>
+    /// <param name="flags">Флаги SMTO_XXX, управляющие поведением функции</param>
+    /// <param name="timeout">Время ожидания отклика от окна в миллисекундах</param>
+    /// <param name="result">Указатель на то место, куда окно должно записать отклик</param>
+    /// <returns>Если произошёл таймаут, то IntPtr.Zero. Иначе значение, отличное от IntPtr.Zero</returns>
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern IntPtr SendMessageTimeoutA(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam, uint flags, uint timeout, IntPtr result);
 
