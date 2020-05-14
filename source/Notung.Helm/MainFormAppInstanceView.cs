@@ -14,14 +14,11 @@ namespace Notung.Helm
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
     private readonly Form m_main_form;
-    private static readonly uint _args_code;
+    private static readonly uint _args_code = 1;
 
     static MainFormAppInstanceView()
     {
-      _args_code = WinAPIHelper.RegisterWindowMessageA("StringArgsMessageCode");
-
-      if (_args_code == 0)
-        _args_code = 0xA146;
+      DataTypeCode.Set(1, "Command line arguments");
     }
 
     public MainFormAppInstanceView(Form mainForm)
