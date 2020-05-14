@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Notung.Data;
 using Notung.Helm.Properties;
 
 namespace Notung.Helm
@@ -68,6 +68,7 @@ namespace Notung.Helm
     /// Отправка данных другому процессу
     /// </summary>
     /// <param name="destination">Дескриптор главного окна процесса, которому надо передать данные</param>
+    /// <param name="timeout">Время ожидания ответа от принимающей стороны. Значение по умолчанию - не ограничено</param>
     /// <returns>Результат обработки сообщения принимающей стороной</returns>
     public unsafe IntPtr Send(IntPtr destination, TimeSpan timeout = default(TimeSpan))
     {

@@ -1,5 +1,6 @@
 ﻿using System;
 using Notung.Configuration;
+using Notung.Loader;
 using Notung.Log;
 
 namespace Notung
@@ -8,6 +9,7 @@ namespace Notung
   {
     private static IConfigurator _configurator;
     private static IAppInstance _app_instance;
+    private static IAssemblyClassifier _asm_classifier;
 
     private static readonly object _lock = new object();
 
@@ -49,6 +51,25 @@ namespace Notung
           throw new ArgumentNullException();
 
         _app_instance = value;
+      }
+    }
+
+    public static IAssemblyClassifier AssemblyClassifier
+    {
+      get
+      {
+        return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier());
+      }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+
+        lock (_lock)
+        {
+          _asm_classifier.Dispose();
+          _asm_classifier = value;
+        }
       }
     }
   }

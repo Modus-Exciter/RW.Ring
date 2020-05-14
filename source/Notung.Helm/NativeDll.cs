@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Notung.Data;
 using Notung.Helm.Properties;
 
 namespace Notung.Helm

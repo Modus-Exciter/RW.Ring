@@ -43,8 +43,11 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
-    <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="DataTypeCode.cs" />
+    <Compile Include="Data\WeakSet.cs" />
+    <Compile Include="Loader\IAssemblyClassifier.cs" />
+    <Compile Include="Loader\IFactory.cs" />
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Logging\LogStringBuilder.cs" />

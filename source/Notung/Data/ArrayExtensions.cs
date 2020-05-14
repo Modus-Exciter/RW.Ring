@@ -1,5 +1,5 @@
 ﻿
-namespace Notung
+namespace Notung.Data
 {
   public static class ArrayExtensions
   {

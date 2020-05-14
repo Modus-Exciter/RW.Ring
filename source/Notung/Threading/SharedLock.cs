@@ -125,6 +125,24 @@ namespace Notung.Threading
       m_lock.Dispose();
     }
 
+    /// <summary>
+    /// Статус блокировки - нет, чтение, обновляемый режим или запись
+    /// </summary>
+    public LockState LockState
+    {
+      get
+      {
+        if (m_lock.IsWriteLockHeld)
+          return Threading.LockState.Write;
+        else if (m_lock.IsUpgradeableReadLockHeld)
+          return Threading.LockState.Upgradeable;
+        else if (m_lock.IsReadLockHeld)
+          return Threading.LockState.Read;
+        else
+          return Threading.LockState.None;
+      }
+    }
+
     private sealed class ReadLockHandle : IDisposable
     {
       private readonly ReaderWriterLockSlim m_lock;
@@ -169,5 +187,13 @@ namespace Notung.Threading
         m_lock.ExitUpgradeableReadLock();
       }
     }
+  }
+
+  public enum LockState
+  {
+    None,
+    Read,
+    Upgradeable,
+    Write
   }
 }

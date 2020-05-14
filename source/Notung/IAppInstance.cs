@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Notung.Data;
 using Notung.Log;
 using Notung.Threading;
 
@@ -14,8 +15,6 @@ namespace Notung
 {
   public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
   {
-    bool IsUserAnAdmin { get; }
-
     ReadOnlyCollection<string> CommandLineArgs { get; }
 
     IOperationWrapper ApartmentWrapper { get; }
@@ -58,7 +57,6 @@ namespace Notung
     private Thread m_mutex_thread;
     private volatile bool m_terminating;
     private volatile bool m_restarting;
-    private readonly bool m_is_admin;
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
     private readonly string m_main_module_file_name = ApplicationInfo.Instance.CurrentProcess.MainModule.FileName;
@@ -84,7 +82,6 @@ namespace Notung
 
       m_view = view;
       m_args = Array.AsReadOnly(args);
-      m_is_admin = m_apartment_wrapper.Invoke(new Func<bool>(APIHelper.IsUserAnAdmin)); // TODO: уточнить, можно ли изменить это в ходе работы программы
 
       if (m_view.ReliableThreading)
         LogManager.SetMainThreadInfo(this);
@@ -108,7 +105,7 @@ namespace Notung
 
         if (m_view.Invoker.InvokeRequired)
           return m_main_thread = (Thread)m_view.Invoker.Invoke(
-            new Func<Thread>(APIHelper.GetCurrentThread), ArrayExtensions.Empty<object>());
+            new Func<Thread>(() => Thread.CurrentThread), ArrayExtensions.Empty<object>());
         else
           return Thread.CurrentThread;
       }
@@ -117,11 +114,6 @@ namespace Notung
     public bool ReliableThreading
     {
       get { return m_view.ReliableThreading; }
-    }
-
-    public bool IsUserAnAdmin
-    {
-      get { return m_is_admin; }
     }
 
     public ReadOnlyCollection<string> CommandLineArgs
@@ -159,7 +151,7 @@ namespace Notung
     {
       if (m_mutex_thread != null)
         return;
-      
+
       m_mutex_thread = new Thread(CreateBlockingMutex);
       m_mutex_thread.SetApartmentState(ApartmentState.STA);
       m_mutex_thread.Start();
@@ -248,17 +240,6 @@ namespace Notung
       }
 
       return new string(path);
-    }
-
-    static private class APIHelper
-    {
-      [DllImport("shell32.dll")]
-      public static extern bool IsUserAnAdmin();
-
-      public static Thread GetCurrentThread()
-      {
-        return Thread.CurrentThread;
-      }
     }
   }
 

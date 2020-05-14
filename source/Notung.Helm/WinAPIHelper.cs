@@ -313,6 +313,9 @@ namespace Notung.Helm
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+    [DllImport("shell32.dll")]
+    public static extern bool IsUserAnAdmin();
+
     #endregion
 
     private static LoadSymbolDelegate LoadSymbol { get; set; }

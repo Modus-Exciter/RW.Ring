@@ -68,6 +68,7 @@ namespace Notung.Log
       private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
       private readonly Queue<LoggingEvent> m_data = new Queue<LoggingEvent>();
       private readonly IMainThreadInfo m_info;
+      private readonly object m_close_lock = new object();
       private volatile int m_size = 0;
       private readonly Thread m_work_thread;
       private volatile bool m_shutdown;
@@ -87,13 +88,16 @@ namespace Notung.Log
 
       public override void WaitUntilStop()
       {
-        if (m_stop)
-          return;
+        lock (m_close_lock)
+        {
+          if (m_stop)
+            return;
 
-        m_shutdown = true;
+          m_shutdown = true;
 
-        while (m_data.Count > 0)
-          m_signal.Set();
+          while (m_data.Count > 0)
+            m_signal.Set();
+        }
 
         this.Stop();
 
@@ -168,12 +172,15 @@ namespace Notung.Log
 
       public override void Stop()
       {
-        if (m_stop)
-          return;
+        lock (m_close_lock)
+        {
+          if (m_stop)
+            return;
 
-        m_stop = true;
-        m_shutdown = true;
-        m_signal.Set();
+          m_stop = true;
+          m_shutdown = true;
+          m_signal.Set();
+        }
       }
     }
   }
