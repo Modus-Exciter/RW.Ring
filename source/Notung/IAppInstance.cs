@@ -188,9 +188,9 @@ namespace Notung
           _log.Debug("CreateBlockingMutex(): exit");
           mutex.Close();
 
-          if (m_args.Count > 0)
+          if (m_args.Count > 0 && m_view.SupportSendingArgs)
           {
-            if (m_view.SupportSendingArgs && this.SendArgsToPreviousProcess())
+            if (this.SendArgsToPreviousProcess())
               _log.Debug("CreateBlockingMutex(): message to previous application copy sent");
             else
               _log.Debug("CreateBlockingMutex(): previous application copy not responding");
