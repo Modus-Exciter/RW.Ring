@@ -62,15 +62,6 @@ namespace Notung.Helm
     {
       var text_to_send = string.Join("\n", args);
 
-      /*using (var atom = new Atom(text_to_send))
-      {
-        if (atom.IsValid && atom.Send(previous.MainWindowHandle, StringArgsMessageCode) != IntPtr.Zero)
-        {
-          WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
-          return true;
-        }
-      }*/
-
       var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), (DataTypeCode)StringArgsMessageCode);
 
       if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
@@ -89,16 +80,7 @@ namespace Notung.Helm
 
     public static string[] GetStringArgs(Message message)
     {
-      /*if (message.Msg == StringArgsMessageCode)
-      {
-        _log.Debug("GetStringArgs(): atom recieved");
-        using (var atom = new Atom(message.LParam, message.WParam.ToInt32()))
-        {
-          if (atom.Text != null)
-            return atom.Text.Split('\n');
-        }
-      }
-      else */if (message.Msg == WinAPIHelper.WM_COPYDATA)
+      if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
         var cd = new CopyData(message.LParam, (DataTypeCode)StringArgsMessageCode);
 
