@@ -19,13 +19,13 @@ namespace Notung.Helm
     /// </summary>
     /// <param name="data">Данные, которые требуется передать другому процессу</param>
     /// <param name="typeCode">Идентификатор типа данных для другого процесса</param>
-    public CopyData(byte[] data, uint typeCode)
+    public CopyData(byte[] data, DataTypeCode typeCode)
     {
       if (data == null)
         throw new ArgumentNullException("data");
       
       m_data = data;
-      m_type_code = typeCode;
+      m_type_code = typeCode.Code;
       m_can_send = true;
     }
 
@@ -35,12 +35,13 @@ namespace Notung.Helm
     /// <param name="lParam">Идентификатор объекта, полученный из Message.LParam</param>
     /// <param name="expectedTypeCode">Ожидаемый идентификатор типа или 0.
     /// Если получен идентификатор типа, отличный от ожидаемого, данные не загружаются</param>
-    public unsafe CopyData(IntPtr lParam, uint expectedTypeCode = 0)
+    public unsafe CopyData(IntPtr lParam, DataTypeCode expectedTypeCode = default(DataTypeCode))
     {
       COPYDATASTRUCT* data_pointer = (COPYDATASTRUCT*)lParam.ToPointer();
+
       m_type_code = (uint)data_pointer->dwData.ToInt32();
 
-      if (expectedTypeCode == 0 || m_type_code == expectedTypeCode)
+      if (expectedTypeCode == DataTypeCode.Empty || m_type_code == expectedTypeCode.Code)
       {
         m_data = new byte[data_pointer->cbData];
         Marshal.Copy(data_pointer->lpData, m_data, 0, m_data.Length);
@@ -58,7 +59,7 @@ namespace Notung.Helm
     /// <summary>
     /// Идентификатор типа данных
     /// </summary>
-    public uint TypeCode
+    public DataTypeCode TypeCode
     {
       get { return m_type_code; }
     }
@@ -68,15 +69,12 @@ namespace Notung.Helm
     /// </summary>
     /// <param name="destination">Дескриптор главного окна процесса, которому надо передать данные</param>
     /// <returns>Результат обработки сообщения принимающей стороной</returns>
-    public unsafe IntPtr Send(IntPtr destination)
+    public unsafe IntPtr Send(IntPtr destination, TimeSpan timeout = default(TimeSpan))
     {
       if (!m_can_send)
         throw new InvalidOperationException(Resources.COPY_DATA_SEND_RECIEVE);
 
-      IntPtr source;
-
-      using (var process = Process.GetCurrentProcess())
-        source = process.MainWindowHandle;
+      IntPtr source = ApplicationInfo.Instance.CurrentProcess.MainWindowHandle;
 
       fixed (byte* array = m_data)
       {
@@ -85,7 +83,18 @@ namespace Notung.Helm
         copyData.dwData = new IntPtr(m_type_code);
         copyData.cbData = (uint)m_data.Length;
 
-        return WinAPIHelper.SendMessage(destination, WinAPIHelper.WM_COPYDATA, source, new IntPtr(&copyData));
+        if (timeout == default(TimeSpan))
+          return WinAPIHelper.SendMessage(destination, WinAPIHelper.WM_COPYDATA, source, new IntPtr(&copyData));
+        else
+        {
+          IntPtr result;
+
+          if (WinAPIHelper.SendMessageTimeoutA(destination, WinAPIHelper.WM_COPYDATA, source, new IntPtr(&copyData),
+            WinAPIHelper.SMTO_BLOCK, (uint)timeout.TotalMilliseconds, new IntPtr(&result)) != IntPtr.Zero)
+            return result;
+
+          else return IntPtr.Zero;
+        }
       }
     }
 

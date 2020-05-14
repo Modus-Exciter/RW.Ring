@@ -131,7 +131,7 @@ namespace Notung.Helm
     /// <returns>Список имён функций</returns>
     public static StringCollection GetDllExportList(string fileName)
     {
-     // var loader = new SymbolLoader();
+      // var loader = new SymbolLoader();
 
       IntPtr procId = new IntPtr(Process.GetCurrentProcess().Id);
 
@@ -161,7 +161,7 @@ namespace Notung.Helm
             {
               _strings = null;
             }
-            
+
             return _strings;
           }
           finally
@@ -265,6 +265,13 @@ namespace Notung.Helm
 
     public const uint WM_COPYDATA = 0x004A;
 
+    public const uint SMTO_ABORTIFHUNG = 0x0002;
+    public const uint SMTO_BLOCK = 0x0001;
+    public const uint SMTO_NORMAL = 0x0000;
+    public const uint SMTO_NOTIMEOUTIFNOTHUNG = 0x0008;
+    public const uint SMTO_ERRORONEXIT = 0x0020;
+
+
     [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
     public static extern uint RegisterWindowMessageA(string lpString);
 
@@ -289,6 +296,9 @@ namespace Notung.Helm
     /// <returns></returns>
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern IntPtr SendMessage(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern IntPtr SendMessageTimeoutA(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam, uint flags, uint timeout, IntPtr result);
 
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);

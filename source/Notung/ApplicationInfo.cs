@@ -1,4 +1,5 @@
 ﻿using System;
+using Process = System.Diagnostics.Process;
 using System.IO;
 using System.Reflection;
 using Notung.ComponentModel;
@@ -14,6 +15,7 @@ namespace Notung
     private string m_description;
     private Version m_version;
     private Version m_file_version;
+    private Process m_current_process;
 
     private static ApplicationInfo _instance;
     private static object _lock = new object();
@@ -146,6 +148,17 @@ namespace Notung
         }
 
         return m_file_version;
+      }
+    }
+
+    public Process CurrentProcess
+    {
+      get
+      {
+        if (m_current_process == null)
+          m_current_process = Process.GetCurrentProcess();
+
+        return m_current_process;
       }
     }
 

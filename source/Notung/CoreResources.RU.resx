@@ -123,6 +123,9 @@
   <data name="NULL" xml:space="preserve">
     <value>(пусто)</value>
   </data>
+  <data name="UNKNOWN" xml:space="preserve">
+    <value>(неизвестно)</value>
+  </data>
   <data name="YES" xml:space="preserve">
     <value>Да</value>
   </data>

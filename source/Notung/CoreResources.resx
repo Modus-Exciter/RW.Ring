@@ -123,6 +123,9 @@
   <data name="NULL" xml:space="preserve">
     <value>(empty)</value>
   </data>
+  <data name="UNKNOWN" xml:space="preserve">
+    <value>(unknown)</value>
+  </data>
   <data name="YES" xml:space="preserve">
     <value>Yes</value>
   </data>

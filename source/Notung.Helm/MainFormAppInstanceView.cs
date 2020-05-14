@@ -55,6 +55,8 @@ namespace Notung.Helm
       get { return _args_code; }
     }
 
+    public static TimeSpan SendMessageTimeout = TimeSpan.FromMilliseconds(0x100);
+
     public bool SendArgsToProcess(Process previous, IList<string> args)
     {
       var text_to_send = string.Join("\n", args);
@@ -68,9 +70,9 @@ namespace Notung.Helm
         }
       }*/
 
-      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
+      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), new DataTypeCode(StringArgsMessageCode));
 
-      if (cd.Send(previous.MainWindowHandle) != IntPtr.Zero)
+      if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
       {
         WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
         return true;
@@ -99,7 +101,7 @@ namespace Notung.Helm
       {
         _log.Debug("GetStringArgs(): copy data structure recieved");
 
-        var cd = new CopyData(message.LParam, StringArgsMessageCode);
+        var cd = new CopyData(message.LParam, new DataTypeCode(StringArgsMessageCode));
 
         if (cd.Data != null)
           return Encoding.Unicode.GetString(cd.Data).Split('\n');

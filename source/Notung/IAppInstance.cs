@@ -61,7 +61,7 @@ namespace Notung
     private readonly bool m_is_admin;
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
-    private readonly string m_main_module_file_name = GetMainModuleFileName();
+    private readonly string m_main_module_file_name = ApplicationInfo.Instance.CurrentProcess.MainModule.FileName;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(AppInstance));
 
@@ -221,19 +221,17 @@ namespace Notung
 
     private bool SendArgsToPreviousProcess()
     {
-      using (var currentProc = Process.GetCurrentProcess())
+      var currentProc = ApplicationInfo.Instance.CurrentProcess;
+      var procList = Process.GetProcessesByName(currentProc.ProcessName);
+      foreach (var proc in procList)
       {
-        var procList = Process.GetProcessesByName(currentProc.ProcessName);
-        foreach (var proc in procList)
-        {
-          if (proc.Id == currentProc.Id)
-            continue;
+        if (proc.Id == currentProc.Id)
+          continue;
 
-          if (proc.StartInfo.UserName != currentProc.StartInfo.UserName)
-            continue;
+        if (proc.StartInfo.UserName != currentProc.StartInfo.UserName)
+          continue;
 
-          return m_view.SendArgsToProcess(proc, m_args);
-        }
+        return m_view.SendArgsToProcess(proc, m_args);
       }
 
       return false;
@@ -250,14 +248,6 @@ namespace Notung
       }
 
       return new string(path);
-    }
-
-    private static string GetMainModuleFileName()
-    {
-      using (var process = Process.GetCurrentProcess())
-      {
-        return process.MainModule.FileName;
-      }
     }
 
     static private class APIHelper

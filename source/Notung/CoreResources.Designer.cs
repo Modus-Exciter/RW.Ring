@@ -79,6 +79,15 @@ namespace Notung {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (unknown).
+        /// </summary>
+        public static string UNKNOWN {
+            get {
+                return ResourceManager.GetString("UNKNOWN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         public static string YES {
