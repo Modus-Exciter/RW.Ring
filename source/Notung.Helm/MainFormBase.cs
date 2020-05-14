@@ -14,7 +14,7 @@ namespace Notung.Helm
     {
       base.WndProc(ref msg);
 
-      if (msg.Msg == MainFormAppInstanceView.StringArgsMessageCode)
+      if (msg.Msg == MainFormAppInstanceView.StringArgsMessageCode || msg.Msg == WinAPIHelper.WM_COPYDATA)
       {
         if (AcceptStringArgs(MainFormAppInstanceView.GetStringArgs(msg)))
           msg.Result = new IntPtr(1);
