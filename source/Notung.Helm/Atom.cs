@@ -106,6 +106,26 @@ namespace Notung.Helm
       return WinAPIHelper.SendMessage(destination, messageCode, new IntPtr(m_buffer_size), this.Handle);
     }
     
+    public override bool Equals(object obj)
+    {
+      var other = obj as Atom;
+
+      if (other == null)
+        return false;
+
+      return m_handle == other.m_handle;
+    }
+
+    public override int GetHashCode()
+    {
+      return m_handle;
+    }
+
+    public override string ToString()
+    {
+      return m_text ?? CoreResources.NULL;
+    }
+
     ~Atom()
     {
       this.Dispose(false);
@@ -126,21 +146,6 @@ namespace Notung.Helm
 
       if (disposing)
         m_handle = 0;
-    }
-
-    public override bool Equals(object obj)
-    {
-      var other = obj as Atom;
-
-      if (other == null)
-        return false;
-
-      return m_handle == other.m_handle;
-    }
-
-    public override int GetHashCode()
-    {
-      return m_handle;
     }
 
     [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]

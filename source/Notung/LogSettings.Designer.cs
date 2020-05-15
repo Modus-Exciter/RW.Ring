@@ -25,15 +25,6 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[{Date:dd.MM.yyyy HH:mm:ss}] [{Level}] {Source}: {Message}")]
-        public string MessageTemplate {
-            get {
-                return ((string)(this["MessageTemplate"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("===============================================")]
         public string Separator {
             get {
@@ -56,6 +47,15 @@ namespace Notung {
         public string DefaultLogger {
             get {
                 return ((string)(this["DefaultLogger"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}")]
+        public string MessageTemplate {
+            get {
+                return ((string)(this["MessageTemplate"]));
             }
         }
     }

@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppInfoConsoleTest", "..\te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfiguratorGraphicalTest", "..\test\Notung\ConfiguratorGraphicalTest\ConfiguratorGraphicalTest.csproj", "{E8CD576D-BDBD-40C0-880F-B64C02EA1184}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginsTest", "..\test\Notung\PluginsTest\PluginsTest.csproj", "{AB642C81-9465-4072-93F2-2B4E999141A0}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = RW.Ring.vsmdi
@@ -113,6 +115,16 @@ Global
 		{E8CD576D-BDBD-40C0-880F-B64C02EA1184}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E8CD576D-BDBD-40C0-880F-B64C02EA1184}.Release|x86.ActiveCfg = Release|x86
 		{E8CD576D-BDBD-40C0-880F-B64C02EA1184}.Release|x86.Build.0 = Release|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Debug|x86.ActiveCfg = Debug|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Debug|x86.Build.0 = Debug|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Release|Any CPU.ActiveCfg = Release|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Release|Mixed Platforms.Build.0 = Release|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Release|x86.ActiveCfg = Release|x86
+		{AB642C81-9465-4072-93F2-2B4E999141A0}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,5 +138,6 @@ Global
 		{E7C90A07-C930-47D0-BCBE-34919DC5F592} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 		{F7908156-8FB0-4882-A463-B8904D3F8E6D} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 		{E8CD576D-BDBD-40C0-880F-B64C02EA1184} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
+		{AB642C81-9465-4072-93F2-2B4E999141A0} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 	EndGlobalSection
 EndGlobal

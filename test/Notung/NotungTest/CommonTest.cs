@@ -4,6 +4,7 @@ using Notung;
 using Notung.Data;
 using Notung.Loader;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace NotungTest
 {
@@ -60,6 +61,8 @@ namespace NotungTest
     [TestMethod]
     public void DeferredFactoryTest()
     {
+      var asm2 = Assembly.LoadWithPartialName("System.Data");
+      
       var factory = new DeferredFactory<IComponent>("System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "System.Windows.Forms.Form");
       Assert.IsTrue(factory.Create() is Component);
     }

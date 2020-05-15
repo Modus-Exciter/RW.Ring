@@ -151,6 +151,24 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0} is not a correct plugin file.
+        /// </summary>
+        internal static string INVALID_PLUGIN_FILE {
+            get {
+                return ResourceManager.GetString("INVALID_PLUGIN_FILE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assembly {0} specified in plugin file {1} does not exist.
+        /// </summary>
+        internal static string PLUGIN_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("PLUGIN_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to save inherited section. Expected type {0}, actual type {1}.
         /// </summary>
         internal static string SECTION_TYPE_UNINHERITABLE {
