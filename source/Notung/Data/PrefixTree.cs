@@ -89,6 +89,8 @@ namespace Notung.Data
       get { return m_count; }
     }
 
+    #region Implementation
+
     private void Collect(PrefixTreeItem item, LinkedList<PrefixTreeItem> list)
     {
       foreach (var child in item.Children)
@@ -133,37 +135,14 @@ namespace Notung.Data
         m_next_symbols.Clear();
       }
 
-      public bool Contains(char symbol)
-      {
-        return m_next_symbols.ContainsKey(symbol);
-      }
-
       public bool TryGetChild(char symbol, out PrefixTreeItem item)
       {
         return m_next_symbols.TryGetValue(symbol, out item);
       }
 
-      public ICollection<PrefixTreeItem> Children
+      public IEnumerable<PrefixTreeItem> Children
       {
         get { return m_next_symbols.Values; }
-      }
-
-      public PrefixTreeItem Parent
-      {
-        get { return m_parent; }
-      }
-
-      public PrefixTreeItem Root
-      {
-        get
-        {
-          var item = this;
-
-          while (item.m_parent != null)
-            item = item.m_parent;
-
-          return item;
-        }
       }
 
       public bool IsLeaf
@@ -192,5 +171,7 @@ namespace Notung.Data
         return new string(ret);
       }
     }
+
+    #endregion
   }
 }
