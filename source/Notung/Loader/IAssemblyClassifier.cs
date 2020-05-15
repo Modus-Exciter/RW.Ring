@@ -22,7 +22,7 @@ namespace Notung.Loader
 
     string PluginsDirectory { get; set; }
 
-    string[] GetUnmanagedAsemblies();
+    string[] GetUnmanagedAsemblies(); // TODO: property; add loaing all assembly tree
 
     void LoadPlugins(string searchPattern);
   }
@@ -44,7 +44,6 @@ namespace Notung.Loader
     private readonly ReadOnlyCollection<PluginInfo> m_plugins_wrapper;
 
     private readonly HashSet<string> m_unmanaged_asms = new HashSet<string>();
-
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
 

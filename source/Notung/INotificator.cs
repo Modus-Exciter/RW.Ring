@@ -15,6 +15,10 @@ namespace Notung
     void Show(Info info);
 
     bool Confirm(Info info);
+
+    void Show(string message, InfoLevel level);
+
+    bool Confirm(string message, InfoLevel level);
   }
 
   public sealed class Notificator : INotificator
@@ -35,6 +39,8 @@ namespace Notung
     {
       if (buffer == null)
         throw new ArgumentNullException("buffer");
+
+      // TODO if (string.IsnullOrEmpty - generate summary automatically from resources)
       
       m_view.Alert(summary, buffer, false);
     }
@@ -52,6 +58,8 @@ namespace Notung
       if (info == null)
         throw new ArgumentNullException("info");
 
+      // TODO: add more overloading versions
+
       m_view.Alert(info, false);
     }
 
@@ -61,6 +69,16 @@ namespace Notung
         throw new ArgumentNullException("info");
 
       return m_view.Alert(info, true);
+    }
+
+    public void Show(string message, InfoLevel level)
+    {
+      this.Show(new Info(message, level));
+    }
+
+    public bool Confirm(string message, InfoLevel level)
+    {
+      return this.Confirm(new Info(message, level));
     }
 
     public void Dispose() { }

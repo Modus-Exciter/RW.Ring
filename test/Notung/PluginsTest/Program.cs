@@ -23,12 +23,12 @@ namespace PluginsTest
 
       Console.WriteLine();
 
-      buffer = new InfoBuffer();
+      var info = new Info("Plugins:", InfoLevel.Fatal);
 
       foreach (var plugin in AppManager.AssemblyClassifier.Plugins)
-        buffer.Add(string.Format("{0}, {1}", plugin.Name, plugin.Assembly), InfoLevel.Debug);
+        info.InnerMessages.Add(string.Format("{0}, {1}", plugin.Name, plugin.Assembly), InfoLevel.Debug);
 
-      AppManager.Notificator.Show("Plugins:", buffer);
+      AppManager.Notificator.Show(info);
 
       if (AppManager.Notificator.Confirm(new Info("Show unmanaged?", InfoLevel.Warning)))
       {
