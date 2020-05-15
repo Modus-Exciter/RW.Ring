@@ -47,7 +47,7 @@ namespace Notung.Loader
     
     public T Create()
     {
-      Assembly asm = Assembly.Load(new AssemblyName(m_assembly));
+      Assembly asm = Assembly.Load(m_assembly);
 
       Type type = asm.GetType(m_type, true);
 
@@ -57,5 +57,4 @@ namespace Notung.Loader
         throw new TypeLoadException();
     }
   }
-
 }

@@ -1,14 +1,8 @@
-﻿using System;
-using System.Threading;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.ComponentModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Notung.Threading;
 using Notung;
-using Notung.Log;
-using System.Text;
-using System.IO;
-using System.Diagnostics;
+using Notung.Data;
+using Notung.Loader;
 
 namespace NotungTest
 {
@@ -21,190 +15,26 @@ namespace NotungTest
       Assert.AreEqual("hello, world!", AppManager.Instance.ApartmentWrapper.Invoke(() => "Hello, World!".ToLower()));
     }
 
-
     [TestMethod]
-    public void SetContext()
+    public void PrefixTreeTest()
     {
-      LoggingContext.Global["RW"] = "Composer";
+      PrefixTree tree = new PrefixTree();
+      tree.AddPrefix("DevExpress.");
+      tree.AddPrefix("System");
+      tree.AddPrefix("Syslogs");
+      tree.AddPrefix("Document");
 
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-      Assert.AreEqual("Composer", evt["RW"]);
-
-      LoggingContext.Thread["RW"] = "Stream";
-      Assert.AreEqual("Stream", evt["RW"]);
+      Assert.IsTrue(tree.MatchAny("DevExpress.Logs"));
+      Assert.IsFalse(tree.MatchAny("DevExpress"));
+      Assert.IsTrue(tree.MatchAny("System"));
+      Assert.IsTrue(tree.MatchAny("DocumentView"));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void CheckReserved()
+    public void DeferredFactoryTest()
     {
-      LoggingContext.Global["Source"] = "TEST";
-    }
-
-    [TestMethod]
-    public void SaveContext()
-    {
-      LoggingEvent data = default(LoggingEvent);
-
-      LoggingContext.Thread["RW"] = "Composer";
-
-      Thread parallel = new Thread(() =>
-        {
-          data = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-          LoggingContext.Thread["RW"] = "Stream";
-        });
-
-      parallel.Start();
-      parallel.Join();
-
-      Assert.AreEqual("Stream", data["RW"]);
-    }
-
-    [TestMethod]
-    public void LogStringBuilderTest()
-    {
-      var bldr = new LogStringBuilder("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR");
-      var bldr2 = new LogStringBuilder("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR{Message}");
-
-      Assert.AreEqual("Summa \\{1} and {SUKA} and {RUKA: 67612} RRR{Message}", bldr2.ToString());
-    }
-
-    [TestMethod]
-    public void EmptyFormat()
-    {
-      var builder = new LogStringBuilder("RW = {RW:}.");
-      LoggingContext.Global["RW"] = 123;
-
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-
-      var sb = new StringBuilder();
-
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual("RW = 123.", sb.ToString());
-    }
-
-    [TestMethod]
-    public void EscapeFormat()
-    {
-      var builder = new LogStringBuilder("RW = {RW:}.\\{MH}");
-      LoggingContext.Global["RW"] = 123;
-      LoggingContext.Global["MH"] = "BERRO";
-
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-
-      var sb = new StringBuilder();
-
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual("RW = 123.{MH}", sb.ToString());
-    }
-
-    [TestMethod]
-    public void UnEscapeFormat()
-    {
-      var builder = new LogStringBuilder("RW = {RW:}.\\{{MH}}");
-      LoggingContext.Global["RW"] = 123;
-      LoggingContext.Global["MH"] = "BERRO";
-
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-
-      var sb = new StringBuilder();
-
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual("RW = 123.{BERRO}", sb.ToString());
-    }
-
-    [TestMethod]
-    public void InfoString()
-    {
-      InfoLevel l1 = InfoLevel.Info;
-      InfoLevel l2 = InfoLevel.Info;
-
-      Assert.IsTrue(ReferenceEquals(l1.ToString(), l2.ToString()));
-    }
-
-    [TestMethod]
-    public void DefaultDateFormat()
-    {
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-      var builder = new LogStringBuilder("{Date}");
-
-      var sb = new StringBuilder();
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual(evt.LoggingDate.ToString("dd.MM.yyyy HH:mm:ss.fff"), sb.ToString());
-    }
-
-    [TestMethod]
-    public void CustomDateFormat()
-    {
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-      var builder = new LogStringBuilder("{Date:dd.MM.yyyy HH:mm:ss}");
-
-      var sb = new StringBuilder();
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual(evt.LoggingDate.ToString("dd.MM.yyyy HH:mm:ss"), sb.ToString());
-    }
-
-    [TestMethod]
-    public void ProcessAndThread()
-    {
-      LoggingEvent evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-      var builder = new LogStringBuilder("P:{Process}, T:{Thread}");
-
-      var sb = new StringBuilder();
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual(string.Format("P:{0}, T:{1} {2}", 
-        Process.GetCurrentProcess().Id, 
-        Thread.CurrentThread.ManagedThreadId,
-        Thread.CurrentThread.Name), sb.ToString());
-    }
-
-    [TestMethod]
-    public void ProcessAndThreadWithoutName()
-    {
-      LoggingEvent evt = default(LoggingEvent);
-      Thread parallel = new Thread(() =>
-      {
-        evt = new LoggingEvent("TEST", "MSG", InfoLevel.Info, null);
-      });
-
-      parallel.Start();
-      parallel.Join();
-
-      var builder = new LogStringBuilder("P:{Process}, T:{Thread}");
-
-      var sb = new StringBuilder();
-      using (var sw = new StringWriter(sb))
-      {
-        builder.BuildString(sw, evt);
-      }
-
-      Assert.AreEqual(string.Format("P:{0}, T:{1}",
-        Process.GetCurrentProcess().Id,
-        parallel.ManagedThreadId), sb.ToString());
+      var factory = new DeferredFactory<IComponent>("System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "System.Windows.Forms.Form");
+      Assert.IsTrue(factory.Create() is Component);
     }
   }
 }

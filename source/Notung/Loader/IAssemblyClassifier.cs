@@ -32,6 +32,8 @@ namespace Notung.Loader
     private readonly List<Assembly> m_plugins = new List<Assembly>();
     private readonly ReadOnlyCollection<Assembly> m_plugins_wrapper;
 
+    private readonly PrefixTree m_prefix_tree = new PrefixTree();
+
     public AssemblyClassifier(AppDomain domain)
     {
       if (domain == null)
@@ -75,10 +77,14 @@ namespace Notung.Loader
       lock (m_assemblies)
       {
         m_tracking_assemblies.Clear();
+        m_prefix_tree.Clear();
+
+        foreach (var prefix in m_exclude_prefixes)
+          m_prefix_tree.AddPrefix(prefix);
 
         foreach (var asm in m_assemblies)
         {
-          if (!m_exclude_prefixes.Any(p => asm.FullName.StartsWith(p)))
+          if (!m_prefix_tree.MatchAny(asm.FullName))
             m_tracking_assemblies.Add(asm);
         }
       }
