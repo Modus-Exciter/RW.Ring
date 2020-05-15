@@ -28,6 +28,8 @@ namespace Notung.Data
       {
         if (item.TryGetChild(fullString[i], out item) && item.IsLeaf)
           return true;
+        else if (item == null)
+          break;
       }
 
       return false;

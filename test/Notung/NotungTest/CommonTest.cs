@@ -26,6 +26,7 @@ namespace NotungTest
 
       Assert.IsTrue(tree.MatchAny("DevExpress.Logs"));
       Assert.IsFalse(tree.MatchAny("DevExpress"));
+      Assert.IsFalse(tree.MatchAny("Dev.Express"));
       Assert.IsTrue(tree.MatchAny("System"));
       Assert.IsTrue(tree.MatchAny("DocumentView"));
     }
