@@ -76,7 +76,7 @@ namespace Notung.Loader
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
 
-    private volatile bool m_loading_plugins;
+    private string m_current_plugin;
 
     public AssemblyClassifier(AppDomain domain)
     {
@@ -142,37 +142,28 @@ namespace Notung.Loader
       if (string.IsNullOrEmpty(searchPattern))
         throw new ArgumentNullException("searchPattern");
 
-      m_loading_plugins = true;
-
-      try
+      foreach (var plugin_file in Directory.GetFiles(GetPluginsSearchPath(), searchPattern))
       {
-        foreach (var plugin_file in Directory.GetFiles(GetPluginsSearchPath(), searchPattern))
-        {
-          var pluginInfo = GetPluginInfo(plugin_file);
+        var pluginInfo = GetPluginInfo(plugin_file);
 
-          if (!CheckPlugin(pluginInfo, plugin_file))
+        if (!CheckPlugin(pluginInfo, plugin_file))
+          continue;
+
+        pluginInfo.SearchPattern = searchPattern;
+
+        lock (m_assemblies)
+        {
+          if (m_plugins.Contains(pluginInfo.AssemblyFile))
             continue;
 
-          pluginInfo.SearchPattern = searchPattern;
+          if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
+            pluginInfo.Assembly = LoadAssemblyFromFile(pluginInfo.AssemblyFile);
+          else
+            pluginInfo.Assembly = m_assemblies[pluginInfo.AssemblyFile];
 
-          lock (m_assemblies)
-          {
-            if (m_plugins.Contains(pluginInfo.AssemblyFile))
-              continue;
-
-            if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
-              pluginInfo.Assembly = LoadAssemblyFromFile(pluginInfo.AssemblyFile);
-            else
-              pluginInfo.Assembly = m_assemblies[pluginInfo.AssemblyFile];
-
-            if (pluginInfo.Assembly != null)
-              m_plugins.Add(pluginInfo);
-          }
+          if (pluginInfo.Assembly != null)
+            m_plugins.Add(pluginInfo);
         }
-      }
-      finally
-      {
-        m_loading_plugins = false;
       }
     }
 
@@ -246,13 +237,8 @@ namespace Notung.Loader
 
     private Assembly HandleAssemblyResolve(object source, ResolveEventArgs e)
     {
-      if (m_loading_plugins && !string.IsNullOrEmpty(this.PluginsDirectory))
-      {
-        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, this.PluginsDirectory, e.Name + ".dll");
-
-        if (File.Exists(path))
-          return Assembly.LoadFrom(path);
-      }
+      if (m_current_plugin != null && e.Name.StartsWith(Path.GetFileNameWithoutExtension(m_current_plugin)))
+        return Assembly.LoadFrom(m_current_plugin);
 
       return null;
     }
@@ -348,6 +334,8 @@ namespace Notung.Loader
 
     private Assembly LoadAssemblyFromFile(string fileName)
     {
+      m_current_plugin = fileName;
+
       try
       {
         return Assembly.Load(Path.GetFileNameWithoutExtension(fileName));
@@ -358,6 +346,10 @@ namespace Notung.Loader
         m_unmanaged_asms.Add(fileName);
 
         return null;
+      }
+      finally
+      {
+        m_current_plugin = null;
       }
     }
 
