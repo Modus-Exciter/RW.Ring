@@ -6,7 +6,7 @@ using Notung.Properties;
 
 namespace Notung.ComponentModel
 {
-  public static class SystemExtensions
+  public static class ComponentExtensions
   {
     private static readonly Dictionary<Type, List<EnumLabel>> _enum_labels =
       new Dictionary<Type, List<EnumLabel>>();
@@ -65,50 +65,6 @@ namespace Notung.ComponentModel
       return list;
     }
 
-    /// <summary>
-    /// Проверяет тип на допустимось присвоения null
-    /// </summary>
-    /// <param name="type">Проверяемый тип</param>
-    /// <returns>True, если тип допускает присвоение null</returns>
-    public static bool IsNullable(this Type type)
-    {
-      return !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
-    }
-
-    /// <summary>
-    /// Возвращает экземпляр атрибута у элемента
-    /// </summary>
-    /// <typeparam name="A">Тип атрибута</typeparam>
-    /// <param name="item">Элемент</param>
-    /// <param name="inherit">Указывает, нужно ли искать атрибут в предках</param>
-    /// <returns>Если имеется единственный экземпляр, то его. Иначе, null</returns>
-    public static A GetCustomAttribute<A>(this MemberInfo item, bool inherit)
-      where A : Attribute
-    {
-      if (item.IsDefined(typeof(A), inherit))
-      {
-        return item.GetCustomAttributes(typeof(A), inherit)[0] as A;
-      }
-
-      return null;
-    }
-    /// <summary>
-    /// Возвращает экземпляр атрибута у элемента
-    /// </summary>
-    /// <typeparam name="A">Тип атрибута</typeparam>
-    /// <param name="item">Элемент</param>
-    /// <param name="inherit">Указывает, нужно ли искать атрибут в предках</param>
-    /// <returns>Если имеется единственный экземпляр, то его. Иначе, null</returns>
-    public static A GetCustomAttribute<A>(this Assembly item)
-      where A : Attribute
-    {
-      if (item.IsDefined(typeof(A), false))
-      {
-        return item.GetCustomAttributes(typeof(A), false)[0] as A;
-      }
-
-      return null;
-    }
     /// <summary>
     /// Получает метку у перечисления
     /// </summary>

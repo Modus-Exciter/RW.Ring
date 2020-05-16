@@ -55,7 +55,7 @@ namespace Notung.ComponentModel
     {
       if (value is string)
       {
-        object ret = SystemExtensions.ParseEnumLabel(m_type, value as string);
+        object ret = ComponentExtensions.ParseEnumLabel(m_type, value as string);
 
         if (ret != null && ret.GetType() == m_type)
           return ret;

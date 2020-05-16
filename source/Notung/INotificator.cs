@@ -8,17 +8,23 @@ namespace Notung
 {
   public interface INotificator : IDisposable
   {
-    void Show(string summary, InfoBuffer buffer);
-
-    bool Confirm(string summary, InfoBuffer buffer);
-
     void Show(Info info);
-
-    bool Confirm(Info info);
 
     void Show(string message, InfoLevel level);
 
+    void Show(string summary, InfoBuffer buffer);
+
+    bool Confirm(Info info);
+
     bool Confirm(string message, InfoLevel level);
+
+    bool Confirm(string summary, InfoBuffer buffer);
+
+    bool? ConfirmOrCancel(Info info);
+
+    bool? ConfirmOrCancel(string message, InfoLevel level);
+
+    bool? ConfirmOrCancel(string summary, InfoBuffer buffer);
   }
 
   public sealed class Notificator : INotificator
@@ -35,24 +41,6 @@ namespace Notung
 
     internal Notificator() : this(new ConsoleNotificatorView()) { }
 
-    public void Show(string summary, InfoBuffer buffer)
-    {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
-
-      // TODO if (string.IsnullOrEmpty - generate summary automatically from resources)
-      
-      m_view.Alert(summary, buffer, false);
-    }
-
-    public bool Confirm(string summary, InfoBuffer buffer)
-    {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
-
-      return m_view.Alert(summary, buffer, true);
-    }
-
     public void Show(Info info)
     {
       if (info == null)
@@ -60,25 +48,64 @@ namespace Notung
 
       // TODO: add more overloading versions
 
-      m_view.Alert(info, false);
+      m_view.Alert(info, ConfirmationRegime.None);
     }
 
-    public bool Confirm(Info info)
+    public void Show(string summary, InfoBuffer buffer)
     {
-      if (info == null)
-        throw new ArgumentNullException("info");
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
 
-      return m_view.Alert(info, true);
+      // TODO if (string.IsnullOrEmpty - generate summary automatically from resources)
+
+      m_view.Alert(summary, buffer, ConfirmationRegime.None);
     }
 
     public void Show(string message, InfoLevel level)
     {
       this.Show(new Info(message, level));
-    }
+    }    
+    
+    public bool Confirm(string summary, InfoBuffer buffer)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
 
+      return m_view.Alert(summary, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
+    }
+    
+    public bool Confirm(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      return m_view.Alert(info, ConfirmationRegime.Confirm).GetValueOrDefault();
+    }
+    
     public bool Confirm(string message, InfoLevel level)
     {
       return this.Confirm(new Info(message, level));
+    }
+
+    public bool? ConfirmOrCancel(string summary, InfoBuffer buffer)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      return m_view.Alert(summary, buffer, ConfirmationRegime.CancelableConfirm);
+    }
+
+    public bool? ConfirmOrCancel(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      return m_view.Alert(info, ConfirmationRegime.CancelableConfirm).GetValueOrDefault();
+    }
+
+    public bool? ConfirmOrCancel(string message, InfoLevel level)
+    {
+      return this.ConfirmOrCancel(new Info(message, level));
     }
 
     public void Dispose() { }
@@ -86,16 +113,23 @@ namespace Notung
 
   public interface INotificatorView : ISynchronizeProvider
   {
-    bool Alert(Info info, bool confirm);
+    bool? Alert(Info info, ConfirmationRegime confirm);
 
-    bool Alert(string summary, InfoBuffer buffer, bool confirm);
+    bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm);
+  }
+
+  public enum ConfirmationRegime
+  {
+    None,
+    Confirm,
+    CancelableConfirm
   }
 
   public class ConsoleNotificatorView : SynchronizeProviderStub, INotificatorView
   {
-    public bool Alert(Info info, bool confirm)
+    public bool? Alert(Info info, ConfirmationRegime confirm)
     {
-      using (var setter = new ConsoleColorSetter(info.Level))
+      using (new ConsoleColorSetter(info.Level))
       {
         Console.WriteLine(info.Message);
 
@@ -103,15 +137,15 @@ namespace Notung
           Console.WriteLine("Details: {0}", info.Details);
 
         foreach (var inner in info.InnerMessages)
-          Alert(inner, false);
+          Alert(inner, ConfirmationRegime.None);
 
         return ConfirmIfNeeded(confirm);
       }
     }
 
-    private static bool ConfirmIfNeeded(bool confirm)
+    private static bool? ConfirmIfNeeded(ConfirmationRegime confirm)
     {
-      if (confirm)
+      if (confirm != ConfirmationRegime.None)
       {
         Console.Write("Y / N: ");
         if (Console.ReadLine().ToUpper().Trim() == "Y")
@@ -120,10 +154,10 @@ namespace Notung
           return false;
       }
       else
-        return true;
+        return null;
     }
 
-    public bool Alert(string summary, InfoBuffer buffer, bool confirm)
+    public bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
     {
       if (!string.IsNullOrWhiteSpace(summary))
       {
@@ -141,7 +175,7 @@ namespace Notung
       }
 
       foreach (var inner in buffer)
-        Alert(inner, false);
+        Alert(inner, ConfirmationRegime.None);
 
       return ConfirmIfNeeded(confirm);
     }

@@ -50,11 +50,13 @@
     <Compile Include="INotificator.cs" />
     <Compile Include="Loader\IAssemblyClassifier.cs" />
     <Compile Include="Loader\IFactory.cs" />
+    <Compile Include="Loader\ILibraryInitializer.cs" />
     <Compile Include="Loader\PluginInfo.cs" />
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Logging\LogStringBuilder.cs" />
     <Compile Include="LogSettings.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
     <Compile Include="ComponentModel\NoYesTypeConverter.cs" />
@@ -89,7 +91,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SerializeCondition.cs" />
-    <Compile Include="ComponentModel\SystemExtensions.cs" />
+    <Compile Include="ComponentModel\ComponentExtensions.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
     <Compile Include="Threading\ITaskManager.cs" />
     <Compile Include="Threading\SharedLock.cs" />

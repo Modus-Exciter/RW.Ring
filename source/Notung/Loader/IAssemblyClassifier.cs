@@ -14,11 +14,11 @@ namespace Notung.Loader
 {
   public interface IAssemblyClassifier : IDisposable
   {
-    IList<string> ExcludePrefixes { get; }
+    Collection<string> ExcludePrefixes { get; }
 
-    IList<Assembly> TrackingAssemblies { get; }
+    ReadOnlyCollection<Assembly> TrackingAssemblies { get; }
 
-    IList<PluginInfo> Plugins { get; }
+    ReadOnlyCollection<PluginInfo> Plugins { get; }
 
     string PluginsDirectory { get; set; }
 
@@ -37,7 +37,7 @@ namespace Notung.Loader
     private readonly BindingList<string> m_exclude_prefixes = new BindingList<string>();
     private readonly Collection<string> m_exclude_wrapper;
 
-    private readonly List<Assembly> m_tracking_assemblies = new List<Assembly>();
+    private readonly AssemblyList m_tracking_assemblies = new AssemblyList();
     private readonly ReadOnlyCollection<Assembly> m_tracking_wrapper;
 
     private readonly PluginList m_plugins = new PluginList();
@@ -82,17 +82,17 @@ namespace Notung.Loader
 
     public AssemblyClassifier() : this(AppDomain.CurrentDomain) { }
 
-    public IList<string> ExcludePrefixes
+    public Collection<string> ExcludePrefixes
     {
       get { return m_exclude_wrapper; }
     }
 
-    public IList<Assembly> TrackingAssemblies
+    public ReadOnlyCollection<Assembly> TrackingAssemblies
     {
       get { return m_tracking_wrapper; }
     }
 
-    public IList<PluginInfo> Plugins
+    public ReadOnlyCollection<PluginInfo> Plugins
     {
       get { return m_plugins_wrapper; }
     }
@@ -190,16 +190,17 @@ namespace Notung.Loader
 
       if (!string.IsNullOrEmpty(dir))
       {
-        if (!Path.IsPathRooted(dir))
-          dir = Path.Combine(path, dir);
 
-        if (!(AppDomain.CurrentDomain.SetupInformation.PrivateBinPath ?? "").Contains(dir))
+        /*if (!(AppDomain.CurrentDomain.SetupInformation.PrivateBinPath ?? string.Empty).Contains(dir))
         {
           if (string.IsNullOrEmpty(AppDomain.CurrentDomain.SetupInformation.PrivateBinPath))
             AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = dir;
           else
             AppDomain.CurrentDomain.SetupInformation.PrivateBinPath += ", " + dir;
-        }
+        }*/
+
+        if (!Path.IsPathRooted(dir))
+          dir = Path.Combine(path, dir);
 
         path = dir;
       }
@@ -209,16 +210,21 @@ namespace Notung.Loader
 
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
     {
-      new Action(delegate
+      lock (m_assemblies)
       {
-        lock (m_assemblies)
-        {
-          m_assemblies.Add(args.LoadedAssembly);
+        m_assemblies.Add(args.LoadedAssembly);
 
-          if (!m_prefix_tree.MatchAny(args.LoadedAssembly.FullName))
-            m_tracking_assemblies.Add(args.LoadedAssembly);
-        }
-      }).BeginInvoke(null, null);
+        if (!m_prefix_tree.MatchAny(args.LoadedAssembly.FullName))
+          m_tracking_assemblies.Add(args.LoadedAssembly);
+      }
+
+      if (args.LoadedAssembly.IsDefined(typeof(LibraryInitializerAttribute), false))
+      {
+        new Action(delegate
+        {
+          args.LoadedAssembly.GetCustomAttribute<LibraryInitializerAttribute>().Perform();
+        }).BeginInvoke(null, null);
+      }
     }
 
     private void HandleListChanged(object sender, ListChangedEventArgs e)
