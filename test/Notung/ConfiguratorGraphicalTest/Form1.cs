@@ -120,7 +120,7 @@ namespace ConfiguratorGraphicalTest
     {
       base.WndProc(ref msg);
 
-      if (msg.Msg == MainFormAppInstanceView.StringArgsMessageCode || msg.Msg == WinAPIHelper.WM_COPYDATA)
+      if (msg.Msg == WinAPIHelper.WM_COPYDATA)
       {
         string[] fileNames = MainFormAppInstanceView.GetStringArgs(msg);
         this.Text = string.Join(" ", fileNames);

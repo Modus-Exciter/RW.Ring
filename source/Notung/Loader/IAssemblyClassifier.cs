@@ -47,6 +47,12 @@ namespace Notung.Loader
     /// </summary>
     /// <param name="searchPattern">Фильтр для поиска файлов плагинов в директории</param>
     void LoadPlugins(string searchPattern);
+
+    /// <summary>
+    /// Загрузка всех зависимостей указанной сборки
+    /// </summary>
+    /// <param name="source"></param>
+    void LoadDependencies(Assembly source);
   }
 
   public class AssemblyClassifier : IAssemblyClassifier
@@ -158,6 +164,39 @@ namespace Notung.Loader
 
           if (pluginInfo.Assembly != null)
             m_plugins.Add(pluginInfo);
+        }
+      }
+    }
+
+    public void LoadDependencies(Assembly source)
+    {
+      if (source == null)
+        throw new ArgumentNullException("source");
+
+      lock (m_assemblies)
+      {
+        if (m_prefix_tree.MatchAny(source.FullName))
+          return;
+      }
+
+      foreach (var asm_name in source.GetReferencedAssemblies())
+      {
+        lock (m_assemblies)
+        {
+          if (m_prefix_tree.MatchAny(asm_name.Name))
+            continue;
+        }
+
+        if (asm_name.Name.Contains(".resources"))
+          continue;
+
+        lock (m_assemblies)
+        {
+          int before = m_assemblies.Count;
+          Assembly asm = Assembly.Load(asm_name);
+
+          if (m_assemblies.Count > before)
+            this.LoadDependencies(asm);
         }
       }
     }

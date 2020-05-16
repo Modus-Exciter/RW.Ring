@@ -15,8 +15,14 @@ namespace Notung
 {
   public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
   {
+    /// <summary>
+    /// Аргументы командной строки
+    /// </summary>
     ReadOnlyCollection<string> CommandLineArgs { get; }
 
+    /// <summary>
+    /// Декоратор операций, позволяющий их выполнять в однопоточном апартаменте
+    /// </summary>
     IOperationWrapper ApartmentWrapper { get; }
 
     /// <summary>
