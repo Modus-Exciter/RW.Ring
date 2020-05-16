@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Notung.Threading;
+using System.ComponentModel;
+using System.Threading;
+using Notung.Logging;
 using Notung.Properties;
+using Notung.Threading;
 
 namespace Notung
 {
@@ -31,6 +31,10 @@ namespace Notung
   public sealed class Notificator : INotificator
   {
     private readonly INotificatorView m_view;
+    private ISynchronizeInvoke m_last_ivoker;
+    private IOperationWrapper m_last_wrapper;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(Notificator));
 
     public Notificator(INotificatorView view)
     {
@@ -47,8 +51,82 @@ namespace Notung
       if (info == null)
         throw new ArgumentNullException("info");
 
-      m_view.Alert(info, ConfirmationRegime.None);
+      this.AlertSync(info, ConfirmationRegime.None);
     }
+
+    public void Show(InfoBuffer buffer, string summary)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
+
+      this.AlertSync(summary, buffer, ConfirmationRegime.None);
+    }
+
+    public void Show(string message, InfoLevel level)
+    {
+      this.Show(new Info(message, level));
+    }
+
+    public bool Confirm(InfoBuffer buffer, string summary)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
+
+      return this.AlertSync(summary, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
+    }
+    
+    public bool Confirm(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      return this.AlertSync(info, ConfirmationRegime.Confirm).GetValueOrDefault();
+    }
+    
+    public bool Confirm(string message, InfoLevel level)
+    {
+      return this.Confirm(new Info(message, level));
+    }
+
+    public bool? ConfirmOrCancel(InfoBuffer buffer, string summary)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
+
+      return this.AlertSync(summary, buffer, ConfirmationRegime.CancelableConfirm);
+    }
+
+    public bool? ConfirmOrCancel(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      return this.AlertSync(info, ConfirmationRegime.CancelableConfirm).GetValueOrDefault();
+    }
+
+    public bool? ConfirmOrCancel(string message, InfoLevel level)
+    {
+      return this.ConfirmOrCancel(new Info(message, level));
+    }
+
+    public void Dispose()
+    {
+      IDisposable dp = m_view as IDisposable;
+
+      if (dp != null)
+        dp.Dispose();
+    }
+
+    #region Implementation
 
     private InfoLevel GetMaxLevel(InfoBuffer buffer)
     {
@@ -87,71 +165,29 @@ namespace Notung
       return CoreResources.UNKNOWN;
     }
 
-    public void Show(InfoBuffer buffer, string summary)
+    private IOperationWrapper GetOperationWrapper()
     {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
+      if (!ReferenceEquals(m_last_ivoker, m_view.Invoker))
+        m_last_wrapper = null;
 
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
-
-      m_view.Alert(summary, buffer, ConfirmationRegime.None);
+      return m_last_wrapper ?? (m_last_wrapper = new SynchronizeOperationWrapper(m_last_ivoker = m_view.Invoker, true));
     }
 
-    public void Show(string message, InfoLevel level)
+    private bool? AlertSync(Info info, ConfirmationRegime confirm)
     {
-      this.Show(new Info(message, level));
+      _log.Alert(info);
+      return this.GetOperationWrapper().Invoke(() => m_view.Alert(info, confirm));
     }
 
-    public bool Confirm(InfoBuffer buffer, string summary)
+    private bool? AlertSync(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
     {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
+      foreach (var info in buffer)
+        _log.Alert(info);
 
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
-
-      return m_view.Alert(summary, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
-    }
-    
-    public bool Confirm(Info info)
-    {
-      if (info == null)
-        throw new ArgumentNullException("info");
-
-      return m_view.Alert(info, ConfirmationRegime.Confirm).GetValueOrDefault();
-    }
-    
-    public bool Confirm(string message, InfoLevel level)
-    {
-      return this.Confirm(new Info(message, level));
+      return this.GetOperationWrapper().Invoke(() => m_view.Alert(summary, buffer, confirm));
     }
 
-    public bool? ConfirmOrCancel(InfoBuffer buffer, string summary)
-    {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
-
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
-
-      return m_view.Alert(summary, buffer, ConfirmationRegime.CancelableConfirm);
-    }
-
-    public bool? ConfirmOrCancel(Info info)
-    {
-      if (info == null)
-        throw new ArgumentNullException("info");
-
-      return m_view.Alert(info, ConfirmationRegime.CancelableConfirm).GetValueOrDefault();
-    }
-
-    public bool? ConfirmOrCancel(string message, InfoLevel level)
-    {
-      return this.ConfirmOrCancel(new Info(message, level));
-    }
-
-    public void Dispose() { }
+    #endregion
   }
 
   public interface INotificatorView : ISynchronizeProvider
@@ -226,37 +262,54 @@ namespace Notung
     private class ConsoleColorSetter : IDisposable
     {
       private readonly ConsoleColor m_old_color;
+      private static readonly object _lock = new object();
 
       public ConsoleColorSetter(InfoLevel level)
       {
         m_old_color = Console.ForegroundColor;
-        switch (level)
+        Monitor.Enter(_lock);
+        try
         {
-          case InfoLevel.Debug:
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            break;
+          switch (level)
+          {
+            case InfoLevel.Debug:
+              Console.ForegroundColor = ConsoleColor.DarkCyan;
+              break;
 
-          case InfoLevel.Info:
-            Console.ForegroundColor = ConsoleColor.Gray;
-            break;
+            case InfoLevel.Info:
+              Console.ForegroundColor = ConsoleColor.Gray;
+              break;
 
-          case InfoLevel.Warning:
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            break;
+            case InfoLevel.Warning:
+              Console.ForegroundColor = ConsoleColor.Yellow;
+              break;
 
-          case InfoLevel.Error:
-            Console.ForegroundColor = ConsoleColor.Red;
-            break;
+            case InfoLevel.Error:
+              Console.ForegroundColor = ConsoleColor.Red;
+              break;
 
-          case InfoLevel.Fatal:
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            break;
+            case InfoLevel.Fatal:
+              Console.ForegroundColor = ConsoleColor.Magenta;
+              break;
+          }
+        }
+        catch
+        {
+          Monitor.Exit(_lock);
+          throw;
         }
       }
 
       public void Dispose()
       {
-        Console.ForegroundColor = m_old_color;
+        try
+        {
+          Console.ForegroundColor = m_old_color;
+        }
+        finally
+        {
+          Monitor.Exit(_lock);
+        }
       }
     }
   }
