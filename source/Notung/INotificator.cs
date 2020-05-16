@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Notung.Threading;
+using Notung.Properties;
 
 namespace Notung
 {
@@ -12,19 +13,19 @@ namespace Notung
 
     void Show(string message, InfoLevel level);
 
-    void Show(string summary, InfoBuffer buffer);
+    void Show(InfoBuffer buffer, string summary = null);
 
     bool Confirm(Info info);
 
     bool Confirm(string message, InfoLevel level);
 
-    bool Confirm(string summary, InfoBuffer buffer);
+    bool Confirm(InfoBuffer buffer, string summary = null);
 
     bool? ConfirmOrCancel(Info info);
 
     bool? ConfirmOrCancel(string message, InfoLevel level);
 
-    bool? ConfirmOrCancel(string summary, InfoBuffer buffer);
+    bool? ConfirmOrCancel(InfoBuffer buffer, string summary = null);
   }
 
   public sealed class Notificator : INotificator
@@ -46,17 +47,53 @@ namespace Notung
       if (info == null)
         throw new ArgumentNullException("info");
 
-      // TODO: add more overloading versions
-
       m_view.Alert(info, ConfirmationRegime.None);
     }
 
-    public void Show(string summary, InfoBuffer buffer)
+    private InfoLevel GetMaxLevel(InfoBuffer buffer)
+    {
+      InfoLevel ret = InfoLevel.Debug;
+
+      foreach (var info in buffer)
+      {
+        if (info.Level > ret)
+          ret = info.Level;
+
+        var inner = GetMaxLevel(info.InnerMessages);
+
+        if (inner > ret)
+          ret = inner;
+      }
+
+      return ret;
+    }
+
+    private string GetDefaultSummary(InfoBuffer buffer)
+    {
+      switch (GetMaxLevel(buffer))
+      {
+        case InfoLevel.Debug:
+        case InfoLevel.Info:
+          return Resources.SUMMARY_INFO;
+
+        case InfoLevel.Warning:
+          return Resources.SUMMARY_WARNING;
+
+        case InfoLevel.Error:
+        case InfoLevel.Fatal:
+          return Resources.SUMMARY_ERROR;
+      }
+
+      return CoreResources.UNKNOWN;
+    }
+
+    public void Show(InfoBuffer buffer, string summary)
     {
       if (buffer == null)
         throw new ArgumentNullException("buffer");
 
-      // TODO if (string.IsnullOrEmpty - generate summary automatically from resources)
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
 
       m_view.Alert(summary, buffer, ConfirmationRegime.None);
     }
@@ -64,12 +101,15 @@ namespace Notung
     public void Show(string message, InfoLevel level)
     {
       this.Show(new Info(message, level));
-    }    
-    
-    public bool Confirm(string summary, InfoBuffer buffer)
+    }
+
+    public bool Confirm(InfoBuffer buffer, string summary)
     {
       if (buffer == null)
         throw new ArgumentNullException("buffer");
+
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
 
       return m_view.Alert(summary, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
     }
@@ -87,10 +127,13 @@ namespace Notung
       return this.Confirm(new Info(message, level));
     }
 
-    public bool? ConfirmOrCancel(string summary, InfoBuffer buffer)
+    public bool? ConfirmOrCancel(InfoBuffer buffer, string summary)
     {
       if (buffer == null)
         throw new ArgumentNullException("buffer");
+
+      if (string.IsNullOrEmpty(summary))
+        summary = GetDefaultSummary(buffer);
 
       return m_view.Alert(summary, buffer, ConfirmationRegime.CancelableConfirm);
     }

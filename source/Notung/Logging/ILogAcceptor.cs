@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public interface ILogAcceptor
   {

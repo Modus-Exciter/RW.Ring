@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Notung.ComponentModel;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Properties;
 using Notung.Threading;
 

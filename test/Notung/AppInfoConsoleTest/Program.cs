@@ -8,6 +8,7 @@ namespace AppInfoConsoleTest
     static void Main(string[] args)
     {
       Console.WriteLine(ApplicationInfo.Instance);
+
       Console.ReadKey();
     }
   }

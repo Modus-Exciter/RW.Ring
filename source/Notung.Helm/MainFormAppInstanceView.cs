@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Notung.Data;
-using Notung.Log;
+using Notung.Logging;
 
 namespace Notung.Helm
 {

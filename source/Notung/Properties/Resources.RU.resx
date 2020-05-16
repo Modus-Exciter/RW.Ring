@@ -162,6 +162,15 @@
   <data name="STREAM_FLUSH" xml:space="preserve">
     <value>Сообщение потока</value>
   </data>
+  <data name="SUMMARY_ERROR" xml:space="preserve">
+    <value>Произошло несколько критических ошибок, приведших к останову.  Просмотрите детальную информацию</value>
+  </data>
+  <data name="SUMMARY_INFO" xml:space="preserve">
+    <value>Эти сообщения носят информационный характер и не требуют никакх дополнительных действий</value>
+  </data>
+  <data name="SUMMARY_WARNING" xml:space="preserve">
+    <value>Прочтите предупреждающие сообщения и примите необходимые меры</value>
+  </data>
   <data name="THREAD_CONTEXT_MISMATCH" xml:space="preserve">
     <value>Контекст потока может быть изменён только из того потока, где он был создан</value>
   </data>

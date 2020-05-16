@@ -162,6 +162,15 @@
   <data name="STREAM_FLUSH" xml:space="preserve">
     <value>Stream flush</value>
   </data>
+  <data name="SUMMARY_ERROR" xml:space="preserve">
+    <value>Some critical errors leaded to stop. View detail descripton for all messages to explain</value>
+  </data>
+  <data name="SUMMARY_INFO" xml:space="preserve">
+    <value>These messages contain only information and does not require anithing to do</value>
+  </data>
+  <data name="SUMMARY_WARNING" xml:space="preserve">
+    <value>Read these warnings and fix the problems detected</value>
+  </data>
   <data name="THREAD_CONTEXT_MISMATCH" xml:space="preserve">
     <value>Thread context can be edited only in thread where it was created</value>
   </data>

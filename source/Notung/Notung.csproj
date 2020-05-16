@@ -56,7 +56,7 @@
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Logging\LogStringBuilder.cs" />
-    <Compile Include="LogSettings.cs" />
+    <Compile Include="Logging\LogSettings.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
@@ -80,7 +80,7 @@
     <Compile Include="Logging\ILogAcceptor.cs" />
     <Compile Include="Logging\IMainThreadInfo.cs" />
     <Compile Include="Logging\LogStreamWriter.cs" />
-    <Compile Include="LogSettings.Designer.cs">
+    <Compile Include="Logging\LogSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>LogSettings.settings</DependentUpon>
@@ -112,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="LogSettings.settings">
+    <None Include="Logging\LogSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>LogSettings.Designer.cs</LastGenOutput>
     </None>

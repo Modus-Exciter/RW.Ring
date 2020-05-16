@@ -196,6 +196,33 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Some critical errors leaded to stop. View detail descripton for all messages to explain.
+        /// </summary>
+        internal static string SUMMARY_ERROR {
+            get {
+                return ResourceManager.GetString("SUMMARY_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These messages contain only information and does not require anithing to do.
+        /// </summary>
+        internal static string SUMMARY_INFO {
+            get {
+                return ResourceManager.GetString("SUMMARY_INFO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read these warnings and fix the problems detected.
+        /// </summary>
+        internal static string SUMMARY_WARNING {
+            get {
+                return ResourceManager.GetString("SUMMARY_WARNING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thread context can be edited only in thread where it was created.
         /// </summary>
         internal static string THREAD_CONTEXT_MISMATCH {

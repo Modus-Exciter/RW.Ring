@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Properties;
 
-namespace Notung
+namespace Notung.Logging
 {
   // This class allows you to handle specific events on the settings class:
   //  The SettingChanging event is raised before a setting's value is changed.

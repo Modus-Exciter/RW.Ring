@@ -4,7 +4,7 @@ using Notung.Threading;
 using SysThread = System.Threading.Thread;
 using Notung.Properties;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public interface ILoggingContext
   {

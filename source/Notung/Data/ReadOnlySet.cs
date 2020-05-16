@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 
 namespace Notung.Data
 {
+  [DebuggerDisplay("Count = {Count}")]
   public sealed class ReadOnlySet<T> : ISet<T>
   {
     private readonly ISet<T> m_set;

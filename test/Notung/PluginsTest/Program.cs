@@ -19,7 +19,7 @@ namespace PluginsTest
       foreach (var asm in AppManager.AssemblyClassifier.TrackingAssemblies)
         buffer.Add(asm.FullName, InfoLevel.Info);
 
-      AppManager.Notificator.Show("Assemblies:", buffer);
+      AppManager.Notificator.Show(buffer, "Assemblies:");
 
       Console.WriteLine();
 
@@ -36,7 +36,7 @@ namespace PluginsTest
 
         foreach (var unm in AppManager.AssemblyClassifier.UnmanagedAsemblies)
           buffer.Add(new Info(unm, InfoLevel.Error));
-        AppManager.Notificator.Show(null, buffer);
+        AppManager.Notificator.Show(buffer, null);
 
         Console.ReadKey();
       }

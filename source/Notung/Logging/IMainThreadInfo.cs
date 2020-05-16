@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   /// <summary>
   /// Информация о главном потоке, необходимая для работы логов

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Notung.Data;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Threading;
 
 namespace Notung

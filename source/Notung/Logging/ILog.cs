@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public interface ILog
   {

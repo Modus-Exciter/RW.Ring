@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   /// <summary>
   /// Пока не решил, использовать log4net или свои асинхронные логи, частично дублируем его API

@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Notung" GeneratedClassName="LogSettings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Notung.Logging" GeneratedClassName="LogSettings">
   <Profiles />
   <Settings>
     <Setting Name="Separator" Type="System.String" Scope="Application">
@@ -9,7 +9,7 @@
       <Value Profile="(Default)">65536</Value>
     </Setting>
     <Setting Name="DefaultLogger" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">&lt;&lt;- - - - - - -&gt;&gt;</Value>
+      <Value Profile="(Default)">&lt;&lt;- - - - - - - -&gt;&gt;</Value>
     </Setting>
     <Setting Name="MessageTemplate" Type="System.String" Scope="Application">
       <Value Profile="(Default)">[{Date}] [{Level}] [{Process}] [{Source}]

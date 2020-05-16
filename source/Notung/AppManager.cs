@@ -1,7 +1,7 @@
 ﻿using System;
 using Notung.Configuration;
 using Notung.Loader;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Threading;
 
 namespace Notung

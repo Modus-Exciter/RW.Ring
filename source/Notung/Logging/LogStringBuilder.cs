@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Notung.Threading;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public class LogStringBuilder
   {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Notung {
+namespace Notung.Logging {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -43,7 +43,7 @@ namespace Notung {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<<- - - - - - ->>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<<- - - - - - - ->>")]
         public string DefaultLogger {
             get {
                 return ((string)(this["DefaultLogger"]));
