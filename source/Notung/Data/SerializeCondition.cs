@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Notung
+namespace Notung.Data
 {
   /// <summary>
   /// Структура, которая позволяет сериализовывать или не сериализовывать поле 

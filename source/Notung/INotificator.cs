@@ -28,7 +28,7 @@ namespace Notung
     bool? ConfirmOrCancel(InfoBuffer buffer, string summary = null);
   }
 
-  public sealed class Notificator : INotificator
+  public sealed class Notificator : MarshalByRefObject, INotificator
   {
     private readonly INotificatorView m_view;
     private ISynchronizeInvoke m_last_ivoker;

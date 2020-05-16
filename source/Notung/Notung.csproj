@@ -44,7 +44,7 @@
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="Data\ArrayExtensions.cs" />
-    <Compile Include="DataTypeCode.cs" />
+    <Compile Include="Data\DataTypeCode.cs" />
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
@@ -91,7 +91,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SerializeCondition.cs" />
+    <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
     <Compile Include="Threading\ITaskManager.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace Notung.Logging
 {
@@ -8,9 +9,9 @@ namespace Notung.Logging
   public interface IMainThreadInfo
   {
     /// <summary>
-    /// Ссылка на главный поток приложения, чтобы отслеживать его завершение
+    /// Работает ли главный поток
     /// </summary>
-    Thread MainThread { get; }
+    bool IsAlive { get; }
 
     /// <summary>
     /// Надёжна ли информация о главном потоке
@@ -18,13 +19,13 @@ namespace Notung.Logging
     bool ReliableThreading { get; }
   }
 
-  public sealed class CurrentMainThreadInfo : IMainThreadInfo
+  public sealed class CurrentMainThreadInfo : MarshalByRefObject, IMainThreadInfo
   {
     private readonly Thread m_main_thred = Thread.CurrentThread;
-   
-    public Thread MainThread
+
+    public bool IsAlive
     {
-      get { return m_main_thred; }
+      get { return m_main_thred.IsAlive; }
     }
 
     public bool ReliableThreading

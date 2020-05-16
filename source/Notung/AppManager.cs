@@ -3,6 +3,7 @@ using Notung.Configuration;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Threading;
+using System.Reflection;
 
 namespace Notung
 {
@@ -44,7 +45,8 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _configurator = value;
+        lock (_lock) 
+          _configurator = value;
       }
     }
 
@@ -62,7 +64,8 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _app_instance = value;
+        lock (_lock) 
+          _app_instance = value;
       }
     }
 
@@ -82,7 +85,9 @@ namespace Notung
 
         lock (_lock)
         {
-          _asm_classifier.Dispose();
+          if (_asm_classifier != null)
+            _asm_classifier.Dispose();
+
           _asm_classifier = value;
         }
       }
@@ -104,7 +109,9 @@ namespace Notung
 
         lock (_lock)
         {
-          _notificator.Dispose();
+          if (_notificator != null)
+            _notificator.Dispose();
+
           _notificator = value;
         }
       }
@@ -124,7 +131,52 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _task_manager = value;
+        lock (_lock) 
+          _task_manager = value;
+      }
+    }
+
+    /// <summary>
+    /// Настройка нового домена для работы с сервисами приложения. 
+    /// Этот метод необходимо вызывать сразу после создания нового домена
+    /// </summary>
+    /// <param name="newDomain">Новый домен</param>
+    public static void SetupNewDomain(AppDomain newDomain)
+    {
+      if (newDomain == null)
+        throw new ArgumentNullException("newDomain");
+
+      if (newDomain == AppDomain.CurrentDomain)
+        return;
+
+      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.AcceptServices(Instance, Configurator, Notificator, TaskManager);
+
+      LogManager.SetupNewDomain(newDomain);
+      ApplicationInfo.SetupNewDomain(newDomain);
+    }
+
+    private interface IDomainAcceptor
+    {
+      void AcceptServices(IAppInstance instance, 
+                          IConfigurator configurator, 
+                          INotificator notificator, 
+                          ITaskManager taskManager);
+    }
+
+    private sealed class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    {
+      public void AcceptServices(IAppInstance instance, 
+                                 IConfigurator configurator, 
+                                 INotificator notificator, 
+                                 ITaskManager taskManager)
+      {
+        _notificator = notificator;
+        _app_instance = instance;
+        _configurator = configurator;
+        _task_manager = taskManager;
       }
     }
   }

@@ -1,11 +1,11 @@
 ﻿using System;
-using Process = System.Diagnostics.Process;
 using System.IO;
 using System.Reflection;
-using Notung.ComponentModel;
+using Process = System.Diagnostics.Process;
 
 namespace Notung
 {
+  [Serializable]
   public sealed class ApplicationInfo
   {
     private readonly Assembly m_product_assembly;
@@ -15,6 +15,8 @@ namespace Notung
     private string m_description;
     private Version m_version;
     private Version m_file_version;
+
+    [NonSerialized]
     private Process m_current_process;
 
     private static ApplicationInfo _instance;
@@ -190,6 +192,27 @@ namespace Notung
     public override int GetHashCode()
     {
       return m_product_assembly.GetHashCode();
+    }
+
+    private interface IDomainAcceptor
+    {
+      void Accept(ApplicationInfo info);
+    }
+
+    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    {
+      public void Accept(ApplicationInfo info)
+      {
+        _instance = info;
+      }
+    }
+
+    internal static void SetupNewDomain(AppDomain newDomain)
+    {
+      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(Instance);
     }
   }
 }

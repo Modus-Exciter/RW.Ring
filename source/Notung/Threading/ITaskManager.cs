@@ -9,7 +9,7 @@ namespace Notung.Threading
   {
   }
 
-  public class TaskManager : ITaskManager
+  public class TaskManager : MarshalByRefObject, ITaskManager
   {
     private readonly ITaskManagerView m_view;
 

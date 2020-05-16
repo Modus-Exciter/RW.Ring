@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Notung.ComponentModel;
+using Notung.Data;
 using Notung.Properties;
 
 namespace Notung

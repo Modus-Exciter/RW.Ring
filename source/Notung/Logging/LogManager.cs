@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 
 namespace Notung.Logging
 {
@@ -63,6 +63,19 @@ namespace Notung.Logging
 
       lock (_acceptors)
         _acceptors.Add(acceptor);
+    }
+
+    internal static void SetupNewDomain(AppDomain newDomain)
+    {
+      var process = _process;
+
+      if (process == null)
+        return;
+      
+      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(process);
     }
 
     public static void SetMainThreadInfo(IMainThreadInfo info)

@@ -38,8 +38,27 @@ namespace PluginsTest
           buffer.Add(new Info(unm, InfoLevel.Error));
         AppManager.Notificator.Show(buffer, null);
 
+        DomainTest();
+
         Console.ReadKey();
       }
+    }
+
+    static void DomainTest()
+    {
+      AppDomain newDomain = AppDomain.CreateDomain("Plugin domain");
+
+      AppManager.SetupNewDomain(newDomain);
+
+      ApplicationInfo.Instance.CurrentProcess.ToString();
+
+      newDomain.DoCallBack(() =>
+        {
+          Console.WriteLine(AppManager.Instance.StartupPath);
+          Console.WriteLine(ApplicationInfo.Instance);
+        });
+
+      AppDomain.Unload(newDomain);
     }
   }
 }

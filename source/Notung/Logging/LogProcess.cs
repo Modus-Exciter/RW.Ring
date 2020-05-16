@@ -7,7 +7,7 @@ namespace Notung.Logging
 {
   partial class LogManager
   {
-    private abstract class LogProcess
+    private abstract class LogProcess : MarshalByRefObject
     {
       protected readonly HashSet<ILogAcceptor> m_acceptors;
       protected volatile bool m_stop;
@@ -31,6 +31,25 @@ namespace Notung.Logging
       public abstract void WriteMessage(LoggingEvent data);
 
       public abstract void Stop();
+    }
+
+    private interface IDomainAcceptor
+    {
+      void Accept(LogProcess process);
+    }
+
+    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    {
+      public void Accept(LogProcess process)
+      {
+        lock (_lock)
+        {
+          if (_process != null && !_process.Stopped)
+            _process.Stop();
+
+          _process = process;
+        }
+      }
     }
 
     private sealed class SyncLogProcess : LogProcess
@@ -123,7 +142,7 @@ namespace Notung.Logging
 
       private void Watch(object state)
       {
-        if (!m_info.MainThread.IsAlive)
+        if (!m_info.IsAlive)
           this.Stop();
       }
 

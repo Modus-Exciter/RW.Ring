@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using Notung.Data;
@@ -56,7 +55,7 @@ namespace Notung
     void Restart();
   }
 
-  public class AppInstance : IAppInstance
+  public class AppInstance : MarshalByRefObject, IAppInstance
   {
     private readonly IAppInstanceView m_view;
     private Thread m_main_thread;
@@ -102,19 +101,9 @@ namespace Notung
       get { return m_view.Invoker; }
     }
 
-    public Thread MainThread
+    public bool IsAlive
     {
-      get
-      {
-        if (m_main_thread != null)
-          return m_main_thread;
-
-        if (m_view.Invoker.InvokeRequired)
-          return m_main_thread = (Thread)m_view.Invoker.Invoke(
-            new Func<Thread>(() => Thread.CurrentThread), ArrayExtensions.Empty<object>());
-        else
-          return Thread.CurrentThread;
-      }
+      get { return MainThread.IsAlive; }
     }
 
     public bool ReliableThreading
@@ -179,6 +168,21 @@ namespace Notung
         m_mutex_thread.Join();
 
       m_view.Restart(m_main_module_file_name, m_args);
+    }
+
+    private Thread MainThread
+    {
+      get
+      {
+        if (m_main_thread != null)
+          return m_main_thread;
+
+        if (m_view.Invoker.InvokeRequired)
+          return m_main_thread = (Thread)m_view.Invoker.Invoke(
+            new Func<Thread>(() => Thread.CurrentThread), ArrayExtensions.Empty<object>());
+        else
+          return Thread.CurrentThread;
+      }
     }
 
     private void CreateBlockingMutex()
