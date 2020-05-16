@@ -75,7 +75,8 @@ namespace Notung.Loader
     private readonly ReadOnlySet<string> m_unmanaged_wrapper;
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
-    private readonly string[] m_private_bin_path;
+
+    private volatile bool m_loading_plugins;
 
     public AssemblyClassifier(AppDomain domain)
     {
@@ -92,6 +93,7 @@ namespace Notung.Loader
 
       m_domain = domain;
       m_domain.AssemblyLoad += HandleAssemblyLoad;
+      m_domain.AssemblyResolve += HandleAssemblyResolve;
 
       lock (m_assemblies)
       {
@@ -109,9 +111,6 @@ namespace Notung.Loader
       m_tracking_wrapper = new ReadOnlyCollection<Assembly>(m_tracking_assemblies);
       m_plugins_wrapper = new ReadOnlyCollection<PluginInfo>(m_plugins);
       m_unmanaged_wrapper = new ReadOnlySet<string>(m_unmanaged_asms);
-
-      m_private_bin_path = this.FindPrivateBinaryDirectories() ?? ArrayExtensions.Empty<string>();
-      SetDefaultPluginPath();
     }
 
     public AssemblyClassifier() : this(AppDomain.CurrentDomain) { }
@@ -142,29 +141,38 @@ namespace Notung.Loader
     {
       if (string.IsNullOrEmpty(searchPattern))
         throw new ArgumentNullException("searchPattern");
-      
-      foreach (var plugin_file in Directory.GetFiles(GetPluginsSearchPath(), searchPattern))
+
+      m_loading_plugins = true;
+
+      try
       {
-        var pluginInfo = GetPluginInfo(plugin_file);
-
-        if (!CheckPlugin(pluginInfo, plugin_file))
-          continue;
-
-        pluginInfo.SearchPattern = searchPattern;
-
-        lock (m_assemblies)
+        foreach (var plugin_file in Directory.GetFiles(GetPluginsSearchPath(), searchPattern))
         {
-          if (m_plugins.Contains(pluginInfo.AssemblyFile))
-            continue;
-          
-          if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
-            pluginInfo.Assembly = LoadAssemblyFromFile(pluginInfo.AssemblyFile);
-          else
-            pluginInfo.Assembly = m_assemblies[pluginInfo.AssemblyFile];
+          var pluginInfo = GetPluginInfo(plugin_file);
 
-          if (pluginInfo.Assembly != null)
-            m_plugins.Add(pluginInfo);
+          if (!CheckPlugin(pluginInfo, plugin_file))
+            continue;
+
+          pluginInfo.SearchPattern = searchPattern;
+
+          lock (m_assemblies)
+          {
+            if (m_plugins.Contains(pluginInfo.AssemblyFile))
+              continue;
+
+            if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
+              pluginInfo.Assembly = LoadAssemblyFromFile(pluginInfo.AssemblyFile);
+            else
+              pluginInfo.Assembly = m_assemblies[pluginInfo.AssemblyFile];
+
+            if (pluginInfo.Assembly != null)
+              m_plugins.Add(pluginInfo);
+          }
         }
+      }
+      finally
+      {
+        m_loading_plugins = false;
       }
     }
 
@@ -214,6 +222,7 @@ namespace Notung.Loader
     public void Dispose()
     {
       m_domain.AssemblyLoad -= HandleAssemblyLoad;
+      m_domain.AssemblyResolve -= HandleAssemblyResolve;
     }
 
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
@@ -235,6 +244,19 @@ namespace Notung.Loader
       }
     }
 
+    private Assembly HandleAssemblyResolve(object source, ResolveEventArgs e)
+    {
+      if (m_loading_plugins && !string.IsNullOrEmpty(this.PluginsDirectory))
+      {
+        var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, this.PluginsDirectory, e.Name + ".dll");
+
+        if (File.Exists(path))
+          return Assembly.LoadFrom(path);
+      }
+
+      return null;
+    }
+
     private void HandleListChanged(object sender, ListChangedEventArgs e)
     {
       lock (m_assemblies)
@@ -253,57 +275,6 @@ namespace Notung.Loader
       }
     }
 
-    private string[] FindPrivateBinaryDirectories()
-    {
-      if (string.IsNullOrEmpty(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile)
-        || !File.Exists(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile))
-        return null;
-
-      using (var file = new FileStream(AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
-        FileMode.Open, FileAccess.Read, FileShare.Read))
-      {
-        using (var reader = new XmlTextReader(file))
-        {
-          while (reader.Read())
-          {
-            if (reader.NodeType == XmlNodeType.Element)
-            {
-              if (reader.Name == "configuration")
-                reader.ReadStartElement();
-              else if (reader.Name != "runtime")
-                reader.Skip();
-
-              if (reader.Name == "runtime")
-              {
-                while (reader.Read())
-                {
-                  if (reader.NodeType != XmlNodeType.Element || reader.Name != "assemblyBinding"
-                    || reader.NamespaceURI != "urn:schemas-microsoft-com:asm.v1")
-                    continue;
-
-                  while (reader.Read())
-                  {
-                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "probing")
-                    {
-                      var dirs_string = reader.GetAttribute("privatePath") ?? string.Empty;
-
-                      if (string.IsNullOrWhiteSpace(dirs_string))
-                        return null;
-
-                      return dirs_string.Split(';').Select(d => d.Trim())
-                        .Where(d => !string.IsNullOrEmpty(d)).Distinct().ToArray();
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      return null;
-    }
-
     protected virtual PluginInfo GetPluginInfo(string path)
     {
 #if DEBUG
@@ -316,7 +287,7 @@ namespace Notung.Loader
         {
           while (reader.Read())
           {
-            if (reader.NodeType == XmlNodeType.Element && reader.Name == "plugin")
+            if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0 && reader.Name == "plugin")
             {
               var asm_file = reader.GetAttribute("assembly");
 
@@ -336,23 +307,6 @@ namespace Notung.Loader
       }
 
       return null;
-    }
-
-    private void SetDefaultPluginPath()
-    {
-      if (m_private_bin_path.Length == 1)
-        this.PluginsDirectory = m_private_bin_path[0];
-      else
-      {
-        for (int i = 0; i < m_private_bin_path.Length; i++)
-        {
-          if (m_private_bin_path[i].ToLower() == "plugins")
-          {
-            this.PluginsDirectory = m_private_bin_path[i];
-            break;
-          }
-        }
-      }
     }
 
     private string GetPluginsSearchPath()
@@ -396,15 +350,7 @@ namespace Notung.Loader
     {
       try
       {
-        if (this.CanLoadWithFullContext(fileName))
-        {
-          return Assembly.Load(Path.GetFileNameWithoutExtension(fileName));
-        }
-        else
-        {
-          _log.Warn("LoadAssemblyFromFile(): Unable to use Assembly.Load. Trying Assembly.LoadFile");
-          return Assembly.LoadFile(fileName);
-        }
+        return Assembly.Load(Path.GetFileNameWithoutExtension(fileName));
       }
       catch (BadImageFormatException ex)
       {
@@ -413,22 +359,6 @@ namespace Notung.Loader
 
         return null;
       }
-    }
-
-    private bool CanLoadWithFullContext(string fileName)
-    {
-      var base_dir = AppDomain.CurrentDomain.BaseDirectory;
-
-      if (fileName == Path.Combine(base_dir, Path.GetFileName(fileName)))
-        return true;
-
-      for (int i = 0; i < m_private_bin_path.Length; i++)
-      {
-        if (fileName == Path.Combine(base_dir, m_private_bin_path[i], Path.GetFileName(fileName)))
-          return true;
-      }
-
-      return false;
     }
 
     private class AssemblyList : KeyedCollection<string, Assembly>

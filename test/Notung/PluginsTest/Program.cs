@@ -9,7 +9,7 @@ namespace PluginsTest
   {
     static void Main(string[] args)
     {
-      //AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
+      AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
       AppManager.AssemblyClassifier.LoadPlugins("*.adapter");
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
