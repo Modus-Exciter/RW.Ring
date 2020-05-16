@@ -280,7 +280,7 @@ namespace Notung.Configuration
       }
       else
       {
-        var root = sectionType.GetCustomAttribute<XmlRootAttribute>(false);
+        var root = sectionType.GetCustomAttribute<XmlRootAttribute>();
 
         if (root == null || string.IsNullOrEmpty(root.ElementName))
           section_name = sectionType.Name;

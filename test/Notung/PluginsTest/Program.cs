@@ -9,7 +9,7 @@ namespace PluginsTest
   {
     static void Main(string[] args)
     {
-      AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
+      //AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
       AppManager.AssemblyClassifier.LoadPlugins("*.adapter");
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
@@ -34,7 +34,7 @@ namespace PluginsTest
       {
         buffer = new InfoBuffer();
 
-        foreach (var unm in AppManager.AssemblyClassifier.GetUnmanagedAsemblies())
+        foreach (var unm in AppManager.AssemblyClassifier.UnmanagedAsemblies)
           buffer.Add(new Info(unm, InfoLevel.Error));
         AppManager.Notificator.Show(null, buffer);
 

@@ -22,28 +22,12 @@ namespace Notung
     /// <param name="item">Элемент</param>
     /// <param name="inherit">Указывает, нужно ли искать атрибут в предках</param>
     /// <returns>Если имеется единственный экземпляр, то его. Иначе, null</returns>
-    public static A GetCustomAttribute<A>(this MemberInfo item, bool inherit)
+    public static A GetCustomAttribute<A>(this ICustomAttributeProvider item, bool inherit = false)
       where A : Attribute
     {
       if (item.IsDefined(typeof(A), inherit))
       {
         return item.GetCustomAttributes(typeof(A), inherit)[0] as A;
-      }
-
-      return null;
-    }
-    /// <summary>
-    /// Возвращает экземпляр атрибута у сборки
-    /// </summary>
-    /// <typeparam name="A">Тип атрибута</typeparam>
-    /// <param name="item">Сборка</param>
-    /// <returns>Если имеется единственный экземпляр, то его. Иначе, null</returns>
-    public static A GetCustomAttribute<A>(this Assembly item)
-      where A : Attribute
-    {
-      if (item.IsDefined(typeof(A), false))
-      {
-        return item.GetCustomAttributes(typeof(A), false)[0] as A;
       }
 
       return null;

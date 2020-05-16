@@ -33,6 +33,8 @@ namespace Notung.Loader
 
     public Assembly Assembly { get; internal set; }
 
+    public string SearchPattern { get; internal set; }
+
     public override string ToString()
     {
       if (!string.IsNullOrEmpty(m_name))
