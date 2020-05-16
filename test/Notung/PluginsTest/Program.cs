@@ -13,7 +13,7 @@ namespace PluginsTest
       AppManager.AssemblyClassifier.LoadPlugins("*.adapter");
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
-
+     // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
       InfoBuffer buffer = new InfoBuffer();
 
       foreach (var asm in AppManager.AssemblyClassifier.TrackingAssemblies)

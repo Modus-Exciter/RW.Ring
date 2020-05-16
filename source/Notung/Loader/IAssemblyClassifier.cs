@@ -190,14 +190,24 @@ namespace Notung.Loader
         if (asm_name.Name.Contains(".resources"))
           continue;
 
+        int before;
+        Assembly asm = null;
+
         lock (m_assemblies)
         {
-          int before = m_assemblies.Count;
-          Assembly asm = Assembly.Load(asm_name);
-
-          if (m_assemblies.Count > before)
-            this.LoadDependencies(asm);
+          before = m_assemblies.Count;
+          try
+          {
+            asm = Assembly.Load(asm_name);
+          }
+          catch (Exception ex)
+          {
+            _log.Error("LoadDependencies(): excption", ex);
+          }
         }
+
+        if (m_assemblies.Count > before && asm != null)
+          this.LoadDependencies(asm);
       }
     }
 
