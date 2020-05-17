@@ -8,8 +8,9 @@ namespace PluginsTest
   {
     static void Main(string[] args)
     {
+      Console.WriteLine("Scanning...");
       AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
-      AppManager.AssemblyClassifier.LoadPlugins("*.adapter");
+      AppManager.AssemblyClassifier.LoadPlugins("*.adapter", Notung.Loader.LoadPluginsMode.DomainPerPlugin);
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
       // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
@@ -27,7 +28,7 @@ namespace PluginsTest
       var info = new Info("Plugins:", InfoLevel.Fatal);
 
       foreach (var plugin in AppManager.AssemblyClassifier.Plugins)
-        info.InnerMessages.Add(string.Format("{0}, {1}", plugin.Name, plugin.Assembly), InfoLevel.Debug);
+        info.InnerMessages.Add(string.Format("{0}, {1}", plugin.Name, plugin.AssemblyName), InfoLevel.Debug);
 
       AppManager.Notificator.Show(info);
 

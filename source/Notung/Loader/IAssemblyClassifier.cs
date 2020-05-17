@@ -46,13 +46,32 @@ namespace Notung.Loader
     /// Загрузить плагины, находящиеся в директории плагинов
     /// </summary>
     /// <param name="searchPattern">Фильтр для поиска файлов плагинов в директории</param>
-    void LoadPlugins(string searchPattern);
+    void LoadPlugins(string searchPattern, LoadPluginsMode mode = LoadPluginsMode.CurrentDomain);
 
     /// <summary>
     /// Загрузка всех зависимостей указанной сборки
     /// </summary>
     /// <param name="source"></param>
     void LoadDependencies(Assembly source);
+  }
+
+  /// <summary>
+  /// Куда загружать плагины
+  /// </summary>
+  public enum LoadPluginsMode
+  {
+    /// <summary>
+    /// В текущий домен
+    /// </summary>
+    CurrentDomain,
+    /// <summary>
+    /// Все плагины в отдельный домен
+    /// </summary>
+    SeparateDomain,
+    /// <summary>
+    /// Каждый плагин в свой домен
+    /// </summary>
+    DomainPerPlugin
   }
 
   public class AssemblyClassifier : IAssemblyClassifier
@@ -73,27 +92,24 @@ namespace Notung.Loader
 
     private readonly HashSet<string> m_unmanaged_asms = new HashSet<string>();
     private readonly ReadOnlySet<string> m_unmanaged_wrapper;
+    private readonly PluginLoader m_plugin_loader;
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
 
-    private string m_current_plugin;
 
     public AssemblyClassifier(AppDomain domain)
     {
       if (domain == null)
         throw new ArgumentNullException("domain");
 
-      m_prefix_tree.AddPrefix("Microsoft");
-      m_prefix_tree.AddPrefix("System");
-      m_prefix_tree.AddPrefix("mscorlib");
-
       m_exclude_prefixes.Add("Microsoft");
       m_exclude_prefixes.Add("System");
       m_exclude_prefixes.Add("mscorlib");
+      m_exclude_prefixes.Add("Windows");
+      m_prefix_tree.AddRange(m_exclude_prefixes);
 
       m_domain = domain;
       m_domain.AssemblyLoad += HandleAssemblyLoad;
-      m_domain.AssemblyResolve += HandleAssemblyResolve;
 
       lock (m_assemblies)
       {
@@ -111,6 +127,7 @@ namespace Notung.Loader
       m_tracking_wrapper = new ReadOnlyCollection<Assembly>(m_tracking_assemblies);
       m_plugins_wrapper = new ReadOnlyCollection<PluginInfo>(m_plugins);
       m_unmanaged_wrapper = new ReadOnlySet<string>(m_unmanaged_asms);
+      m_plugin_loader = new PluginLoader(m_unmanaged_asms);
     }
 
     public AssemblyClassifier() : this(AppDomain.CurrentDomain) { }
@@ -137,32 +154,38 @@ namespace Notung.Loader
       get { return m_unmanaged_wrapper; }
     }
 
-    public void LoadPlugins(string searchPattern)
+    public void LoadPlugins(string searchPattern, LoadPluginsMode mode = LoadPluginsMode.CurrentDomain)
     {
       if (string.IsNullOrEmpty(searchPattern))
         throw new ArgumentNullException("searchPattern");
 
-      foreach (var plugin_file in Directory.GetFiles(GetPluginsSearchPath(), searchPattern))
-      {
-        var pluginInfo = GetPluginInfo(plugin_file);
+      var search_path = GetPluginsSearchPath();
 
-        if (!CheckPlugin(pluginInfo, plugin_file))
+      AppDomain separate_domain = mode == LoadPluginsMode.SeparateDomain ?
+        CreateDomain(string.Format("Plugins ({0})", searchPattern), search_path) : null;
+
+      foreach (var plugin_file in Directory.GetFiles(search_path, searchPattern))
+      {
+        var plugin_info = GetPluginInfo(plugin_file);
+
+        if (!CheckPlugin(plugin_info, plugin_file))
           continue;
 
-        pluginInfo.SearchPattern = searchPattern;
+        plugin_info.SearchPattern = searchPattern;
 
-        lock (m_assemblies)
+        switch (mode)
         {
-          if (m_plugins.Contains(pluginInfo.AssemblyFile))
-            continue;
+          case LoadPluginsMode.CurrentDomain:
+            LoadPluginToCurrentDomain(plugin_info);
+            break;
 
-          if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
-            pluginInfo.Assembly = LoadAssemblyFromFile(pluginInfo.AssemblyFile);
-          else
-            pluginInfo.Assembly = m_assemblies[pluginInfo.AssemblyFile];
+          case LoadPluginsMode.DomainPerPlugin:
+            LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name, search_path), true);
+            break;
 
-          if (pluginInfo.Assembly != null)
-            m_plugins.Add(pluginInfo);
+          case LoadPluginsMode.SeparateDomain:
+            LoadPluginToAnotherDomain(plugin_info, separate_domain, false);
+            break;
         }
       }
     }
@@ -213,7 +236,7 @@ namespace Notung.Loader
     public void Dispose()
     {
       m_domain.AssemblyLoad -= HandleAssemblyLoad;
-      m_domain.AssemblyResolve -= HandleAssemblyResolve;
+      m_plugin_loader.Dispose();
     }
 
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
@@ -235,14 +258,6 @@ namespace Notung.Loader
       }
     }
 
-    private Assembly HandleAssemblyResolve(object source, ResolveEventArgs e)
-    {
-      if (m_current_plugin != null && e.Name.StartsWith(Path.GetFileNameWithoutExtension(m_current_plugin)))
-        return Assembly.LoadFrom(m_current_plugin);
-
-      return null;
-    }
-
     private void HandleListChanged(object sender, ListChangedEventArgs e)
     {
       lock (m_assemblies)
@@ -250,8 +265,7 @@ namespace Notung.Loader
         m_tracking_assemblies.Clear();
         m_prefix_tree.Clear();
 
-        foreach (var prefix in m_exclude_prefixes)
-          m_prefix_tree.AddPrefix(prefix);
+        m_prefix_tree.AddRange(m_exclude_prefixes);
 
         foreach (var asm in m_assemblies)
         {
@@ -332,24 +346,151 @@ namespace Notung.Loader
       return true;
     }
 
-    private Assembly LoadAssemblyFromFile(string fileName)
+    private AppDomain CreateDomain(string friendlyName, string searchPath)
     {
-      m_current_plugin = fileName;
+      AppDomainSetup setup = new AppDomainSetup();
 
-      try
+      foreach (var pi in typeof(AppDomainSetup).GetProperties())
       {
-        return Assembly.Load(Path.GetFileNameWithoutExtension(fileName));
+        if (pi.CanWrite && pi.GetIndexParameters().Length == 0)
+          pi.SetValue(setup, pi.GetValue(AppDomain.CurrentDomain.SetupInformation, null), null);
       }
-      catch (BadImageFormatException ex)
+
+      setup.PrivateBinPath = this.PluginsDirectory;
+
+      AppDomain ret = AppDomain.CreateDomain(friendlyName,
+        AppDomain.CurrentDomain.Evidence, setup);
+
+      AppManager.Share(ret);
+
+      return ret;
+    }
+
+    private void LoadPluginToCurrentDomain(PluginInfo pluginInfo)
+    {
+      lock (m_assemblies)
       {
-        _log.Error("LoadAssemblyFromFile(): exception", ex);
-        m_unmanaged_asms.Add(fileName);
+        if (m_plugins.Contains(pluginInfo.AssemblyFile))
+          return;
+
+        Assembly asm;
+
+        if (!m_assemblies.Contains(pluginInfo.AssemblyFile))
+          asm = m_plugin_loader.LoadAssemblyFromFile(pluginInfo.AssemblyFile);
+        else
+          asm = m_assemblies[pluginInfo.AssemblyFile];
+
+        if (asm != null)
+        {
+          pluginInfo.AssemblyName = asm.GetName();
+          pluginInfo.Domain = AppDomain.CurrentDomain;
+          m_plugins.Add(pluginInfo);
+        }
+      }
+    }
+
+    private void LoadPluginToAnotherDomain(PluginInfo pluginInfo, AppDomain domain, bool unloadOnFail)
+    {
+      AssemblyName asm_name;
+
+      using (var plugin_loader = (IPluginLoader)domain.CreateInstanceAndUnwrap(
+        typeof(AssemblyClassifier).Assembly.FullName, typeof(PluginLoader).FullName))
+      {
+        asm_name = plugin_loader.LoadAssemblyFromFile(pluginInfo.AssemblyFile);
+
+        if (asm_name != null)
+        {
+          lock (m_assemblies)
+          {
+            if (!m_plugins.Contains(pluginInfo.AssemblyFile))
+            {
+              pluginInfo.AssemblyName = asm_name;
+              pluginInfo.Domain = domain;
+              m_plugins.Add(pluginInfo);
+            }
+          }
+        }
+        else
+        {
+          var unmanaged = plugin_loader.GetUnmanagedAssemblies();
+
+          if (unmanaged.Count > 0)
+          {
+            lock (m_assemblies)
+            {
+              foreach (var asm in unmanaged)
+                m_unmanaged_asms.Add(asm);
+            }
+          }
+        }
+      }
+
+      if (asm_name == null && unloadOnFail)
+        AppDomain.Unload(domain);
+    }
+
+    private interface IPluginLoader : IDisposable
+    {
+      AssemblyName LoadAssemblyFromFile(string fileName);
+
+      HashSet<string> GetUnmanagedAssemblies();
+    }
+
+    private class PluginLoader : MarshalByRefObject, IPluginLoader
+    {
+      private string m_current_plugin;
+      private readonly HashSet<string> m_unmanaged_asms;
+
+      public PluginLoader(HashSet<string> unmanagedAsemblies)
+      {
+        m_unmanaged_asms = unmanagedAsemblies;
+        AppDomain.CurrentDomain.AssemblyResolve += HandleAssemblyResolve;
+      }
+
+      public PluginLoader() : this(new HashSet<string>()) { }
+
+      public Assembly LoadAssemblyFromFile(string fileName)
+      {
+        m_current_plugin = fileName;
+        try
+        {
+          return Assembly.Load(Path.GetFileNameWithoutExtension(fileName));
+        }
+        catch (BadImageFormatException ex)
+        {
+          _log.Error("LoadAssemblyFromFile(): exception", ex);
+          m_unmanaged_asms.Add(fileName);
+          return null;
+        }
+        finally
+        {
+          m_current_plugin = null;
+        }
+      }
+
+      private Assembly HandleAssemblyResolve(object source, ResolveEventArgs e)
+      {
+        if (m_current_plugin != null && e.Name.StartsWith(Path.GetFileNameWithoutExtension(m_current_plugin)))
+          return Assembly.LoadFrom(m_current_plugin);
 
         return null;
       }
-      finally
+
+      public HashSet<string> GetUnmanagedAssemblies()
       {
-        m_current_plugin = null;
+        return m_unmanaged_asms;
+      }
+
+      AssemblyName IPluginLoader.LoadAssemblyFromFile(string fileName)
+      {
+        var asm = this.LoadAssemblyFromFile(fileName);
+
+        return asm != null ? asm.GetName() : null;
+      }
+
+      public void Dispose()
+      {
+        AppDomain.CurrentDomain.AssemblyResolve -= HandleAssemblyResolve;
       }
     }
 

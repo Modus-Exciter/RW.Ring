@@ -31,7 +31,9 @@ namespace Notung.Loader
       get { return m_asm_file; }
     }
 
-    public Assembly Assembly { get; internal set; }
+    public AppDomain Domain { get; internal set; }
+
+    public AssemblyName AssemblyName { get; internal set; }
 
     public string SearchPattern { get; internal set; }
 

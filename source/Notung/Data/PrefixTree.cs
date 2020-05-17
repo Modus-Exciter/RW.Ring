@@ -15,7 +15,6 @@ namespace Notung.Data
     /// <summary>
     /// Добавление префикса для поиска
     /// </summary>
-    /// <param name="prefix"></param>
     public void AddPrefix(string prefix)
     {
       if (string.IsNullOrEmpty(prefix))
@@ -28,6 +27,21 @@ namespace Notung.Data
 
       if (addedNew)
         m_count++;
+    }
+
+    /// <summary>
+    /// Добавление сразу же нескольких префиксов для поиска
+    /// </summary>
+    public void AddRange(IEnumerable<string> prefixes)
+    {
+      if (prefixes == null)
+        throw new ArgumentNullException("prefixes");
+
+      foreach (var prefix in prefixes)
+      {
+        if (!string.IsNullOrEmpty(prefix))
+          AddPrefix(prefix);
+      }
     }
 
     /// <summary>
