@@ -155,6 +155,7 @@ namespace Notung
       acceptor.AcceptServices(Instance, Configurator, Notificator, TaskManager);
 
       LogManager.Share(newDomain);
+      LoggingContext.Share(newDomain);
       ApplicationInfo.Share(newDomain);
     }
 

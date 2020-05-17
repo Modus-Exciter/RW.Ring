@@ -47,6 +47,8 @@ namespace PluginsTest
 
     static void DomainTest()
     {
+      LoggingContext.Global["Note"] = "Thread of fortune";
+
       AppDomain newDomain = AppDomain.CreateDomain("Plugin domain");
 
       AppManager.Share(newDomain);
@@ -59,6 +61,7 @@ namespace PluginsTest
           LogManager.GetLogger("").Error("Test error", new Exception("Test error!"));
           LogManager.GetLogger("").Alert(new Info("Alert cust", InfoLevel.Info) { Details = new Cust() });
           AppManager.Notificator.Show(new Info("OK!", InfoLevel.Info) { Details = new Cust() });
+          Console.WriteLine(LoggingContext.Global["Note"]);
         });
 
       AppDomain.Unload(newDomain);

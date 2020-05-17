@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Notung.Properties;
 using Notung.Threading;
 using SysThread = System.Threading.Thread;
@@ -22,7 +23,7 @@ namespace Notung.Logging
   {
     [ThreadStatic]
     private static ThreadContextData _thread;
-    private static readonly GlobalContextData _global = new GlobalContextData();
+    private static GlobalContextData _global = new GlobalContextData();
     private static readonly HashSet<string> _forbidden = new HashSet<string>
     {
       "Source",
@@ -48,6 +49,27 @@ namespace Notung.Logging
 
         return _thread;
       }
+    }
+
+    private interface IDomainAcceptor
+    {
+      void Accept(GlobalContextData info);
+    }
+
+    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    {
+      public void Accept(GlobalContextData data)
+      {
+        _global = data;
+      }
+    }
+
+    internal static void Share(AppDomain newDomain)
+    {
+      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(_global);
     }
 
     private class ThreadContextData : MarshalByRefObject, IThreadLoggingContext
@@ -104,7 +126,7 @@ namespace Notung.Logging
       }
     }
 
-    private class GlobalContextData : ILoggingContext
+    private class GlobalContextData : MarshalByRefObject, ILoggingContext
     {
       private readonly ThreadContextData m_data = new ThreadContextData(false);
       private readonly SharedLock m_lock = new SharedLock(false);
