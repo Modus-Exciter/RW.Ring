@@ -76,7 +76,13 @@ namespace Notung
     {
       get
       {
-        return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier());
+        return _asm_classifier ?? InitService(ref _asm_classifier, 
+          delegate
+          {
+            var ret = new AssemblyClassifier();
+            ret.SetDomainShareHandler(Share);
+            return ret;
+          });
       }
       set
       {
@@ -85,10 +91,15 @@ namespace Notung
 
         lock (_lock)
         {
+          if (ReferenceEquals(_asm_classifier, value))
+            return;
+
           if (_asm_classifier != null)
             _asm_classifier.Dispose();
 
           _asm_classifier = value;
+          if (_asm_classifier is AssemblyClassifier)
+            ((AssemblyClassifier)_asm_classifier).SetDomainShareHandler(Share);
         }
       }
     }
@@ -109,6 +120,9 @@ namespace Notung
 
         lock (_lock)
         {
+          if (ReferenceEquals(_notificator, value))
+            return;
+
           if (_notificator != null)
             _notificator.Dispose();
 

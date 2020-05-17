@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Notung.Data;
@@ -96,6 +95,7 @@ namespace Notung.Loader
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
 
+    private Action<AppDomain> m_domain_share_handler;
 
     public AssemblyClassifier(AppDomain domain)
     {
@@ -164,29 +164,37 @@ namespace Notung.Loader
       AppDomain separate_domain = mode == LoadPluginsMode.SeparateDomain ?
         CreateDomain(string.Format("Plugins ({0})", searchPattern), search_path) : null;
 
-      foreach (var plugin_file in Directory.GetFiles(search_path, searchPattern))
+      try
       {
-        var plugin_info = GetPluginInfo(plugin_file);
-
-        if (!CheckPlugin(plugin_info, plugin_file))
-          continue;
-
-        plugin_info.SearchPattern = searchPattern;
-
-        switch (mode)
+        foreach (var plugin_file in Directory.GetFiles(search_path, searchPattern))
         {
-          case LoadPluginsMode.CurrentDomain:
-            LoadPluginToCurrentDomain(plugin_info);
-            break;
+          var plugin_info = GetPluginInfo(plugin_file);
 
-          case LoadPluginsMode.DomainPerPlugin:
-            LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name, search_path), true);
-            break;
+          if (!CheckPlugin(plugin_info, plugin_file))
+            continue;
 
-          case LoadPluginsMode.SeparateDomain:
-            LoadPluginToAnotherDomain(plugin_info, separate_domain, false);
-            break;
+          plugin_info.SearchPattern = searchPattern;
+
+          switch (mode)
+          {
+            case LoadPluginsMode.CurrentDomain:
+              LoadPluginToCurrentDomain(plugin_info);
+              break;
+
+            case LoadPluginsMode.DomainPerPlugin:
+              LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name, search_path), true);
+              break;
+
+            case LoadPluginsMode.SeparateDomain:
+              LoadPluginToAnotherDomain(plugin_info, separate_domain, false);
+              break;
+          }
         }
+      }
+      finally
+      {
+        if (separate_domain != null && m_plugins.Count == 0)
+          AppDomain.Unload(separate_domain);
       }
     }
 
@@ -237,6 +245,12 @@ namespace Notung.Loader
     {
       m_domain.AssemblyLoad -= HandleAssemblyLoad;
       m_plugin_loader.Dispose();
+    }
+
+    internal void SetDomainShareHandler(Action<AppDomain> handler)
+    {
+      lock (m_tracking_assemblies)
+        m_domain_share_handler = handler;
     }
 
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
@@ -311,7 +325,7 @@ namespace Notung.Loader
 
     private string GetPluginsSearchPath()
     {
-      var path = AppDomain.CurrentDomain.BaseDirectory;
+      var path = m_domain.BaseDirectory;
 
       var dir = this.PluginsDirectory;
 
@@ -353,15 +367,18 @@ namespace Notung.Loader
       foreach (var pi in typeof(AppDomainSetup).GetProperties())
       {
         if (pi.CanWrite && pi.GetIndexParameters().Length == 0)
-          pi.SetValue(setup, pi.GetValue(AppDomain.CurrentDomain.SetupInformation, null), null);
+          pi.SetValue(setup, pi.GetValue(m_domain.SetupInformation, null), null);
       }
 
       setup.PrivateBinPath = this.PluginsDirectory;
 
-      AppDomain ret = AppDomain.CreateDomain(friendlyName,
-        AppDomain.CurrentDomain.Evidence, setup);
+      AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
 
-      AppManager.Share(ret);
+      lock (m_tracking_assemblies)
+      {
+        if (m_domain_share_handler != null)
+          m_domain_share_handler(ret);
+      }
 
       return ret;
     }
@@ -383,7 +400,7 @@ namespace Notung.Loader
         if (asm != null)
         {
           pluginInfo.AssemblyName = asm.GetName();
-          pluginInfo.Domain = AppDomain.CurrentDomain;
+          pluginInfo.Domain = m_domain;
           m_plugins.Add(pluginInfo);
         }
       }

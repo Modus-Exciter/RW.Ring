@@ -10,7 +10,7 @@ namespace PluginsTest
     {
       Console.WriteLine("Scanning...");
       AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
-      AppManager.AssemblyClassifier.LoadPlugins("*.adapter", Notung.Loader.LoadPluginsMode.DomainPerPlugin);
+      AppManager.AssemblyClassifier.LoadPlugins("*.adapter", Notung.Loader.LoadPluginsMode.SeparateDomain);
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
       // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
