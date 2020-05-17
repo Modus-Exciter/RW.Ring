@@ -65,7 +65,7 @@ namespace Notung.Logging
         _acceptors.Add(acceptor);
     }
 
-    internal static void SetupNewDomain(AppDomain newDomain)
+    internal static void Share(AppDomain newDomain)
     {
       var process = _process;
 
@@ -75,7 +75,7 @@ namespace Notung.Logging
       var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
-      acceptor.Accept(process);
+      acceptor.Accept(_proxy);
     }
 
     public static void SetMainThreadInfo(IMainThreadInfo info)
@@ -190,6 +190,37 @@ namespace Notung.Logging
 
     #endregion
 
+    private interface IProcessProxy
+    {
+      void WriteMessage(LoggingEvent data);
+    }
+
+    private class ProcessProxy : MarshalByRefObject, IProcessProxy
+    {
+      public void WriteMessage(LoggingEvent data)
+      {
+        var process = _process;
+
+        if (process != null)
+          process.WriteMessage(ref data);
+      }
+    }
+
+    private interface IDomainAcceptor
+    {
+      void Accept(IProcessProxy proxy);
+    }
+
+    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    {
+      public void Accept(IProcessProxy proxy)
+      {
+        _proxy = proxy;
+      }
+    }
+
+    private static IProcessProxy _proxy = new ProcessProxy();
+
     private class Logger : ILog
     {
       private readonly string m_source;
@@ -206,10 +237,7 @@ namespace Notung.Logging
 
       public void WriteLog(string message, InfoLevel level, object data)
       {
-        var process = _process;
-
-        if (process != null)
-          process.WriteMessage(new LoggingEvent(m_source, message, level, data));
+        _proxy.WriteMessage(new LoggingEvent(m_source, message, level, data));
       }
     }
   }

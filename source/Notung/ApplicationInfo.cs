@@ -207,7 +207,7 @@ namespace Notung
       }
     }
 
-    internal static void SetupNewDomain(AppDomain newDomain)
+    internal static void Share(AppDomain newDomain)
     {
       var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);

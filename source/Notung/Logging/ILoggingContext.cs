@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Notung.Properties;
 using Notung.Threading;
 using SysThread = System.Threading.Thread;
-using Notung.Properties;
 
 namespace Notung.Logging
 {
@@ -50,7 +50,7 @@ namespace Notung.Logging
       }
     }
 
-    private class ThreadContextData : IThreadLoggingContext
+    private class ThreadContextData : MarshalByRefObject, IThreadLoggingContext
     {
       private readonly Dictionary<string, object> m_data = new Dictionary<string, object>();
       private readonly SysThread m_thread = SysThread.CurrentThread;

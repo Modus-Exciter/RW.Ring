@@ -60,6 +60,7 @@ namespace Notung.Logging
   /// Смысл этой структуры - запомнить всё, что требуется писать в лог 
   /// (к стандартному комплекту Info добавляется источник и дата события)
   /// </summary>
+  [Serializable]
   public struct LoggingEvent
   {
     private static readonly LogStringBuilder _builder = new LogStringBuilder("[{Date}][{Level}][{Source}]\n{Message}");

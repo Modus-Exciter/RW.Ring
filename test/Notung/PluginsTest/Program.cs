@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Notung;
+using Notung.Logging;
 
 namespace PluginsTest
 {
@@ -15,6 +14,8 @@ namespace PluginsTest
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
      // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
       InfoBuffer buffer = new InfoBuffer();
+
+      LogManager.SetMainThreadInfo(new CurrentMainThreadInfo());
 
       foreach (var asm in AppManager.AssemblyClassifier.TrackingAssemblies)
         buffer.Add(asm.FullName, InfoLevel.Info);
@@ -48,17 +49,20 @@ namespace PluginsTest
     {
       AppDomain newDomain = AppDomain.CreateDomain("Plugin domain");
 
-      AppManager.SetupNewDomain(newDomain);
-
-      ApplicationInfo.Instance.CurrentProcess.ToString();
+      AppManager.Share(newDomain);
 
       newDomain.DoCallBack(() =>
         {
           Console.WriteLine(AppManager.Instance.StartupPath);
           Console.WriteLine(ApplicationInfo.Instance);
+          LogManager.GetLogger("").Info("Mesage from new domain");
+          AppManager.Notificator.Show("OK!", InfoLevel.Info);
+          LogManager.GetLogger("").Error("Test error", new Exception("Test error!"));
         });
 
       AppDomain.Unload(newDomain);
     }
   }
+
+  public class Cust { }
 }

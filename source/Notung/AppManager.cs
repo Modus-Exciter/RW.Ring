@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Reflection;
 using Notung.Configuration;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Threading;
-using System.Reflection;
 
 namespace Notung
 {
@@ -141,7 +141,7 @@ namespace Notung
     /// Этот метод необходимо вызывать сразу после создания нового домена
     /// </summary>
     /// <param name="newDomain">Новый домен</param>
-    public static void SetupNewDomain(AppDomain newDomain)
+    public static void Share(AppDomain newDomain)
     {
       if (newDomain == null)
         throw new ArgumentNullException("newDomain");
@@ -154,8 +154,8 @@ namespace Notung
 
       acceptor.AcceptServices(Instance, Configurator, Notificator, TaskManager);
 
-      LogManager.SetupNewDomain(newDomain);
-      ApplicationInfo.SetupNewDomain(newDomain);
+      LogManager.Share(newDomain);
+      ApplicationInfo.Share(newDomain);
     }
 
     private interface IDomainAcceptor
