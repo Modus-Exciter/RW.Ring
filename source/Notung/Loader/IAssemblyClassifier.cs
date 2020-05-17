@@ -249,8 +249,7 @@ namespace Notung.Loader
 
     internal void SetDomainShareHandler(Action<AppDomain> handler)
     {
-      lock (m_tracking_assemblies)
-        m_domain_share_handler = handler;
+      m_domain_share_handler = handler;
     }
 
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
@@ -374,11 +373,8 @@ namespace Notung.Loader
 
       AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
 
-      lock (m_tracking_assemblies)
-      {
-        if (m_domain_share_handler != null)
-          m_domain_share_handler(ret);
-      }
+      if (m_domain_share_handler != null)
+        m_domain_share_handler(ret);
 
       return ret;
     }
