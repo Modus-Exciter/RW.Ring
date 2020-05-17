@@ -12,7 +12,7 @@ namespace PluginsTest
       AppManager.AssemblyClassifier.LoadPlugins("*.adapter");
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
-     // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
+      // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
       InfoBuffer buffer = new InfoBuffer();
 
       LogManager.SetMainThreadInfo(new CurrentMainThreadInfo());
@@ -56,8 +56,9 @@ namespace PluginsTest
           Console.WriteLine(AppManager.Instance.StartupPath);
           Console.WriteLine(ApplicationInfo.Instance);
           LogManager.GetLogger("").Info("Mesage from new domain");
-          AppManager.Notificator.Show("OK!", InfoLevel.Info);
           LogManager.GetLogger("").Error("Test error", new Exception("Test error!"));
+          LogManager.GetLogger("").Alert(new Info("Alert cust", InfoLevel.Info) { Details = new Cust() });
+          AppManager.Notificator.Show(new Info("OK!", InfoLevel.Info) { Details = new Cust() });
         });
 
       AppDomain.Unload(newDomain);

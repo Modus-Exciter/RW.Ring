@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Notung.Logging
@@ -81,16 +82,23 @@ namespace Notung.Logging
 
       m_thread_context = LoggingContext.Thread;
     }
+
+    [OnSerializing]
+    private void OnSerializing(StreamingContext context)
+    {
+      if (this.Data != null && !this.Data.GetType().IsDefined(typeof(SerializableAttribute), false))
+        this.Data = this.Data.ToString();
+    }
     
     public readonly string Message;
 
     public readonly InfoLevel Level;
 
-    public readonly object Data;
-
     public readonly DateTime LoggingDate;
 
     public readonly string Source;
+
+    public object Data { get; private set; }
 
     private readonly IThreadLoggingContext m_thread_context;
 

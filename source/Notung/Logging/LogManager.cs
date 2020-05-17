@@ -65,19 +65,6 @@ namespace Notung.Logging
         _acceptors.Add(acceptor);
     }
 
-    internal static void Share(AppDomain newDomain)
-    {
-      var process = _process;
-
-      if (process == null)
-        return;
-      
-      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
-        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
-
-      acceptor.Accept(_proxy);
-    }
-
     public static void SetMainThreadInfo(IMainThreadInfo info)
     {
       if (info == null || !info.ReliableThreading)
@@ -190,6 +177,16 @@ namespace Notung.Logging
 
     #endregion
 
+    #region Sharing log between domains
+
+    internal static void Share(AppDomain newDomain)
+    {
+      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(_proxy);
+    }
+
     private interface IProcessProxy
     {
       void WriteMessage(LoggingEvent data);
@@ -220,6 +217,8 @@ namespace Notung.Logging
     }
 
     private static IProcessProxy _proxy = new ProcessProxy();
+
+    #endregion
 
     private class Logger : ILog
     {
