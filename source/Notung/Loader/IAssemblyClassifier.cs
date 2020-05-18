@@ -242,6 +242,40 @@ namespace Notung.Loader
       m_plugin_loader.Dispose();
     }
 
+    protected virtual PluginInfo GetPluginInfo(string path)
+    {
+#if DEBUG
+      if (path == null)
+        throw new ArgumentNullException("path");
+#endif
+      using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
+      {
+        using (var reader = new XmlTextReader(file))
+        {
+          while (reader.Read())
+          {
+            if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0 && reader.Name == "plugin")
+            {
+              var asm_file = reader.GetAttribute("assembly");
+
+              if (!string.IsNullOrEmpty(asm_file))
+              {
+                if (!Path.IsPathRooted(asm_file))
+                  asm_file = Path.Combine(Path.GetDirectoryName(path), asm_file);
+
+                var name_node = reader.GetAttribute("name");
+
+                return new PluginInfo(name_node != null ? name_node :
+                  Path.GetFileNameWithoutExtension(asm_file), asm_file);
+              }
+            }
+          }
+        }
+      }
+
+      return null;
+    }
+
     internal void SetDomainShareHandler(Action<AppDomain> handler)
     {
       m_domain_share_handler = handler;
@@ -270,10 +304,15 @@ namespace Notung.Loader
     {
       lock (m_assemblies)
       {
-        m_tracking_assemblies.Clear();
-        m_prefix_tree.Clear();
+        if (e.ListChangedType == ListChangedType.ItemAdded)
+          m_prefix_tree.AddPrefix(m_exclude_prefixes[e.NewIndex]);
+        else
+        {
+          m_prefix_tree.Clear();
+          m_prefix_tree.AddRange(m_exclude_prefixes);
+        }
 
-        m_prefix_tree.AddRange(m_exclude_prefixes);
+        m_tracking_assemblies.Clear();
 
         foreach (var asm in m_assemblies)
         {
@@ -317,40 +356,6 @@ namespace Notung.Loader
       }
 
       return path;
-    }
-
-    protected virtual PluginInfo GetPluginInfo(string path)
-    {
-#if DEBUG
-      if (path == null) 
-        throw new ArgumentNullException("path");
-#endif
-      using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
-      {
-        using (var reader = new XmlTextReader(file))
-        {
-          while (reader.Read())
-          {
-            if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0 && reader.Name == "plugin")
-            {
-              var asm_file = reader.GetAttribute("assembly");
-
-              if (!string.IsNullOrEmpty(asm_file))
-              {
-                if (!Path.IsPathRooted(asm_file))
-                  asm_file = Path.Combine(Path.GetDirectoryName(path), asm_file);
-
-                var name_node = reader.GetAttribute("name");
-
-                return new PluginInfo(name_node != null ? name_node :
-                  Path.GetFileNameWithoutExtension(asm_file), asm_file);
-              }
-            }
-          }
-        }
-      }
-
-      return null;
     }
 
     private bool CheckPlugin(PluginInfo pluginInfo, string plugin_file)
