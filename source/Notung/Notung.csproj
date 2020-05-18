@@ -51,7 +51,7 @@
     <Compile Include="INotificator.cs" />
     <Compile Include="Loader\IAssemblyClassifier.cs" />
     <Compile Include="Loader\IFactory.cs" />
-    <Compile Include="Loader\ILibraryInitializer.cs" />
+    <Compile Include="Loader\LibraryInitializer.cs" />
     <Compile Include="Loader\PluginInfo.cs" />
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />

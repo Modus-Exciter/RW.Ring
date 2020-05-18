@@ -20,6 +20,13 @@ namespace Notung
 
     private static readonly object _lock = new object();
 
+    static AppManager()
+    {
+      var classifier = new AssemblyClassifier();
+      classifier.SetDomainShareHandler(Share);
+      _asm_classifier = classifier;
+    }
+
     private static T InitService<T>(ref T field, Func<T> creator)
     {
       lock (_lock)
@@ -74,16 +81,7 @@ namespace Notung
     /// </summary>
     public static IAssemblyClassifier AssemblyClassifier
     {
-      get
-      {
-        return _asm_classifier ?? InitService(ref _asm_classifier, 
-          delegate
-          {
-            var ret = new AssemblyClassifier();
-            ret.SetDomainShareHandler(Share);
-            return ret;
-          });
-      }
+      get { return _asm_classifier; }
       set
       {
         if (value == null)

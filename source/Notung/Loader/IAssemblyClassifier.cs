@@ -114,12 +114,7 @@ namespace Notung.Loader
       lock (m_assemblies)
       {
         foreach (var asm in m_domain.GetAssemblies())
-        {
-          m_assemblies.Add(asm);
-
-          if (!m_prefix_tree.MatchAny(asm.FullName))
-            m_tracking_assemblies.Add(asm);
-        }
+          this.HandleAssemblyLoad(this, new AssemblyLoadEventArgs(asm));
       }
 
       m_exclude_prefixes.ListChanged += HandleListChanged;
@@ -288,6 +283,42 @@ namespace Notung.Loader
       }
     }
 
+    private AppDomain CreateDomain(string friendlyName, string searchPath)
+    {
+      AppDomainSetup setup = new AppDomainSetup();
+
+      foreach (var pi in typeof(AppDomainSetup).GetProperties())
+      {
+        if (pi.CanWrite && pi.GetIndexParameters().Length == 0)
+          pi.SetValue(setup, pi.GetValue(m_domain.SetupInformation, null), null);
+      }
+
+      setup.PrivateBinPath = this.PluginsDirectory ?? setup.PrivateBinPath;
+
+      AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
+
+      if (m_domain_share_handler != null)
+        m_domain_share_handler(ret);
+
+      return ret;
+    }
+
+    private string GetPluginsSearchPath()
+    {
+      var path = m_domain.BaseDirectory;
+      var dir = this.PluginsDirectory;
+
+      if (!string.IsNullOrEmpty(dir))
+      {
+        if (!Path.IsPathRooted(dir))
+          dir = Path.Combine(path, dir);
+
+        path = dir;
+      }
+
+      return path;
+    }
+
     protected virtual PluginInfo GetPluginInfo(string path)
     {
 #if DEBUG
@@ -322,23 +353,6 @@ namespace Notung.Loader
       return null;
     }
 
-    private string GetPluginsSearchPath()
-    {
-      var path = m_domain.BaseDirectory;
-
-      var dir = this.PluginsDirectory;
-
-      if (!string.IsNullOrEmpty(dir))
-      {
-        if (!Path.IsPathRooted(dir))
-          dir = Path.Combine(path, dir);
-
-        path = dir;
-      }
-
-      return path;
-    }
-
     private bool CheckPlugin(PluginInfo pluginInfo, string plugin_file)
     {
       if (pluginInfo == null)
@@ -357,26 +371,6 @@ namespace Notung.Loader
         return false;
 
       return true;
-    }
-
-    private AppDomain CreateDomain(string friendlyName, string searchPath)
-    {
-      AppDomainSetup setup = new AppDomainSetup();
-
-      foreach (var pi in typeof(AppDomainSetup).GetProperties())
-      {
-        if (pi.CanWrite && pi.GetIndexParameters().Length == 0)
-          pi.SetValue(setup, pi.GetValue(m_domain.SetupInformation, null), null);
-      }
-
-      setup.PrivateBinPath = this.PluginsDirectory;
-
-      AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
-
-      if (m_domain_share_handler != null)
-        m_domain_share_handler(ret);
-
-      return ret;
     }
 
     private void LoadPluginToCurrentDomain(PluginInfo pluginInfo)
@@ -441,6 +435,8 @@ namespace Notung.Loader
       if (asm_name == null && unloadOnFail)
         AppDomain.Unload(domain);
     }
+
+    #region Implementation types
 
     private interface IPluginLoader : IDisposable
     {
@@ -521,6 +517,34 @@ namespace Notung.Loader
       {
         return item.AssemblyFile;
       }
+
+      protected override void SetItem(int index, PluginInfo item)
+      {
+        item.Container = this;
+        base.SetItem(index, item);
+      }
+
+      protected override void InsertItem(int index, PluginInfo item)
+      {
+        item.Container = this;
+        base.InsertItem(index, item);
+      }
+
+      protected override void RemoveItem(int index)
+      {
+        this.Items[index].Container = null;
+        base.RemoveItem(index);
+      }
+
+      protected override void ClearItems()
+      {
+        foreach (var plugin in this.Items)
+          plugin.Container = null;
+
+        base.ClearItems();
+      }
     }
+
+    #endregion
   }
 }

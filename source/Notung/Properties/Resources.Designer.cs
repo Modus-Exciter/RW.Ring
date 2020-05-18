@@ -232,6 +232,24 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This plugin was not loaded correctly. It cannot be unloaded.
+        /// </summary>
+        internal static string UNLOAD_PLUGIN_NO_CONTAINER {
+            get {
+                return ResourceManager.GetString("UNLOAD_PLUGIN_NO_CONTAINER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to unload plugin from the current appliation domain.
+        /// </summary>
+        internal static string UNLOADING_PLUGIN_CURRENT_DOMAIN {
+            get {
+                return ResourceManager.GetString("UNLOADING_PLUGIN_CURRENT_DOMAIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warning.
         /// </summary>
         internal static string WARNING {
