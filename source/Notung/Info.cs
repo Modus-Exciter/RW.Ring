@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Notung.ComponentModel;
-using Notung.Data;
 using Notung.Properties;
 
 namespace Notung
@@ -12,7 +11,8 @@ namespace Notung
   public sealed class Info
   {
     private readonly InfoBuffer m_inner_messages = new InfoBuffer();
-    private SerializeCondition<object> m_details;
+    [NonSerialized]
+    private object m_details;
     private string m_details_string;
 
     /// <summary>
@@ -71,12 +71,12 @@ namespace Notung
     /// </summary>
     public object Details
     {
-      get { return m_details.Value ?? m_details_string; }
+      get { return m_details ?? m_details_string; }
       set
       {
-        m_details.Value = value;
+        m_details = value;
 
-        if (value != null && !m_details.CanSerialize)
+        if (value != null)
           m_details_string = value.ToString();
         else
           m_details_string = null;

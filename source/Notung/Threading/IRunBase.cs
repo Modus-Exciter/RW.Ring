@@ -5,34 +5,64 @@ using Notung.ComponentModel;
 
 namespace Notung.Threading
 {
+  /// <summary>
+  /// Выполняемая задача с индикатором прогресса
+  /// </summary>
   public interface IRunBase
   {
+    /// <summary>
+    /// Выполнить задачу
+    /// </summary>
     void Run();
 
+    /// <summary>
+    /// Задание индикатора прогресса для задачи
+    /// </summary>
+    /// <param name="indicator">Индикатор прогресса</param>
     void SetProgressIndicator(IProgressIndicator indicator);
   }
 
+  /// <summary>
+  /// Выполняемая задача с индикатором проргресса и возможностью отмены
+  /// </summary>
   public interface ICancelableRunBase : IRunBase
   {
-    Cancellation CancellationToken { get; set; }
-
-    bool CanCancel { get; }
-
-    event EventHandler CanCancelChanged;
+    /// <summary>
+    /// Обёртка над токеном отмены задачи
+    /// </summary>
+    CancellationTokenRef CancellationToken { get; set; }
   }
 
+  /// <summary>
+  /// Интерфейс для задач, изменяющих настройки отображения в ходе выполнения
+  /// </summary>
+  public interface IChangeLaunchParameters : IRunBase
+  {
+    /// <summary>
+    /// Передаёт задаче настройки отображения, 
+    /// которые она может изменять в ходе выполнения
+    /// </summary>
+    /// <param name="parameters">Настройки отображения</param>
+    void SetLaunchParameters(LaunchParameters parameters);
+  }
+  
+  /// <summary>
+  /// Индикатор прогресса для удалённой задачи
+  /// </summary>
   public interface IProgressIndicator
   {
+    /// <summary>
+    /// Отображает прогресс выполнения задачи
+    /// </summary>
+    /// <param name="percentage">Процент выполнения задачи</param>
+    /// <param name="state">Текстовое описание состояния задачи</param>
     void ReportProgress(int percentage, string state);
   }
 
-  public interface ICancellation
-  {
-    bool IsCancellationRequested { get; }
-
-    void ThrowIfCancellationRequested();
-  }
-
+  /// <summary>
+  /// Этим атрибутом следует пометить задачу, если она поддерживает
+  /// оповещение о прогрессе операции в процентах
+  /// </summary>
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
   public sealed class PercentNotificationAttribute : Attribute { }
 
@@ -97,44 +127,23 @@ namespace Notung.Threading
 
     private sealed class ProgressIndicatorStub : IProgressIndicator
     {
-      public void ReportProgress(int percentage, string state) { }
+      void IProgressIndicator.ReportProgress(int percentage, string state) { }
     }
   }
 
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
-    private volatile bool m_can_cancel;
-    private Cancellation m_cancellation = _cancellation_stub;
+    private static readonly CancellationTokenRef _cancellation_stub =
+      new CancellationTokenRef(System.Threading.CancellationToken.None);
 
-    private static readonly Cancellation _cancellation_stub = new Cancellation(System.Threading.CancellationToken.None);
+    private CancellationTokenRef m_cancellation = _cancellation_stub;
 
-    protected CancelableRunBase(bool canCancel = true)
-    {
-      m_can_cancel = canCancel;
-    }
+    protected CancelableRunBase() { }
 
-    public Cancellation CancellationToken
+    public CancellationTokenRef CancellationToken
     {
       get { return m_cancellation; }
-      set
-      {
-        m_cancellation = value ?? _cancellation_stub;
-      }
+      set { m_cancellation = value ?? _cancellation_stub; }
     }
-
-    public bool CanCancel
-    {
-      get { return m_can_cancel; }
-      protected set
-      {
-        if (m_can_cancel == value)
-          return;
-
-        m_can_cancel = value;
-        this.CanCancelChanged.InvokeSynchronized(this, EventArgs.Empty);
-      }
-    }
-
-    public event EventHandler CanCancelChanged;
   }
 }

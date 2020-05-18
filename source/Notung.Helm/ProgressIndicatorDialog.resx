@@ -117,19 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CANCEL" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="COPY_DATA_SEND_RECIEVE" xml:space="preserve">
-    <value>This method cannot be called in recieving process</value>
-  </data>
-  <data name="DLL_FUNCTIONS_ENUM_FAIL" xml:space="preserve">
-    <value>Library failed to load. Unable to enumerate functions</value>
-  </data>
-  <data name="NO_LINK_MESSAGE_CODE" xml:space="preserve">
-    <value>Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode or WM_COPYDATA.</value>
-  </data>
-  <data name="READY" xml:space="preserve">
-    <value>Ready</value>
-  </data>
 </root>

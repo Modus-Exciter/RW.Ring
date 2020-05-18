@@ -6,6 +6,10 @@ using System.Xml.Serialization;
 using Notung;
 using Notung.Configuration;
 using Notung.Helm;
+using Notung.Threading;
+using System;
+using ConfiguratorGraphicalTest.Properties;
+using Notung.Logging;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -84,8 +88,11 @@ namespace ConfiguratorGraphicalTest
     }
     public Form1()
     {
-      AppManager.Instance = new AppInstance(new MainFormAppInstanceView(this));
+      var view = new MainFormAppInstanceView(this);
+      AppManager.Instance = new AppInstance(view);
       AppManager.Instance.AllowOnlyOneInstance();
+      AppManager.TaskManager = new TaskManager(view);
+      AppManager.Notificator = new Notificator(view);
 
       InitializeComponent();
 
@@ -149,6 +156,83 @@ namespace ConfiguratorGraphicalTest
     private void buttonOpenFolder_Click(object sender, System.EventArgs e)
     {
       System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath());
+    }
+
+    private void button2_Click(object sender, System.EventArgs e)
+    {
+      AppManager.TaskManager.SyncWaitingTime = TimeSpan.FromSeconds(0.2);
+      var domain = AppDomain.CreateDomain("Parallel");
+      AppManager.Share(domain);
+
+      var wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
+        typeof(Program).Assembly.FullName, typeof(TestWork).FullName);
+
+      AppManager.TaskManager.Run(wrk, new LaunchParameters { Bitmap = Resources.DOS_TRACK });
+
+      domain.DomainUnload += (s, args) =>
+        {
+          s.ToString();
+        };
+
+      AppDomain.Unload(domain);
+    }
+
+    [PercentNotification]
+    [DisplayName("Tesovo worka")]
+    private class TestWork : CancelableRunBase, IChangeLaunchParameters, IServiceProvider
+    {
+      private LaunchParameters m_parameters;
+
+      private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
+      
+      public override void Run()
+      {
+        this.ReportProgress("Some state");
+        for (int i = 1; i <= 100; i++)
+        {
+          this.ReportProgress(i, string.Format("Some state {0}", i / 11));
+          System.Threading.Thread.Sleep(50);
+
+          if (i == 50)
+            m_parameters.CanCancel = true;
+          else if (i == 80)
+          {
+            m_parameters.CanCancel = false;
+            m_parameters.Caption = "FILLINFS";
+          }
+          if (i % 10 == 0)
+            _log.DebugFormat("Message from task {0}", i / 10);
+
+          this.CancellationToken.ThrowIfCancellationRequested();
+        }
+
+        _log.Debug("ALL RIGHT!");
+      }
+
+      //public override string ToString()
+      //{
+      //  return "Gotterdammerung";
+      //}
+
+      public void SetLaunchParameters(LaunchParameters parameters)
+      {
+        //parameters.CloseOnFinish = false;
+        parameters.CanCancel = false;
+        parameters.Caption = "Dragon fligel";
+        m_parameters = parameters;
+      }
+
+      public object GetService(Type serviceType)
+      {
+        if (serviceType == typeof(InfoBuffer))
+          return new InfoBuffer
+          {
+            new Info("Good message", InfoLevel.Info),
+            new Info("Bad message" ,InfoLevel.Warning)
+          };
+        else
+          return null;
+      }
     }
   }
 }

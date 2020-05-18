@@ -7,11 +7,23 @@ using Notung.ComponentModel;
 
 namespace Notung.Threading
 {
+  /// <summary>
+  /// Управляет задачами, которые можно запустить в диалоге с индикатором прогресса
+  /// </summary>
   public interface ITaskManager 
   {
+    /// <summary>
+    /// Время ожидания до показа индикатора прогресса
+    /// </summary>
     TimeSpan SyncWaitingTime { get; set; }
 
-    TaskStatus Run(IRunBase runBase, LaunchParameters parameters);
+    /// <summary>
+    /// Запуск задачи на выполнение
+    /// </summary>
+    /// <param name="runBase">Задача, которую требуется выполнить</param>
+    /// <param name="parameters">Параметры отображения задачи в пользовательском интерфейсе</param>
+    /// <returns>Результат выполнения задачи</returns>
+    TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
   }
 
   public class TaskManager : MarshalByRefObject, ITaskManager
@@ -28,27 +40,53 @@ namespace Notung.Threading
 
     internal TaskManager() : this(new TaskManagerViewStub()) { }
 
+    public TimeSpan SyncWaitingTime { get; set; }
+
     public TaskStatus Run(IRunBase work, LaunchParameters parameters)
     {
       if (work == null)
         throw new ArgumentNullException("runBase");
 
       if (parameters == null)
-        parameters = new LaunchParameters(work);
+        parameters = new LaunchParameters();
 
-      var taskInfo = new TaskInfo(work, parameters);
-      var action = new Action(taskInfo.Run);
-      var async = action.BeginInvoke(null, taskInfo);
+      parameters.Setup(work);
 
+      if (work is IChangeLaunchParameters)
+        ((IChangeLaunchParameters)work).SetLaunchParameters(parameters);
+
+      var task_info = new TaskInfo(work, parameters);
+      var action = new Action(task_info.Run);
+      var async = action.BeginInvoke(null, task_info);
+
+      var ret = FinishTask(task_info, parameters, async);
+
+      if (work is IServiceProvider)
+      {
+        var messages = ((IServiceProvider)work).GetService<InfoBuffer>();
+
+        if (messages != null && messages.Count != 0)
+          AppManager.Notificator.Show(messages);
+      }
+
+      return ret;
+    }
+
+    private TaskStatus FinishTask(TaskInfo taskInfo, LaunchParameters parameters, IAsyncResult async)
+    {
       if (this.SyncWaitingTime > TimeSpan.Zero && async.AsyncWaitHandle.WaitOne(this.SyncWaitingTime))
         return taskInfo.Status;
 
-      m_view.ShowProgressDialog(taskInfo, parameters, async);
+      if (m_view.Invoker.InvokeRequired)
+      {
+        m_view.Invoker.Invoke(new Func<LaunchParameters, IAsyncResult, bool>
+          (m_view.ShowProgressDialog), new object[] { parameters, async });
+      }
+
+      m_view.ShowProgressDialog(parameters, async);
 
       return taskInfo.Status;
     }
-
-    public TimeSpan SyncWaitingTime { get; set; }
   }
 
   public sealed class TaskInfo : MarshalByRefObject, IProgressIndicator
@@ -74,6 +112,11 @@ namespace Notung.Threading
       this.Status = TaskStatus.Created;
     }
 
+    public IRunBase RunBase
+    {
+      get { return m_run_base; }
+    }
+
     public TaskStatus Status { get; private set; }
 
     public Exception Error { get; private set; }
@@ -95,7 +138,7 @@ namespace Notung.Threading
 
     public event EventHandler TaskCompleted;
 
-    public void Run()
+    internal void Run()
     {
       try
       {
@@ -115,9 +158,6 @@ namespace Notung.Threading
       }
       finally
       {
-        if (m_parameters != null)
-          m_parameters.Finish();
-
         this.TaskCompleted.InvokeSynchronized(this, EventArgs.Empty);
       }
     }
@@ -135,13 +175,21 @@ namespace Notung.Threading
     }
   }
 
-  public sealed class Cancellation : MarshalByRefObject
+  /// <summary>
+  /// Обёртка над токеном отмены задачи, позволяющая делать это через границы доменов приложения
+  /// </summary>
+  public sealed class CancellationTokenRef : MarshalByRefObject
   {
     private readonly CancellationToken m_token;
 
-    public Cancellation(CancellationToken token)
+    public CancellationTokenRef(CancellationToken token)
     {
       m_token = token;
+    }
+
+    public bool CanBeCanceled
+    {
+      get { return m_token.CanBeCanceled; }
     }
 
     public bool IsCancellationRequested
@@ -154,24 +202,25 @@ namespace Notung.Threading
       m_token.ThrowIfCancellationRequested();
     }
 
-    public static implicit operator Cancellation(CancellationToken token)
+    public static implicit operator CancellationTokenRef(CancellationToken token)
     {
-      return new Cancellation(token);
+      return new CancellationTokenRef(token);
     }
   }
 
-
   public interface ITaskManagerView : ISynchronizeProvider
   {
-    bool ShowProgressDialog(TaskInfo work, LaunchParameters parameters, IAsyncResult wait);
+    bool ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait);
   }
 
   public class TaskManagerViewStub : SynchronizeProviderStub, ITaskManagerView
   {
-    public bool ShowProgressDialog(TaskInfo work, LaunchParameters parameters, IAsyncResult wait)
+    public bool ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
     {
+      TaskInfo work = wait.AsyncState as TaskInfo;
       try
       {
+        
         work.ProgressChanged += HandleProgressChanged;
         work.ShowCurrentProgress();
         wait.AsyncWaitHandle.WaitOne();
@@ -189,14 +238,6 @@ namespace Notung.Threading
         Console.WriteLine("{0,3} %, {1}", e.ProgressPercentage, e.UserState);
       else
         Console.WriteLine(e.UserState);
-    }
-  }
-
-  public static class RunBaseExtensions
-  {
-    public static bool Run(this ITaskManager context, IRunBase runBase)
-    {
-      return context.Run(runBase, new LaunchParameters(runBase)) == TaskStatus.RanToCompletion;
     }
   }
 }

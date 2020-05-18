@@ -2,42 +2,34 @@
 using System.ComponentModel;
 using System.Drawing;
 using Notung.ComponentModel;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Notung.Threading
 {
   public sealed class LaunchParameters : MarshalByRefObject, INotifyPropertyChanged
   {
-    private readonly IRunBase m_work;
-
     private string m_caption;
-    private Image m_bitmap;
-    private bool m_close_on_finish;
-    private bool m_supports_cancellation;
+    private Bitmap m_bitmap;
+    private bool m_close_on_finish = true;
     private bool m_can_cancel;
     private bool m_percent_notification;
 
-    public LaunchParameters(IRunBase work = null)
+    internal void Setup(IRunBase work)
     {
-      m_work = work;
       m_close_on_finish = true;
 
-      if (m_work == null)
+      if (work == null)
       {
         m_caption = "";
         return;
       }
 
-      m_caption = GetDefaultCaption();
-      m_percent_notification = m_work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
+      if (string.IsNullOrWhiteSpace(m_caption))
+        m_caption = GetDefaultCaption(work);
 
-      var cancelable = m_work as ICancelableRunBase;
-
-      if (cancelable != null)
-      {
-        m_supports_cancellation = true;
-        m_can_cancel = cancelable.CanCancel;
-        cancelable.CanCancelChanged += this.HandleCanCancelChanged;
-      }
+      m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
+      m_can_cancel = work is ICancelableRunBase;
     }
     
     public string Caption
@@ -45,16 +37,25 @@ namespace Notung.Threading
       get { return m_caption; }
       set
       {
+        if (string.IsNullOrEmpty(value))
+          return;
+        
+        if (m_caption == value)
+          return;
+
         m_caption = value;
         this.OnPropertyChanged("Caption");
       }
     }
 
-    public Image Bitmap
+    public Bitmap Bitmap
     {
       get { return m_bitmap; }
       set
       {
+        if (m_bitmap == value)
+          return;
+
         m_bitmap = value;
         this.OnPropertyChanged("Bitmap");
       }
@@ -65,18 +66,11 @@ namespace Notung.Threading
       get { return m_close_on_finish; }
       set
       {
+        if (m_close_on_finish == value)
+          return;
+
         m_close_on_finish = value;
         this.OnPropertyChanged("CloseOnFinish");
-      }
-    }
-
-    public bool SupportsCancellation
-    {
-      get { return m_supports_cancellation; }
-      set
-      {
-        m_supports_cancellation = value;
-        this.OnPropertyChanged("SupportsCancellation");
       }
     }
 
@@ -85,6 +79,9 @@ namespace Notung.Threading
       get { return m_can_cancel; }
       set
       {
+        if (m_can_cancel == value)
+          return;
+
         m_can_cancel = value;
         this.OnPropertyChanged("CanCancel");
       }
@@ -93,14 +90,14 @@ namespace Notung.Threading
     public bool SupportsPercentNotification
     {
       get { return m_percent_notification; }
-      set
-      {
-        m_percent_notification = value;
-        this.OnPropertyChanged("SupportsPercentNotification");
-      }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+    public void ShowCurrentSettings()
+    {
+      this.OnPropertyChanged(null); 
+    }
 
     public override string ToString()
     {
@@ -109,32 +106,19 @@ namespace Notung.Threading
 
     #region Implementation
 
-    internal void Finish()
+    private string GetDefaultCaption(IRunBase work)
     {
-      var cancelable = m_work as ICancelableRunBase;
+      var ret = work.ToString();
 
-      if (cancelable != null) 
-        cancelable.CanCancelChanged -= this.HandleCanCancelChanged;
-    }
-
-    private string GetDefaultCaption()
-    {
-      var ret = m_work.ToString();
-
-      if (!object.Equals(this.Caption, m_work.GetType().ToString()))
+      if (object.Equals(ret, work.GetType().ToString()))
       {
-        var dn = m_work.GetType().GetCustomAttribute<DisplayNameAttribute>(true);
+        var dn = work.GetType().GetCustomAttribute<DisplayNameAttribute>(true);
 
         if (dn != null && !string.IsNullOrWhiteSpace(dn.DisplayName))
           ret = dn.DisplayName;
       }
 
       return ret;
-    }
-
-    private void HandleCanCancelChanged(object sender, EventArgs e)
-    {
-      this.CanCancel = ((ICancelableRunBase)m_work).CanCancel;
     }
 
     private void OnPropertyChanged(string propertyName)
