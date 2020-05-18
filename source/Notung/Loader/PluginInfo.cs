@@ -48,7 +48,7 @@ namespace Notung.Loader
         return;
 
       if (this.Container == null)
-        throw new InvalidOperationException();
+        throw new InvalidOperationException(Resources.UNLOAD_PLUGIN_NO_CONTAINER);
 
       if (this.Domain == AppDomain.CurrentDomain)
         throw new InvalidOperationException(Resources.UNLOADING_PLUGIN_CURRENT_DOMAIN);
