@@ -87,6 +87,11 @@ namespace Notung.ComponentModel
       }
     }
 
+    public static TService GetService<TService>(this IServiceProvider provider) where TService: class
+    {
+      return provider.GetService(typeof(TService)) as TService;
+    }
+
     /// <summary>
     /// Выполнение обработчика события в синхронизированном контексте
     /// </summary>

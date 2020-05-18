@@ -37,6 +37,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -93,8 +94,10 @@
     </Compile>
     <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
+    <Compile Include="Threading\IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
     <Compile Include="Threading\ITaskManager.cs" />
+    <Compile Include="Threading\LaunchParameters.cs" />
     <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
   </ItemGroup>

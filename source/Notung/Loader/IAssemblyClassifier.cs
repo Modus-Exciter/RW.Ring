@@ -50,7 +50,7 @@ namespace Notung.Loader
     /// <summary>
     /// Загрузка всех зависимостей указанной сборки
     /// </summary>
-    /// <param name="source"></param>
+    /// <param name="source">Сборка, зависимости которой следует загрузить</param>
     void LoadDependencies(Assembly source);
   }
 

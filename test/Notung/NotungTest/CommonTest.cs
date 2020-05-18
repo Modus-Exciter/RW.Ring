@@ -6,6 +6,8 @@ using Notung.Loader;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using Notung.Threading;
+using System.Threading;
 
 namespace NotungTest
 {
