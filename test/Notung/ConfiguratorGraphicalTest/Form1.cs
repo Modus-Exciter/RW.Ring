@@ -146,7 +146,7 @@ namespace ConfiguratorGraphicalTest
           using (var dll = new NativeDll(dlg.FileName))
           {
             this.Text = string.Join(", ", dll.GetExportList());
-          }            
+          }
           //this.Text = string.Join(", ", WinAPIHelper.GetDllExportList(dlg.FileName).OfType<string>());
 
         }
@@ -161,20 +161,24 @@ namespace ConfiguratorGraphicalTest
     private void button2_Click(object sender, System.EventArgs e)
     {
       AppManager.TaskManager.SyncWaitingTime = TimeSpan.FromSeconds(0.2);
+#if MULTI_DOMAIN
       var domain = AppDomain.CreateDomain("Parallel");
       AppManager.Share(domain);
 
-      var wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
+      var wrk = (IRunBase)domain.CreateInstanceAndUnwrap(
         typeof(Program).Assembly.FullName, typeof(TestWork).FullName);
-
+#else
+      var wrk = new TestWork();
+#endif
       AppManager.TaskManager.Run(wrk, new LaunchParameters { Bitmap = Resources.DOS_TRACK });
 
+#if MULTI_DOMAIN
       domain.DomainUnload += (s, args) =>
         {
           s.ToString();
         };
-
       AppDomain.Unload(domain);
+#endif
     }
 
     [PercentNotification]
@@ -182,6 +186,7 @@ namespace ConfiguratorGraphicalTest
     private class TestWork : CancelableRunBase, IChangeLaunchParameters, IServiceProvider
     {
       private LaunchParameters m_parameters;
+      private bool m_ok = false;
 
       private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
       
@@ -205,7 +210,7 @@ namespace ConfiguratorGraphicalTest
 
           this.CancellationToken.ThrowIfCancellationRequested();
         }
-
+        m_ok = true;
         _log.Debug("ALL RIGHT!");
       }
 
@@ -216,7 +221,7 @@ namespace ConfiguratorGraphicalTest
 
       public void SetLaunchParameters(LaunchParameters parameters)
       {
-        //parameters.CloseOnFinish = false;
+        parameters.CloseOnFinish = false;
         parameters.CanCancel = false;
         parameters.Caption = "Dragon fligel";
         m_parameters = parameters;
@@ -224,7 +229,7 @@ namespace ConfiguratorGraphicalTest
 
       public object GetService(Type serviceType)
       {
-        if (serviceType == typeof(InfoBuffer))
+        if (serviceType == typeof(InfoBuffer) && !m_ok)
           return new InfoBuffer
           {
             new Info("Good message", InfoLevel.Info),
