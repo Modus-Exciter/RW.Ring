@@ -48,7 +48,7 @@ namespace Notung.Helm
       m_operation.ProgressChanged += HandleProgressChanged;
       m_operation.ShowCurrentProgress();
 
-      m_operation.TaskCompleted += HandleTaskCompleted;
+      m_operation.Completed += HandleOperationCompleted;
     }
 
     private void HanldePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -67,11 +67,11 @@ namespace Notung.Helm
       m_view.StateText = (e.UserState ?? string.Empty).ToString();
     }
 
-    private void HandleTaskCompleted(object sender, EventArgs e)
+    private void HandleOperationCompleted(object sender, EventArgs e)
     {
       m_launch_parameters.PropertyChanged -= HanldePropertyChanged;
       m_operation.ProgressChanged -= HandleProgressChanged;
-      m_operation.TaskCompleted -= HandleTaskCompleted;
+      m_operation.Completed -= HandleOperationCompleted;
 
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;

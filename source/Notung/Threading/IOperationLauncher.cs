@@ -60,6 +60,9 @@ namespace Notung.Threading
         ((IChangeLaunchParameters)runBase).SetLaunchParameters(parameters);
 
       var operation = new LengthyOperation(runBase);
+#if !APP_MANAGER
+      operation.Invoker = m_view.Invoker;
+#endif
       operation.Start();
 
       var ret = Complete(operation, parameters);
@@ -169,7 +172,7 @@ namespace Notung.Threading
 
     public event ProgressChangedEventHandler ProgressChanged;
 
-    public event EventHandler TaskCompleted;
+    public event EventHandler Completed;
 
     public void ShowCurrentProgress()
     {
@@ -289,7 +292,7 @@ namespace Notung.Threading
 
     private void OnTaskCompleted()
     {
-      this.TaskCompleted.InvokeSynchronized(this, EventArgs.Empty);
+      this.Completed.InvokeSynchronized(this, EventArgs.Empty);
     }
 
     private void OnProgressChanged(ProgressChangedEventArgs e)
@@ -346,7 +349,7 @@ namespace Notung.Threading
           return;
 
         operation.ProgressChanged -= this.HandleProgressChanged;
-        operation.TaskCompleted -= this.HandleTaskCompleted;
+        operation.Completed -= this.HandleTaskCompleted;
       }
     }
 
@@ -355,7 +358,7 @@ namespace Notung.Threading
       var progress = new ProgressInConsole(parameters);
 
       operation.ProgressChanged += progress.HandleProgressChanged;
-      operation.TaskCompleted += progress.HandleTaskCompleted;
+      operation.Completed += progress.HandleTaskCompleted;
       operation.Wait();
     }
   }
