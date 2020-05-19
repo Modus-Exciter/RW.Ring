@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if APP_MANAGER
+using System;
 using System.Reflection;
 using Notung.Configuration;
 using Notung.Loader;
@@ -16,16 +17,9 @@ namespace Notung
     private static IAppInstance _app_instance;
     private static IAssemblyClassifier _asm_classifier;
     private static INotificator _notificator;
-    private static ITaskManager _task_manager;
+    private static IOperationLauncher _operation_launcher;
 
     private static readonly object _lock = new object();
-
-    static AppManager()
-    {
-      var classifier = new AssemblyClassifier();
-      classifier.SetDomainShareHandler(Share);
-      _asm_classifier = classifier;
-    }
 
     private static T InitService<T>(ref T field, Func<T> creator)
     {
@@ -81,7 +75,7 @@ namespace Notung
     /// </summary>
     public static IAssemblyClassifier AssemblyClassifier
     {
-      get { return _asm_classifier; }
+      get { return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier()); }
       set
       {
         if (value == null)
@@ -96,8 +90,6 @@ namespace Notung
             _asm_classifier.Dispose();
 
           _asm_classifier = value;
-          if (_asm_classifier is AssemblyClassifier)
-            ((AssemblyClassifier)_asm_classifier).SetDomainShareHandler(Share);
         }
       }
     }
@@ -132,32 +124,16 @@ namespace Notung
     /// <summary>
     /// Управление задачами с индикатором прогресса
     /// </summary>
-    public static ITaskManager TaskManager
+    public static IOperationLauncher TaskManager
     {
-      get
-      {
-        return _task_manager ?? InitService(ref _task_manager, delegate
-        { 
-          var ret = new TaskManager();
-          ret.SetNotificationDelegate((buffer) => _notificator.Show(buffer));
-          return ret;
-        });
-      }
+      get { return _operation_launcher ?? InitService(ref _operation_launcher, () => new OperationLauncher()); }
+
       set
       {
         if (value == null)
           throw new ArgumentNullException();
 
-        lock (_lock)
-        {
-          if (ReferenceEquals(_task_manager, value))
-            return;
-          
-          if (value is TaskManager)
-            ((TaskManager)value).SetNotificationDelegate((buffer) => _notificator.Show(buffer));
-
-          _task_manager = value;
-        }
+        _operation_launcher = value;
       }
     }
 
@@ -181,7 +157,9 @@ namespace Notung
 
       LogManager.Share(newDomain);
       LoggingContext.Share(newDomain);
+#if APPLICATION_INFO
       ApplicationInfo.Share(newDomain);
+#endif
     }
 
     private interface IDomainAcceptor
@@ -189,7 +167,7 @@ namespace Notung
       void AcceptServices(IAppInstance instance, 
                           IConfigurator configurator, 
                           INotificator notificator, 
-                          ITaskManager taskManager);
+                          IOperationLauncher taskManager);
     }
 
     private sealed class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
@@ -197,13 +175,14 @@ namespace Notung
       public void AcceptServices(IAppInstance instance, 
                                  IConfigurator configurator, 
                                  INotificator notificator, 
-                                 ITaskManager taskManager)
+                                 IOperationLauncher taskManager)
       {
         _notificator = notificator;
         _app_instance = instance;
         _configurator = configurator;
-        _task_manager = taskManager;
+        _operation_launcher = taskManager; // TODO: обёртка должна быть здесь
       }
     }
   }
 }
+#endif

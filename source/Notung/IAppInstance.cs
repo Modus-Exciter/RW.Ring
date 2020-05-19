@@ -64,7 +64,12 @@ namespace Notung
     private volatile bool m_restarting;
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
+
+#if APPLICATION_INFO
     private readonly string m_main_module_file_name = ApplicationInfo.Instance.CurrentProcess.MainModule.FileName;
+#else
+    private readonly string m_main_module_file_name = GetCurrentProcessModuleName();
+#endif
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(AppInstance));
 
@@ -170,6 +175,14 @@ namespace Notung
       m_view.Restart(m_main_module_file_name, m_args);
     }
 
+#if !APPLICATION_INFO
+    private static string GetCurrentProcessModuleName()
+    {
+      using (var process = Process.GetCurrentProcess())
+        return process.MainModule.FileName;
+    }
+#endif
+
     private Thread MainThread
     {
       get
@@ -223,7 +236,12 @@ namespace Notung
 
     private bool SendArgsToPreviousProcess()
     {
+#if APPLICATION_INFO
       var currentProc = ApplicationInfo.Instance.CurrentProcess;
+#else
+      using (var currentProc = Process.GetCurrentProcess())
+      {
+#endif
       var procList = Process.GetProcessesByName(currentProc.ProcessName);
       foreach (var proc in procList)
       {
@@ -235,6 +253,9 @@ namespace Notung
 
         return m_view.SendArgsToProcess(proc, m_args);
       }
+#if !APPLICATION_INFO
+      }
+#endif
 
       return false;
     }

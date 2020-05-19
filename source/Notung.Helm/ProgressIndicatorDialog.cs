@@ -11,10 +11,10 @@ namespace Notung.Helm
   public sealed partial class ProgressIndicatorDialog : Form, IProcessIndicatorView
   {
     private readonly ProgressIndicatorPresenter m_presenter;
-    
-    public ProgressIndicatorDialog(LaunchParameters parameters, IAsyncResult work)
+
+    public ProgressIndicatorDialog(LengthyOperation work, LaunchParameters parameters)
     {
-      m_presenter = new ProgressIndicatorPresenter(parameters, work, this);
+      m_presenter = new ProgressIndicatorPresenter(work, parameters, this);
       InitializeComponent();
       m_presenter.Initialize();
     }

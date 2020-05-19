@@ -12,7 +12,7 @@ using Notung.Threading;
 
 namespace Notung.Helm
 {
-  public class MainFormAppInstanceView : IAppInstanceView, ITaskManagerView, INotificatorView
+  public class MainFormAppInstanceView : IAppInstanceView, IOperationLauncherView, INotificatorView
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
     private readonly Form m_main_form;
@@ -73,9 +73,9 @@ namespace Notung.Helm
       System.Windows.Forms.Application.Restart();
     }
 
-    public virtual void ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
+    public virtual void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
     {
-      using (var dlg = new ProgressIndicatorDialog(parameters, wait))
+      using (var dlg = new ProgressIndicatorDialog(operation, parameters))
       {
         dlg.ShowDialog(m_main_form);
       }

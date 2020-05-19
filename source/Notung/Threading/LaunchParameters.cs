@@ -12,6 +12,7 @@ namespace Notung.Threading
     private string m_caption;
     private Bitmap m_bitmap;
     private bool m_close_on_finish = true;
+    private bool m_cancelable;
     private bool m_can_cancel;
     private bool m_percent_notification;
 
@@ -19,9 +20,9 @@ namespace Notung.Threading
     {
       if (string.IsNullOrWhiteSpace(m_caption))
         m_caption = GetDefaultCaption(work);
-
+      // TODO: if task is wrapper, do this another way or create several wrappers
       m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
-      m_can_cancel = work is ICancelableRunBase;
+      m_cancelable = m_can_cancel = work is ICancelableRunBase;
     }
     
     public string Caption
@@ -82,6 +83,11 @@ namespace Notung.Threading
     public bool SupportsPercentNotification
     {
       get { return m_percent_notification; }
+    }
+
+    public bool SupportsCancellation
+    {
+      get { return m_cancelable; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

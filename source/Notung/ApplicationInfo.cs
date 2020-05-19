@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if APPLICATION_INFO
+using System;
 using System.IO;
 using System.Reflection;
 using Process = System.Diagnostics.Process;
@@ -216,3 +217,4 @@ namespace Notung
     }
   }
 }
+#endif

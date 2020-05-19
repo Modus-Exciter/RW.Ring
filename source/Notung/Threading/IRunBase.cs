@@ -16,10 +16,9 @@ namespace Notung.Threading
     void Run();
 
     /// <summary>
-    /// Задание индикатора прогресса для задачи
+    /// Происходит при изменении прогресса выполнения задачи
     /// </summary>
-    /// <param name="indicator">Индикатор прогресса</param>
-    void SetProgressIndicator(IProgressIndicator indicator);
+    event ProgressChangedEventHandler ProgressChanged;
   }
 
   /// <summary>
@@ -28,9 +27,9 @@ namespace Notung.Threading
   public interface ICancelableRunBase : IRunBase
   {
     /// <summary>
-    /// Обёртка над токеном отмены задачи
+    /// Токен отмены задачи
     /// </summary>
-    CancellationTokenRef CancellationToken { get; set; }
+    CancellationToken CancellationToken { get; set; }
   }
 
   /// <summary>
@@ -47,19 +46,6 @@ namespace Notung.Threading
   }
   
   /// <summary>
-  /// Индикатор прогресса для удалённой задачи
-  /// </summary>
-  public interface IProgressIndicator
-  {
-    /// <summary>
-    /// Отображает прогресс выполнения задачи
-    /// </summary>
-    /// <param name="percentage">Процент выполнения задачи</param>
-    /// <param name="state">Текстовое описание состояния задачи</param>
-    void ReportProgress(int percentage, string state);
-  }
-
-  /// <summary>
   /// Этим атрибутом следует пометить задачу, если она поддерживает
   /// оповещение о прогрессе операции в процентах
   /// </summary>
@@ -69,20 +55,20 @@ namespace Notung.Threading
   /// <summary>
   /// Базовая реализация интерфейса IRunBase
   /// </summary>
-  public abstract class RunBase : MarshalByRefObject, IRunBase
+  public abstract class RunBase : IRunBase
   {
     private volatile int m_percent;
-    private volatile string m_state;
+    private volatile object m_state;
     private readonly bool m_percent_notification;
-    private IProgressIndicator m_indicator = _indicator_stub;
-
-    private static readonly ProgressIndicatorStub _indicator_stub = new ProgressIndicatorStub();
 
     protected RunBase()
     {
       m_percent_notification = this.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
     }
 
+    /// <summary>
+    /// Поддерживается ли оповещение о прогрессе операции
+    /// </summary>
     protected bool SupportsPercentNotification
     {
       get { return m_percent_notification; }
@@ -90,60 +76,54 @@ namespace Notung.Threading
 
     public abstract void Run();
 
-    protected void ReportProgress(int percent, string state)
+    public event ProgressChangedEventHandler ProgressChanged;
+
+    protected void ReportProgress(int percent, object state)
     {
       if (m_percent_notification)
+      {
+        if (m_percent == percent && object.Equals(m_state, state))
+          return;
+
         m_percent = percent;
+      }
+      else if (object.Equals(state, m_state))
+        return;
 
       m_state = state;
-      m_indicator.ReportProgress(m_percent, m_state);
+
+      this.OnProgressChanged();
     }
 
     protected void ReportProgress(int percent)
     {
-      if (!m_percent_notification)
-        return;
-
-      if (m_percent == percent)
+      if (!m_percent_notification || m_percent == percent)
         return;
 
       m_percent = percent;
-      m_indicator.ReportProgress(m_percent, m_state);
+
+      this.OnProgressChanged();
     }
 
-    protected void ReportProgress(string state)
+    protected void ReportProgress(object state)
     {
-      if (object.Equals(state, m_state))
+      if (object.Equals(m_state, state))
         return;
 
       m_state = state;
-      m_indicator.ReportProgress(m_percent, m_state);
+
+      this.OnProgressChanged();
     }
 
-    void IRunBase.SetProgressIndicator(IProgressIndicator indicator)
+    private void OnProgressChanged()
     {
-      if (indicator == null)
-        throw new ArgumentNullException("indicator");
-
-      m_indicator = indicator;
-    }
-
-    private sealed class ProgressIndicatorStub : IProgressIndicator
-    {
-      void IProgressIndicator.ReportProgress(int percentage, string state) { }
+      if (this.ProgressChanged != null)
+        this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(m_percent, m_state));
     }
   }
 
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
-    private CancellationTokenRef m_cancellation = CancellationTokenRef.None;
-
-    protected CancelableRunBase() { }
-
-    public CancellationTokenRef CancellationToken
-    {
-      get { return m_cancellation; }
-      set { m_cancellation = value ?? CancellationTokenRef.None; }
-    }
+    public CancellationToken CancellationToken { get; set; }
   }
 }

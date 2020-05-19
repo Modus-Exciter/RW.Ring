@@ -27,6 +27,11 @@ namespace Notung.Loader
     ReadOnlyCollection<Assembly> TrackingAssemblies { get; }
 
     /// <summary>
+    /// Имена сборок, которые не удалось загрузить при загрузке плагинов
+    /// </summary>
+    ReadOnlySet<string> UnmanagedAsemblies { get; }
+
+    /// <summary>
     /// Плагины, которые удалось загрузить
     /// </summary>
     ReadOnlyCollection<PluginInfo> Plugins { get; }
@@ -35,11 +40,6 @@ namespace Notung.Loader
     /// Директория, в которой расположены плагины
     /// </summary>
     string PluginsDirectory { get; set; }
-
-    /// <summary>
-    /// Имена сборок, которые не удалось загрузить при загрузке плагинов
-    /// </summary>
-    ReadOnlySet<string> UnmanagedAsemblies { get; }
 
     /// <summary>
     /// Загрузить плагины, находящиеся в директории плагинов
@@ -94,8 +94,6 @@ namespace Notung.Loader
     private readonly PluginLoader m_plugin_loader;
 
     private readonly PrefixTree m_prefix_tree = new PrefixTree();
-
-    private Action<AppDomain> m_domain_share_handler;
 
     public AssemblyClassifier(AppDomain domain)
     {
@@ -276,11 +274,6 @@ namespace Notung.Loader
       return null;
     }
 
-    internal void SetDomainShareHandler(Action<AppDomain> handler)
-    {
-      m_domain_share_handler = handler;
-    }
-
     private void HandleAssemblyLoad(object sender, AssemblyLoadEventArgs args)
     {
       lock (m_assemblies)
@@ -336,9 +329,16 @@ namespace Notung.Loader
 
       AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
 
-      if (m_domain_share_handler != null)
-        m_domain_share_handler(ret);
+#if APP_MANAGER
+      AppManager.Share(ret);
+#else
+      LogManager.Share(ret);
+      LoggingContext.Share(ret);
+#if APPLICATION_INFO
+      ApplicationInfo.Share(ret);
+#endif
 
+#endif
       return ret;
     }
 

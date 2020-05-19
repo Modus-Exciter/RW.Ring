@@ -9,26 +9,31 @@ namespace AppInfoConsoleTest
   {
     static void Main(string[] args)
     {
+#if APPLICATION_INFO
       Console.WriteLine(ApplicationInfo.Instance);
-
+#endif
       AppManager.TaskManager.SyncWaitingTime = new TimeSpan(0, 0, 1);
       CancellationTokenSource src = new CancellationTokenSource();
 
       var domain = AppDomain.CreateDomain("Parallel");
       AppManager.Share(domain);
 
+#if ANOTHER_DOMAIN
       var wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
         typeof(Program).Assembly.FullName, typeof(TestWork).FullName);
-
+#else
+      var wrk = new TestWork();
+#endif
       wrk.CancellationToken = src.Token;
 
       src.Cancel();
       Console.WriteLine(AppManager.TaskManager.Run(wrk, null));
 
+#if ANOTHER_DOMAIN
       wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
         typeof(Program).Assembly.FullName, typeof(TestWork).FullName);
-
-      wrk.CancellationToken = null;
+#endif
+      wrk.CancellationToken = CancellationToken.None;
 
       Console.WriteLine(AppManager.TaskManager.Run(wrk, null));
 

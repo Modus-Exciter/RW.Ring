@@ -13,45 +13,42 @@ namespace Notung.Helm
   {
     private readonly IProcessIndicatorView m_view;
     private readonly LaunchParameters m_launch_parameters;
-    private readonly TaskInfo m_task_info;
+    private readonly LengthyOperation m_operation;
     private CancellationTokenSource m_cancel_source;
 
-    public ProgressIndicatorPresenter(LaunchParameters parameters, IAsyncResult work, IProcessIndicatorView view)
+    public ProgressIndicatorPresenter(LengthyOperation operation, LaunchParameters parameters, IProcessIndicatorView view)
     {
+      if (operation == null)
+        throw new ArgumentNullException("operation");
+
       if (parameters == null)
         throw new ArgumentNullException("parameters");
-
-      if (work == null)
-        throw new ArgumentNullException("work");
 
       if (view == null)
         throw new ArgumentNullException("view");
 
       m_launch_parameters = parameters;
-      m_task_info = work.AsyncState as TaskInfo;
+      m_operation = operation;
       m_view = view;
 
-      if (m_task_info == null)
+      if (m_operation == null)
         throw new ArgumentException();
     }
 
     public void Initialize()
     {
-      if (m_task_info.RunBase is ICancelableRunBase)
-      {
-        m_cancel_source = new CancellationTokenSource();
-        ((ICancelableRunBase)m_task_info.RunBase).CancellationToken = m_cancel_source.Token;
-      }
-      else
+      m_cancel_source = m_operation.GetCancellationTokenSource();
+
+      if (m_cancel_source == null)
         m_view.ButtonVisible = false;
 
       m_launch_parameters.PropertyChanged += HanldePropertyChanged;
       m_launch_parameters.ShowCurrentSettings();
 
-      m_task_info.ProgressChanged += HandleProgressChanged;
-      m_task_info.ShowCurrentProgress();
+      m_operation.ProgressChanged += HandleProgressChanged;
+      m_operation.ShowCurrentProgress();
 
-      m_task_info.TaskCompleted += HandleTaskCompleted;
+      m_operation.TaskCompleted += HandleTaskCompleted;
     }
 
     private void HanldePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -73,8 +70,8 @@ namespace Notung.Helm
     private void HandleTaskCompleted(object sender, EventArgs e)
     {
       m_launch_parameters.PropertyChanged -= HanldePropertyChanged;
-      m_task_info.ProgressChanged -= HandleProgressChanged;
-      m_task_info.TaskCompleted -= HandleTaskCompleted;
+      m_operation.ProgressChanged -= HandleProgressChanged;
+      m_operation.TaskCompleted -= HandleTaskCompleted;
 
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;
@@ -83,7 +80,7 @@ namespace Notung.Helm
       if (m_cancel_source != null)
         m_cancel_source.Dispose();
 
-      if (m_task_info.Status != TaskStatus.RanToCompletion)
+      if (m_operation.Status != TaskStatus.RanToCompletion)
       {
         m_view.DialogResultOK = false;
         m_view.Close();
@@ -103,7 +100,7 @@ namespace Notung.Helm
 
     public void ButtonClick()
     {
-      if (m_cancel_source != null && m_task_info.Status != TaskStatus.RanToCompletion)
+      if (m_cancel_source != null && m_operation.Status != TaskStatus.RanToCompletion)
         m_cancel_source.Cancel();
     }
   }

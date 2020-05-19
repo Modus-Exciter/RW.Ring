@@ -204,4 +204,31 @@ namespace Notung
   {
     bool Validate(InfoBuffer buffer);
   }
+
+  [Serializable]
+  public class InfoBufferEventArgs : EventArgs
+  {
+    private readonly InfoBuffer m_buffer;
+
+    public InfoBufferEventArgs(InfoBuffer buffer)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      m_buffer = buffer;
+    }
+
+    public InfoBufferEventArgs(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      m_buffer = new InfoBuffer { info };
+    }
+
+    public InfoBuffer Messages
+    {
+      get { return m_buffer; }
+    }
+  }
 }

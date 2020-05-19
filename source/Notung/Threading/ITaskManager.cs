@@ -1,35 +1,33 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.ComponentModel;
-using Notung.Logging;
+using System.Threading.Tasks;
 using Notung.ComponentModel;
+using Notung.Logging;
 
 namespace Notung.Threading
 {
+  [Obsolete("Use IOperationLauncher")]
+  public interface ITaskManager { }
+  
   /// <summary>
-  /// Управляет задачами, которые можно запустить в диалоге с индикатором прогресса
+  /// Индикатор прогресса для удалённой задачи
   /// </summary>
-  public interface ITaskManager 
+  public interface IProgressIndicator
   {
     /// <summary>
-    /// Время ожидания до показа индикатора прогресса
+    /// Отображает прогресс выполнения задачи
     /// </summary>
-    TimeSpan SyncWaitingTime { get; set; }
-
-    /// <summary>
-    /// Запуск задачи на выполнение
-    /// </summary>
-    /// <param name="runBase">Задача, которую требуется выполнить</param>
-    /// <param name="parameters">Параметры отображения задачи в пользовательском интерфейсе</param>
-    /// <returns>Результат выполнения задачи</returns>
-    TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
+    /// <param name="percentage">Процент выполнения задачи</param>
+    /// <param name="state">Текстовое описание состояния задачи</param>
+    void ReportProgress(int percentage, string state);
   }
 
-  public class TaskManager : MarshalByRefObject, ITaskManager
+  /*public class TaskManager : MarshalByRefObject, ITaskManager
   {
     private readonly ITaskManagerView m_view;
-    private Action<InfoBuffer> m_notification_delegate;
 
     public TaskManager(ITaskManagerView view)
     {
@@ -56,27 +54,52 @@ namespace Notung.Threading
       if (work is IChangeLaunchParameters)
         ((IChangeLaunchParameters)work).SetLaunchParameters(parameters);
 
-      var task_info = new TaskInfo(work, parameters);
+      var task_info = new TaskInfo(work, parameters) { Invoker = m_view.Invoker };
       var action = new Action(task_info.Run);
       var async = action.BeginInvoke(null, task_info);
 
       var ret = FinishTask(task_info, parameters, async);
 
-      if (work is IServiceProvider && m_notification_delegate != null)
+      if (work is IServiceProvider)
       {
         var messages = ((IServiceProvider)work).GetService<InfoBuffer>();
 
         if (messages != null && messages.Count != 0)
-          m_notification_delegate(messages);
+          this.OnMessagesRecieved(messages);
       }
+      else if (task_info.Error != null)
+        this.OnMessagesRecieved(new Info(task_info.Error));
 
       return ret;
     }
 
-    internal void SetNotificationDelegate(Action<InfoBuffer> action)
+#if !APP_MANAGER
+
+    private void OnMessagesRecieved(InfoBuffer buffer)
     {
-      m_notification_delegate = action;
+      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs(buffer), m_view.Invoker);
     }
+
+    private void OnMessagesRecieved(Info info)
+    {
+      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs(info), m_view.Invoker);
+    }
+
+    public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
+
+#else
+
+    private void OnMessagesRecieved(InfoBuffer buffer)
+    {
+      AppManager.Notificator.Show(buffer);
+    }
+
+    private void OnMessagesRecieved(Info info)
+    {
+      AppManager.Notificator.Show(info);
+    }
+
+#endif
 
     private TaskStatus FinishTask(TaskInfo taskInfo, LaunchParameters parameters, IAsyncResult async)
     {
@@ -114,7 +137,8 @@ namespace Notung.Threading
 
       m_run_base = runBase;
       m_parameters = parameters;
-      m_run_base.SetProgressIndicator(this);
+      m_run_base.ProgressChanged += (sender, e) => 
+        ((IProgressIndicator)this).ReportProgress(e.ProgressPercentage, (e.UserState ?? "").ToString());
       this.Status = TaskStatus.Created;
     }
 
@@ -126,6 +150,8 @@ namespace Notung.Threading
     public TaskStatus Status { get; private set; }
 
     public Exception Error { get; private set; }
+
+    internal ISynchronizeInvoke Invoker { get; set; }
 
     public bool WasCanceled
     {
@@ -139,7 +165,7 @@ namespace Notung.Threading
         return cancelable.CancellationToken.IsCancellationRequested;
       }
     }
-    
+
     public event ProgressChangedEventHandler ProgressChanged;
 
     public event EventHandler TaskCompleted;
@@ -164,20 +190,32 @@ namespace Notung.Threading
       }
       finally
       {
+#if APP_MANAGER
         this.TaskCompleted.InvokeSynchronized(this, EventArgs.Empty);
+#else
+        this.TaskCompleted.InvokeSynchronized(this, EventArgs.Empty, this.Invoker);
+#endif
       }
     }
 
     public void ShowCurrentProgress()
     {
+#if APP_MANAGER
       this.ProgressChanged.InvokeSynchronized(m_run_base, new ProgressChangedEventArgs(m_current_progress, m_current_state));
+#else
+      this.ProgressChanged.InvokeSynchronized(m_run_base, new ProgressChangedEventArgs(m_current_progress, m_current_state), this.Invoker);
+#endif 
     }
 
     void IProgressIndicator.ReportProgress(int percentage, string state)
     {
       m_current_progress = percentage;
       m_current_state = state;
+#if APP_MANAGER
       this.ProgressChanged.InvokeSynchronized(m_run_base, new ProgressChangedEventArgs(percentage, state));
+#else
+      this.ProgressChanged.InvokeSynchronized(m_run_base, new ProgressChangedEventArgs(percentage, state), this.Invoker);
+#endif
     }
   }
 
@@ -228,7 +266,6 @@ namespace Notung.Threading
       TaskInfo work = wait.AsyncState as TaskInfo;
       try
       {
-        
         work.ProgressChanged += HandleProgressChanged;
         work.ShowCurrentProgress();
         wait.AsyncWaitHandle.WaitOne();
@@ -246,5 +283,5 @@ namespace Notung.Threading
       else
         Console.WriteLine(e.UserState);
     }
-  }
+  }*/
 }

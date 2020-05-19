@@ -64,7 +64,9 @@ namespace PluginsTest
       newDomain.DoCallBack(() =>
         {
           Console.WriteLine(AppManager.Instance.StartupPath);
+#if APPLICATION_INFO
           Console.WriteLine(ApplicationInfo.Instance);
+#endif
           LogManager.GetLogger("").Info("Mesage from new domain");
           LogManager.GetLogger("").Error("Test error", new Exception("Test error!"));
           LogManager.GetLogger("").Alert(new Info("Alert cust", InfoLevel.Info) { Details = new Cust() });

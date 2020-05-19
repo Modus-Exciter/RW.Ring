@@ -91,7 +91,7 @@ namespace ConfiguratorGraphicalTest
       var view = new MainFormAppInstanceView(this);
       AppManager.Instance = new AppInstance(view);
       AppManager.Instance.AllowOnlyOneInstance();
-      AppManager.TaskManager = new TaskManager(view);
+      AppManager.TaskManager = new OperationLauncher(view);
       AppManager.Notificator = new Notificator(view);
 
       InitializeComponent();
@@ -155,7 +155,9 @@ namespace ConfiguratorGraphicalTest
 
     private void buttonOpenFolder_Click(object sender, System.EventArgs e)
     {
-      System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath());
+#if APPLICATION_INFO
+      System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath()); 
+#endif
     }
 
     private void button2_Click(object sender, System.EventArgs e)
