@@ -29,6 +29,7 @@ namespace Notung.Threading
   public class TaskManager : MarshalByRefObject, ITaskManager
   {
     private readonly ITaskManagerView m_view;
+    private Action<InfoBuffer> m_notification_delegate;
 
     public TaskManager(ITaskManagerView view)
     {
@@ -61,15 +62,20 @@ namespace Notung.Threading
 
       var ret = FinishTask(task_info, parameters, async);
 
-      if (work is IServiceProvider)
+      if (work is IServiceProvider && m_notification_delegate != null)
       {
         var messages = ((IServiceProvider)work).GetService<InfoBuffer>();
 
         if (messages != null && messages.Count != 0)
-          AppManager.Notificator.Show(messages);
+          m_notification_delegate(messages);
       }
 
       return ret;
+    }
+
+    internal void SetNotificationDelegate(Action<InfoBuffer> action)
+    {
+      m_notification_delegate = action;
     }
 
     private TaskStatus FinishTask(TaskInfo taskInfo, LaunchParameters parameters, IAsyncResult async)
@@ -79,7 +85,7 @@ namespace Notung.Threading
 
       if (m_view.Invoker.InvokeRequired)
       {
-        m_view.Invoker.Invoke(new Func<LaunchParameters, IAsyncResult, bool>
+        m_view.Invoker.Invoke(new Action<LaunchParameters, IAsyncResult>
           (m_view.ShowProgressDialog), new object[] { parameters, async });
       }
 
@@ -88,7 +94,7 @@ namespace Notung.Threading
       return taskInfo.Status;
     }
   }
-
+  
   public sealed class TaskInfo : MarshalByRefObject, IProgressIndicator
   {
     private readonly IRunBase m_run_base;
@@ -182,6 +188,8 @@ namespace Notung.Threading
   {
     private readonly CancellationToken m_token;
 
+    public static readonly CancellationTokenRef None = new CancellationTokenRef(CancellationToken.None);
+
     public CancellationTokenRef(CancellationToken token)
     {
       m_token = token;
@@ -210,12 +218,12 @@ namespace Notung.Threading
 
   public interface ITaskManagerView : ISynchronizeProvider
   {
-    bool ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait);
+    void ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait);
   }
 
   public class TaskManagerViewStub : SynchronizeProviderStub, ITaskManagerView
   {
-    public bool ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
+    public void ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
     {
       TaskInfo work = wait.AsyncState as TaskInfo;
       try
@@ -224,7 +232,6 @@ namespace Notung.Threading
         work.ProgressChanged += HandleProgressChanged;
         work.ShowCurrentProgress();
         wait.AsyncWaitHandle.WaitOne();
-        return work.Status == TaskStatus.RanToCompletion;
       }
       finally
       {

@@ -46,6 +46,7 @@
     <Compile Include="CopyData.cs" />
     <Compile Include="MainFormAppInstanceView.cs" />
     <Compile Include="NativeDll.cs" />
+    <Compile Include="ProgressIndicatorPresenter.cs" />
     <Compile Include="ProgressIndicatorDialog.cs">
       <SubType>Form</SubType>
     </Compile>

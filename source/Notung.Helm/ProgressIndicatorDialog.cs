@@ -8,100 +8,94 @@ using Notung.Threading;
 
 namespace Notung.Helm
 {
-  public sealed partial class ProgressIndicatorDialog : Form
+  public sealed partial class ProgressIndicatorDialog : Form, IProcessIndicatorView
   {
-    private readonly LaunchParameters m_launch_parameters;
-    private readonly TaskInfo m_task_info;
-    private readonly CancellationTokenSource m_cancel_source;
+    private readonly ProgressIndicatorPresenter m_presenter;
     
     public ProgressIndicatorDialog(LaunchParameters parameters, IAsyncResult work)
     {
-      if (parameters == null)
-        throw new ArgumentNullException("parameters");
-
-      if (work == null)
-        throw new ArgumentNullException("work");
-
-      m_launch_parameters = parameters;
-      m_task_info = work.AsyncState as TaskInfo;
-
-      if (m_task_info == null)
-        throw new ArgumentException();
-
+      m_presenter = new ProgressIndicatorPresenter(parameters, work, this);
       InitializeComponent();
+      m_presenter.Initialize();
+    }
 
-      if (m_task_info.RunBase is ICancelableRunBase)
-      {
-        m_cancel_source = new CancellationTokenSource();
-        ((ICancelableRunBase)m_task_info.RunBase).CancellationToken = m_cancel_source.Token;
-      }
+    public static bool? ToNeitralResult(DialogResult resutl)
+    {
+      if (resutl == DialogResult.OK)
+        return true;
+      else if (resutl == DialogResult.Cancel)
+        return false;
       else
-        m_button.Visible = false;
-
-      m_launch_parameters.PropertyChanged += HanldePropertyChanged;
-      m_launch_parameters.ShowCurrentSettings();
-
-      m_task_info.ProgressChanged += HandleProgressChanged;
-      m_task_info.ShowCurrentProgress();
-
-      m_task_info.TaskCompleted += HandleTaskCompleted;
+        return null;
     }
 
-    private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
+    public static DialogResult FromNeitralResult(bool? value)
     {
-      if (m_launch_parameters.SupportsPercentNotification)
-        m_progress_bar.Value = e.ProgressPercentage;
-
-      m_state_label.Text = (e.UserState ?? string.Empty).ToString();
-    }
-
-    private void HandleTaskCompleted(object sender, EventArgs e)
-    {
-      m_launch_parameters.PropertyChanged -= HanldePropertyChanged;
-      m_task_info.ProgressChanged -= HandleProgressChanged;
-      m_task_info.TaskCompleted -= HandleTaskCompleted;
-
-      m_button.Visible = true;
-      m_button.Enabled = true;
-      m_progress_bar.Style = ProgressBarStyle.Continuous;
-
-      if (m_cancel_source != null)
-        m_cancel_source.Dispose();
-
-      if (m_task_info.Status != TaskStatus.RanToCompletion)
-      {
-        this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-        this.Close();
-      }
-      else if (m_launch_parameters.CloseOnFinish)
-      {
-        this.DialogResult = System.Windows.Forms.DialogResult.OK;
-        this.Close();
-      }
+      if (value == true)
+        return System.Windows.Forms.DialogResult.OK;
+      else if (value == false)
+        return System.Windows.Forms.DialogResult.Cancel;
       else
-      {
-        m_button.DialogResult = System.Windows.Forms.DialogResult.OK;
-        m_button.Text = Resources.READY;
-        m_progress_bar.Value = 100;
-      }
-    }
-
-    private void HanldePropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-      this.Text = m_launch_parameters.Caption;
-
-      m_picture.Image = m_launch_parameters.Bitmap;
-      
-      m_progress_bar.Style = m_launch_parameters.SupportsPercentNotification ? 
-        ProgressBarStyle.Continuous : ProgressBarStyle.Marquee;
-
-      m_button.Enabled = m_launch_parameters.CanCancel;
+        return System.Windows.Forms.DialogResult.None;
     }
 
     private void m_button_Click(object sender, EventArgs e)
     {
-      if (m_cancel_source != null && m_task_info.Status != TaskStatus.RanToCompletion)
-        m_cancel_source.Cancel();
+      m_presenter.ButtonClick();
+    }
+
+    bool IProcessIndicatorView.ButtonVisible
+    {
+      get { return m_button.Visible; }
+      set { m_button.Visible = value; }
+    }
+
+    bool IProcessIndicatorView.ButtonEnabled
+    {
+      get { return m_button.Enabled; }
+      set { m_button.Enabled = value; }
+    }
+
+    bool? IProcessIndicatorView.ButtonDialogResultOK
+    {
+      get { return ToNeitralResult(m_button.DialogResult); }
+      set { m_button.DialogResult = FromNeitralResult(value); }
+    }
+
+    string IProcessIndicatorView.ButtonText
+    {
+      get { return m_button.Text; }
+      set { m_button.Text = value; }
+    }
+
+    System.Drawing.Image IProcessIndicatorView.Image
+    {
+      get { return m_picture.Image; }
+      set { m_picture.Image = value; }
+    }
+
+    bool IProcessIndicatorView.SupportPercent
+    {
+      get { return m_progress_bar.Style != ProgressBarStyle.Marquee; }
+      set { m_progress_bar.Style = value ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee; }
+    }
+
+    int IProcessIndicatorView.ProgressValue
+    {
+      get { return m_progress_bar.Value; }
+      set { m_progress_bar.Value = value; }
+    }
+
+    string IProcessIndicatorView.StateText
+    {
+      get { return m_state_label.Text ; }
+      set { m_state_label.Text = value; }
+    }
+
+    bool? IProcessIndicatorView.DialogResultOK
+    {
+      get { return ToNeitralResult(this.DialogResult); }
+      set { this.DialogResult = FromNeitralResult(value); }
     }
   }
 }

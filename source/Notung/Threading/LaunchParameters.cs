@@ -17,14 +17,6 @@ namespace Notung.Threading
 
     internal void Setup(IRunBase work)
     {
-      m_close_on_finish = true;
-
-      if (work == null)
-      {
-        m_caption = "";
-        return;
-      }
-
       if (string.IsNullOrWhiteSpace(m_caption))
         m_caption = GetDefaultCaption(work);
 

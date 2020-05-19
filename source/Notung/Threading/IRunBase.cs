@@ -66,6 +66,9 @@ namespace Notung.Threading
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
   public sealed class PercentNotificationAttribute : Attribute { }
 
+  /// <summary>
+  /// Базовая реализация интерфейса IRunBase
+  /// </summary>
   public abstract class RunBase : MarshalByRefObject, IRunBase
   {
     private volatile int m_percent;
@@ -133,17 +136,14 @@ namespace Notung.Threading
 
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
-    private static readonly CancellationTokenRef _cancellation_stub =
-      new CancellationTokenRef(System.Threading.CancellationToken.None);
-
-    private CancellationTokenRef m_cancellation = _cancellation_stub;
+    private CancellationTokenRef m_cancellation = CancellationTokenRef.None;
 
     protected CancelableRunBase() { }
 
     public CancellationTokenRef CancellationToken
     {
       get { return m_cancellation; }
-      set { m_cancellation = value ?? _cancellation_stub; }
+      set { m_cancellation = value ?? CancellationTokenRef.None; }
     }
   }
 }

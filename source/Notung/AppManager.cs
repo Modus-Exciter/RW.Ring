@@ -136,15 +136,28 @@ namespace Notung
     {
       get
       {
-        return _task_manager ?? InitService(ref _task_manager, () => new TaskManager());
+        return _task_manager ?? InitService(ref _task_manager, delegate
+        { 
+          var ret = new TaskManager();
+          ret.SetNotificationDelegate((buffer) => _notificator.Show(buffer));
+          return ret;
+        });
       }
       set
       {
         if (value == null)
           throw new ArgumentNullException();
 
-        lock (_lock) 
+        lock (_lock)
+        {
+          if (ReferenceEquals(_task_manager, value))
+            return;
+          
+          if (value is TaskManager)
+            ((TaskManager)value).SetNotificationDelegate((buffer) => _notificator.Show(buffer));
+
           _task_manager = value;
+        }
       }
     }
 

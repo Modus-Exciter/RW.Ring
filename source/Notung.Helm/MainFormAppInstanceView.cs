@@ -73,11 +73,11 @@ namespace Notung.Helm
       System.Windows.Forms.Application.Restart();
     }
 
-    public virtual bool ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
+    public virtual void ShowProgressDialog(LaunchParameters parameters, IAsyncResult wait)
     {
       using (var dlg = new ProgressIndicatorDialog(parameters, wait))
       {
-        return dlg.ShowDialog(m_main_form) == DialogResult.OK;
+        dlg.ShowDialog(m_main_form);
       }
     }
 
