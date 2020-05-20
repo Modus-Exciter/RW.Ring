@@ -94,7 +94,7 @@
     </Compile>
     <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
-    <Compile Include="Threading\ITaskManager.cs" />
+    <Compile Include="Threading\IProgressIndicator.cs" />
     <Compile Include="Threading\IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
     <Compile Include="Threading\IOperationLauncher.cs" />

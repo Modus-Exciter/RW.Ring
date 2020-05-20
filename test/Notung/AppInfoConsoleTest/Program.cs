@@ -12,7 +12,7 @@ namespace AppInfoConsoleTest
 #if APPLICATION_INFO
       Console.WriteLine(ApplicationInfo.Instance);
 #endif
-      AppManager.TaskManager.SyncWaitingTime = new TimeSpan(0, 0, 1);
+      AppManager.OperationLauncher.SyncWaitingTime = new TimeSpan(0, 0, 1);
       CancellationTokenSource src = new CancellationTokenSource();
 
       var domain = AppDomain.CreateDomain("Parallel");
@@ -27,7 +27,7 @@ namespace AppInfoConsoleTest
       wrk.CancellationToken = src.Token;
 
       src.Cancel();
-      Console.WriteLine(AppManager.TaskManager.Run(wrk, null));
+      Console.WriteLine(AppManager.OperationLauncher.Run(wrk, null));
 
 #if ANOTHER_DOMAIN
       wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
@@ -35,7 +35,7 @@ namespace AppInfoConsoleTest
 #endif
       wrk.CancellationToken = CancellationToken.None;
 
-      Console.WriteLine(AppManager.TaskManager.Run(wrk, null));
+      Console.WriteLine(AppManager.OperationLauncher.Run(wrk, null));
 
       Console.ReadKey();
     }

@@ -4,6 +4,8 @@ using System.Threading;
 using System.ComponentModel;
 using Notung.Logging;
 using Notung.ComponentModel;
+using System.Drawing;
+using System.IO;
 
 namespace Notung.Threading
 {
@@ -51,8 +53,10 @@ namespace Notung.Threading
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      if (parameters == null)
-        parameters = new LaunchParameters();
+      runBase = WrapRunBase(runBase);
+
+      if (parameters == null || runBase is RunBaseProxyWrapper)
+        parameters = WrapLaunchParameters(parameters, (RunBaseProxyWrapper)runBase);
 
       parameters.Setup(runBase);
 
@@ -78,6 +82,35 @@ namespace Notung.Threading
         this.OnError(operation.Error);
 
       return ret;
+    }
+
+    private IRunBase WrapRunBase(IRunBase runBase)
+    {
+      if (runBase is CancelableRunBaseCallerWrapper)
+        runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
+      else if (runBase is RunBaseCallerWrapper)
+        runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
+
+      return runBase;
+    }
+
+    private LaunchParameters WrapLaunchParameters(LaunchParameters parameters, RunBaseProxyWrapper wrapper)
+    {
+      var new_params = new LaunchParameters();
+
+      if (parameters != null)
+      {
+        new_params.Bitmap = parameters.Bitmap;
+        new_params.CanCancel = parameters.CanCancel;
+        new_params.Caption = parameters.Caption;
+        new_params.CloseOnFinish = parameters.CloseOnFinish;
+      }
+
+      if (wrapper.BitmapBytes != null)
+        using (var ms = new MemoryStream(wrapper.BitmapBytes))
+          new_params.Bitmap = (Bitmap)Image.FromStream(ms);
+
+      return new_params;
     }
 
     private TaskStatus Complete(LengthyOperation operation, LaunchParameters parameters)
@@ -304,7 +337,7 @@ namespace Notung.Threading
 
     private void OnTaskCompleted()
     {
-      this.TaskCompleted.InvokeSynchronized(this, EventArgs.Empty, this.Invoker);
+      this.Completed.InvokeSynchronized(this, EventArgs.Empty, this.Invoker);
     }
 
     private void OnProgressChanged(ProgressChangedEventArgs e)

@@ -91,6 +91,7 @@ namespace Notung
 
   [DisplayNameRes("INFO_LEVEL", typeof(Resources))]
   [TypeConverter(typeof(EnumLabelConverter))]
+  [Serializable]
   public enum InfoLevel
   {
     [DisplayNameRes("DEBUG", typeof(Resources))]

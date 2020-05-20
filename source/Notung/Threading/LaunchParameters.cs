@@ -18,10 +18,21 @@ namespace Notung.Threading
 
     internal void Setup(IRunBase work)
     {
-      if (string.IsNullOrWhiteSpace(m_caption))
-        m_caption = GetDefaultCaption(work);
-      // TODO: if task is wrapper, do this another way or create several wrappers
-      m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
+      if (work is RunBaseProxyWrapper)
+      {
+        var proxy = (RunBaseProxyWrapper)work;
+        m_percent_notification = proxy.SupportPercentNotification;
+        m_caption = proxy.ToString();
+      }
+
+      else
+      {
+        if (string.IsNullOrWhiteSpace(m_caption))
+          m_caption = GetDefaultCaption(work);
+        // TODO: if task is wrapper, do this another way or create several wrappers
+        m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
+      }
+
       m_cancelable = m_can_cancel = work is ICancelableRunBase;
     }
     
@@ -83,11 +94,13 @@ namespace Notung.Threading
     public bool SupportsPercentNotification
     {
       get { return m_percent_notification; }
+      internal set { m_percent_notification = value; }
     }
 
     public bool SupportsCancellation
     {
       get { return m_cancelable; }
+      internal set { m_cancelable = value; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

@@ -85,7 +85,7 @@ namespace PluginsTest
   }
 
 
-  public class InfoLogSource : MarshalByRefObject, IServiceProvider
+  public class InfoLogSource : MarshalByRefObject, IServiceProvider, Notung.Threading.IRunBase
   {
 
     public object GetService(Type serviceType)
@@ -94,6 +94,17 @@ namespace PluginsTest
         return new Info("Some message", InfoLevel.Info) { Details = new Cust() };
 
       else return null;
+    }
+
+    void Notung.Threading.IRunBase.Run()
+    {
+      
+    }
+
+    event System.ComponentModel.ProgressChangedEventHandler Notung.Threading.IRunBase.ProgressChanged
+    {
+      add {  }
+      remove {  }
     }
   }
 

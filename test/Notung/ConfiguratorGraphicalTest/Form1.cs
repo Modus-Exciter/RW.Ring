@@ -91,7 +91,7 @@ namespace ConfiguratorGraphicalTest
       var view = new MainFormAppInstanceView(this);
       AppManager.Instance = new AppInstance(view);
       AppManager.Instance.AllowOnlyOneInstance();
-      AppManager.TaskManager = new OperationLauncher(view);
+      AppManager.OperationLauncher = new OperationLauncher(view);
       AppManager.Notificator = new Notificator(view);
 
       InitializeComponent();
@@ -147,8 +147,6 @@ namespace ConfiguratorGraphicalTest
           {
             this.Text = string.Join(", ", dll.GetExportList());
           }
-          //this.Text = string.Join(", ", WinAPIHelper.GetDllExportList(dlg.FileName).OfType<string>());
-
         }
       }
     }
@@ -162,25 +160,29 @@ namespace ConfiguratorGraphicalTest
 
     private void button2_Click(object sender, System.EventArgs e)
     {
-      AppManager.TaskManager.SyncWaitingTime = TimeSpan.FromSeconds(0.2);
+      AppManager.OperationLauncher.SyncWaitingTime = TimeSpan.FromSeconds(0.2);
 #if MULTI_DOMAIN
       var domain = AppDomain.CreateDomain("Parallel");
       AppManager.Share(domain);
 
-      var wrk = (IRunBase)domain.CreateInstanceAndUnwrap(
-        typeof(Program).Assembly.FullName, typeof(TestWork).FullName);
+      var wrk = (RunWorkMain)domain.CreateInstanceAndUnwrap(
+        typeof(Program).Assembly.FullName, typeof(RunWorkMain).FullName);
+
+      wrk.Run();
+
+      AppDomain.Unload(domain);
 #else
       var wrk = new TestWork();
+      AppManager.OperationLauncher.Run(wrk, new LaunchParameters { Bitmap = Resources.DOS_TRACK });
 #endif
-      AppManager.TaskManager.Run(wrk, new LaunchParameters { Bitmap = Resources.DOS_TRACK });
+    }
 
-#if MULTI_DOMAIN
-      domain.DomainUnload += (s, args) =>
-        {
-          s.ToString();
-        };
-      AppDomain.Unload(domain);
-#endif
+    private class RunWorkMain : MarshalByRefObject
+    {
+      public void Run()
+      {
+        AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters { Bitmap = Resources.DOS_TRACK });
+      }
     }
 
     [PercentNotification]

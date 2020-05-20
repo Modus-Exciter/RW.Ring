@@ -124,7 +124,7 @@ namespace Notung
     /// <summary>
     /// Управление задачами с индикатором прогресса
     /// </summary>
-    public static IOperationLauncher TaskManager
+    public static IOperationLauncher OperationLauncher
     {
       get { return _operation_launcher ?? InitService(ref _operation_launcher, () => new OperationLauncher()); }
 
@@ -153,7 +153,7 @@ namespace Notung
       var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
-      acceptor.AcceptServices(Instance, Configurator, Notificator, TaskManager);
+      acceptor.AcceptServices(Instance, Configurator, Notificator, OperationLauncher);
 
       LogManager.Share(newDomain);
       LoggingContext.Share(newDomain);
@@ -167,20 +167,20 @@ namespace Notung
       void AcceptServices(IAppInstance instance, 
                           IConfigurator configurator, 
                           INotificator notificator, 
-                          IOperationLauncher taskManager);
+                          IOperationLauncher operationLauncher);
     }
 
     private sealed class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
     {
       public void AcceptServices(IAppInstance instance, 
                                  IConfigurator configurator, 
-                                 INotificator notificator, 
-                                 IOperationLauncher taskManager)
+                                 INotificator notificator,
+                                 IOperationLauncher operationLauncher)
       {
         _notificator = notificator;
         _app_instance = instance;
         _configurator = configurator;
-        _operation_launcher = taskManager; // TODO: обёртка должна быть здесь
+        _operation_launcher = new OperationLauncherProxy(operationLauncher);
       }
     }
   }
