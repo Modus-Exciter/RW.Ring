@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
 using System.ComponentModel;
-using Notung.Logging;
-using Notung.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
+using Notung.ComponentModel;
 
 namespace Notung.Threading
 {
@@ -53,64 +51,52 @@ namespace Notung.Threading
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      runBase = WrapRunBase(runBase);
+      var operation = CreateOperation(runBase, ref parameters);
 
-      if (parameters == null || runBase is RunBaseProxyWrapper)
-        parameters = WrapLaunchParameters(parameters, (RunBaseProxyWrapper)runBase);
-
-      parameters.Setup(runBase);
-
-      if (runBase is IChangeLaunchParameters)
-        ((IChangeLaunchParameters)runBase).SetLaunchParameters(parameters);
-
-      var operation = new LengthyOperation(runBase);
-#if !APP_MANAGER
-      operation.Invoker = m_view.Invoker;
-#endif
       operation.Start();
 
       var ret = Complete(operation, parameters);
 
-      if (runBase is IServiceProvider)
+      if (operation.Error != null)
+        this.OnError(operation.Error);
+      else if (runBase is IServiceProvider)
       {
         var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
 
         if (messages != null && messages.Count != 0)
           this.OnMessagesRecieved(messages);
       }
-      else if (operation.Error != null)
-        this.OnError(operation.Error);
 
       return ret;
     }
 
-    private IRunBase WrapRunBase(IRunBase runBase)
+    private LengthyOperation CreateOperation(IRunBase runBase, ref LaunchParameters parameters)
     {
+      if (parameters == null)
+        parameters = new LaunchParameters();
+
+#if DOMAIN_TASK
       if (runBase is CancelableRunBaseCallerWrapper)
-        runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
-      else if (runBase is RunBaseCallerWrapper)
-        runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
-
-      return runBase;
-    }
-
-    private LaunchParameters WrapLaunchParameters(LaunchParameters parameters, RunBaseProxyWrapper wrapper)
-    {
-      var new_params = new LaunchParameters();
-
-      if (parameters != null)
       {
-        new_params.Bitmap = parameters.Bitmap;
-        new_params.CanCancel = parameters.CanCancel;
-        new_params.Caption = parameters.Caption;
-        new_params.CloseOnFinish = parameters.CloseOnFinish;
+        runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
+      }
+      else if (runBase is RunBaseCallerWrapper)
+      {
+        runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
       }
 
-      if (wrapper.BitmapBytes != null)
-        using (var ms = new MemoryStream(wrapper.BitmapBytes))
-          new_params.Bitmap = (Bitmap)Image.FromStream(ms);
+      if (runBase is RunBaseProxyWrapper && ((RunBaseProxyWrapper)runBase).BitmapBytes != null)
+        using (var ms = new MemoryStream(((RunBaseProxyWrapper)runBase).BitmapBytes))
+          parameters.Bitmap = (Bitmap)Image.FromStream(ms);
+#endif
 
-      return new_params;
+      parameters.Setup(runBase);
+
+#if APP_MANAGER
+      return new LengthyOperation(runBase);
+#else
+      return new LengthyOperation(runBase) { Invoker = m_view.Invoker };
+#endif
     }
 
     private TaskStatus Complete(LengthyOperation operation, LaunchParameters parameters)
@@ -141,7 +127,7 @@ namespace Notung.Threading
       AppManager.Notificator.Show(new Info(ex));
     }
 
-    #else
+#else
 
     private void OnMessagesRecieved(InfoBuffer buffer)
     {
@@ -159,199 +145,15 @@ namespace Notung.Threading
   }
 
   /// <summary>
-  /// Обёртка над объектом RunBase, позволяющая отслеживать его состояние выполнения
+  /// Представление индикатора прогресса
   /// </summary>
-  public sealed class LengthyOperation
-  {
-    private readonly IRunBase m_run_base;
-    private int m_current_progress;
-    private object m_current_state;
-    private IAsyncResult m_operation;
-    private CancellationTokenSource m_cancel_source;
-
-    private readonly object m_lock = new object();
-
-    private static readonly ILog _log = LogManager.GetLogger(typeof(LengthyOperation));
-
-    /// <summary>
-    /// Создание новой длительной операции на основе задачи
-    /// </summary>
-    /// <param name="runBase">Задача, которую требуется выполнить</param>
-    public LengthyOperation(IRunBase runBase)
-    {
-      if (runBase == null)
-        throw new ArgumentNullException("runBase");
-
-      m_run_base = runBase;
-      this.Status = TaskStatus.Created;
-    }
-
-    public TaskStatus Status { get; private set; }
-
-    public Exception Error { get; private set; }
-
-    public bool IsCanceled
-    {
-      get
-      {
-        var cancelable = m_run_base as ICancelableRunBase;
-
-        if (cancelable == null)
-          return false;
-
-        return cancelable.CancellationToken.IsCancellationRequested;
-      }
-    }
-
-    public event ProgressChangedEventHandler ProgressChanged;
-
-    public event EventHandler Completed;
-
-    public void ShowCurrentProgress()
-    {
-      this.OnProgressChanged(new ProgressChangedEventArgs(m_current_progress, m_current_state));
-    }
-
-    public CancellationTokenSource GetCancellationTokenSource()
-    {
-      if (!(m_run_base is ICancelableRunBase))
-        return null;
-      
-      if (m_cancel_source != null)
-        return m_cancel_source;
-
-      lock (m_lock)
-      {
-        if (m_cancel_source == null)
-        {
-          m_cancel_source = new CancellationTokenSource();
-          ((ICancelableRunBase)m_run_base).CancellationToken = m_cancel_source.Token;
-        }
-
-        return m_cancel_source;
-      }
-    }
-
-    internal void Start()
-    {
-      lock (m_lock)
-      {
-        if (m_operation != null)
-          throw new InvalidOperationException();
-
-        m_operation = new Action(this.Run).BeginInvoke(CloseHandle, this);
-      }
-    }
-
-    public void Wait()
-    {
-      var operation = m_operation;
-
-      if (operation == null)
-        return;
-
-      operation.AsyncWaitHandle.WaitOne();
-    }
-
-    public bool Wait(TimeSpan duration)
-    {
-      var operation = m_operation;
-
-      if (operation == null)
-        return true;
-
-      return operation.AsyncWaitHandle.WaitOne(duration);
-    }
-
-    private void Run()
-    {
-      m_run_base.ProgressChanged += HandleProgressChanged;
-      try
-      {
-        this.Status = TaskStatus.Running;
-        m_run_base.Run();
-        this.Status = IsCanceled ? TaskStatus.Canceled : TaskStatus.RanToCompletion;
-      }
-      catch (OperationCanceledException)
-      {
-        this.Status = TaskStatus.Canceled;
-      }
-      catch (Exception ex)
-      {
-        _log.Error("Run(): exception", ex);
-        this.Error = ex;
-        this.Status = TaskStatus.Faulted;
-      }
-      finally
-      {
-        m_run_base.ProgressChanged -= HandleProgressChanged;
-        this.OnTaskCompleted();
-      }
-    }
-
-    private void CloseHandle(IAsyncResult result)
-    {
-      if (!ReferenceEquals(m_operation, result))
-        throw new InvalidOperationException();
-
-      lock (m_lock)
-      {
-        result.AsyncWaitHandle.Dispose();
-        m_operation = null;
-      }
-    }
-
-    private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
-    {
-      bool changed = false;
-
-      if (m_current_progress != e.ProgressPercentage)
-      {
-        m_current_progress = e.ProgressPercentage;
-        changed = true;
-      }
-
-      if (!object.Equals(m_current_state, e.UserState))
-      {
-        m_current_state = e.UserState;
-        changed = true;
-      }
-
-      if (changed)
-        this.OnProgressChanged(e);
-    }
-
-#if APP_MANAGER
-
-    private void OnTaskCompleted()
-    {
-      this.Completed.InvokeSynchronized(this, EventArgs.Empty);
-    }
-
-    private void OnProgressChanged(ProgressChangedEventArgs e)
-    {
-      this.ProgressChanged.InvokeSynchronized(this, e);
-    }
-
-#else
-
-    private void OnTaskCompleted()
-    {
-      this.Completed.InvokeSynchronized(this, EventArgs.Empty, this.Invoker);
-    }
-
-    private void OnProgressChanged(ProgressChangedEventArgs e)
-    {
-      this.ProgressChanged.InvokeSynchronized(this, e, this.Invoker);
-    }
-
-    internal ISynchronizeInvoke Invoker { get; set; }
-
-#endif
-  }
-
   public interface IOperationLauncherView : ISynchronizeProvider
   {
+    /// <summary>
+    /// Показывает индикатор прогресса и ждёт завершения задачи
+    /// </summary>
+    /// <param name="task">Задача, которую требуется выполнить</param>
+    /// <param name="parameters">Настройки отображения задачи</param>
     void ShowProgressDialog(LengthyOperation task, LaunchParameters parameters);
   }
 

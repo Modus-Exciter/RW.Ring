@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER DOMAIN_TASK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
+    <Compile Include="Threading\LengthyOperation.cs" />
     <Compile Include="Threading\OperationLauncherProxy.cs" />
     <Compile Include="Threading\IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />

@@ -173,7 +173,11 @@ namespace ConfiguratorGraphicalTest
       AppDomain.Unload(domain);
 #else
       var wrk = new TestWork();
-      AppManager.OperationLauncher.Run(wrk, new LaunchParameters { Bitmap = Resources.DOS_TRACK });
+      AppManager.OperationLauncher.Run(wrk, new LaunchParameters
+      { 
+        Bitmap = Resources.DOS_TRACK,
+        CloseOnFinish = false
+      });
 #endif
     }
 
@@ -181,21 +185,25 @@ namespace ConfiguratorGraphicalTest
     {
       public void Run()
       {
-        AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters { Bitmap = Resources.DOS_TRACK });
+        AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters 
+        { 
+          Bitmap = Resources.DOS_TRACK,
+          CloseOnFinish = false
+        });
       }
     }
 
     [PercentNotification]
     [DisplayName("Tesovo worka")]
-    private class TestWork : CancelableRunBase, IChangeLaunchParameters, IServiceProvider
+    private class TestWork : CancelableRunBase, IServiceProvider
     {
-      private LaunchParameters m_parameters;
-      private bool m_ok = false;
+       private bool m_ok = false;
 
       private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
       
       public override void Run()
       {
+        this.CanCancel = false;
         this.ReportProgress("Some state");
         for (int i = 1; i <= 100; i++)
         {
@@ -203,11 +211,10 @@ namespace ConfiguratorGraphicalTest
           System.Threading.Thread.Sleep(50);
 
           if (i == 50)
-            m_parameters.CanCancel = true;
+            this.CanCancel = true;
           else if (i == 80)
           {
-            m_parameters.CanCancel = false;
-            m_parameters.Caption = "FILLINFS";
+            this.CanCancel = false;
           }
           if (i % 10 == 0)
             _log.DebugFormat("Message from task {0}", i / 10);
@@ -223,15 +230,7 @@ namespace ConfiguratorGraphicalTest
       //  return "Gotterdammerung";
       //}
 
-      public void SetLaunchParameters(LaunchParameters parameters)
-      {
-        parameters.CloseOnFinish = false;
-        parameters.CanCancel = false;
-        parameters.Caption = "Dragon fligel";
-        m_parameters = parameters;
-      }
-
-      public object GetService(Type serviceType)
+      public override object GetService(Type serviceType)
       {
         if (serviceType == typeof(InfoBuffer) && !m_ok)
           return new InfoBuffer

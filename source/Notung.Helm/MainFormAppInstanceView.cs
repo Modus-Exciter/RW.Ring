@@ -102,11 +102,11 @@ namespace Notung.Helm
       return null;
     }
 
-    public virtual bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
+    public virtual bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
     {
       return this.Alert(new Info(summary + Environment.NewLine
         + string.Join(Environment.NewLine, buffer.Select(i => i.Message)),
-        buffer.Max(i => i.Level)), confirm);
+        summaryLevel), confirm);
     }
 
     public static string[] GetStringArgs(Message message)

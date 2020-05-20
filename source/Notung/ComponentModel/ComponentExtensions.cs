@@ -87,6 +87,21 @@ namespace Notung.ComponentModel
       }
     }
 
+    /// <summary>
+    /// Проверяет, изменилось ли указанное свойство в событии PropertyChanged
+    /// </summary>
+    /// <param name="property">Свойство, которое проверяется</param>
+    /// <returns>True, если свойство изменилось. Иначе, false</returns>
+    public static bool IsChanged(this PropertyChangedEventArgs e, string property)
+    {
+      return string.IsNullOrEmpty(e.PropertyName) || e.PropertyName.Equals(property);
+    }
+
+    /// <summary>
+    /// Получает значение указанного типа от IServiceProvider
+    /// </summary>
+    /// <typeparam name="TService">Тип, который требуется получить</typeparam>
+    /// <returns>Значение указанного типа, если IServiceProvider поддерживает этот тип</returns>
     public static TService GetService<TService>(this IServiceProvider provider) where TService: class
     {
       return provider.GetService(typeof(TService)) as TService;

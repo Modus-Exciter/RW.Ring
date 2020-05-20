@@ -30,19 +30,16 @@ namespace Notung.Threading
     /// Токен отмены задачи
     /// </summary>
     CancellationToken CancellationToken { get; set; }
-  }
 
-  /// <summary>
-  /// Интерфейс для задач, изменяющих настройки отображения в ходе выполнения
-  /// </summary>
-  public interface IChangeLaunchParameters : IRunBase
-  {
     /// <summary>
-    /// Передаёт задаче настройки отображения, 
-    /// которые она может изменять в ходе выполнения
+    /// Возможно ли отменить задачу в текущий момент
     /// </summary>
-    /// <param name="parameters">Настройки отображения</param>
-    void SetLaunchParameters(LaunchParameters parameters);
+    bool CanCancel { get; }
+
+    /// <summary>
+    /// Происходит, когда возможность отмены задачи меняется
+    /// </summary>
+    event EventHandler CanCancelChanged;
   }
   
   /// <summary>
@@ -60,6 +57,7 @@ namespace Notung.Threading
     private volatile int m_percent;
     private volatile object m_state;
     private readonly bool m_percent_notification;
+    private readonly InfoBuffer m_infolog = new InfoBuffer();
 
     protected RunBase()
     {
@@ -72,6 +70,14 @@ namespace Notung.Threading
     protected bool SupportsPercentNotification
     {
       get { return m_percent_notification; }
+    }
+
+    /// <summary>
+    /// Буфер, в который можно писать сообщения, накапливающиеся во время выполнения задачи
+    /// </summary>
+    protected InfoBuffer Infolog
+    {
+      get { return m_infolog; }
     }
 
     public abstract void Run();
@@ -120,10 +126,35 @@ namespace Notung.Threading
       if (this.ProgressChanged != null)
         this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(m_percent, m_state));
     }
+
+    public virtual object GetService(Type serviceType)
+    {
+      if (serviceType == typeof(InfoBuffer))
+        return m_infolog;
+      else
+        return null;
+    }
   }
 
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
+    private volatile bool m_can_cancel = true;
+    
     public CancellationToken CancellationToken { get; set; }
+
+    public bool CanCancel
+    {
+      get { return m_can_cancel; }
+      protected set
+      {
+        if (m_can_cancel == value)
+          return;
+
+        m_can_cancel = value;
+        this.CanCancelChanged.InvokeSynchronized(this, EventArgs.Empty);
+      }
+    }
+
+    public event EventHandler CanCancelChanged;
   }
 }

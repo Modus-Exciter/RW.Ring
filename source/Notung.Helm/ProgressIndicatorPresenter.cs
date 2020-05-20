@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Notung.Helm.Properties;
 using Notung.Threading;
-using System.Drawing;
 
 namespace Notung.Helm
 {
@@ -41,22 +40,23 @@ namespace Notung.Helm
 
       if (m_cancel_source == null)
         m_view.ButtonVisible = false;
-
-      m_launch_parameters.PropertyChanged += HanldePropertyChanged;
-      m_launch_parameters.ShowCurrentSettings();
+      else
+        m_operation.CanCancelChanged += HandleCanCancelChanged;
 
       m_operation.ProgressChanged += HandleProgressChanged;
       m_operation.ShowCurrentProgress();
 
       m_operation.Completed += HandleOperationCompleted;
-    }
 
-    private void HanldePropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
+      m_view.ButtonEnabled = m_operation.CanCancel;
       m_view.Text = m_launch_parameters.Caption;
       m_view.Image = m_launch_parameters.Bitmap;
       m_view.SupportPercent = m_launch_parameters.SupportsPercentNotification;
-      m_view.ButtonEnabled = m_launch_parameters.CanCancel;
+    }
+
+    private void HandleCanCancelChanged(object sender, EventArgs e)
+    {
+      m_view.ButtonEnabled = m_operation.CanCancel;
     }
 
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -69,16 +69,18 @@ namespace Notung.Helm
 
     private void HandleOperationCompleted(object sender, EventArgs e)
     {
-      m_launch_parameters.PropertyChanged -= HanldePropertyChanged;
       m_operation.ProgressChanged -= HandleProgressChanged;
       m_operation.Completed -= HandleOperationCompleted;
-
+      
+      if (m_cancel_source != null)
+      {
+        m_cancel_source.Dispose();
+        m_operation.CanCancelChanged -= HandleCanCancelChanged;
+      }
+      
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;
       m_view.SupportPercent = true;
-
-      if (m_cancel_source != null)
-        m_cancel_source.Dispose();
 
       if (m_operation.Status != TaskStatus.RanToCompletion)
       {

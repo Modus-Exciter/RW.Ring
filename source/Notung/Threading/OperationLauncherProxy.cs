@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿#if DOMAIN_TASK
+
+using System;
 using System.ComponentModel;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
-using Notung.Logging;
-using System.Threading;
-using System.IO;
-using System.Drawing.Imaging;
 
 namespace Notung.Threading
 {
@@ -40,29 +38,39 @@ namespace Notung.Threading
       else
         return m_real_launcher.Run(new RunBaseCallerWrapper(runBase, parameters), parameters);
     }
+
 #if !APP_MANAGER
-    public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
+    event EventHandler<InfoBufferEventArgs> IOperationLauncher.MessagesRecieved { add { } remove { } }
 #endif
   }
 
   /// <summary>
-  /// Индикатор прогресса для удалённой задачи
-  /// </summary>  
+  /// Индикатор прогресса задачи, выполняющейся в другом домене
+  /// </summary>
   internal interface IProgressIndicator
   {
     /// <summary>
     /// Отображает прогресс выполнения задачи
     /// </summary>
     /// <param name="percentage">Процент выполнения задачи</param>
-    /// <param name="state">Текстовое описание состояния задачи</param>
+    /// <param name="state">Текстовое описание состояния задачи. Object нельзя, потому что Remoting</param>
     void ReportProgress(int percentage, string state);
+
+    /// <summary>
+    /// Отправляет обёртке сообщение о том, что изменилась возможность отмены задачи
+    /// </summary>
+    void RaiseCanCancelChanged(EventArgs e);
   }
 
-  internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke, IChangeLaunchParameters, IServiceProvider
+  /// <summary>
+  /// Обёртка над задачей для домена, в котором создана задача
+  /// </summary>
+  internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke
   {
     protected readonly IRunBase m_run_base;
-    protected LaunchParameters m_parameters;
-    private byte[] m_image;
+    private readonly byte[] m_image;
+
+    private static readonly ISynchronizeInvoke _invoker = new SynchronizeProviderStub().Invoker;
 
     public RunBaseCallerWrapper(IRunBase runBase, LaunchParameters parameters)
     {
@@ -70,8 +78,8 @@ namespace Notung.Threading
         throw new ArgumentNullException("runBase");
 
       m_run_base = runBase;
-      m_parameters = parameters;
-      if (m_parameters != null && m_parameters.Bitmap != null)
+
+      if (parameters != null && parameters.Bitmap != null)
       {
         using (var ms = new MemoryStream())
         {
@@ -81,53 +89,9 @@ namespace Notung.Threading
       }
     }
     
-    public virtual void Run()
-    {
-      m_run_base.ProgressChanged += this.HadnleProgressChanged;
-      try
-      {
-        m_run_base.Run();
-      }
-      finally
-      {
-        m_run_base.ProgressChanged -= this.HadnleProgressChanged;
-      }
-    }
-
     public bool SupportPercentNotification
     {
       get { return m_run_base.GetType().IsDefined(typeof(PercentNotificationAttribute), false); }
-    }
-
-    private void HadnleProgressChanged(object sender, ProgressChangedEventArgs e)
-    {
-      var indicator = this.ProgressIndicator;
-
-      if (indicator != null)
-        indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
-    }
-
-    public IProgressIndicator ProgressIndicator { get; set; }
-
-    public event ProgressChangedEventHandler ProgressChanged
-    {
-      add { }
-      remove { }
-    }
-
-    public override string ToString()
-    {
-      var ret = m_run_base.ToString();
-
-      if (object.Equals(ret, m_run_base.GetType().ToString()))
-      {
-        var dn = m_run_base.GetType().GetCustomAttribute<DisplayNameAttribute>(true);
-
-        if (dn != null && !string.IsNullOrWhiteSpace(dn.DisplayName))
-          ret = dn.DisplayName;
-      }
-
-      return ret;
     }
 
     public byte[] BitmapBytes
@@ -135,31 +99,11 @@ namespace Notung.Threading
       get { return m_image; }
     }
 
-    public IAsyncResult BeginInvoke(Delegate method, object[] args)
-    {
-      var func = new Func<object[], object>(method.DynamicInvoke);
-      return func.BeginInvoke(args, null, func);
-    }
+    public IProgressIndicator ProgressIndicator { get; set; }
 
-    public object EndInvoke(IAsyncResult result)
+    public string GetCaption()
     {
-      return ((Func<object[], object>)result.AsyncState).EndInvoke(result);
-    }
-
-    public object Invoke(Delegate method, object[] args)
-    {
-      return method.DynamicInvoke(args);
-    }
-
-    public bool InvokeRequired
-    {
-      get { return false; }
-    }
-
-    public void SetLaunchParameters(LaunchParameters parameters)
-    {
-      if (m_run_base is IChangeLaunchParameters)
-        ((IChangeLaunchParameters)m_run_base).SetLaunchParameters(parameters);
+      return LaunchParameters.GetDefaultCaption(m_run_base);
     }
 
     public object GetService(Type serviceType)
@@ -169,26 +113,93 @@ namespace Notung.Threading
 
       return null;
     }
+
+    public virtual void Run()
+    {
+      m_run_base.ProgressChanged += this.HandleProgressChanged;
+      try
+      {
+        m_run_base.Run();
+      }
+      finally
+      {
+        m_run_base.ProgressChanged -= this.HandleProgressChanged;
+      }
+    }
+
+    private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
+    {
+      var indicator = this.ProgressIndicator;
+
+      if (indicator != null)
+        indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
+    }
+
+    public event ProgressChangedEventHandler ProgressChanged { add { } remove { } }
+
+    #region ISynchronizeInvoke members
+
+    IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
+    {
+      return _invoker.BeginInvoke(method, args);
+    }
+
+    object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
+    {
+      return _invoker.EndInvoke(result);
+    }
+
+    object ISynchronizeInvoke.Invoke(Delegate method, object[] args)
+    {
+      return method.DynamicInvoke(args);
+    }
+
+    bool ISynchronizeInvoke.InvokeRequired
+    {
+      get { return false; }
+    }
+
+    #endregion
   }
 
-  internal class CancelableRunBaseCallerWrapper : RunBaseCallerWrapper, ICancelableRunBase
+  /// <summary>
+  /// Обёртка над задачей с поддержкой отмены для домена, в котором создана задача
+  /// </summary>
+  internal class CancelableRunBaseCallerWrapper : RunBaseCallerWrapper
   {
     private CancellationTokenSource m_token_source;
 
     public CancelableRunBaseCallerWrapper(ICancelableRunBase runBase, LaunchParameters parameters)
-      : base(runBase, parameters)
-    {
-    }
+      : base(runBase, parameters) { }
 
-    CancellationToken ICancelableRunBase.CancellationToken { get; set; }
+    public bool CanCancel
+    {
+      get { return ((ICancelableRunBase)m_run_base).CanCancel; }
+    }
 
     public override void Run()
     {
-      using (m_token_source = new CancellationTokenSource())
+      m_token_source = new CancellationTokenSource();
+      ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
+
+      try
       {
         ((ICancelableRunBase)m_run_base).CancellationToken = m_token_source.Token;
         base.Run();
       }
+      finally
+      {
+        ((ICancelableRunBase)m_run_base).CanCancelChanged -= this.HandleCanCancelChanged;
+        m_token_source.Dispose();
+      }
+    }
+
+    private void HandleCanCancelChanged(object sender, EventArgs e)
+    {
+      var indicator = this.ProgressIndicator;
+
+      if (indicator != null)
+        indicator.RaiseCanCancelChanged(e);
     }
 
     public void Cancel()
@@ -197,7 +208,10 @@ namespace Notung.Threading
     }
   }
 
-  internal class RunBaseProxyWrapper : MarshalByRefObject, IRunBase, IProgressIndicator, IChangeLaunchParameters, IServiceProvider
+  /// <summary>
+  /// Обёртка над задачей для домена, в котором работает индикатор прогресса
+  /// </summary>
+  internal class RunBaseProxyWrapper : MarshalByRefObject, IRunBase, IProgressIndicator, IServiceProvider
   {
     protected readonly RunBaseCallerWrapper m_caller;
 
@@ -207,53 +221,61 @@ namespace Notung.Threading
         throw new ArgumentNullException("caller");
 
       m_caller = caller;
+
+      this.SupportsPercentNotification = caller.SupportPercentNotification;
+      this.BitmapBytes = caller.BitmapBytes;
+      this.Caption = caller.GetCaption();
     }
 
-    public bool SupportPercentNotification
-    {
-      get { return m_caller.SupportPercentNotification; }
-    }
+    public bool SupportsPercentNotification { get; private set; }
 
-    public byte[] BitmapBytes
-    {
-      get { return m_caller.BitmapBytes; }
-    }
-    
-    public void Run()
+    public byte[] BitmapBytes { get; private set; }
+
+    public string Caption { get; private set; }
+
+    public virtual void Run()
     {
       m_caller.ProgressIndicator = this;
-      m_caller.Run();
+      try
+      {
+        m_caller.Run();
+      }
+      finally
+      {
+        m_caller.ProgressIndicator = null;
+      }
     }
 
     public event ProgressChangedEventHandler ProgressChanged;
+
+    public object GetService(Type serviceType)
+    {
+      return m_caller.GetService(serviceType);
+    }
 
     void IProgressIndicator.ReportProgress(int percentage, string state)
     {
       this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
     }
 
-    public override string ToString()
-    {
-      return m_caller.ToString();
-    }
-
-    public void SetLaunchParameters(LaunchParameters parameters)
-    {
-      m_caller.SetLaunchParameters(parameters);
-    }
-
-    public object GetService(Type serviceType)
-    {
-      return m_caller.GetService(serviceType);
-    }
+    public virtual void RaiseCanCancelChanged(EventArgs e) { }
   }
 
+  /// <summary>
+  /// Обёртка над задачей с поддержкой отмены для домена, в котором работает индикатор прогресса
+  /// </summary>
   internal class CancelableRunBaseProxyWrapper : RunBaseProxyWrapper, ICancelableRunBase
   {
     private CancellationToken m_token;
 
-    public CancelableRunBaseProxyWrapper(CancelableRunBaseCallerWrapper caller) : base(caller) { }
-    
+    public CancelableRunBaseProxyWrapper(CancelableRunBaseCallerWrapper caller)
+      : base(caller) { }
+
+    public override void RaiseCanCancelChanged(EventArgs e)
+    {
+      this.CanCancelChanged.InvokeSynchronized(this, e);
+    }
+
     public CancellationToken CancellationToken
     {
       get { return m_token; }
@@ -265,5 +287,14 @@ namespace Notung.Threading
           m_token.Register(((CancelableRunBaseCallerWrapper)m_caller).Cancel);
       }
     }
+
+    public bool CanCancel
+    {
+      get { return ((CancelableRunBaseCallerWrapper)m_caller).CanCancel; }
+    }
+
+    public event EventHandler CanCancelChanged;
   }
 }
+
+#endif

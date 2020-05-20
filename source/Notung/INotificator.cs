@@ -7,20 +7,38 @@ using Notung.Threading;
 
 namespace Notung
 {
+  /// <summary>
+  /// Сервис для отображения пользователю информационных сообщений
+  /// </summary>
   public interface INotificator : IDisposable
   {
+    /// <summary>
+    /// Отображение сообщения, не требующего от пользователя принятия решения
+    /// </summary>
+    /// <param name="info">Сообщение</param>
     void Show(Info info);
 
     void Show(string message, InfoLevel level);
 
     void Show(InfoBuffer buffer, string summary = null);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя подтверждения или отмены
+    /// </summary>
+    /// <param name="info">Сообщение</param>
+    /// <returns>True, если пользователь подтвердил. Иначе, false</returns>
     bool Confirm(Info info);
 
     bool Confirm(string message, InfoLevel level);
 
     bool Confirm(InfoBuffer buffer, string summary = null);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя согласия, отказа или отмены
+    /// </summary>
+    /// <param name="info">Сообщение</param>
+    /// <returns>True, если пользователь согласился, false, если пользователь отказался,
+    /// null, если пользователь отменил принятие решения</returns>
     bool? ConfirmOrCancel(Info info);
 
     bool? ConfirmOrCancel(string message, InfoLevel level);
@@ -51,7 +69,10 @@ namespace Notung
       if (info == null)
         throw new ArgumentNullException("info");
 
-      this.AlertSync(info, ConfirmationRegime.None);
+      if (info.InnerMessages.Count == 0)
+        this.AlertSync(info, ConfirmationRegime.None);
+      else
+        this.AlertSync(info.Message, info.Level, info.InnerMessages, ConfirmationRegime.None);
     }
 
     public void Show(InfoBuffer buffer, string summary)
@@ -59,15 +80,34 @@ namespace Notung
       if (buffer == null)
         throw new ArgumentNullException("buffer");
 
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
+      if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0)
+        this.AlertSync(buffer[0], ConfirmationRegime.None);
+      else
+      {
+        var level = GetMaxLevel(buffer);
 
-      this.AlertSync(summary, buffer, ConfirmationRegime.None);
+        if (string.IsNullOrEmpty(summary))
+          summary = GetDefaultSummary(level);
+
+        this.AlertSync(summary, level, buffer, ConfirmationRegime.None);
+      }
     }
 
     public void Show(string message, InfoLevel level)
     {
-      this.Show(new Info(message, level));
+      this.AlertSync(new Info(message, level), ConfirmationRegime.None);
+    }
+
+    public bool Confirm(Info info)
+    {
+      if (info == null)
+        throw new ArgumentNullException("info");
+
+      if (info.InnerMessages.Count == 0)
+        return this.AlertSync(info, ConfirmationRegime.Confirm).GetValueOrDefault();
+      else
+        return this.AlertSync(info.Message, info.Level, 
+          info.InnerMessages, ConfirmationRegime.Confirm).GetValueOrDefault();
     }
 
     public bool Confirm(InfoBuffer buffer, string summary)
@@ -75,34 +115,22 @@ namespace Notung
       if (buffer == null)
         throw new ArgumentNullException("buffer");
 
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
+      if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0)
+        return this.AlertSync(buffer[0], ConfirmationRegime.Confirm).GetValueOrDefault();
+      else
+      {
+        var level = GetMaxLevel(buffer);
 
-      return this.AlertSync(summary, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
-    }
-    
-    public bool Confirm(Info info)
-    {
-      if (info == null)
-        throw new ArgumentNullException("info");
+        if (string.IsNullOrEmpty(summary))
+          summary = GetDefaultSummary(level);
 
-      return this.AlertSync(info, ConfirmationRegime.Confirm).GetValueOrDefault();
+        return this.AlertSync(summary, level, buffer, ConfirmationRegime.Confirm).GetValueOrDefault();
+      }
     }
     
     public bool Confirm(string message, InfoLevel level)
     {
-      return this.Confirm(new Info(message, level));
-    }
-
-    public bool? ConfirmOrCancel(InfoBuffer buffer, string summary)
-    {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
-
-      if (string.IsNullOrEmpty(summary))
-        summary = GetDefaultSummary(buffer);
-
-      return this.AlertSync(summary, buffer, ConfirmationRegime.CancelableConfirm);
+      return this.AlertSync(new Info(message, level), ConfirmationRegime.Confirm).GetValueOrDefault();
     }
 
     public bool? ConfirmOrCancel(Info info)
@@ -110,12 +138,34 @@ namespace Notung
       if (info == null)
         throw new ArgumentNullException("info");
 
-      return this.AlertSync(info, ConfirmationRegime.CancelableConfirm).GetValueOrDefault();
+      if (info.InnerMessages.Count == 0)
+        return this.AlertSync(info, ConfirmationRegime.CancelableConfirm);
+      else
+        return this.AlertSync(info.Message, info.Level, 
+          info.InnerMessages, ConfirmationRegime.CancelableConfirm);
+    }
+
+    public bool? ConfirmOrCancel(InfoBuffer buffer, string summary)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0)
+        return this.AlertSync(buffer[0], ConfirmationRegime.CancelableConfirm);
+      else
+      {
+        var level = GetMaxLevel(buffer);
+
+        if (string.IsNullOrEmpty(summary))
+          summary = GetDefaultSummary(level);
+
+        return this.AlertSync(summary, level, buffer, ConfirmationRegime.CancelableConfirm);
+      }
     }
 
     public bool? ConfirmOrCancel(string message, InfoLevel level)
     {
-      return this.ConfirmOrCancel(new Info(message, level));
+      return this.AlertSync(new Info(message, level), ConfirmationRegime.CancelableConfirm);
     }
 
     public void Dispose()
@@ -146,9 +196,9 @@ namespace Notung
       return ret;
     }
 
-    private string GetDefaultSummary(InfoBuffer buffer)
+    private string GetDefaultSummary(InfoLevel level)
     {
-      switch (GetMaxLevel(buffer))
+      switch(level)
       {
         case InfoLevel.Debug:
         case InfoLevel.Info:
@@ -179,12 +229,12 @@ namespace Notung
       return this.GetOperationWrapper().Invoke(() => m_view.Alert(info, confirm));
     }
 
-    private bool? AlertSync(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
+    private bool? AlertSync(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
     {
       foreach (var info in buffer)
         _log.Alert(info);
 
-      return this.GetOperationWrapper().Invoke(() => m_view.Alert(summary, buffer, confirm));
+      return this.GetOperationWrapper().Invoke(() => m_view.Alert(summary, summaryLevel, buffer, confirm));
     }
 
     #endregion
@@ -194,7 +244,7 @@ namespace Notung
   {
     bool? Alert(Info info, ConfirmationRegime confirm);
 
-    bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm);
+    bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm);
   }
 
   public enum ConfirmationRegime
@@ -236,7 +286,7 @@ namespace Notung
         return null;
     }
 
-    public bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
+    public bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
     {
       if (!string.IsNullOrWhiteSpace(summary))
       {

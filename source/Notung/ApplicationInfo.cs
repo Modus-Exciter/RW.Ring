@@ -1,4 +1,5 @@
 ﻿#if APPLICATION_INFO
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -217,4 +218,5 @@ namespace Notung
     }
   }
 }
+
 #endif

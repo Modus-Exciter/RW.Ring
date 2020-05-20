@@ -2,121 +2,84 @@
 using System.ComponentModel;
 using System.Drawing;
 using Notung.ComponentModel;
-using System.IO;
-using System.Drawing.Imaging;
 
 namespace Notung.Threading
 {
-  public sealed class LaunchParameters : MarshalByRefObject, INotifyPropertyChanged
+  /// <summary>
+  /// Настройки отображения задачи с индикатором прогресса
+  /// </summary>
+  [Serializable]
+  public sealed class LaunchParameters 
   {
-    private string m_caption;
-    private Bitmap m_bitmap;
-    private bool m_close_on_finish = true;
-    private bool m_cancelable;
-    private bool m_can_cancel;
-    private bool m_percent_notification;
-
-    internal void Setup(IRunBase work)
+    /// <summary>
+    /// Инициализация нового набора настроек отображения задачи с индикатором прогресса
+    /// </summary>
+    public LaunchParameters()
     {
-      if (work is RunBaseProxyWrapper)
-      {
-        var proxy = (RunBaseProxyWrapper)work;
-        m_percent_notification = proxy.SupportPercentNotification;
-        m_caption = proxy.ToString();
-      }
-      else
-      {
-        if (string.IsNullOrWhiteSpace(m_caption))
-          m_caption = GetDefaultCaption(work);
-        
-        m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
-      }
-
-      m_cancelable = m_can_cancel = work is ICancelableRunBase;
-    }
-    
-    public string Caption
-    {
-      get { return m_caption; }
-      set
-      {
-        if (string.IsNullOrEmpty(value))
-          return;
-        
-        if (m_caption == value)
-          return;
-
-        m_caption = value;
-        this.OnPropertyChanged("Caption");
-      }
+      this.CloseOnFinish = true;
     }
 
-    public Bitmap Bitmap
-    {
-      get { return m_bitmap; }
-      set
-      {
-        if (m_bitmap == value)
-          return;
+    /// <summary>
+    /// Заголовок задачи
+    /// </summary>
+    public string Caption { get; set; }
 
-        m_bitmap = value;
-        this.OnPropertyChanged("Bitmap");
-      }
-    }
+    /// <summary>
+    /// Картинка, отображающаяся при выполнении задачи
+    /// </summary>
+    public Bitmap Bitmap { get; set; }
 
-    public bool CloseOnFinish
-    {
-      get { return m_close_on_finish; }
-      set
-      {
-        if (m_close_on_finish == value)
-          return;
+    /// <summary>
+    /// Закрывать ли диалог с прогрессом выполнения после завершения задачи
+    /// </summary>
+    public bool CloseOnFinish { get; set; }
 
-        m_close_on_finish = value;
-        this.OnPropertyChanged("CloseOnFinish");
-      }
-    }
+    /// <summary>
+    /// Поддерживается ли оповещение о прогрессе операции в процентах
+    /// </summary>
+    public bool SupportsPercentNotification { get; internal set; }
 
-    public bool CanCancel
-    {
-      get { return m_can_cancel; }
-      set
-      {
-        if (m_can_cancel == value)
-          return;
+    /// <summary>
+    /// Поддерживается ли отмена задачи
+    /// </summary>
+    public bool SupportsCancellation { get; internal set; }
 
-        m_can_cancel = value;
-        this.OnPropertyChanged("CanCancel");
-      }
-    }
-
-    public bool SupportsPercentNotification
-    {
-      get { return m_percent_notification; }
-      internal set { m_percent_notification = value; }
-    }
-
-    public bool SupportsCancellation
-    {
-      get { return m_cancelable; }
-      internal set { m_cancelable = value; }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public void ShowCurrentSettings()
-    {
-      this.OnPropertyChanged(null); 
-    }
-
+    /// <summary>
+    /// Строковое представление настроек задачи
+    /// </summary>
+    /// <returns>Заголовок задачи, если задан</returns>
     public override string ToString()
     {
-      return !string.IsNullOrWhiteSpace(m_caption) ? m_caption : base.ToString();
+      return !string.IsNullOrWhiteSpace(this.Caption) ? this.Caption : base.ToString();
     }
 
     #region Implementation
 
-    private string GetDefaultCaption(IRunBase work)
+    internal void Setup(IRunBase work)
+    {
+#if DOMAIN_TASK
+      if (work is RunBaseProxyWrapper)
+      {
+        var proxy = (RunBaseProxyWrapper)work;
+
+        if (string.IsNullOrWhiteSpace(this.Caption))
+          this.Caption = proxy.Caption;
+
+        this.SupportsPercentNotification = proxy.SupportsPercentNotification;
+      }
+      else
+#endif
+      {
+        if (string.IsNullOrWhiteSpace(this.Caption))
+          this.Caption = GetDefaultCaption(work);
+
+        this.SupportsPercentNotification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
+      }
+
+      this.SupportsCancellation = work is ICancelableRunBase;
+    }
+
+    internal static string GetDefaultCaption(IRunBase work)
     {
       var ret = work.ToString();
 
@@ -129,11 +92,6 @@ namespace Notung.Threading
       }
 
       return ret;
-    }
-
-    private void OnPropertyChanged(string propertyName)
-    {
-      this.PropertyChanged.InvokeSynchronized(this, new PropertyChangedEventArgs(propertyName));
     }
 
     #endregion

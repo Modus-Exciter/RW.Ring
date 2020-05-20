@@ -1,4 +1,5 @@
 ﻿#if APP_MANAGER
+
 using System;
 using System.Reflection;
 using Notung.Configuration;
@@ -180,9 +181,12 @@ namespace Notung
         _notificator = notificator;
         _app_instance = instance;
         _configurator = configurator;
+#if DOMAIN_TASK
         _operation_launcher = new OperationLauncherProxy(operationLauncher);
+#endif
       }
     }
   }
 }
+
 #endif
