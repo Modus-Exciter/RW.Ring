@@ -81,6 +81,34 @@ namespace Notung.Helm
       }
     }
 
+    public virtual bool? Alert(Info info, ConfirmationRegime confirm)
+    {
+      if (confirm == ConfirmationRegime.None)
+        MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OK, GetIconForLevel(info.Level, false));
+      else if (confirm == ConfirmationRegime.Confirm)
+        return MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OKCancel,
+          GetIconForLevel(info.Level, true)) == DialogResult.OK;
+      else
+      {
+        var res = MessageBox.Show(info.Message, m_main_form.Text,
+          MessageBoxButtons.YesNoCancel, GetIconForLevel(info.Level, true));
+
+        if (res == DialogResult.Yes)
+          return true;
+        else if (res == DialogResult.No)
+          return false;
+      }
+
+      return null;
+    }
+
+    public virtual bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
+    {
+      return this.Alert(new Info(summary + Environment.NewLine
+        + string.Join(Environment.NewLine, buffer.Select(i => i.Message)),
+        buffer.Max(i => i.Level)), confirm);
+    }
+
     public static string[] GetStringArgs(Message message)
     {
       if (message.Msg == WinAPIHelper.WM_COPYDATA)
@@ -112,34 +140,6 @@ namespace Notung.Helm
         default:
           return MessageBoxIcon.None;
       }
-    }
-
-    public bool? Alert(Info info, ConfirmationRegime confirm)
-    {
-      if (confirm == ConfirmationRegime.None)
-        MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OK, GetIconForLevel(info.Level, false));
-      else if (confirm == ConfirmationRegime.Confirm)
-        return MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OKCancel,
-          GetIconForLevel(info.Level, true)) == DialogResult.OK;
-      else
-      {
-        var res = MessageBox.Show(info.Message, m_main_form.Text, 
-          MessageBoxButtons.YesNoCancel, GetIconForLevel(info.Level, true));
-
-        if (res == DialogResult.Yes)
-          return true;
-        else if (res == DialogResult.No)
-          return false;
-      }
-
-      return null;
-    }
-
-    public bool? Alert(string summary, InfoBuffer buffer, ConfirmationRegime confirm)
-    {
-      return this.Alert(new Info(summary + Environment.NewLine
-        + string.Join(Environment.NewLine, buffer.Select(i => i.Message)),
-        buffer.Max(i => i.Level)), confirm);
     }
   }
 }

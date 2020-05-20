@@ -1,5 +1,6 @@
 ﻿using System;
 using Notung;
+using Notung.ComponentModel;
 using Notung.Logging;
 using Notung.Loader;
 
@@ -74,7 +75,25 @@ namespace PluginsTest
           Console.WriteLine(LoggingContext.Global["Note"]);
         });
 
+      IServiceProvider source = (IServiceProvider)newDomain.CreateInstanceAndUnwrap(
+        typeof(InfoLogSource).Assembly.FullName, typeof(InfoLogSource).FullName);
+
+      Console.WriteLine(source.GetService<Info>());
+
       AppDomain.Unload(newDomain);
+    }
+  }
+
+
+  public class InfoLogSource : MarshalByRefObject, IServiceProvider
+  {
+
+    public object GetService(Type serviceType)
+    {
+      if (serviceType == typeof(Info))
+        return new Info("Some message", InfoLevel.Info) { Details = new Cust() };
+
+      else return null;
     }
   }
 

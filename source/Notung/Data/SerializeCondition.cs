@@ -33,7 +33,7 @@ namespace Notung.Data
       T value = this.Value;
 
       if (!CanSerialize)
-        info.AddValue("Value", null);
+        info.AddValue("Value", default(T), typeof(T));
       else
         info.AddValue("Value", this.Value);
     }

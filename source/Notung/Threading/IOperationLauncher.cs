@@ -96,7 +96,19 @@ namespace Notung.Threading
       return operation.Status;
     }
 
-#if !APP_MANAGER
+#if APP_MANAGER
+
+    private void OnMessagesRecieved(InfoBuffer buffer)
+    {
+      AppManager.Notificator.Show(buffer);
+    }
+
+    private void OnError(Exception ex)
+    {
+      AppManager.Notificator.Show(new Info(ex));
+    }
+
+    #else
 
     private void OnMessagesRecieved(InfoBuffer buffer)
     {
@@ -109,18 +121,6 @@ namespace Notung.Threading
     }
 
     public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
-
-#else
-
-    private void OnMessagesRecieved(InfoBuffer buffer)
-    {
-      AppManager.Notificator.Show(buffer);
-    }
-
-    private void OnError(Exception ex)
-    {
-      AppManager.Notificator.Show(new Info(ex));
-    }
 
 #endif
   }
