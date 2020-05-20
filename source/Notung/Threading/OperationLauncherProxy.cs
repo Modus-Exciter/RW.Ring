@@ -13,18 +13,8 @@ using System.Drawing.Imaging;
 namespace Notung.Threading
 {
   /// <summary>
-  /// Индикатор прогресса для удалённой задачи
+  /// Вспомогательный класс для запуска задач из другого домена
   /// </summary>
-  public interface IProgressIndicator
-  {
-    /// <summary>
-    /// Отображает прогресс выполнения задачи
-    /// </summary>
-    /// <param name="percentage">Процент выполнения задачи</param>
-    /// <param name="state">Текстовое описание состояния задачи</param>
-    void ReportProgress(int percentage, string state);
-  }
-
   internal sealed class OperationLauncherProxy : IOperationLauncher
   {
     private readonly IOperationLauncher m_real_launcher;
@@ -53,6 +43,19 @@ namespace Notung.Threading
 #if !APP_MANAGER
     public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
 #endif
+  }
+
+  /// <summary>
+  /// Индикатор прогресса для удалённой задачи
+  /// </summary>  
+  internal interface IProgressIndicator
+  {
+    /// <summary>
+    /// Отображает прогресс выполнения задачи
+    /// </summary>
+    /// <param name="percentage">Процент выполнения задачи</param>
+    /// <param name="state">Текстовое описание состояния задачи</param>
+    void ReportProgress(int percentage, string state);
   }
 
   internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke, IChangeLaunchParameters, IServiceProvider

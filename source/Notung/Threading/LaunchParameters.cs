@@ -24,12 +24,11 @@ namespace Notung.Threading
         m_percent_notification = proxy.SupportPercentNotification;
         m_caption = proxy.ToString();
       }
-
       else
       {
         if (string.IsNullOrWhiteSpace(m_caption))
           m_caption = GetDefaultCaption(work);
-        // TODO: if task is wrapper, do this another way or create several wrappers
+        
         m_percent_notification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
       }
 
