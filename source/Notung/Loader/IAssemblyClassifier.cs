@@ -153,6 +153,7 @@ namespace Notung.Loader
         throw new ArgumentNullException("searchPattern");
 
       var search_path = GetPluginsSearchPath();
+      var old_count = m_plugins.Count;
 
       AppDomain separate_domain = mode == LoadPluginsMode.SeparateDomain ?
         CreateDomain(string.Format("Plugins ({0})", searchPattern), search_path) : null;
@@ -186,7 +187,7 @@ namespace Notung.Loader
       }
       finally
       {
-        if (separate_domain != null && m_plugins.Count == 0)
+        if (separate_domain != null && m_plugins.Count == old_count)
           AppDomain.Unload(separate_domain);
       }
     }
