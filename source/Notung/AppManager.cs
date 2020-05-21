@@ -4,7 +4,6 @@ using System;
 using System.Reflection;
 using Notung.Configuration;
 using Notung.Loader;
-using Notung.Logging;
 using Notung.Threading;
 
 namespace Notung

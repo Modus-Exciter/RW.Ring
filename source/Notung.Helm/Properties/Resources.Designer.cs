@@ -78,12 +78,28 @@ namespace Notung.Helm.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap DefaultSplash {
+            get {
+                object obj = ResourceManager.GetObject("DefaultSplash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Library failed to load. Unable to enumerate functions.
         /// </summary>
         internal static string DLL_FUNCTIONS_ENUM_FAIL {
             get {
                 return ResourceManager.GetString("DLL_FUNCTIONS_ENUM_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to init Application instance. Would You like to check settings?.
+        /// </summary>
+        internal static string INIT_FAIL_DESCRIPTION {
+            get {
+                return ResourceManager.GetString("INIT_FAIL_DESCRIPTION", resourceCulture);
             }
         }
         

@@ -86,18 +86,23 @@ namespace ConfiguratorGraphicalTest
 
       public InnerEnum Nom { get; set; }
     }
+
     public Form1()
     {
-      var view = new MainFormAppInstanceView(this);
-      AppManager.Instance = new AppInstance(view);
-      AppManager.Instance.AllowOnlyOneInstance();
-      AppManager.OperationLauncher = new OperationLauncher(view);
-      AppManager.Notificator = new Notificator(view);
-
       InitializeComponent();
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
 
       if (AppManager.Instance.CommandLineArgs.Count != 0)
         this.Text = string.Join(" ", AppManager.Instance.CommandLineArgs);
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+      base.OnShown(e);
 
       innerDefault.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDefault>();
       innerContract.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDataContract>();
@@ -110,12 +115,6 @@ namespace ConfiguratorGraphicalTest
       outerContractName.SelectedObject = AppManager.Configurator.GetSection<OuterSectionDataContractName>();
       outerXml.SelectedObject = AppManager.Configurator.GetSection<OuterSectionXml>();
       outerXmlName.SelectedObject = AppManager.Configurator.GetSection<OuterSectionXmlName>();
-    }
-
-    protected override void OnFormClosed(FormClosedEventArgs e)
-    {
-      base.OnFormClosed(e);
-      AppManager.Configurator.SaveSettings();
     }
 
     private void button1_Click(object sender, System.EventArgs e)

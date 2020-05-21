@@ -6,6 +6,10 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung.Configuration;
+using Notung.Helm;
+using Notung.Loader;
+using Notung.Data;
+using Notung;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -15,24 +19,86 @@ namespace ConfiguratorGraphicalTest
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
-    static void Main()
+    static int Main()
     {
-      SplashScreen scr = new SplashScreen("splashscreen.jpg");
-      scr.Show(false);
-      RunApp(scr);
-    }
+      ApplicationStarter.ShowSplashScreen("splashscreen.jpg");
 
-    private static void RunApp(SplashScreen scr)
-    {
-      Application.EnableVisualStyles();
-      Application.SetCompatibleTextRenderingDefault(false);
+      ApplicationStarter starter = new ApplicationStarter(
+        new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
+        new DefaultFactory<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
 
-      var frm = new Form1();
-      frm.Shown += (e, args) => scr.Close(TimeSpan.FromMilliseconds(300));
-      Application.Run(frm);
+      return starter.Run();
     }
   }
 
+
+  public class TestLoadingQueue : ILoadingQueue
+  {
+    public IApplicationLoader[] GetLoaders()
+    {
+      return new IApplicationLoader[] { new LongApplicationLoader() };
+    }
+
+    private class LongApplicationLoader : IApplicationLoader
+    {
+      public Type Key
+      {
+        get { return typeof(HelpItem); }
+      }
+
+      public IList<Type> MandatoryDependencies
+      {
+        get { return ArrayExtensions.Empty<Type>(); }
+      }
+
+      public IList<Type> OptionalDependencies
+      {
+        get { return ArrayExtensions.Empty<Type>(); }
+      }
+
+      public bool Load(LoadingContext context)
+      {
+        Report(context, 0, "Form1.InnerSectionDefault");
+        AppManager.Configurator.GetSection<Form1.InnerSectionDefault>();
+
+        Report(context, 10, "Form1.InnerSectionDataContract");
+        AppManager.Configurator.GetSection<Form1.InnerSectionDataContract>();
+
+        Report(context, 20, "Form1.InnerSectionDataContractName");
+        AppManager.Configurator.GetSection<Form1.InnerSectionDataContractName>();
+
+        Report(context, 30, "Form1.InnerSectionXml");
+        AppManager.Configurator.GetSection<Form1.InnerSectionXml>();
+
+        Report(context, 40, "Form1.InnerSectionXmlName");
+        AppManager.Configurator.GetSection<Form1.InnerSectionXmlName>();
+
+        Report(context, 50, "OuterSectionDefault");
+        AppManager.Configurator.GetSection<OuterSectionDefault>();
+
+        Report(context, 60, "OuterSectionDataContract");
+        AppManager.Configurator.GetSection<OuterSectionDataContract>();
+        
+        Report(context, 70, "OuterSectionDataContractName");
+        AppManager.Configurator.GetSection<OuterSectionDataContractName>();
+        
+        Report(context, 80, "OuterSectionXml");
+        AppManager.Configurator.GetSection<OuterSectionXml>();
+        
+        Report(context, 90, "OuterSectionXmlName");
+        AppManager.Configurator.GetSection<OuterSectionXmlName>();
+
+        return true;
+      }
+
+      private void Report(LoadingContext context, int start, string section)
+      {
+        context.Indicator.ReportProgress(start, string.Format("Loading section {0}...", section));
+        System.Threading.Thread.Sleep(200);
+        context.Indicator.ReportProgress(start + 5, string.Format("Loading section {0}...", section));
+      }
+    }
+  }
 
   public enum OuterEnum
   {

@@ -58,6 +58,8 @@ namespace Notung.Helm
         {
           IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(LoadSymbolImpl));
 
+          _strings = new List<string>();
+
           if (!SymEnumerateSymbols(procId, m_handle.Handle, collector, IntPtr.Zero))
             _strings = null;
 

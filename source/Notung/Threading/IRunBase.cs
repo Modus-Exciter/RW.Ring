@@ -136,12 +136,18 @@ namespace Notung.Threading
     }
   }
 
+  /// <summary>
+  /// Базовая реализация интерфейса ICancelableRunBase
+  /// </summary>
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
     private volatile bool m_can_cancel = true;
     
     public CancellationToken CancellationToken { get; set; }
 
+    /// <summary>
+    /// Возможность отмены задачи. Текущая задача может это свойство менять, остальные только получать
+    /// </summary>
     public bool CanCancel
     {
       get { return m_can_cancel; }
