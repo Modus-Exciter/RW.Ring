@@ -12,25 +12,52 @@ namespace Notung.Loader
     T Create();
   }
 
+  /// <summary>
+  /// Фабрика, создающая объект указанного типа вызовом конструктора без параметров
+  /// </summary>
+  /// <typeparam name="TContract">Требуемый тип данных</typeparam>
+  /// <typeparam name="TService">Тип объекта, реально порождаемый фабрикой</typeparam>
   public sealed class DefaultFactory<TContract, TService> : IFactory<TContract>
     where TContract : class
     where TService : TContract, new()
   {
-    #region IFactory<TContract> Members
+    public static readonly IFactory<TContract> Instance = new DefaultFactory<TContract, TService>();
+
+    private DefaultFactory() { }
 
     public TContract Create()
     {
       return new TService();
     }
-
-    #endregion
   }
 
+  /// <summary>
+  /// Фабрика, которая всегда возвращает null
+  /// </summary>
+  public sealed class EmptyFactory<T> : IFactory<T> where T : class
+  {
+    public static readonly IFactory<T> Instance = new EmptyFactory<T>();
+
+    private EmptyFactory() { }
+    
+    public T Create() { return null; }
+  }
+
+  /// <summary>
+  /// Фабрика, которую можно создать, не загружая сборку, 
+  /// в которой описан тип реально порождаемого объекта
+  /// </summary>
+  /// <typeparam name="T">Требуемый тип данных</typeparam>
   public sealed class DeferredFactory<T> : IFactory<T>
   {
     private readonly string m_assembly;
     private readonly string m_type;
 
+    /// <summary>
+    /// Инициализация фабрики
+    /// </summary>
+    /// <param name="assembly">Имя сборки, в которой объявлен искомый тип</param>
+    /// <param name="type">Полное имя типа данный, который будет порождать фабрика</param>
     public DeferredFactory(string assembly, string type)
     {
       if (string.IsNullOrEmpty(assembly))

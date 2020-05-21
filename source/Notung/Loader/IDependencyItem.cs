@@ -19,12 +19,12 @@ namespace Notung.Loader
     /// <summary>
     /// Ключи объектов, от которых текущий объект зависит обязательно
     /// </summary>
-    IList<T> MandatoryDependencies { get; }
+    ICollection<T> MandatoryDependencies { get; }
 
     /// <summary>
     /// Ключи объектов, от которых текущий объект зависит, но нестрого
     /// </summary>
-    IList<T> OptionalDependencies { get; }
+    ICollection<T> OptionalDependencies { get; }
   }
 
   /// <summary>

@@ -8,14 +8,14 @@ using Notung.Threading;
 
 namespace Notung.Loader
 {
-  public sealed class ApplicationLoadingTask
+  public sealed class ApplicationLoadingWork
   {
-    private static readonly ILog _log = LogManager.GetLogger(typeof(ApplicationLoadingTask));
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ApplicationLoadingWork));
 
     private readonly ILoadingQueue m_queue;
     private readonly DependencyContainer m_container;
 
-    public ApplicationLoadingTask(ILoadingQueue queue, DependencyContainer container)
+    public ApplicationLoadingWork(ILoadingQueue queue, DependencyContainer container)
     {
       if (queue == null)
         throw new ArgumentNullException("queue");
@@ -47,7 +47,7 @@ namespace Notung.Loader
 
         foreach (IApplicationLoader item in items)
         {
-          worker.ReportProgress(0, "");
+          worker.ReportProgress(0, string.Empty);
 
           try
           {
@@ -102,12 +102,12 @@ namespace Notung.Loader
         get { return m_type; }
       }
 
-      public IList<Type> MandatoryDependencies
+      public ICollection<Type> MandatoryDependencies
       {
         get { return ArrayExtensions.Empty<Type>(); }
       }
 
-      public IList<Type> OptionalDependencies
+      public ICollection<Type> OptionalDependencies
       {
         get { return ArrayExtensions.Empty<Type>(); }
       }

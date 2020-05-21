@@ -12,6 +12,9 @@ using Notung.Threading;
 
 namespace Notung.Helm
 {
+  /// <summary>
+  /// Загрузчик Windows-приложения
+  /// </summary>
   public class ApplicationStarter
   {
     private readonly IFactory<Form> m_form_factory;
@@ -34,13 +37,16 @@ namespace Notung.Helm
       m_loading_queue_factory = loadingQueueFactory;
     }
 
+    public ApplicationStarter(IFactory<Form> formFactory) 
+      : this(formFactory, EmptyFactory<ILoadingQueue>.Instance) { } 
+
     public bool AllowOnlyOneInstance { get; set; }
 
     public Image AlternativeSplashScreen { get; set; }
 
     public static void ShowSplashScreen(string resource)
     {
-      _splash = new System.Windows.SplashScreen(resource);
+      _splash = new SplashScreen(resource);
       _splash.Show(true);
       _splash_resource = resource;
     }
@@ -87,20 +93,19 @@ namespace Notung.Helm
 
     protected virtual void ExcludePrefixes(Action<string> exclude) { }
 
-    protected virtual ApplicationLoadingResult RunLoadingTask(object sender, ApplicationLoadingTask task)
+    protected virtual ApplicationLoadingResult RunLoadingTask(Form mainForm, ApplicationLoadingWork task, Image splashScreen)
     {
       using (var dlg = new SplashScreenDialog(task))
       {
-        dlg.Picture = this.GetSplashScreenImage();
-        dlg.ShowDialog(sender as IWin32Window);
-
+        dlg.Picture = splashScreen; 
+        dlg.ShowDialog(mainForm);
         return dlg.Result;
       }
     }
 
     protected virtual bool ShowSettingsForm(InfoBuffer buffer) { return true; }
 
-    protected Image GetSplashScreenImage()
+    private Image GetSplashScreenImage()
     {
       if (_splash != null)
       {
@@ -161,14 +166,14 @@ namespace Notung.Helm
       if (queue == null)
         return;
 
+      var image = this.GetSplashScreenImage();
       var container = new DependencyContainer();
-      var task = new ApplicationLoadingTask(queue, container);
-      var res = this.RunLoadingTask(sender, task);
+      var task = new ApplicationLoadingWork(queue, container);
+      var res = this.RunLoadingTask((Form)sender, task, image);
 
       if (res == null)
       {
         _log.Fatal("InitApplication(): Can't get result loading task");
-        AppManager.Notificator.Show("FATAL ERROR", InfoLevel.Fatal);
         Application.Exit();
         return;
       }
@@ -181,8 +186,8 @@ namespace Notung.Helm
         if (!this.ShowSettingsForm(res.Buffer))
           Application.Exit();
 
-        task = new ApplicationLoadingTask(res, container);
-        res = this.RunLoadingTask(sender, task);
+        task = new ApplicationLoadingWork(res, container);
+        res = this.RunLoadingTask((Form)sender, task, image);
       }
     }
 

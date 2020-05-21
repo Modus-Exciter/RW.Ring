@@ -9,9 +9,9 @@ namespace Notung.Helm
 {
   public partial class SplashScreenDialog : Form
   {
-    private readonly ApplicationLoadingTask m_task;
+    private readonly ApplicationLoadingWork m_task;
 
-    public SplashScreenDialog(ApplicationLoadingTask task)
+    public SplashScreenDialog(ApplicationLoadingWork task)
     {
       if (task == null)
         throw new ArgumentNullException("task");

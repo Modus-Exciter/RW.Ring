@@ -166,6 +166,12 @@ namespace Notung.Threading
       {
         result.AsyncWaitHandle.Dispose();
         m_operation = null;
+
+        if (m_cancel_source != null)
+        {
+          m_cancel_source.Dispose();
+          m_cancel_source = null;
+        }
       }
     }
 

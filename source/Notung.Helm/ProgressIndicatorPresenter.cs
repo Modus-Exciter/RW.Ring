@@ -73,10 +73,7 @@ namespace Notung.Helm
       m_operation.Completed -= HandleOperationCompleted;
       
       if (m_cancel_source != null)
-      {
-        m_cancel_source.Dispose();
         m_operation.CanCancelChanged -= HandleCanCancelChanged;
-      }
       
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;

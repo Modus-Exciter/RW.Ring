@@ -40,7 +40,7 @@ namespace Notung.Threading
 #endif
   }
 
-  internal interface IProgressIndicatorWithcancel : IProgressIndicator
+  internal interface IProgressIndicatorWithCancel : IProgressIndicator
   {
     /// <summary>
     /// Отправляет обёртке сообщение о том, что изменилась возможность отмены задачи
@@ -70,7 +70,7 @@ namespace Notung.Threading
       get { return m_run_base.GetType().IsDefined(typeof(PercentNotificationAttribute), false); }
     }
 
-    public IProgressIndicatorWithcancel ProgressIndicator { get; set; }
+    public IProgressIndicatorWithCancel ProgressIndicator { get; set; }
 
     public string GetCaption()
     {
@@ -182,7 +182,7 @@ namespace Notung.Threading
   /// <summary>
   /// Обёртка над задачей для домена, в котором работает индикатор прогресса
   /// </summary>
-  internal class RunBaseProxyWrapper : MarshalByRefObject, IRunBase, IProgressIndicatorWithcancel, IServiceProvider
+  internal class RunBaseProxyWrapper : MarshalByRefObject, IRunBase, IProgressIndicatorWithCancel, IServiceProvider
   {
     protected readonly RunBaseCallerWrapper m_caller;
 
@@ -221,7 +221,7 @@ namespace Notung.Threading
       return m_caller.GetService(serviceType);
     }
 
-    void IProgressIndicator.ReportProgress(int percentage, string state)
+    public void ReportProgress(int percentage, string state)
     {
       this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
     }

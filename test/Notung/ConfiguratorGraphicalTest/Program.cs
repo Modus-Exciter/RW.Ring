@@ -25,7 +25,7 @@ namespace ConfiguratorGraphicalTest
 
       ApplicationStarter starter = new ApplicationStarter(
         new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
-        new DefaultFactory<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
+        DefaultFactory<ILoadingQueue, TestLoadingQueue>.Instance) { AllowOnlyOneInstance = true };
 
       return starter.Run();
     }
@@ -46,12 +46,12 @@ namespace ConfiguratorGraphicalTest
         get { return typeof(HelpItem); }
       }
 
-      public IList<Type> MandatoryDependencies
+      public ICollection<Type> MandatoryDependencies
       {
         get { return ArrayExtensions.Empty<Type>(); }
       }
 
-      public IList<Type> OptionalDependencies
+      public ICollection<Type> OptionalDependencies
       {
         get { return ArrayExtensions.Empty<Type>(); }
       }
