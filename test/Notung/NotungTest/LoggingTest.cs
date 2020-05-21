@@ -12,6 +12,11 @@ namespace NotungTest
   [TestClass]
   public class LoggingTest
   {
+    [TestCleanup()]
+    public void MyTestCleanup() {
+      LoggingContext.Thread.Clear();
+    }
+
     [TestMethod]
     public void SetContext()
     {

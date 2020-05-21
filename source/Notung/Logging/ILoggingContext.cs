@@ -17,6 +17,8 @@ namespace Notung.Logging
   public interface IThreadLoggingContext : ILoggingContext
   {
     SysThread CurrentThread { get; }
+
+    void Clear();
   }
 
   public static class LoggingContext
@@ -118,6 +120,11 @@ namespace Notung.Logging
       public override string ToString()
       {
         return string.Format("Logging context of thread {0} {1}", m_thread.ManagedThreadId, m_thread.Name);
+      }
+
+      public void Clear()
+      {
+        m_data.Clear();
       }
     }
 
