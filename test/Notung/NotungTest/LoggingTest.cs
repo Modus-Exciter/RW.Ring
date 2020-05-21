@@ -169,7 +169,7 @@ namespace NotungTest
       Assert.AreEqual(string.Format("P:{0}, T:{1} {2}",
         Process.GetCurrentProcess().Id,
         Thread.CurrentThread.ManagedThreadId,
-        Thread.CurrentThread.Name), sb.ToString());
+        Thread.CurrentThread.Name).Trim(), sb.ToString());
     }
 
     [TestMethod]
