@@ -1,7 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.Serialization;
 using Notung.ComponentModel;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace Notung.Threading
 {
@@ -11,12 +14,41 @@ namespace Notung.Threading
   [Serializable]
   public sealed class LaunchParameters 
   {
+    [NonSerialized]
+    private Bitmap m_bitmap;
+    private byte[] m_image_data;
+    
     /// <summary>
     /// Инициализация нового набора настроек отображения задачи с индикатором прогресса
     /// </summary>
     public LaunchParameters()
     {
       this.CloseOnFinish = true;
+    }
+
+    [OnSerializing]
+    void OnSerializing(StreamingContext context)
+    {
+      if (m_bitmap != null)
+      {
+        using (var ms = new MemoryStream())
+        {
+          m_bitmap.Save(ms, ImageFormat.Png);
+          m_image_data = ms.ToArray();
+        }
+      }
+    }
+
+    [OnDeserialized]
+    void OnDeserialized(StreamingContext context)
+    {
+      if (m_image_data != null)
+      {
+        using (var ms = new MemoryStream(m_image_data))
+        {
+          m_bitmap = (Bitmap)Image.FromStream(ms);
+        }
+      }
     }
 
     /// <summary>
@@ -27,7 +59,15 @@ namespace Notung.Threading
     /// <summary>
     /// Картинка, отображающаяся при выполнении задачи
     /// </summary>
-    public Bitmap Bitmap { get; set; }
+    public Bitmap Bitmap
+    {
+      get { return m_bitmap; }
+      set
+      {
+        m_bitmap = value;
+        m_image_data = null;
+      }
+    }
 
     /// <summary>
     /// Закрывать ли диалог с прогрессом выполнения после завершения задачи
@@ -44,10 +84,6 @@ namespace Notung.Threading
     /// </summary>
     public bool SupportsCancellation { get; internal set; }
 
-    /// <summary>
-    /// Строковое представление настроек задачи
-    /// </summary>
-    /// <returns>Заголовок задачи, если задан</returns>
     public override string ToString()
     {
       return !string.IsNullOrWhiteSpace(this.Caption) ? this.Caption : base.ToString();
@@ -57,7 +93,6 @@ namespace Notung.Threading
 
     internal void Setup(IRunBase work)
     {
-#if DOMAIN_TASK
       if (work is RunBaseProxyWrapper)
       {
         var proxy = (RunBaseProxyWrapper)work;
@@ -68,7 +103,6 @@ namespace Notung.Threading
         this.SupportsPercentNotification = proxy.SupportsPercentNotification;
       }
       else
-#endif
       {
         if (string.IsNullOrWhiteSpace(this.Caption))
           this.Caption = GetDefaultCaption(work);

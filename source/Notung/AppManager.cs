@@ -181,9 +181,7 @@ namespace Notung
         _notificator = notificator;
         _app_instance = instance;
         _configurator = configurator;
-#if DOMAIN_TASK
         _operation_launcher = new OperationLauncherProxy(operationLauncher);
-#endif
       }
     }
   }

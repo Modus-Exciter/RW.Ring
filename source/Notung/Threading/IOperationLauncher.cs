@@ -51,7 +51,7 @@ namespace Notung.Threading
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      var operation = CreateOperation(runBase, ref parameters);
+      var operation = CreateOperation(ref runBase, ref parameters);
 
       operation.Start();
 
@@ -70,25 +70,15 @@ namespace Notung.Threading
       return ret;
     }
 
-    private LengthyOperation CreateOperation(IRunBase runBase, ref LaunchParameters parameters)
+    private LengthyOperation CreateOperation(ref IRunBase runBase, ref LaunchParameters parameters)
     {
       if (parameters == null)
         parameters = new LaunchParameters();
 
-#if DOMAIN_TASK
       if (runBase is CancelableRunBaseCallerWrapper)
-      {
         runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
-      }
       else if (runBase is RunBaseCallerWrapper)
-      {
         runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
-      }
-
-      if (runBase is RunBaseProxyWrapper && ((RunBaseProxyWrapper)runBase).BitmapBytes != null)
-        using (var ms = new MemoryStream(((RunBaseProxyWrapper)runBase).BitmapBytes))
-          parameters.Bitmap = (Bitmap)Image.FromStream(ms);
-#endif
 
       parameters.Setup(runBase);
 
@@ -144,16 +134,8 @@ namespace Notung.Threading
 #endif
   }
 
-  /// <summary>
-  /// Представление индикатора прогресса
-  /// </summary>
   public interface IOperationLauncherView : ISynchronizeProvider
   {
-    /// <summary>
-    /// Показывает индикатор прогресса и ждёт завершения задачи
-    /// </summary>
-    /// <param name="task">Задача, которую требуется выполнить</param>
-    /// <param name="parameters">Настройки отображения задачи</param>
     void ShowProgressDialog(LengthyOperation task, LaunchParameters parameters);
   }
 

@@ -1,6 +1,4 @@
-﻿#if DOMAIN_TASK
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.IO;
@@ -34,9 +32,9 @@ namespace Notung.Threading
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
     {
       if (runBase is ICancelableRunBase)
-        return m_real_launcher.Run(new CancelableRunBaseCallerWrapper((ICancelableRunBase)runBase, parameters), parameters);
+        return m_real_launcher.Run(new CancelableRunBaseCallerWrapper((ICancelableRunBase)runBase), parameters);
       else
-        return m_real_launcher.Run(new RunBaseCallerWrapper(runBase, parameters), parameters);
+        return m_real_launcher.Run(new RunBaseCallerWrapper(runBase), parameters);
     }
 
 #if !APP_MANAGER
@@ -68,35 +66,20 @@ namespace Notung.Threading
   internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke
   {
     protected readonly IRunBase m_run_base;
-    private readonly byte[] m_image;
 
     private static readonly ISynchronizeInvoke _invoker = new SynchronizeProviderStub().Invoker;
 
-    public RunBaseCallerWrapper(IRunBase runBase, LaunchParameters parameters)
+    public RunBaseCallerWrapper(IRunBase runBase)
     {
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
       m_run_base = runBase;
-
-      if (parameters != null && parameters.Bitmap != null)
-      {
-        using (var ms = new MemoryStream())
-        {
-          parameters.Bitmap.Save(ms, ImageFormat.Png);
-          m_image = ms.ToArray();
-        }
-      }
     }
     
     public bool SupportPercentNotification
     {
       get { return m_run_base.GetType().IsDefined(typeof(PercentNotificationAttribute), false); }
-    }
-
-    public byte[] BitmapBytes
-    {
-      get { return m_image; }
     }
 
     public IProgressIndicator ProgressIndicator { get; set; }
@@ -117,6 +100,7 @@ namespace Notung.Threading
     public virtual void Run()
     {
       m_run_base.ProgressChanged += this.HandleProgressChanged;
+
       try
       {
         m_run_base.Run();
@@ -169,8 +153,7 @@ namespace Notung.Threading
   {
     private CancellationTokenSource m_token_source;
 
-    public CancelableRunBaseCallerWrapper(ICancelableRunBase runBase, LaunchParameters parameters)
-      : base(runBase, parameters) { }
+    public CancelableRunBaseCallerWrapper(ICancelableRunBase runBase) : base(runBase) { }     
 
     public bool CanCancel
     {
@@ -223,13 +206,10 @@ namespace Notung.Threading
       m_caller = caller;
 
       this.SupportsPercentNotification = caller.SupportPercentNotification;
-      this.BitmapBytes = caller.BitmapBytes;
       this.Caption = caller.GetCaption();
     }
 
     public bool SupportsPercentNotification { get; private set; }
-
-    public byte[] BitmapBytes { get; private set; }
 
     public string Caption { get; private set; }
 
@@ -296,5 +276,3 @@ namespace Notung.Threading
     public event EventHandler CanCancelChanged;
   }
 }
-
-#endif
