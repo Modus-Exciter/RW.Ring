@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Notung.Logging;
 
 namespace Notung
 {
@@ -29,6 +30,29 @@ namespace Notung
         return item.GetCustomAttributes(typeof(A), inherit)[0] as A;
 
       return null;
+    }
+
+    /// <summary>
+    /// Настройка нового домена для работы с сервисами приложения. 
+    /// Этот метод необходимо вызывать сразу после создания нового домена
+    /// </summary>
+    /// <param name="newDomain">Новый домен</param>
+    public static void ShareServices(this AppDomain newDomain)
+    {
+      if (newDomain == null)
+        throw new ArgumentNullException("newDomain");
+
+      if (newDomain == AppDomain.CurrentDomain)
+        return;
+
+#if APP_MANAGER
+      AppManager.Share(newDomain);
+#endif
+      LogManager.Share(newDomain);
+      LoggingContext.Share(newDomain);
+#if APPLICATION_INFO
+      ApplicationInfo.Share(newDomain);
+#endif    
     }
 
     /// <summary>

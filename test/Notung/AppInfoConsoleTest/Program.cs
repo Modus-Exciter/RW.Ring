@@ -16,7 +16,7 @@ namespace AppInfoConsoleTest
       CancellationTokenSource src = new CancellationTokenSource();
 
       var domain = AppDomain.CreateDomain("Parallel");
-      AppManager.Share(domain);
+      domain.ShareServices();
 
 #if ANOTHER_DOMAIN
       var wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(

@@ -138,40 +138,15 @@ namespace Notung
       }
     }
 
-    /// <summary>
-    /// Настройка нового домена для работы с сервисами приложения. 
-    /// Этот метод необходимо вызывать сразу после создания нового домена
-    /// </summary>
-    /// <param name="newDomain">Новый домен</param>
-    public static void Share(AppDomain newDomain)
+    internal static void Share(AppDomain newDomain)
     {
-      if (newDomain == null)
-        throw new ArgumentNullException("newDomain");
-
-      if (newDomain == AppDomain.CurrentDomain)
-        return;
-
-      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
       acceptor.AcceptServices(Instance, Configurator, Notificator, OperationLauncher);
-
-      LogManager.Share(newDomain);
-      LoggingContext.Share(newDomain);
-#if APPLICATION_INFO
-      ApplicationInfo.Share(newDomain);
-#endif
     }
 
-    private interface IDomainAcceptor
-    {
-      void AcceptServices(IAppInstance instance, 
-                          IConfigurator configurator, 
-                          INotificator notificator, 
-                          IOperationLauncher operationLauncher);
-    }
-
-    private sealed class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    private sealed class DomainAcceptor : MarshalByRefObject
     {
       public void AcceptServices(IAppInstance instance, 
                                  IConfigurator configurator, 

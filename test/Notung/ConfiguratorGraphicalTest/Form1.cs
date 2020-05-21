@@ -163,7 +163,7 @@ namespace ConfiguratorGraphicalTest
       AppManager.OperationLauncher.SyncWaitingTime = TimeSpan.FromSeconds(0.2);
 #if MULTI_DOMAIN
       var domain = AppDomain.CreateDomain("Parallel");
-      AppManager.Share(domain);
+      domain.ShareServices();
 
       var wrk = (RunWorkMain)domain.CreateInstanceAndUnwrap(
         typeof(Program).Assembly.FullName, typeof(RunWorkMain).FullName);

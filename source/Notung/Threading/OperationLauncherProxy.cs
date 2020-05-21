@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
@@ -248,9 +246,8 @@ namespace Notung.Threading
   {
     private CancellationToken m_token;
 
-    public CancelableRunBaseProxyWrapper(CancelableRunBaseCallerWrapper caller)
-      : base(caller) { }
-
+    public CancelableRunBaseProxyWrapper(CancelableRunBaseCallerWrapper caller) : base(caller) { }
+      
     public override void RaiseCanCancelChanged(EventArgs e)
     {
       this.CanCancelChanged.InvokeSynchronized(this, e);

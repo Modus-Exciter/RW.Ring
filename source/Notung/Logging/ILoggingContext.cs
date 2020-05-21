@@ -51,12 +51,7 @@ namespace Notung.Logging
       }
     }
 
-    private interface IDomainAcceptor
-    {
-      void Accept(GlobalContextData info);
-    }
-
-    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    private class DomainAcceptor : MarshalByRefObject
     {
       public void Accept(GlobalContextData data)
       {
@@ -66,7 +61,7 @@ namespace Notung.Logging
 
     internal static void Share(AppDomain newDomain)
     {
-      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
       acceptor.Accept(_global);

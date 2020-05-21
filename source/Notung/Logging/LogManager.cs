@@ -181,18 +181,13 @@ namespace Notung.Logging
 
     internal static void Share(AppDomain newDomain)
     {
-      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
       acceptor.Accept(_proxy);
     }
 
-    private interface IProcessProxy
-    {
-      void WriteMessage(LoggingEvent data);
-    }
-
-    private class ProcessProxy : MarshalByRefObject, IProcessProxy
+    private class ProcessProxy : MarshalByRefObject
     {
       public void WriteMessage(LoggingEvent data)
       {
@@ -203,20 +198,15 @@ namespace Notung.Logging
       }
     }
 
-    private interface IDomainAcceptor
+    private class DomainAcceptor : MarshalByRefObject
     {
-      void Accept(IProcessProxy proxy);
-    }
-
-    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
-    {
-      public void Accept(IProcessProxy proxy)
+      public void Accept(ProcessProxy proxy)
       {
         _proxy = proxy;
       }
     }
 
-    private static IProcessProxy _proxy = new ProcessProxy();
+    private static ProcessProxy _proxy = new ProcessProxy();
 
     #endregion
 

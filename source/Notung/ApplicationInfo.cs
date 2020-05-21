@@ -196,12 +196,7 @@ namespace Notung
       return m_product_assembly.GetHashCode();
     }
 
-    private interface IDomainAcceptor
-    {
-      void Accept(ApplicationInfo info);
-    }
-
-    private class DomainAcceptor : MarshalByRefObject, IDomainAcceptor
+    private class DomainAcceptor : MarshalByRefObject
     {
       public void Accept(ApplicationInfo info)
       {
@@ -211,7 +206,7 @@ namespace Notung
 
     internal static void Share(AppDomain newDomain)
     {
-      var acceptor = (IDomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
 
       acceptor.Accept(Instance);

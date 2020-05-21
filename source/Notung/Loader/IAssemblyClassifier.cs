@@ -329,16 +329,8 @@ namespace Notung.Loader
 
       AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
 
-#if APP_MANAGER
-      AppManager.Share(ret);
-#else
-      LogManager.Share(ret);
-      LoggingContext.Share(ret);
-#if APPLICATION_INFO
-      ApplicationInfo.Share(ret);
-#endif
+      ret.ShareServices();
 
-#endif
       return ret;
     }
 

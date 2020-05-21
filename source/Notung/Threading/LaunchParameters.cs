@@ -1,10 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.Serialization;
-using Notung.ComponentModel;
-using System.IO;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace Notung.Threading
 {

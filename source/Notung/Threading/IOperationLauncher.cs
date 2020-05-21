@@ -1,7 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.IO;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 
