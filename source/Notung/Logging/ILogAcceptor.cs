@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public interface ILogAcceptor
   {
@@ -20,13 +21,39 @@ namespace Notung.Log
     public FileLogAcceptor(string template)
     {
       m_builder = new LogStringBuilder(template);
-      m_working_path = Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs");
+#if APPLICATION_INFO
+      m_working_path = Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs");         
+#else
+      m_working_path = GetWorkingPath();
+#endif
 
       if (!Directory.Exists(m_working_path))
         Directory.CreateDirectory(m_working_path);
 
       InitializeCounter();
     }
+
+#if !APPLICATION_INFO
+    private string GetWorkingPath()
+    {
+      var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+      var m_assembly = Assembly.GetEntryAssembly() ?? typeof(FileLogAcceptor).Assembly;
+
+      var company = m_assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+
+      if (company != null && !string.IsNullOrWhiteSpace(company.Company))
+        basePath = Path.Combine(basePath, company.Company);
+
+      var product = m_assembly.GetCustomAttribute<AssemblyProductAttribute>();
+
+      if (product != null && !string.IsNullOrWhiteSpace(product.Product))
+        basePath = Path.Combine(basePath, product.Product);
+      else
+        basePath = Path.Combine(basePath, m_assembly.GetName().Name);
+
+      return Path.Combine(basePath, "Logs");
+    }
+#endif
 
     public FileLogAcceptor() : this(LogSettings.Default.MessageTemplate) { }
 

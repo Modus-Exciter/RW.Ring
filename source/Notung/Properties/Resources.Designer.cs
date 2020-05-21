@@ -196,11 +196,56 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Some critical errors leaded to stop. View detail descripton for all messages to explain.
+        /// </summary>
+        internal static string SUMMARY_ERROR {
+            get {
+                return ResourceManager.GetString("SUMMARY_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to These messages contain only information and does not require anithing to do.
+        /// </summary>
+        internal static string SUMMARY_INFO {
+            get {
+                return ResourceManager.GetString("SUMMARY_INFO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read these warnings and fix the problems detected.
+        /// </summary>
+        internal static string SUMMARY_WARNING {
+            get {
+                return ResourceManager.GetString("SUMMARY_WARNING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thread context can be edited only in thread where it was created.
         /// </summary>
         internal static string THREAD_CONTEXT_MISMATCH {
             get {
                 return ResourceManager.GetString("THREAD_CONTEXT_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This plugin was not loaded correctly. It cannot be unloaded.
+        /// </summary>
+        internal static string UNLOAD_PLUGIN_NO_CONTAINER {
+            get {
+                return ResourceManager.GetString("UNLOAD_PLUGIN_NO_CONTAINER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to unload plugin from the current appliation domain.
+        /// </summary>
+        internal static string UNLOADING_PLUGIN_CURRENT_DOMAIN {
+            get {
+                return ResourceManager.GetString("UNLOADING_PLUGIN_CURRENT_DOMAIN", resourceCulture);
             }
         }
         

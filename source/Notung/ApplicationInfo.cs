@@ -1,11 +1,13 @@
-﻿using System;
-using Process = System.Diagnostics.Process;
+﻿#if APPLICATION_INFO
+
+using System;
 using System.IO;
 using System.Reflection;
-using Notung.ComponentModel;
+using Process = System.Diagnostics.Process;
 
 namespace Notung
 {
+  [Serializable]
   public sealed class ApplicationInfo
   {
     private readonly Assembly m_product_assembly;
@@ -15,6 +17,8 @@ namespace Notung
     private string m_description;
     private Version m_version;
     private Version m_file_version;
+
+    [NonSerialized]
     private Process m_current_process;
 
     private static ApplicationInfo _instance;
@@ -191,5 +195,23 @@ namespace Notung
     {
       return m_product_assembly.GetHashCode();
     }
+
+    private class DomainAcceptor : MarshalByRefObject
+    {
+      public void Accept(ApplicationInfo info)
+      {
+        _instance = info;
+      }
+    }
+
+    internal static void Share(AppDomain newDomain)
+    {
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(Instance);
+    }
   }
 }
+
+#endif

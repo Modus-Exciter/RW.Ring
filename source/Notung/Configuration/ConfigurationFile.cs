@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Threading;
 
 namespace Notung.Configuration

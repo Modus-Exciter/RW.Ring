@@ -88,22 +88,49 @@ namespace Notung.ComponentModel
     }
 
     /// <summary>
+    /// Проверяет, изменилось ли указанное свойство в событии PropertyChanged
+    /// </summary>
+    /// <param name="property">Свойство, которое проверяется</param>
+    /// <returns>True, если свойство изменилось. Иначе, false</returns>
+    public static bool IsChanged(this PropertyChangedEventArgs e, string property)
+    {
+      return string.IsNullOrEmpty(e.PropertyName) || e.PropertyName.Equals(property);
+    }
+
+    /// <summary>
+    /// Получает значение указанного типа от IServiceProvider
+    /// </summary>
+    /// <typeparam name="TService">Тип, который требуется получить</typeparam>
+    /// <returns>Значение указанного типа, если IServiceProvider поддерживает этот тип</returns>
+    public static TService GetService<TService>(this IServiceProvider provider) where TService: class
+    {
+      return provider.GetService(typeof(TService)) as TService;
+    }
+
+    /// <summary>
     /// Выполнение обработчика события в синхронизированном контексте
     /// </summary>
     /// <typeparam name="TArgs">Тип события</typeparam>
     /// <param name="eventHandler">Обработчик события</param>
     /// <param name="sender">Источник события</param>
     /// <param name="args">Событие</param>
+#if APP_MANAGER
     public static void InvokeSynchronized<TArgs>(this Delegate eventHandler, object sender, TArgs args)
-      where TArgs : EventArgs
+#else
+    public static void InvokeSynchronized<TArgs>(this Delegate eventHandler, object sender, TArgs args, ISynchronizeInvoke sync = null)      
+#endif
+    where TArgs : EventArgs
     {
       if (eventHandler == null)
         return;
 
       foreach (var dlgt in eventHandler.GetInvocationList())
       {
+#if APP_MANAGER
         var invoker = (dlgt.Target as ISynchronizeInvoke) ?? AppManager.Instance.Invoker;
-
+#else
+        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? sync;
+#endif
         if (invoker != null && invoker.InvokeRequired)
         {
           invoker.BeginInvoke(dlgt, new object[] { sender, args });

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   partial class LogManager
   {
@@ -28,7 +28,7 @@ namespace Notung.Log
 
       public abstract void WaitUntilStop();
 
-      public abstract void WriteMessage(LoggingEvent data);
+      public abstract void WriteMessage(ref LoggingEvent data);
 
       public abstract void Stop();
     }
@@ -44,7 +44,7 @@ namespace Notung.Log
         this.Stop();
       }
 
-      public override void WriteMessage(LoggingEvent data)
+      public override void WriteMessage(ref LoggingEvent data)
       {
         if (m_stop)
           return;
@@ -123,7 +123,7 @@ namespace Notung.Log
 
       private void Watch(object state)
       {
-        if (!m_info.MainThread.IsAlive)
+        if (!m_info.IsAlive)
           this.Stop();
       }
 
@@ -159,7 +159,7 @@ namespace Notung.Log
         acceptor.WriteLog(new LoggingData(m_current_data, m_size));
       }
 
-      public override void WriteMessage(LoggingEvent data)
+      public override void WriteMessage(ref LoggingEvent data)
       {
         if (m_shutdown)
           return;

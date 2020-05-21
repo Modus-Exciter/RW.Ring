@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung;
-using Notung.Log;
+using Notung.Logging;
 
 namespace NotungTest
 {

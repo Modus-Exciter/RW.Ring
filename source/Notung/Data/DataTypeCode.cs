@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Notung.Threading;
 
-namespace Notung
+namespace Notung.Data
 {
   /// <summary>
   /// Код типа данных для передачи данных между приложениями

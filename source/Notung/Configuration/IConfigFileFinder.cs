@@ -44,7 +44,11 @@ namespace Notung.Configuration
 
   public sealed class ProductVersionConfigFileFinder : IConfigFileFinder
   {
+#if APPLICATION_INFO
     private readonly ApplicationInfo m_application;
+#else
+    private readonly Assembly m_assembly;
+#endif
     private readonly string m_working_path;
 
     private readonly string m_file_name;
@@ -60,7 +64,14 @@ namespace Notung.Configuration
         throw new ArgumentException(Resources.WRONG_FILE_SYMBOLS);
 
       m_file_name = fileName;
+#if APPLICATION_INFO
       m_application = new ApplicationInfo(productAssembly);
+#else
+      if (productAssembly == null)
+        throw new ArgumentNullException("productAssembly");
+
+      m_assembly = productAssembly;
+#endif
       m_working_path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
     }
 
@@ -69,6 +80,8 @@ namespace Notung.Configuration
 
     private string GetPath(string basePath, bool version = true)
     {
+#if APPLICATION_INFO
+
       if (!string.IsNullOrWhiteSpace(m_application.Company))
         basePath = Path.Combine(basePath, m_application.Company);
 
@@ -77,6 +90,23 @@ namespace Notung.Configuration
       if (version)
         basePath = Path.Combine(basePath, m_application.Version.ToString());
 
+#else
+      var company = m_assembly.GetCustomAttribute<AssemblyCompanyAttribute>();
+
+      if (company != null && !string.IsNullOrWhiteSpace(company.Company))
+        basePath = Path.Combine(basePath, company.Company);
+
+      var product = m_assembly.GetCustomAttribute<AssemblyProductAttribute>();
+
+      if (product != null && !string.IsNullOrWhiteSpace(product.Product))
+        basePath = Path.Combine(basePath, product.Product);
+      else
+        basePath = Path.Combine(basePath, m_assembly.GetName().Name);
+
+      if (version)
+        basePath = Path.Combine(basePath, m_assembly.GetName().Version.ToString());
+
+#endif
       return basePath;
     }
 
@@ -88,7 +118,11 @@ namespace Notung.Configuration
         Version v;
 
         if (Version.TryParse(Path.GetFileName(directory), out v)
+#if APPLICATION_INFO
           && v <= m_application.Version
+#else
+          && v <= m_assembly.GetName().Version
+#endif
           && File.Exists(Path.Combine(directory, m_file_name)))
         {
           if (versions == null)

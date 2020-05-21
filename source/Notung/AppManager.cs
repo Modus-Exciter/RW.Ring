@@ -1,7 +1,10 @@
-﻿using System;
+﻿#if APP_MANAGER
+
+using System;
+using System.Reflection;
 using Notung.Configuration;
 using Notung.Loader;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Threading;
 
 namespace Notung
@@ -15,7 +18,7 @@ namespace Notung
     private static IAppInstance _app_instance;
     private static IAssemblyClassifier _asm_classifier;
     private static INotificator _notificator;
-    private static ITaskManager _task_manager;
+    private static IOperationLauncher _operation_launcher;
 
     private static readonly object _lock = new object();
 
@@ -44,7 +47,8 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _configurator = value;
+        lock (_lock) 
+          _configurator = value;
       }
     }
 
@@ -62,7 +66,8 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _app_instance = value;
+        lock (_lock) 
+          _app_instance = value;
       }
     }
 
@@ -71,10 +76,7 @@ namespace Notung
     /// </summary>
     public static IAssemblyClassifier AssemblyClassifier
     {
-      get
-      {
-        return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier());
-      }
+      get { return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier()); }
       set
       {
         if (value == null)
@@ -82,7 +84,12 @@ namespace Notung
 
         lock (_lock)
         {
-          _asm_classifier.Dispose();
+          if (ReferenceEquals(_asm_classifier, value))
+            return;
+
+          if (_asm_classifier != null)
+            _asm_classifier.Dispose();
+
           _asm_classifier = value;
         }
       }
@@ -104,7 +111,12 @@ namespace Notung
 
         lock (_lock)
         {
-          _notificator.Dispose();
+          if (ReferenceEquals(_notificator, value))
+            return;
+
+          if (_notificator != null)
+            _notificator.Dispose();
+
           _notificator = value;
         }
       }
@@ -113,19 +125,41 @@ namespace Notung
     /// <summary>
     /// Управление задачами с индикатором прогресса
     /// </summary>
-    public static ITaskManager TaskManager
+    public static IOperationLauncher OperationLauncher
     {
-      get
-      {
-        return _task_manager ?? InitService(ref _task_manager, () => new TaskManager());
-      }
+      get { return _operation_launcher ?? InitService(ref _operation_launcher, () => new OperationLauncher()); }
+
       set
       {
         if (value == null)
           throw new ArgumentNullException();
 
-        _task_manager = value;
+        _operation_launcher = value;
+      }
+    }
+
+    internal static void Share(AppDomain newDomain)
+    {
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.AcceptServices(Instance, Configurator, Notificator, OperationLauncher);
+    }
+
+    private sealed class DomainAcceptor : MarshalByRefObject
+    {
+      public void AcceptServices(IAppInstance instance, 
+                                 IConfigurator configurator, 
+                                 INotificator notificator,
+                                 IOperationLauncher operationLauncher)
+      {
+        _notificator = notificator;
+        _app_instance = instance;
+        _configurator = configurator;
+        _operation_launcher = new OperationLauncherProxy(operationLauncher);
       }
     }
   }
 }
+
+#endif

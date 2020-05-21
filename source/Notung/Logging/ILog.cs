@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   public interface ILog
   {
@@ -60,6 +61,7 @@ namespace Notung.Log
   /// Смысл этой структуры - запомнить всё, что требуется писать в лог 
   /// (к стандартному комплекту Info добавляется источник и дата события)
   /// </summary>
+  [Serializable]
   public struct LoggingEvent
   {
     private static readonly LogStringBuilder _builder = new LogStringBuilder("[{Date}][{Level}][{Source}]\n{Message}");
@@ -80,16 +82,23 @@ namespace Notung.Log
 
       m_thread_context = LoggingContext.Thread;
     }
+
+    [OnSerializing]
+    private void OnSerializing(StreamingContext context)
+    {
+      if (this.Data != null && !this.Data.GetType().IsDefined(typeof(SerializableAttribute), false))
+        this.Data = this.Data.ToString();
+    }
     
     public readonly string Message;
 
     public readonly InfoLevel Level;
 
-    public readonly object Data;
-
     public readonly DateTime LoggingDate;
 
     public readonly string Source;
+
+    public object Data { get; private set; }
 
     private readonly IThreadLoggingContext m_thread_context;
 

@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Notung.Data;
-using Notung.Log;
+using Notung.Logging;
+using Notung.Threading;
 
 namespace Notung.Helm
 {
-  public class MainFormAppInstanceView : IAppInstanceView
+  public class MainFormAppInstanceView : IAppInstanceView, IOperationLauncherView, INotificatorView
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
     private readonly Form m_main_form;
-    private static readonly uint _args_code = 1;
 
     static MainFormAppInstanceView()
     {
-      DataTypeCode.Set(1, "Command line arguments");
+      DataTypeCode.Set(StringArgsMessageCode, "Command line arguments");
     }
 
     public MainFormAppInstanceView(Form mainForm)
@@ -48,10 +49,7 @@ namespace Notung.Helm
       }
     }
 
-    public static uint StringArgsMessageCode
-    {
-      get { return _args_code; }
-    }
+    public static readonly DataTypeCode StringArgsMessageCode = 1;
 
     public static TimeSpan SendMessageTimeout = TimeSpan.FromMilliseconds(0x100);
 
@@ -59,7 +57,7 @@ namespace Notung.Helm
     {
       var text_to_send = string.Join("\n", args);
 
-      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), (DataTypeCode)StringArgsMessageCode);
+      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
 
       if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
       {
@@ -75,11 +73,47 @@ namespace Notung.Helm
       System.Windows.Forms.Application.Restart();
     }
 
+    public virtual void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
+    {
+      using (var dlg = new ProgressIndicatorDialog(operation, parameters))
+      {
+        dlg.ShowDialog(m_main_form);
+      }
+    }
+
+    public virtual bool? Alert(Info info, ConfirmationRegime confirm)
+    {
+      if (confirm == ConfirmationRegime.None)
+        MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OK, GetIconForLevel(info.Level, false));
+      else if (confirm == ConfirmationRegime.Confirm)
+        return MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OKCancel,
+          GetIconForLevel(info.Level, true)) == DialogResult.OK;
+      else
+      {
+        var res = MessageBox.Show(info.Message, m_main_form.Text,
+          MessageBoxButtons.YesNoCancel, GetIconForLevel(info.Level, true));
+
+        if (res == DialogResult.Yes)
+          return true;
+        else if (res == DialogResult.No)
+          return false;
+      }
+
+      return null;
+    }
+
+    public virtual bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
+    {
+      return this.Alert(new Info(summary + Environment.NewLine
+        + string.Join(Environment.NewLine, buffer.Select(i => i.Message)),
+        summaryLevel), confirm);
+    }
+
     public static string[] GetStringArgs(Message message)
     {
       if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
-        var cd = new CopyData(message.LParam, (DataTypeCode)StringArgsMessageCode);
+        var cd = new CopyData(message.LParam, StringArgsMessageCode);
 
         _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
         if (cd.Data != null)
@@ -87,6 +121,25 @@ namespace Notung.Helm
       }
 
       return ArrayExtensions.Empty<string>();
+    }
+
+    protected MessageBoxIcon GetIconForLevel(InfoLevel level, bool confirm)
+    {
+      switch (level)
+      {
+        case InfoLevel.Debug:
+          return MessageBoxIcon.None;
+        case InfoLevel.Info:
+          return confirm ? MessageBoxIcon.Information : MessageBoxIcon.Question;
+        case InfoLevel.Warning:
+          return MessageBoxIcon.Warning;
+        case InfoLevel.Error:
+          return MessageBoxIcon.Error;
+        case InfoLevel.Fatal:
+          return MessageBoxIcon.Stop;
+        default:
+          return MessageBoxIcon.None;
+      }
     }
   }
 }

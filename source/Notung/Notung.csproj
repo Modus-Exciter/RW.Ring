@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -37,6 +37,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -44,19 +45,19 @@
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
     <Compile Include="Data\ArrayExtensions.cs" />
-    <Compile Include="DataTypeCode.cs" />
+    <Compile Include="Data\DataTypeCode.cs" />
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
     <Compile Include="INotificator.cs" />
     <Compile Include="Loader\IAssemblyClassifier.cs" />
     <Compile Include="Loader\IFactory.cs" />
-    <Compile Include="Loader\ILibraryInitializer.cs" />
+    <Compile Include="Loader\LibraryInitializer.cs" />
     <Compile Include="Loader\PluginInfo.cs" />
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Logging\LogStringBuilder.cs" />
-    <Compile Include="LogSettings.cs" />
+    <Compile Include="Logging\LogSettings.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="Threading\IOperationWrapper.cs" />
     <Compile Include="ComponentModel\CustomTypeDescriptionProvider.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Logging\ILogAcceptor.cs" />
     <Compile Include="Logging\IMainThreadInfo.cs" />
     <Compile Include="Logging\LogStreamWriter.cs" />
-    <Compile Include="LogSettings.Designer.cs">
+    <Compile Include="Logging\LogSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>LogSettings.settings</DependentUpon>
@@ -91,10 +92,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SerializeCondition.cs" />
+    <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
+    <Compile Include="Threading\LengthyOperation.cs" />
+    <Compile Include="Threading\OperationLauncherProxy.cs" />
+    <Compile Include="Threading\IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
-    <Compile Include="Threading\ITaskManager.cs" />
+    <Compile Include="Threading\IOperationLauncher.cs" />
+    <Compile Include="Threading\LaunchParameters.cs" />
     <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
   </ItemGroup>
@@ -112,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="LogSettings.settings">
+    <None Include="Logging\LogSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>LogSettings.Designer.cs</LastGenOutput>
     </None>

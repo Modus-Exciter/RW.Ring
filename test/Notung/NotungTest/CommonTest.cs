@@ -5,6 +5,9 @@ using Notung.Data;
 using Notung.Loader;
 using System.Collections.Generic;
 using System.Reflection;
+using System;
+using Notung.Threading;
+using System.Threading;
 
 namespace NotungTest
 {
@@ -63,6 +66,33 @@ namespace NotungTest
     {
       var factory = new DeferredFactory<IComponent>("System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "System.Windows.Forms.Form");
       Assert.IsTrue(factory.Create() is Component);
+    }
+
+    [TestMethod]
+    public void DelegateCreation()
+    {
+      var line = typeof(DelegateTester).CreateDelegate<Action<string>>("SetMessage");
+      line("Static call");
+      Assert.AreEqual("Static call", DelegateTester.Message);
+
+      Info inf = new Info("Info mesage", InfoLevel.Info);
+      var tos = inf.CreateDelegate<Func<string>>("get_Message");
+      line(tos());
+      Assert.AreEqual("Info mesage", DelegateTester.Message);
+
+      tos = inf.CreateDelegate<Func<string>>("ToString");
+      line(tos());
+      Assert.AreEqual(inf.ToString(), DelegateTester.Message);
+    }
+
+    private class DelegateTester
+    {
+      public static string Message;
+
+      public static void SetMessage(string message)
+      {
+        Message = message;
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using Notung.ComponentModel;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Properties;
 using Notung.Threading;
 
@@ -29,7 +29,7 @@ namespace Notung.Configuration
     string WorkingPath { get; }
   }
 
-  public sealed class DataContractConfigurator : IConfigurator
+  public sealed class DataContractConfigurator : MarshalByRefObject, IConfigurator
   {
     private readonly Dictionary<Type, ConfigurationSection> m_sections = new Dictionary<Type, ConfigurationSection>();
     private readonly Dictionary<string, Type> m_section_names = new Dictionary<string, Type>();

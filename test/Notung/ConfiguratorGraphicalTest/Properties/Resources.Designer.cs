@@ -59,5 +59,12 @@ namespace ConfiguratorGraphicalTest.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap DOS_TRACK {
+            get {
+                object obj = ResourceManager.GetObject("DOS_TRACK", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Notung.Log;
+using Notung.Logging;
 using Notung.Properties;
 
 namespace Notung.Configuration

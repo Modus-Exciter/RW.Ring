@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Notung
+namespace Notung.Data
 {
   /// <summary>
   /// Структура, которая позволяет сериализовывать или не сериализовывать поле 
@@ -33,7 +33,7 @@ namespace Notung
       T value = this.Value;
 
       if (!CanSerialize)
-        info.AddValue("Value", null);
+        info.AddValue("Value", default(T), typeof(T));
       else
         info.AddValue("Value", this.Value);
     }

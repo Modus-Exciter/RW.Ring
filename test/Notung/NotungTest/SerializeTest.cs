@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung;
+using Notung.Data;
 
 namespace NotungTest
 {
@@ -174,5 +175,59 @@ namespace NotungTest
       Assert.IsTrue(info.Details is string);
       Assert.AreEqual("will burn", info.Details);
     }
+
+    [TestMethod]
+    public void DomainsTest()
+    {
+      AppDomain newDomain = AppDomain.CreateDomain("SOME DOMAIN",
+        AppDomain.CurrentDomain.Evidence, AppDomain.CurrentDomain.SetupInformation);
+
+      try
+      {
+        IExchange exc = (IExchange)newDomain.CreateInstanceAndUnwrap(
+          typeof(DomainExchange).Assembly.FullName, typeof(Exchangeer).FullName);
+
+        Assert.AreEqual("SOME DOMAIN", exc.Get().Value);
+        Assert.AreEqual("SOME DOMAIN".Length, exc.Get().Number);
+      }
+      finally
+      {
+        AppDomain.Unload(newDomain);
+      }
+    }
   }
+
+  [Serializable]
+  public struct DomainExchange
+  {
+    private readonly SerializeCondition<object> m_field;
+    public readonly int Number;
+
+    public DomainExchange(object value) : this()
+    {
+      m_field.Value = value;
+
+      if (value != null)
+        Number = value.ToString().Length;
+    }
+
+    public object Value
+    {
+      get { return m_field.Value; }
+    }
+  }
+
+  public interface IExchange
+  {
+    DomainExchange Get();
+  }
+
+  public class Exchangeer : MarshalByRefObject, IExchange
+  {
+    public DomainExchange Get()
+    {
+      return new DomainExchange(AppDomain.CurrentDomain.FriendlyName);
+    }
+  }
+
 }

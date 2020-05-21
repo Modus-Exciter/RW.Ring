@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Notung.Data;
 using Notung.Helm.Properties;
+using System.Diagnostics;
 
 namespace Notung.Helm
 {
@@ -75,8 +76,14 @@ namespace Notung.Helm
       if (!m_can_send)
         throw new InvalidOperationException(Resources.COPY_DATA_SEND_RECIEVE);
 
+#if APPLICATION_INFO
       IntPtr source = ApplicationInfo.Instance.CurrentProcess.MainWindowHandle;
+#else
+      IntPtr source;
 
+      using (var process = Process.GetCurrentProcess())
+        source = process.MainWindowHandle;
+#endif
       fixed (byte* array = m_data)
       {
         var copyData = default(COPYDATASTRUCT);

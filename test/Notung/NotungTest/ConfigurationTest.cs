@@ -116,12 +116,15 @@ namespace NotungTest
       Assert.AreEqual("RW", section.Text);
     }
 
+#if APPLICATION_INFO
     [TestMethod]
     public void AppInfoTest()
     {
       var info = new ApplicationInfo(typeof(AppManager).Assembly);
       Assert.AreEqual("Base application framework for RW.Ring", info.Description);
     }
+#endif
+
     [TestMethod]
     [ExpectedException(typeof(SerializationException))]
     public void DuplicateElementName()

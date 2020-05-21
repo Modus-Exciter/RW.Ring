@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 
-namespace Notung.Log
+namespace Notung.Logging
 {
   /// <summary>
   /// Пока не решил, использовать log4net или свои асинхронные логи, частично дублируем его API
@@ -177,6 +177,39 @@ namespace Notung.Log
 
     #endregion
 
+    #region Sharing log between domains
+
+    internal static void Share(AppDomain newDomain)
+    {
+      var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
+        Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
+
+      acceptor.Accept(_proxy);
+    }
+
+    private class ProcessProxy : MarshalByRefObject
+    {
+      public void WriteMessage(LoggingEvent data)
+      {
+        var process = _process;
+
+        if (process != null)
+          process.WriteMessage(ref data);
+      }
+    }
+
+    private class DomainAcceptor : MarshalByRefObject
+    {
+      public void Accept(ProcessProxy proxy)
+      {
+        _proxy = proxy;
+      }
+    }
+
+    private static ProcessProxy _proxy = new ProcessProxy();
+
+    #endregion
+
     private class Logger : ILog
     {
       private readonly string m_source;
@@ -193,10 +226,7 @@ namespace Notung.Log
 
       public void WriteLog(string message, InfoLevel level, object data)
       {
-        var process = _process;
-
-        if (process != null)
-          process.WriteMessage(new LoggingEvent(m_source, message, level, data));
+        _proxy.WriteMessage(new LoggingEvent(m_source, message, level, data));
       }
     }
   }

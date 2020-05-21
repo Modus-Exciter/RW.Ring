@@ -43,6 +43,7 @@
       this.button1 = new System.Windows.Forms.Button();
       this.buttonDLL = new System.Windows.Forms.Button();
       this.buttonOpenFolder = new System.Windows.Forms.Button();
+      this.buttonWork = new System.Windows.Forms.Button();
       this.tableLayoutPanel1.SuspendLayout();
       this.flowLayoutPanel1.SuspendLayout();
       this.SuspendLayout();
@@ -71,7 +72,7 @@
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(597, 502);
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(593, 498);
       this.tableLayoutPanel1.TabIndex = 0;
       // 
       // innerDefault
@@ -81,7 +82,7 @@
       this.innerDefault.Location = new System.Drawing.Point(3, 3);
       this.innerDefault.Name = "innerDefault";
       this.innerDefault.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerDefault.Size = new System.Drawing.Size(292, 94);
+      this.innerDefault.Size = new System.Drawing.Size(290, 93);
       this.innerDefault.TabIndex = 0;
       this.innerDefault.ToolbarVisible = false;
       // 
@@ -89,10 +90,10 @@
       // 
       this.innerContract.Dock = System.Windows.Forms.DockStyle.Fill;
       this.innerContract.HelpVisible = false;
-      this.innerContract.Location = new System.Drawing.Point(3, 103);
+      this.innerContract.Location = new System.Drawing.Point(3, 102);
       this.innerContract.Name = "innerContract";
       this.innerContract.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerContract.Size = new System.Drawing.Size(292, 94);
+      this.innerContract.Size = new System.Drawing.Size(290, 93);
       this.innerContract.TabIndex = 1;
       this.innerContract.ToolbarVisible = false;
       // 
@@ -100,10 +101,10 @@
       // 
       this.innerContractName.Dock = System.Windows.Forms.DockStyle.Fill;
       this.innerContractName.HelpVisible = false;
-      this.innerContractName.Location = new System.Drawing.Point(3, 203);
+      this.innerContractName.Location = new System.Drawing.Point(3, 201);
       this.innerContractName.Name = "innerContractName";
       this.innerContractName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerContractName.Size = new System.Drawing.Size(292, 94);
+      this.innerContractName.Size = new System.Drawing.Size(290, 93);
       this.innerContractName.TabIndex = 2;
       this.innerContractName.ToolbarVisible = false;
       // 
@@ -111,10 +112,10 @@
       // 
       this.innerXml.Dock = System.Windows.Forms.DockStyle.Fill;
       this.innerXml.HelpVisible = false;
-      this.innerXml.Location = new System.Drawing.Point(3, 303);
+      this.innerXml.Location = new System.Drawing.Point(3, 300);
       this.innerXml.Name = "innerXml";
       this.innerXml.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerXml.Size = new System.Drawing.Size(292, 94);
+      this.innerXml.Size = new System.Drawing.Size(290, 93);
       this.innerXml.TabIndex = 3;
       this.innerXml.ToolbarVisible = false;
       // 
@@ -122,10 +123,10 @@
       // 
       this.innerXmlName.Dock = System.Windows.Forms.DockStyle.Fill;
       this.innerXmlName.HelpVisible = false;
-      this.innerXmlName.Location = new System.Drawing.Point(3, 403);
+      this.innerXmlName.Location = new System.Drawing.Point(3, 399);
       this.innerXmlName.Name = "innerXmlName";
       this.innerXmlName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerXmlName.Size = new System.Drawing.Size(292, 96);
+      this.innerXmlName.Size = new System.Drawing.Size(290, 96);
       this.innerXmlName.TabIndex = 4;
       this.innerXmlName.ToolbarVisible = false;
       // 
@@ -133,10 +134,10 @@
       // 
       this.outerDefault.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outerDefault.HelpVisible = false;
-      this.outerDefault.Location = new System.Drawing.Point(301, 3);
+      this.outerDefault.Location = new System.Drawing.Point(299, 3);
       this.outerDefault.Name = "outerDefault";
       this.outerDefault.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerDefault.Size = new System.Drawing.Size(293, 94);
+      this.outerDefault.Size = new System.Drawing.Size(291, 93);
       this.outerDefault.TabIndex = 5;
       this.outerDefault.ToolbarVisible = false;
       // 
@@ -144,10 +145,10 @@
       // 
       this.outerContract.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outerContract.HelpVisible = false;
-      this.outerContract.Location = new System.Drawing.Point(301, 103);
+      this.outerContract.Location = new System.Drawing.Point(299, 102);
       this.outerContract.Name = "outerContract";
       this.outerContract.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerContract.Size = new System.Drawing.Size(293, 94);
+      this.outerContract.Size = new System.Drawing.Size(291, 93);
       this.outerContract.TabIndex = 6;
       this.outerContract.ToolbarVisible = false;
       // 
@@ -155,10 +156,10 @@
       // 
       this.outerContractName.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outerContractName.HelpVisible = false;
-      this.outerContractName.Location = new System.Drawing.Point(301, 203);
+      this.outerContractName.Location = new System.Drawing.Point(299, 201);
       this.outerContractName.Name = "outerContractName";
       this.outerContractName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerContractName.Size = new System.Drawing.Size(293, 94);
+      this.outerContractName.Size = new System.Drawing.Size(291, 93);
       this.outerContractName.TabIndex = 7;
       this.outerContractName.ToolbarVisible = false;
       // 
@@ -166,10 +167,10 @@
       // 
       this.outerXml.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outerXml.HelpVisible = false;
-      this.outerXml.Location = new System.Drawing.Point(301, 303);
+      this.outerXml.Location = new System.Drawing.Point(299, 300);
       this.outerXml.Name = "outerXml";
       this.outerXml.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerXml.Size = new System.Drawing.Size(293, 94);
+      this.outerXml.Size = new System.Drawing.Size(291, 93);
       this.outerXml.TabIndex = 8;
       this.outerXml.ToolbarVisible = false;
       // 
@@ -177,10 +178,10 @@
       // 
       this.outerXmlName.Dock = System.Windows.Forms.DockStyle.Fill;
       this.outerXmlName.HelpVisible = false;
-      this.outerXmlName.Location = new System.Drawing.Point(301, 403);
+      this.outerXmlName.Location = new System.Drawing.Point(299, 399);
       this.outerXmlName.Name = "outerXmlName";
       this.outerXmlName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerXmlName.Size = new System.Drawing.Size(293, 96);
+      this.outerXmlName.Size = new System.Drawing.Size(291, 96);
       this.outerXmlName.TabIndex = 9;
       this.outerXmlName.ToolbarVisible = false;
       // 
@@ -189,10 +190,11 @@
       this.flowLayoutPanel1.Controls.Add(this.button1);
       this.flowLayoutPanel1.Controls.Add(this.buttonDLL);
       this.flowLayoutPanel1.Controls.Add(this.buttonOpenFolder);
+      this.flowLayoutPanel1.Controls.Add(this.buttonWork);
       this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 502);
+      this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 498);
       this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-      this.flowLayoutPanel1.Size = new System.Drawing.Size(597, 58);
+      this.flowLayoutPanel1.Size = new System.Drawing.Size(593, 58);
       this.flowLayoutPanel1.TabIndex = 1;
       // 
       // button1
@@ -225,11 +227,21 @@
       this.buttonOpenFolder.UseVisualStyleBackColor = true;
       this.buttonOpenFolder.Click += new System.EventHandler(this.buttonOpenFolder_Click);
       // 
+      // buttonWork
+      // 
+      this.buttonWork.Location = new System.Drawing.Point(246, 3);
+      this.buttonWork.Name = "buttonWork";
+      this.buttonWork.Size = new System.Drawing.Size(75, 23);
+      this.buttonWork.TabIndex = 3;
+      this.buttonWork.Text = "Background work";
+      this.buttonWork.UseVisualStyleBackColor = true;
+      this.buttonWork.Click += new System.EventHandler(this.button2_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(597, 560);
+      this.ClientSize = new System.Drawing.Size(593, 556);
       this.Controls.Add(this.tableLayoutPanel1);
       this.Controls.Add(this.flowLayoutPanel1);
       this.Name = "Form1";
@@ -257,6 +269,7 @@
     private System.Windows.Forms.Button button1;
     private System.Windows.Forms.Button buttonDLL;
     private System.Windows.Forms.Button buttonOpenFolder;
+    private System.Windows.Forms.Button buttonWork;
   }
 }
 
