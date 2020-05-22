@@ -13,34 +13,48 @@ namespace Notung.Loader
   }
 
   /// <summary>
-  /// Фабрика, создающая объект указанного типа вызовом конструктора без параметров
+  /// Набор типовых фабрик для отложенной загрузки
   /// </summary>
-  /// <typeparam name="TContract">Требуемый тип данных</typeparam>
-  /// <typeparam name="TService">Тип объекта, реально порождаемый фабрикой</typeparam>
-  public sealed class DefaultFactory<TContract, TService> : IFactory<TContract>
-    where TContract : class
-    where TService : TContract, new()
+  public static class Factory
   {
-    public static readonly IFactory<TContract> Instance = new DefaultFactory<TContract, TService>();
-
-    private DefaultFactory() { }
-
-    public TContract Create()
+    /// <summary>
+    /// Фабрика, создающая объект указанного типа вызовом конструктора без параметров
+    /// </summary>
+    /// <typeparam name="TContract">Требуемый тип данных</typeparam>
+    /// <typeparam name="TService">Тип объекта, реально порождаемый фабрикой</typeparam>
+    public static IFactory<TContract> Default<TContract, TService>()
+      where TContract : class
+      where TService : TContract, new()
     {
-      return new TService();
+      return DefaultFactory<TContract, TService>.Instance;
     }
-  }
 
-  /// <summary>
-  /// Фабрика, которая всегда возвращает null
-  /// </summary>
-  public sealed class EmptyFactory<T> : IFactory<T> where T : class
-  {
-    public static readonly IFactory<T> Instance = new EmptyFactory<T>();
+    /// <summary>
+    /// Фабрика, которая всегда возвращает null
+    /// </summary>
+    public static IFactory<T> Empty<T>() where T : class
+    {
+      return EmptyFactory<T>.Instance;
+    }
 
-    private EmptyFactory() { }
-    
-    public T Create() { return null; }
+    private sealed class DefaultFactory<TContract, TService> : IFactory<TContract>
+      where TContract : class
+      where TService : TContract, new()
+    {
+      public static readonly IFactory<TContract> Instance = new DefaultFactory<TContract, TService>();
+
+      public TContract Create()
+      {
+        return new TService();
+      }
+    }
+
+    private sealed class EmptyFactory<T> : IFactory<T> where T : class
+    {
+      public static readonly IFactory<T> Instance = new EmptyFactory<T>();
+
+      public T Create() { return null; }
+    }
   }
 
   /// <summary>

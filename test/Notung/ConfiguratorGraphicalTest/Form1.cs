@@ -128,7 +128,7 @@ namespace ConfiguratorGraphicalTest
 
       if (msg.Msg == WinAPIHelper.WM_COPYDATA)
       {
-        string[] fileNames = MainFormAppInstanceView.GetStringArgs(msg);
+        string[] fileNames = MainFormView.GetStringArgs(msg);
         this.Text = string.Join(" ", fileNames);
         msg.Result = new System.IntPtr(1);
       }
@@ -148,6 +148,8 @@ namespace ConfiguratorGraphicalTest
           }
         }
       }
+
+      throw new ArgumentNullException("LALA");
     }
 
     private void buttonOpenFolder_Click(object sender, System.EventArgs e)

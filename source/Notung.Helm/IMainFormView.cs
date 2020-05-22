@@ -12,24 +12,35 @@ using Notung.Threading;
 
 namespace Notung.Helm
 {
-  public class MainFormAppInstanceView : IAppInstanceView, IOperationLauncherView, INotificatorView
+  public interface IMainFormView : IAppInstanceView, IOperationLauncherView, INotificatorView
   {
-    private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormAppInstanceView));
+    Form MainForm { get; }
+
+    ISplashScreenView GetSplashScreenView();
+
+    bool ShowSettingsForm(InfoBuffer infoBuffer);
+
+    void ShowErrorBox(string title, string content);
+  }
+
+  public class MainFormView : IMainFormView
+  {
+    private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormView));
     private readonly Form m_main_form;
 
-    static MainFormAppInstanceView()
+    static MainFormView()
     {
       DataTypeCode.Set(StringArgsMessageCode, "Command line arguments");
     }
 
-    public MainFormAppInstanceView(Form mainForm)
+    public MainFormView(Form mainForm)
     {
       if (mainForm == null)
         throw new ArgumentNullException("mainForm");
 
       m_main_form = mainForm;
     }
-    
+
     public ISynchronizeInvoke Invoker
     {
       get { return m_main_form; }
@@ -52,6 +63,26 @@ namespace Notung.Helm
     public static readonly DataTypeCode StringArgsMessageCode = 1;
 
     public static TimeSpan SendMessageTimeout = TimeSpan.FromMilliseconds(0x100);
+
+    public Form MainForm
+    {
+      get { return m_main_form; }
+    }
+
+    public virtual ISplashScreenView GetSplashScreenView()
+    {
+      return new SplashScreenDialog();
+    }
+
+    public virtual bool ShowSettingsForm(InfoBuffer infoBuffer)
+    {
+      return true;
+    }
+
+    public virtual void ShowErrorBox(string title, string content)
+    {
+      MessageBox.Show(content, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
 
     public bool SendArgsToProcess(Process previous, IList<string> args)
     {

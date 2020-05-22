@@ -1,9 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Notung.Helm.Properties;
 using Notung.Threading;
 
 namespace Notung.Helm
@@ -15,7 +11,9 @@ namespace Notung.Helm
     public ProgressIndicatorDialog(LengthyOperation work, LaunchParameters parameters)
     {
       m_presenter = new ProgressIndicatorPresenter(work, parameters, this);
+
       InitializeComponent();
+
       m_presenter.Initialize();
     }
 
@@ -74,10 +72,10 @@ namespace Notung.Helm
       set { m_picture.Image = value; }
     }
 
-    bool IProcessIndicatorView.SupportPercent
+    bool IProcessIndicatorView.IsMarquee
     {
-      get { return m_progress_bar.Style != ProgressBarStyle.Marquee; }
-      set { m_progress_bar.Style = value ? ProgressBarStyle.Continuous : ProgressBarStyle.Marquee; }
+      get { return m_progress_bar.Style == ProgressBarStyle.Marquee; }
+      set { m_progress_bar.Style = value ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous; }
     }
 
     int IProcessIndicatorView.ProgressValue

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -46,7 +46,7 @@
     <Compile Include="ApplicationStarter.cs" />
     <Compile Include="Atom.cs" />
     <Compile Include="CopyData.cs" />
-    <Compile Include="MainFormAppInstanceView.cs" />
+    <Compile Include="IMainFormView.cs" />
     <Compile Include="NativeDll.cs" />
     <Compile Include="ProgressIndicatorPresenter.cs" />
     <Compile Include="ProgressIndicatorDialog.cs">
@@ -67,6 +67,7 @@
     <Compile Include="SplashScreenDialog.Designer.cs">
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="SplashScreenPresenter.cs" />
     <Compile Include="WinAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>

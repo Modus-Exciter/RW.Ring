@@ -139,4 +139,16 @@
   <data name="INIT_FAIL_DESCRIPTION" xml:space="preserve">
     <value>Failed to init Application instance. Would You like to check settings?</value>
   </data>
+  <data name="EXCEPTION_CALLSTACK" xml:space="preserve">
+    <value>Call stack</value>
+  </data>
+  <data name="EXCEPTION_MESSAGE" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="EXCEPTION_SOURCE" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="EXCEPTION_TYPE" xml:space="preserve">
+    <value>Type</value>
+  </data>
 </root>

@@ -95,6 +95,42 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Call stack.
+        /// </summary>
+        internal static string EXCEPTION_CALLSTACK {
+            get {
+                return ResourceManager.GetString("EXCEPTION_CALLSTACK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        internal static string EXCEPTION_MESSAGE {
+            get {
+                return ResourceManager.GetString("EXCEPTION_MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string EXCEPTION_SOURCE {
+            get {
+                return ResourceManager.GetString("EXCEPTION_SOURCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string EXCEPTION_TYPE {
+            get {
+                return ResourceManager.GetString("EXCEPTION_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to init Application instance. Would You like to check settings?.
         /// </summary>
         internal static string INIT_FAIL_DESCRIPTION {

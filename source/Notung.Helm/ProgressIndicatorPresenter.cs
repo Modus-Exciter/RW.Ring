@@ -51,7 +51,7 @@ namespace Notung.Helm
       m_view.ButtonEnabled = m_operation.CanCancel;
       m_view.Text = m_launch_parameters.Caption;
       m_view.Image = m_launch_parameters.Bitmap;
-      m_view.SupportPercent = m_launch_parameters.SupportsPercentNotification;
+      m_view.IsMarquee = !m_launch_parameters.SupportsPercentNotification;
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
@@ -77,7 +77,7 @@ namespace Notung.Helm
       
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;
-      m_view.SupportPercent = true;
+      m_view.IsMarquee = false;
 
       if (m_operation.Status != TaskStatus.RanToCompletion)
       {
@@ -118,7 +118,7 @@ namespace Notung.Helm
 
     Image Image { get; set; }
 
-    bool SupportPercent { get; set; }
+    bool IsMarquee { get; set; }
 
     int ProgressValue { get; set; }
 

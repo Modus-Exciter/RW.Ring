@@ -122,7 +122,7 @@ namespace Notung.Loader
   public class DependencyContainer : IServiceProvider
   {
     private readonly Dictionary<Type, Func<object>> m_creators = new Dictionary<Type, Func<object>>();
-    private readonly SharedLock m_lock = new SharedLock();
+    private readonly SharedLock m_lock = new SharedLock(false);
     private volatile bool m_search_descendants = true;
 
     /// <summary>

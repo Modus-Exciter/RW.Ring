@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using System.Windows;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using Notung;
 using Notung.Configuration;
+using Notung.Data;
 using Notung.Helm;
 using Notung.Loader;
-using Notung.Data;
-using Notung;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -25,9 +24,9 @@ namespace ConfiguratorGraphicalTest
 
       ApplicationStarter starter = new ApplicationStarter(
         new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
-        DefaultFactory<ILoadingQueue, TestLoadingQueue>.Instance) { AllowOnlyOneInstance = true };
+        Factory.Default<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
 
-      return starter.Run();
+      return starter.RunApplication();
     }
   }
 
