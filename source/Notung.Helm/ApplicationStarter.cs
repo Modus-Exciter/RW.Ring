@@ -82,10 +82,10 @@ namespace Notung.Helm
     /// <returns>Код возврата приложения</returns>
     public int RunApplication()
     {
-      System.Windows.Forms.Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-      System.Windows.Forms.Application.ThreadException += UIExceptionHandler;
-      System.Windows.Forms.Application.EnableVisualStyles();
-      System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+      Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+      Application.ThreadException += UIExceptionHandler;
+      Application.EnableVisualStyles();
+      Application.SetCompatibleTextRenderingDefault(false);
 
       this.ExcludePrefixes(AppManager.AssemblyClassifier.ExcludePrefixes.Add);
 
