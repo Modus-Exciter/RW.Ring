@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Notung.Data;
@@ -8,13 +7,21 @@ using Notung.Helm.Properties;
 
 namespace Notung.Helm
 {
+  /// <summary>
+  /// Работа с неуправляемыми dll и функциями, экспортированными из них
+  /// </summary>
   public sealed class NativeDll : IDisposable
   {
     private readonly string m_path;
     private HandleRef m_handle;
 
+    [ThreadStatic]
     private static List<string> _strings = null;
 
+    /// <summary>
+    /// Загрузка dll для запуска объявленных в ней функций
+    /// </summary>
+    /// <param name="path">Путь к dll с именем файла</param>
     public NativeDll(string path)
     {
       if (!File.Exists(path))
@@ -27,60 +34,29 @@ namespace Notung.Helm
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Путь к dll, указанный при создании объекта
+    /// </summary>
     public string Path
     {
       get { return m_path; }
     }
 
+    /// <summary>
+    /// Дескриптор загруженной dll
+    /// </summary>
     public IntPtr Handle
     {
       get { return m_handle.Handle; }
     }
 
-    public string[] GetExportList()
-    {
-      IntPtr procId;
-
-      using (var process = Process.GetCurrentProcess())
-        procId = new IntPtr(process.Id);
-
-      SymSetOptions(SymSetOptionsType.SYMOPT_UNDNAME | SymSetOptionsType.SYMOPT_DEFERRED_LOADS);
-
-      if (!SymInitialize(procId, null, true))
-        return null;
-
-      try
-      {
-        if (!SymLoadModule(procId, 0, m_path, null, m_handle.Handle, 0))
-          return null;
-
-        try
-        {
-          IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(LoadSymbolImpl));
-
-          _strings = new List<string>();
-
-          if (!SymEnumerateSymbols(procId, m_handle.Handle, collector, IntPtr.Zero))
-            _strings = null;
-
-          var strings = _strings;
-
-          if (strings != null)
-            return strings.ToArray();
-          else
-            return ArrayExtensions.Empty<string>();
-        }
-        finally
-        {
-          SymUnloadModule(procId, m_handle.Handle);
-        }
-      }
-      finally
-      {
-        SymCleanup(procId);
-      }
-    }
-
+    /// <summary>
+    /// Получение функции, объявленной в dll, для вызова
+    /// </summary>
+    /// <typeparam name="TDelegate">Тип делегата, описывающего сигнатуру требуемой функции</typeparam>
+    /// <param name="function">Имя загружаемой функции</param>
+    /// <returns>Делегат, ссылающийся на загруженную функцию. 
+    /// Если функцию не удалось загрузить, метод возвращает null</returns>
     public TDelegate GetFunction<TDelegate>(string function) where TDelegate : class
     {
       if (m_handle.Handle == IntPtr.Zero)
@@ -94,13 +70,67 @@ namespace Notung.Helm
       return (TDelegate)(object)Marshal.GetDelegateForFunctionPointer(funcPtr, typeof(TDelegate));
     }
 
-    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
+    /// <summary>
+    /// Получение имён функций, экспортированных из dll
+    /// </summary>
+    /// <param name="path">Путь к dll, в которой требуется узнать имена функций</param>
+    /// <returns>Массив имён функций</returns>
+    public static string[] GetExportList(string path)
     {
-      if (_strings != null)
-        _strings.Add(name);
+      IntPtr procId = new IntPtr(ApplicationInfo.Instance.CurrentProcess.Id);
 
-      return true;
+      SymSetOptions(SymSetOptionsType.SYMOPT_UNDNAME | SymSetOptionsType.SYMOPT_DEFERRED_LOADS);
+
+      if (!SymInitialize(procId, null, false))
+        return null;
+
+      try
+      {
+        var module_handle = LoadLibraryExW(path, IntPtr.Zero, LoadLibraryFlags.LOAD_LIBRARY_AS_DATAFILE);
+
+        if (module_handle == IntPtr.Zero)
+          return null;
+
+        try
+        {
+          if (!SymLoadModule(procId, 0, path, null, module_handle, 0))
+            return null;
+
+          try
+          {
+            var dlgt = new LoadSymbolDelegate(LoadSymbolImpl);
+            GC.KeepAlive(dlgt);
+
+            IntPtr collector = Marshal.GetFunctionPointerForDelegate(dlgt);
+
+            _strings = new List<string>();
+
+            if (!SymEnumerateSymbols(procId, module_handle, collector, IntPtr.Zero))
+              _strings = null;
+
+            if (_strings != null)
+              return _strings.ToArray();
+            else
+              return ArrayExtensions.Empty<string>();
+          }
+          finally
+          {
+            _strings = null;
+            SymUnloadModule(procId, module_handle);
+          }
+        }
+        finally
+        {
+          FreeLibrary(new HandleRef(null, module_handle));
+        }
+      }
+      finally
+      {
+        SymCleanup(procId);
+      }
     }
+
+    #region Object destroying ---------------------------------------------------------------------
 
     ~NativeDll()
     {
@@ -124,6 +154,18 @@ namespace Notung.Helm
       }
     }
 
+    #endregion
+
+    #region API Helpers ---------------------------------------------------------------------------
+
+    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
+    {
+      if (_strings != null)
+        _strings.Add(name);
+
+      return true;
+    }
+
     private enum SymSetOptionsType : uint
     {
       SYMOPT_CASE_INSENSITIVE = 0x00000001,
@@ -137,6 +179,23 @@ namespace Notung.Helm
       SYMOPT_DEBUG = 0x80000000
     }
 
+    private enum LoadLibraryFlags : uint
+    {
+      DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+      LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
+      LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+      LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE = 0x00000040,
+      LOAD_LIBRARY_AS_IMAGE_RESOURCE = 0x00000020,
+      LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
+      LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
+      LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR = 0x00000100,
+      LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
+      LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
+      LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008,
+      LOAD_LIBRARY_REQUIRE_SIGNED_TARGET = 0x00000080,
+      LOAD_LIBRARY_SAFE_CURRENT_DIRS = 0x00002000
+    }
+
     private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
 
     [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
@@ -144,6 +203,9 @@ namespace Notung.Helm
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr LoadLibrary(string libname);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    private static extern IntPtr LoadLibraryExW([MarshalAs(UnmanagedType.LPWStr)]string libname, IntPtr handle, LoadLibraryFlags flags);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private static extern bool FreeLibrary(HandleRef hModule);
@@ -165,5 +227,7 @@ namespace Notung.Helm
 
     [DllImport("Imagehlp.dll", CharSet = CharSet.Auto)]
     private static extern SymSetOptionsType SymSetOptions(SymSetOptionsType type);
+
+    #endregion
   }
 }

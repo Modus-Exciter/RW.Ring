@@ -61,6 +61,15 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calling function {0} from {1}.
+        /// </summary>
+        internal static string CALLING_FUNCTION {
+            get {
+                return ResourceManager.GetString("CALLING_FUNCTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string CANCEL {
@@ -91,6 +100,15 @@ namespace Notung.Helm.Properties {
         internal static string DLL_FUNCTIONS_ENUM_FAIL {
             get {
                 return ResourceManager.GetString("DLL_FUNCTIONS_ENUM_FAIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No function in dll selected.
+        /// </summary>
+        internal static string DLL_NO_FUNCTION {
+            get {
+                return ResourceManager.GetString("DLL_NO_FUNCTION", resourceCulture);
             }
         }
         

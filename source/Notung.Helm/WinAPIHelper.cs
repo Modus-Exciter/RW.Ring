@@ -59,208 +59,6 @@ namespace Notung.Helm
 
     #endregion
 
-    #region Load library helper
-
-    /*private class SymbolLoader
-    {
-      private readonly StringCollection m_strings = new StringCollection();
-
-      public StringCollection Strings
-      {
-        get { return m_strings; }
-      }
-
-
-    }*/
-    private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
-    {
-      if (_strings != null)
-        _strings.Add(name);
-
-      return true;
-    }
-
-    private static StringCollection _strings = null;
-
-    private enum SymSetOptionsType : uint
-    {
-      SYMOPT_CASE_INSENSITIVE = 0x00000001,
-      SYMOPT_UNDNAME = 0x00000002,
-      SYMOPT_DEFERRED_LOADS = 0x00000004,
-      SYMOPT_LOAD_LINES = 0x00000010,
-      SYMOPT_OMAP_FIND_NEAREST = 0x00000020,
-      SYMOPT_FAIL_CRITICAL_ERRORS = 0x00000200,
-      SYMOPT_AUTO_PUBLICS = 0x00010000,
-      SYMOPT_NO_IMAGE_SEARCH = 0x00020000,
-      SYMOPT_DEBUG = 0x80000000
-    }
-
-    private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
-    private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, IntPtr context);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern IntPtr LoadLibrary(string libname);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-    private static extern bool FreeLibrary(HandleRef hModule);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
-    private static extern IntPtr GetProcAddress(HandleRef hModule, string lpProcName);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
-    private static extern bool SymInitialize(IntPtr process, string userPath, bool fInvadeProcess);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
-    private static extern bool SymLoadModule(IntPtr process, int file, string fileName, string module, IntPtr lib, int size);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Auto)]
-    private static extern bool SymUnloadModule(IntPtr process, IntPtr lib);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Auto)]
-    private static extern bool SymCleanup(IntPtr process);
-
-    [DllImport("Imagehlp.dll", CharSet = CharSet.Auto)]
-    private static extern SymSetOptionsType SymSetOptions(SymSetOptionsType type);
-
-    /// <summary>
-    /// Возвращает список функций, находящихся в неуправляемой библиотеке
-    /// </summary>
-    /// <param name="fileName">Имя файла DLL</param>
-    /// <returns>Список имён функций</returns>
-    public static StringCollection GetDllExportList(string fileName)
-    {
-      // var loader = new SymbolLoader();
-
-      IntPtr procId = new IntPtr(Process.GetCurrentProcess().Id);
-
-      SymSetOptions(SymSetOptionsType.SYMOPT_UNDNAME | SymSetOptionsType.SYMOPT_DEFERRED_LOADS);
-
-      try
-      {
-        if (!SymInitialize(procId, null, true))
-          return null;
-
-        IntPtr lib = LoadLibrary(fileName);
-
-        if (lib == IntPtr.Zero)
-          return null;
-
-        try
-        {
-          if (!SymLoadModule(procId, 0, fileName, null, lib, 0))
-            return null;
-
-          try
-          {
-            _strings = new StringCollection();
-            IntPtr collector = Marshal.GetFunctionPointerForDelegate(new LoadSymbolDelegate(LoadSymbolImpl));
-
-            if (!SymEnumerateSymbols(procId, lib, collector, IntPtr.Zero))
-            {
-              _strings = null;
-            }
-
-            return _strings;
-          }
-          finally
-          {
-            SymUnloadModule(procId, lib);
-          }
-        }
-        finally
-        {
-          FreeLibrary(new HandleRef(new object(), lib));
-        }
-      }
-      finally
-      {
-        SymCleanup(procId);
-      }
-    }
-
-    /// <summary>
-    /// Вызов неуправляемой функции синхронно
-    /// </summary>
-    /// <param name="fileName">Имя файла DLL</param>
-    /// <param name="function">Имя функции</param>
-    public static void CallExternal(string fileName, string function)
-    {
-      IntPtr lib = LoadLibrary(fileName);
-
-      if (lib == IntPtr.Zero)
-        return;
-
-      object wrapper = new object();
-      try
-      {
-        IntPtr funcPtr = GetProcAddress(new HandleRef(wrapper, lib), function);
-
-        if (funcPtr == IntPtr.Zero)
-          return;
-
-        ((Action)Marshal.GetDelegateForFunctionPointer(funcPtr, typeof(Action)))();
-      }
-      finally
-      {
-        FreeLibrary(new HandleRef(wrapper, lib));
-      }
-    }
-
-    /*
-    /// <summary>
-    /// Вызов неуправляемой функции асинхронно в диалоге служебной задачи
-    /// </summary>
-    /// <param name="work">Задача с настроенными параметрами вызова функции</param>
-    /// <returns>True, если функция вызвана и успешно отработала</returns>
-    public static bool RunExternal(this ExternalCallWork work, IWin32Window owner)
-    {
-      ILog log = LogManager.GetLogger(work.Caption);
-      string fileName = Path.GetFileName(work.FileName);
-
-      IntPtr lib = LoadLibrary(work.FileName);
-
-      if (lib == IntPtr.Zero)
-      {
-        log.Alert(new Info(string.Format(Resources.DLL_LOAD_FAIL, fileName), InfoLevel.Error));
-        return false;
-      }
-
-      object wrapper = new object();
-      try
-      {
-        IntPtr funcPtr = GetProcAddress(new HandleRef(wrapper, lib), work.FunctionName);
-
-        if (funcPtr == IntPtr.Zero)
-        {
-          log.Alert(new Info(string.Format(Resources.FUNCTION_LOAD_FAIL,
-            work.FunctionName, fileName), InfoLevel.Error));
-          return false;
-        }
-
-        work.ExternalAction = (Action)Marshal.GetDelegateForFunctionPointer(funcPtr, typeof(Action));
-
-        string last_dir = Environment.CurrentDirectory;
-        Environment.CurrentDirectory = Path.GetDirectoryName(work.FileName);
-
-        try
-        {
-          return work.RunAsync(owner);
-        }
-        finally
-        {
-          Environment.CurrentDirectory = last_dir;
-        }
-      }
-      finally
-      {
-        FreeLibrary(new HandleRef(wrapper, lib));
-      }
-    }*/
-
-    #endregion
-
     #region Message helper
 
     public const uint WM_COPYDATA = 0x004A;
@@ -310,14 +108,21 @@ namespace Notung.Helm
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern IntPtr SendMessageTimeoutA(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam, uint flags, uint timeout, IntPtr result);
 
+    /// <summary>
+    /// Выводит указанное окно на передний план
+    /// </summary>
+    /// <param name="hWnd">Дескриптор окна, которое требуется вывести на первый план</param>
+    /// <returns>Удалось ли выполнить операцию</returns>
     [DllImport("user32.dll")]
     public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+    /// <summary>
+    /// Проверяет наличие админских прав у пользователя
+    /// </summary>
+    /// <returns>True, если пользователь работает с правами админа. Иначе, false</returns>
     [DllImport("shell32.dll")]
     public static extern bool IsUserAnAdmin();
 
     #endregion
-
-    private static LoadSymbolDelegate LoadSymbol { get; set; }
   }
 }

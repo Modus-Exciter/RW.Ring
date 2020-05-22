@@ -46,6 +46,7 @@
     <Compile Include="ApplicationStarter.cs" />
     <Compile Include="Atom.cs" />
     <Compile Include="CopyData.cs" />
+    <Compile Include="ExternalCallWork.cs" />
     <Compile Include="IMainFormView.cs" />
     <Compile Include="NativeDll.cs" />
     <Compile Include="ProgressIndicatorPresenter.cs" />
@@ -61,6 +62,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Resources\WinAPIHelper.cs" />
     <Compile Include="SplashScreenDialog.cs">
       <SubType>Form</SubType>
     </Compile>

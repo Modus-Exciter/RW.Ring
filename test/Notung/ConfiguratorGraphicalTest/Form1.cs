@@ -142,9 +142,21 @@ namespace ConfiguratorGraphicalTest
 
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
         {
-          using (var dll = new NativeDll(dlg.FileName))
+          var export_list = NativeDll.GetExportList(dlg.FileName);
+
+          if (export_list != null && export_list.Length > 0)
           {
-            this.Text = string.Join(", ", dll.GetExportList());
+            using (var selector = new SelectFunctionDialog(export_list))
+            {
+              if (selector.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+              {
+                using (var dll = new NativeDll(dlg.FileName))
+                {
+                  var work = new ExternalCallWork(dll, selector.SelectedItem);
+                  AppManager.OperationLauncher.Run(work);
+                }
+              }
+            }
           }
         }
       }
