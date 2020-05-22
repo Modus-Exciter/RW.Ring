@@ -72,7 +72,7 @@ namespace Notung.Helm
     public static void ShowSplashScreen(string resource)
     {
       _splash = new SplashScreen(resource);
-      _splash.Show(false);
+      _splash.Show(true);
       _splash_resource = resource;
     }
 
