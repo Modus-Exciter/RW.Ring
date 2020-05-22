@@ -78,6 +78,7 @@
       this.ControlBox = false;
       this.Controls.Add(this.panel1);
       this.Controls.Add(this.m_label_descrition);
+      this.DoubleBuffered = true;
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
       this.Name = "SplashScreenDialog";
       this.ShowIcon = false;
