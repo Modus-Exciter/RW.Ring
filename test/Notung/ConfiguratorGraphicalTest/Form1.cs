@@ -148,8 +148,6 @@ namespace ConfiguratorGraphicalTest
           }
         }
       }
-
-      throw new ArgumentNullException("LALA");
     }
 
     private void buttonOpenFolder_Click(object sender, System.EventArgs e)
