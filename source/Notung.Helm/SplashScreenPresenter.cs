@@ -46,7 +46,7 @@ namespace Notung.Helm
 
         m_view.BackgroundImage = value;
 
-        m_view.Width = value.Width + 2;
+        m_view.Width = value.Width;
         m_view.Height = value.Height + m_view.IndicatorHeight;
 
         m_view.Left = (Screen.PrimaryScreen.Bounds.Width - value.Width) / 2;
