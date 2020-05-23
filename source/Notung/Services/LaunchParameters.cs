@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
 
-namespace Notung.Threading
+namespace Notung.Services
 {
   /// <summary>
   /// Настройки отображения задачи с индикатором прогресса

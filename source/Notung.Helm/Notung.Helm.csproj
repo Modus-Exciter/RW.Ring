@@ -50,16 +50,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationStarter.cs" />
-    <Compile Include="Atom.cs" />
-    <Compile Include="CopyData.cs" />
-    <Compile Include="ExternalCallWork.cs" />
+    <Compile Include="Windows\Atom.cs" />
+    <Compile Include="Windows\CopyData.cs" />
+    <Compile Include="Windows\ExternalCallWork.cs" />
     <Compile Include="IMainFormView.cs" />
-    <Compile Include="NativeDll.cs" />
-    <Compile Include="ProgressIndicatorPresenter.cs" />
-    <Compile Include="ProgressIndicatorDialog.cs">
+    <Compile Include="Windows\NativeDll.cs" />
+    <Compile Include="Dialogs\ProgressIndicatorPresenter.cs" />
+    <Compile Include="Dialogs\ProgressIndicatorDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressIndicatorDialog.Designer.cs">
+    <Compile Include="Dialogs\ProgressIndicatorDialog.Designer.cs">
       <DependentUpon>ProgressIndicatorDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,15 +69,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="Helm.snk" />
-    <None Include="Resources\WinAPIHelper.cs" />
-    <Compile Include="SplashScreenDialog.cs">
+    <Compile Include="Dialogs\SplashScreenDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SplashScreenDialog.Designer.cs">
+    <Compile Include="Dialogs\SplashScreenDialog.Designer.cs">
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="SplashScreenPresenter.cs" />
-    <Compile Include="WinAPIHelper.cs" />
+    <Compile Include="Dialogs\SplashScreenPresenter.cs" />
+    <Compile Include="Windows\WinAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notung\Notung.csproj">
@@ -87,22 +86,23 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ProgressIndicatorDialog.resx">
+    <EmbeddedResource Include="Dialogs\ProgressIndicatorDialog.resx">
       <DependentUpon>ProgressIndicatorDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SplashScreenDialog.resx">
+    <EmbeddedResource Include="Dialogs\SplashScreenDialog.resx">
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\DataSources\Notung.Threading.LaunchParameters.datasource" />
+    <EmbeddedResource Include="Properties\Resources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\defaultsplash.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

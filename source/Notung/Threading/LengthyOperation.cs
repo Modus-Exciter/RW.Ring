@@ -75,7 +75,7 @@ namespace Notung.Threading
 
     public event EventHandler Completed;
 
-    internal void Start()
+    public void Start()
     {
       lock (m_lock)
       {

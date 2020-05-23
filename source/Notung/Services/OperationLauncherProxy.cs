@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
+using Notung.Threading;
 
-namespace Notung.Threading
+namespace Notung.Services
 {
   /// <summary>
   /// Вспомогательный класс для запуска задач из другого домена

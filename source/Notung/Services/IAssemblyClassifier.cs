@@ -9,7 +9,7 @@ using Notung.Data;
 using Notung.Logging;
 using Notung.Properties;
 
-namespace Notung.Loader
+namespace Notung.Services
 {
   /// <summary>
   /// Просмотр и управление сборками, загруженными в приложение

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Notung.Loader;
 using Notung.Threading;
 
-namespace Notung.Helm
+namespace Notung.Helm.Dialogs
 {
   public sealed class SplashScreenPresenter
   {
@@ -60,7 +60,7 @@ namespace Notung.Helm
 
     private void HandleShown(object sender, EventArgs e)
     {
-      WinAPIHelper.SetForegroundWindow(m_view.Handle);
+      m_view.Activate();
     }
 
     private void HandleDoWork(object sender, DoWorkEventArgs e)
@@ -99,8 +99,6 @@ namespace Notung.Helm
   {
     #region Common Windows Form members -----------------------------------------------------------
 
-    IntPtr Handle { get; }
-
     int Left { get; set; }
 
     int Top { get; set; }
@@ -110,6 +108,8 @@ namespace Notung.Helm
     int Height { get; set; }
 
     Image BackgroundImage { get; set; }
+
+    void Activate();
 
     void Close();
 

@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
-namespace Notung.Helm
+namespace Notung.Helm.Dialogs
 {
   public partial class SplashScreenDialog : Form, ISplashScreenView
   {

@@ -10,7 +10,7 @@ using Notung.Data;
 using Notung.Logging;
 using Notung.Threading;
 
-namespace Notung
+namespace Notung.Services
 {
   public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
   {

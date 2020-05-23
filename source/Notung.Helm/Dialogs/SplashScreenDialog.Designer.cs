@@ -1,4 +1,4 @@
-﻿namespace Notung.Helm
+﻿namespace Notung.Helm.Dialogs
 {
   partial class SplashScreenDialog
   {

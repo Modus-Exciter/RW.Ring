@@ -3,8 +3,7 @@
 using System;
 using System.Reflection;
 using Notung.Configuration;
-using Notung.Loader;
-using Notung.Threading;
+using Notung.Services;
 
 namespace Notung
 {

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Notung.Helm
+namespace Notung.Helm.Windows
 {
   /// <summary>
   /// Обёртка над объектом Windows для передачи текстовых

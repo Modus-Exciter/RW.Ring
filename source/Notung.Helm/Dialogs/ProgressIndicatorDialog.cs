@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
+using Notung.Services;
 using Notung.Threading;
 
-namespace Notung.Helm
+namespace Notung.Helm.Dialogs
 {
   public sealed partial class ProgressIndicatorDialog : Form, IProcessIndicatorView
   {
-    private readonly ProgressIndicatorPresenter m_presenter;
-
-    public ProgressIndicatorDialog(LengthyOperation work, LaunchParameters parameters)
+    public ProgressIndicatorDialog()
     {
-      m_presenter = new ProgressIndicatorPresenter(work, parameters, this);
-
       InitializeComponent();
-
-      m_presenter.Initialize();
     }
 
     public static bool? ToNeitralResult(DialogResult resutl)
@@ -37,11 +32,6 @@ namespace Notung.Helm
         return System.Windows.Forms.DialogResult.None;
     }
 
-    private void m_button_Click(object sender, EventArgs e)
-    {
-      m_presenter.ButtonClick();
-    }
-
     bool IProcessIndicatorView.ButtonVisible
     {
       get { return m_button.Visible; }
@@ -54,10 +44,10 @@ namespace Notung.Helm
       set { m_button.Enabled = value; }
     }
 
-    bool? IProcessIndicatorView.ButtonDialogResultOK
+    DialogResult IProcessIndicatorView.ButtonDialogResultOK
     {
-      get { return ToNeitralResult(m_button.DialogResult); }
-      set { m_button.DialogResult = FromNeitralResult(value); }
+      get { return m_button.DialogResult; }
+      set { m_button.DialogResult = value; }
     }
 
     string IProcessIndicatorView.ButtonText
@@ -90,10 +80,10 @@ namespace Notung.Helm
       set { m_state_label.Text = value; }
     }
 
-    bool? IProcessIndicatorView.DialogResultOK
+    event EventHandler IProcessIndicatorView.ButtonClick
     {
-      get { return ToNeitralResult(this.DialogResult); }
-      set { this.DialogResult = FromNeitralResult(value); }
+      add { m_button.Click += value; }
+      remove { m_button.Click -= value; }
     }
   }
 }

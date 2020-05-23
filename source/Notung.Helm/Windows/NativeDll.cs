@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Notung.Data;
 using Notung.Helm.Properties;
 
-namespace Notung.Helm
+namespace Notung.Helm.Windows
 {
   /// <summary>
   /// Работа с неуправляемыми dll и функциями, экспортированными из них

@@ -2,8 +2,9 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
+using Notung.Threading;
 
-namespace Notung.Threading
+namespace Notung.Services
 {
   /// <summary>
   /// Управляет задачами, которые можно запустить в диалоге с индикатором прогресса

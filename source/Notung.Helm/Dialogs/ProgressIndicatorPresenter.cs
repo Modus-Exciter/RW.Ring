@@ -3,10 +3,12 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Notung.Helm.Properties;
+using Notung.Services;
 using Notung.Threading;
 
-namespace Notung.Helm
+namespace Notung.Helm.Dialogs
 {
   public sealed class ProgressIndicatorPresenter
   {
@@ -32,10 +34,6 @@ namespace Notung.Helm
 
       if (m_operation == null)
         throw new ArgumentException();
-    }
-
-    public void Initialize()
-    {
       m_cancel_source = m_operation.GetCancellationTokenSource();
 
       if (m_cancel_source == null)
@@ -52,6 +50,8 @@ namespace Notung.Helm
       m_view.Text = m_launch_parameters.Caption;
       m_view.Image = m_launch_parameters.Bitmap;
       m_view.IsMarquee = !m_launch_parameters.SupportsPercentNotification;
+
+      m_view.ButtonClick += this.ButtonClick;
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
@@ -79,38 +79,40 @@ namespace Notung.Helm
       m_view.ButtonEnabled = true;
       m_view.IsMarquee = false;
 
+      m_view.ButtonClick -= this.ButtonClick;
+
       if (m_operation.Status != TaskStatus.RanToCompletion)
       {
-        m_view.DialogResultOK = false;
+        m_view.DialogResult = DialogResult.Cancel;
         m_view.Close();
       }
       else if (m_launch_parameters.CloseOnFinish)
       {
-        m_view.DialogResultOK = true;
+        m_view.DialogResult = DialogResult.OK;
         m_view.Close();
       }
       else
       {
-        m_view.ButtonDialogResultOK = true;
+        m_view.ButtonDialogResultOK = DialogResult.OK;
         m_view.ButtonText = Resources.READY;
         m_view.ProgressValue = 100;
       }
     }
 
-    public void ButtonClick()
+    private void ButtonClick(object sender, EventArgs e)
     {
       if (m_cancel_source != null && m_operation.Status != TaskStatus.RanToCompletion)
         m_cancel_source.Cancel();
     }
   }
 
-  public interface IProcessIndicatorView
+  public interface IProcessIndicatorView : IDisposable
   {
     bool ButtonVisible { get; set; }
 
     bool ButtonEnabled { get; set; }
 
-    bool? ButtonDialogResultOK { get; set; }
+    DialogResult ButtonDialogResultOK { get; set; }
 
     string ButtonText { get; set; }
 
@@ -124,8 +126,12 @@ namespace Notung.Helm
 
     string StateText { get; set; }
 
-    bool? DialogResultOK { get; set; }
+    DialogResult DialogResult { get; set; }
+
+    DialogResult ShowDialog(IWin32Window owner);
 
     void Close();
+
+    event EventHandler ButtonClick;
   }
 }

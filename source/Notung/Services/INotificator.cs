@@ -5,7 +5,7 @@ using Notung.Logging;
 using Notung.Properties;
 using Notung.Threading;
 
-namespace Notung
+namespace Notung.Services
 {
   /// <summary>
   /// Сервис для отображения пользователю информационных сообщений

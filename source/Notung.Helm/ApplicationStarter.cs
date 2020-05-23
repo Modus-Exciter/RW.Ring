@@ -5,10 +5,11 @@ using System.Resources;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
+using Notung.Helm.Dialogs;
 using Notung.Helm.Properties;
 using Notung.Loader;
 using Notung.Logging;
-using Notung.Threading;
+using Notung.Services;
 
 namespace Notung.Helm
 {
@@ -66,7 +67,7 @@ namespace Notung.Helm
     public int ExitCode { get; private set; }
 
     /// <summary>
-    /// Показывает изображение при загрузке приложения. Рекомендуется этот вызов сделать в самом начале
+    /// Показывает изображение при загрузке приложения. Рекомендуется этот метод вызывать в самом начале
     /// </summary>
     /// <param name="resource">Имя ресурса в сборке, запустившей приложение, откуда брать изображение</param>
     public static void ShowSplashScreen(string resource)

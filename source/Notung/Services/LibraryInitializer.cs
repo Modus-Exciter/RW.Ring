@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Notung.Logging;
 
-namespace Notung.Loader
+namespace Notung.Services
 {
   /// <summary>
   /// Атрибут сборки, указывающий, какой тип данных будет инициализировать сборку

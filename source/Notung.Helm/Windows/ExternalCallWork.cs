@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using Notung.Helm.Properties;
-using Notung.Threading;
 
-namespace Notung.Helm
+namespace Notung.Helm.Windows
 {
   /// <summary>
   /// Фоновая задача, запускающая функцию без параметров и возвращаемого значения из нативной dll.

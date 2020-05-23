@@ -1,16 +1,17 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using ConfiguratorGraphicalTest.Properties;
 using Notung;
+using Notung.ComponentModel;
 using Notung.Configuration;
 using Notung.Helm;
-using Notung.Threading;
-using System;
-using ConfiguratorGraphicalTest.Properties;
+using Notung.Helm.Windows;
 using Notung.Logging;
-using Notung.ComponentModel;
+using Notung.Services;
 
 namespace ConfiguratorGraphicalTest
 {

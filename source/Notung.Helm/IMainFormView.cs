@@ -7,8 +7,11 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Notung.Data;
+using Notung.Helm.Windows;
 using Notung.Logging;
+using Notung.Services;
 using Notung.Threading;
+using Notung.Helm.Dialogs;
 
 namespace Notung.Helm
 {
@@ -104,12 +107,18 @@ namespace Notung.Helm
       System.Windows.Forms.Application.Restart();
     }
 
-    public virtual void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
+    public void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
     {
-      using (var dlg = new ProgressIndicatorDialog(operation, parameters))
+      using (var dlg = this.GetProgressIndicatorView())
       {
+        var presenter = new ProgressIndicatorPresenter(operation, parameters, dlg);
         dlg.ShowDialog(m_main_form);
       }
+    }
+
+    protected virtual IProcessIndicatorView GetProgressIndicatorView()
+    {
+      return new ProgressIndicatorDialog();
     }
 
     public virtual bool? Alert(Info info, ConfirmationRegime confirm)

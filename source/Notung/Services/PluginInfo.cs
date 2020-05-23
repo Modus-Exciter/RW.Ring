@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Notung.Properties;
 
-namespace Notung.Loader
+namespace Notung.Services
 {
   public class PluginInfo
   {

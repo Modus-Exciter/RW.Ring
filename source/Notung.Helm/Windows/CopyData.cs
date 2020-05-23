@@ -2,9 +2,8 @@
 using System.Runtime.InteropServices;
 using Notung.Data;
 using Notung.Helm.Properties;
-using System.Diagnostics;
 
-namespace Notung.Helm
+namespace Notung.Helm.Windows
 {
   /// <summary>
   /// Класс для передачи данных от одного процесса Windows к другому через WM_COPYDATA

@@ -1,4 +1,4 @@
-﻿namespace Notung.Helm
+﻿namespace Notung.Helm.Dialogs
 {
   partial class ProgressIndicatorDialog
   {
@@ -59,7 +59,6 @@
       this.m_button.TabIndex = 2;
       this.m_button.Text = "Cancel";
       this.m_button.UseVisualStyleBackColor = true;
-      this.m_button.Click += new System.EventHandler(this.m_button_Click);
       // 
       // m_state_label
       // 

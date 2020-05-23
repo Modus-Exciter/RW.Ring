@@ -13,10 +13,10 @@ namespace Notung.Loader
   /// </summary>
   public sealed class ApplicationLoadingWork
   {
-    private static readonly ILog _log = LogManager.GetLogger(typeof(ApplicationLoadingWork));
-
     private readonly ILoadingQueue m_queue;
     private readonly DependencyContainer m_container;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ApplicationLoadingWork));
 
     /// <summary>
     /// Создание задачи на загрузку компонентов приложения
@@ -35,6 +35,12 @@ namespace Notung.Loader
       m_container = container;
     }
 
+    /// <summary>
+    /// Загружает компоненты приложения
+    /// </summary>
+    /// <param name="invoker">Объект синхронизации для компонентов, требующих синхронизации при загрузке</param>
+    /// <param name="worker">Индикатор прогресса</param>
+    /// <returns>Результат загрузки компонент</returns>
     public ApplicationLoadingResult Run(ISynchronizeInvoke invoker, IProgressIndicator worker)
     {
       if (invoker == null) 
@@ -134,6 +140,8 @@ namespace Notung.Loader
     private readonly IProgressIndicator m_indicator;
     private readonly InfoBuffer m_buffer = new InfoBuffer();
 
+    private static readonly ILog _log = LogManager.GetLogger(typeof(LoadingContext));
+
     public LoadingContext(DependencyContainer container, ISynchronizeInvoke invoker, IProgressIndicator indicator)
     {
       if (container == null)
@@ -180,6 +188,43 @@ namespace Notung.Loader
     public InfoBuffer Buffer
     {
       get { return m_buffer; }
+    }
+
+    /// <summary>
+    /// Запуск задачи в процессе загрузки приложения
+    /// </summary>
+    /// <param name="runBase">Запущенная задача</param>
+    /// <param name="loader">Загрузчик компонента, запустившмй задачу</param>
+    /// <returns>True, если задача выполнилась успешно. Иначе, false</returns>
+    public bool Run(IRunBase runBase, IApplicationLoader loader)
+    {
+      if (runBase == null)
+        throw new ArgumentNullException("runBase");
+
+      if (loader == null)
+        throw new ArgumentNullException("loader");
+
+      runBase.ProgressChanged += this.HandleProgressChanged;
+
+      try
+      {
+        runBase.Run();
+        return true;
+      }
+      catch (Exception ex)
+      {
+        _log.Error(string.Format("Run(): error loaing {0}", loader), ex);
+        return false;
+      }
+      finally
+      {
+        runBase.ProgressChanged -= this.HandleProgressChanged;
+      }
+    }
+
+    private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
+    {
+      m_indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
     }
   }
 

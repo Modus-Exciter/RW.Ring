@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using Notung.ComponentModel;
 
-namespace Notung.Threading
+namespace Notung
 {
   /// <summary>
   /// Выполняемая задача с индикатором прогресса

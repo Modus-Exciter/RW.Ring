@@ -2,7 +2,7 @@
 using Notung;
 using Notung.ComponentModel;
 using Notung.Logging;
-using Notung.Loader;
+using Notung.Services;
 
 [assembly: LibraryInitializer(typeof(PluginsTest.Cust))]
 
@@ -14,7 +14,7 @@ namespace PluginsTest
     {
       Console.WriteLine("Scanning...");
       AppManager.AssemblyClassifier.PluginsDirectory = @"Plugins";
-      AppManager.AssemblyClassifier.LoadPlugins("*.adapter", Notung.Loader.LoadPluginsMode.DomainPerPlugin);
+      AppManager.AssemblyClassifier.LoadPlugins("*.adapter", LoadPluginsMode.DomainPerPlugin);
       AppManager.AssemblyClassifier.ExcludePrefixes.Add("vshost");
       AppManager.AssemblyClassifier.ExcludePrefixes.Remove("System");
       // AppManager.AssemblyClassifier.LoadDependencies(AppManager.AssemblyClassifier.Plugins[0].Assembly);
@@ -85,7 +85,7 @@ namespace PluginsTest
   }
 
 
-  public class InfoLogSource : MarshalByRefObject, IServiceProvider, Notung.Threading.IRunBase
+  public class InfoLogSource : MarshalByRefObject, IServiceProvider, IRunBase
   {
 
     public object GetService(Type serviceType)
@@ -96,12 +96,12 @@ namespace PluginsTest
       else return null;
     }
 
-    void Notung.Threading.IRunBase.Run()
+    void IRunBase.Run()
     {
       
     }
 
-    event System.ComponentModel.ProgressChangedEventHandler Notung.Threading.IRunBase.ProgressChanged
+    event System.ComponentModel.ProgressChangedEventHandler IRunBase.ProgressChanged
     {
       add {  }
       remove {  }

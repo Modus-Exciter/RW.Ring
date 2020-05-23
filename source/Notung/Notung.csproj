@@ -58,15 +58,15 @@
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
-    <Compile Include="INotificator.cs" />
+    <Compile Include="Services\INotificator.cs" />
     <Compile Include="Loader\ApplicationLoadingWork.cs" />
-    <Compile Include="Loader\IAssemblyClassifier.cs" />
+    <Compile Include="Services\IAssemblyClassifier.cs" />
     <Compile Include="Loader\IComponentLoader.cs" />
     <Compile Include="Loader\IDependencyItem.cs" />
     <Compile Include="Loader\IFactory.cs" />
     <Compile Include="Loader\ILoadingQueue.cs" />
-    <Compile Include="Loader\LibraryInitializer.cs" />
-    <Compile Include="Loader\PluginInfo.cs" />
+    <Compile Include="Services\LibraryInitializer.cs" />
+    <Compile Include="Services\PluginInfo.cs" />
     <Compile Include="Logging\ILoggingContext.cs" />
     <Compile Include="Logging\LogProcess.cs" />
     <Compile Include="Logging\LogStringBuilder.cs" />
@@ -87,7 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CoreResources.resx</DependentUpon>
     </Compile>
-    <Compile Include="IAppInstance.cs" />
+    <Compile Include="Services\IAppInstance.cs" />
     <Compile Include="Info.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\LogManager.cs" />
@@ -109,11 +109,11 @@
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
     <Compile Include="Threading\IProgressIndicator.cs" />
     <Compile Include="Threading\LengthyOperation.cs" />
-    <Compile Include="Threading\OperationLauncherProxy.cs" />
-    <Compile Include="Threading\IRunBase.cs" />
+    <Compile Include="Services\OperationLauncherProxy.cs" />
+    <Compile Include="IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
-    <Compile Include="Threading\IOperationLauncher.cs" />
-    <Compile Include="Threading\LaunchParameters.cs" />
+    <Compile Include="Services\IOperationLauncher.cs" />
+    <Compile Include="Services\LaunchParameters.cs" />
     <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
   </ItemGroup>
