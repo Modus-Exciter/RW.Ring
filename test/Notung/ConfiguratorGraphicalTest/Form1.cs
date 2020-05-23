@@ -10,6 +10,7 @@ using Notung.Threading;
 using System;
 using ConfiguratorGraphicalTest.Properties;
 using Notung.Logging;
+using Notung.ComponentModel;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -215,10 +216,10 @@ namespace ConfiguratorGraphicalTest
       public override void Run()
       {
         this.CanCancel = false;
-        this.ReportProgress("Some state");
+        this.ReportProgress(string.Format(Resources.SOME_STATE, ""));
         for (int i = 1; i <= 100; i++)
         {
-          this.ReportProgress(i, string.Format("Some state {0}", i / 11));
+          this.ReportProgress(i, string.Format(Resources.SOME_STATE, i / 11));
           System.Threading.Thread.Sleep(50);
 
           if (i == 50)
@@ -228,12 +229,12 @@ namespace ConfiguratorGraphicalTest
             this.CanCancel = false;
           }
           if (i % 10 == 0)
-            _log.DebugFormat("Message from task {0}", i / 10);
+            _log.DebugFormat(Resources.MESSAGE, i / 10);
 
           this.CancellationToken.ThrowIfCancellationRequested();
         }
         m_ok = true;
-        _log.Debug("ALL RIGHT!");
+        _log.Debug(Resources.ALL_RIGHT);
       }
 
       //public override string ToString()
@@ -252,6 +253,19 @@ namespace ConfiguratorGraphicalTest
         else
           return null;
       }
+    }
+
+    private void languageSwitcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    {
+      buttonDLL.Text = Resources.DLL;
+      buttonOpenFolder.Text = Resources.OPEN_FOLDER;
+      buttonRestart.Text = Resources.RESTART;
+      buttonWork.Text = Resources.BACKGROUND;
+    }
+
+    private void comboBoxLang_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      LanguageSwitcher.Switch(comboBoxLang.Text);
     }
   }
 }

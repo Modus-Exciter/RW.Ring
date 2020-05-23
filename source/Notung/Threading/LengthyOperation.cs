@@ -133,6 +133,9 @@ namespace Notung.Threading
 
     private void Run()
     {
+#if MULTI_LANG
+      LanguageSwitcher.RegisterThread(Thread.CurrentThread);
+#endif
       m_run_base.ProgressChanged += HandleProgressChanged;
       try
       {

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER </DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER MULTI_LANG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -31,6 +31,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Notung.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,6 +50,9 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppManager.cs" />
+    <Compile Include="ComponentModel\LanguageSwitcher.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\DataTypeCode.cs" />
     <Compile Include="Data\PrefixTree.cs" />
@@ -126,6 +135,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>LogSettings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Notung.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

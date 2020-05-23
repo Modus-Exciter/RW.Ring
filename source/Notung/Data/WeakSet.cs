@@ -6,7 +6,7 @@ using Notung.Threading;
 
 namespace Notung.Data
 {
-  public class WeakSet <T> : ICollection<T> where T : class
+  public class WeakSet <T> : IEnumerable<T> where T : class
   {
     private readonly HashSet<InnerReference> m_set = new HashSet<InnerReference>();
     private readonly SharedLock m_lock = new SharedLock(false);
@@ -49,29 +49,6 @@ namespace Notung.Data
       {
         return m_set.Contains(new InnerReference(item));
       }
-    }
-
-    public void CopyTo(T[] array, int arrayIndex)
-    {
-      using (m_lock.WriteLock())
-      {
-        Fix();
-        InnerReference[] refs = new InnerReference[array.Length];
-        m_set.CopyTo(refs, arrayIndex);
-
-        for (int i = arrayIndex; i < array.Length && i < arrayIndex + m_set.Count; i++)
-          array[i] = refs[i].Target;
-      }
-    }
-
-    int ICollection<T>.Count
-    {
-      get { return m_set.Count; }
-    }
-
-    public bool IsReadOnly
-    {
-      get { return false; }
     }
 
     public bool Remove(T item)

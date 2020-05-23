@@ -60,10 +60,73 @@ namespace ConfiguratorGraphicalTest.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to All right!.
+        /// </summary>
+        internal static string ALL_RIGHT {
+            get {
+                return ResourceManager.GetString("ALL_RIGHT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backgound.
+        /// </summary>
+        internal static string BACKGROUND {
+            get {
+                return ResourceManager.GetString("BACKGROUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run DLL.
+        /// </summary>
+        internal static string DLL {
+            get {
+                return ResourceManager.GetString("DLL", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap DOS_TRACK {
             get {
                 object obj = ResourceManager.GetObject("DOS_TRACK", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message from task {0}.
+        /// </summary>
+        internal static string MESSAGE {
+            get {
+                return ResourceManager.GetString("MESSAGE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open folder.
+        /// </summary>
+        internal static string OPEN_FOLDER {
+            get {
+                return ResourceManager.GetString("OPEN_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        internal static string RESTART {
+            get {
+                return ResourceManager.GetString("RESTART", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some state {0}.
+        /// </summary>
+        internal static string SOME_STATE {
+            get {
+                return ResourceManager.GetString("SOME_STATE", resourceCulture);
             }
         }
     }

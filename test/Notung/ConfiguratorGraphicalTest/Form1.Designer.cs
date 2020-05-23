@@ -28,7 +28,8 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+      this.components = new System.ComponentModel.Container();
+      this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
       this.innerDefault = new System.Windows.Forms.PropertyGrid();
       this.innerContract = new System.Windows.Forms.PropertyGrid();
       this.innerContractName = new System.Windows.Forms.PropertyGrid();
@@ -40,40 +41,43 @@
       this.outerXml = new System.Windows.Forms.PropertyGrid();
       this.outerXmlName = new System.Windows.Forms.PropertyGrid();
       this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-      this.button1 = new System.Windows.Forms.Button();
+      this.buttonRestart = new System.Windows.Forms.Button();
       this.buttonDLL = new System.Windows.Forms.Button();
       this.buttonOpenFolder = new System.Windows.Forms.Button();
       this.buttonWork = new System.Windows.Forms.Button();
-      this.tableLayoutPanel1.SuspendLayout();
+      this.languageSwitcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
+      this.comboBoxLang = new System.Windows.Forms.ComboBox();
+      this.tableLayoutPanel.SuspendLayout();
       this.flowLayoutPanel1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.languageSwitcher)).BeginInit();
       this.SuspendLayout();
       // 
-      // tableLayoutPanel1
+      // tableLayoutPanel
       // 
-      this.tableLayoutPanel1.ColumnCount = 2;
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-      this.tableLayoutPanel1.Controls.Add(this.innerDefault, 0, 0);
-      this.tableLayoutPanel1.Controls.Add(this.innerContract, 0, 1);
-      this.tableLayoutPanel1.Controls.Add(this.innerContractName, 0, 2);
-      this.tableLayoutPanel1.Controls.Add(this.innerXml, 0, 3);
-      this.tableLayoutPanel1.Controls.Add(this.innerXmlName, 0, 4);
-      this.tableLayoutPanel1.Controls.Add(this.outerDefault, 1, 0);
-      this.tableLayoutPanel1.Controls.Add(this.outerContract, 1, 1);
-      this.tableLayoutPanel1.Controls.Add(this.outerContractName, 1, 2);
-      this.tableLayoutPanel1.Controls.Add(this.outerXml, 1, 3);
-      this.tableLayoutPanel1.Controls.Add(this.outerXmlName, 1, 4);
-      this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 5;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(854, 619);
-      this.tableLayoutPanel1.TabIndex = 0;
+      this.tableLayoutPanel.ColumnCount = 2;
+      this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+      this.tableLayoutPanel.Controls.Add(this.innerDefault, 0, 0);
+      this.tableLayoutPanel.Controls.Add(this.innerContract, 0, 1);
+      this.tableLayoutPanel.Controls.Add(this.innerContractName, 0, 2);
+      this.tableLayoutPanel.Controls.Add(this.innerXml, 0, 3);
+      this.tableLayoutPanel.Controls.Add(this.innerXmlName, 0, 4);
+      this.tableLayoutPanel.Controls.Add(this.outerDefault, 1, 0);
+      this.tableLayoutPanel.Controls.Add(this.outerContract, 1, 1);
+      this.tableLayoutPanel.Controls.Add(this.outerContractName, 1, 2);
+      this.tableLayoutPanel.Controls.Add(this.outerXml, 1, 3);
+      this.tableLayoutPanel.Controls.Add(this.outerXmlName, 1, 4);
+      this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+      this.tableLayoutPanel.Name = "tableLayoutPanel";
+      this.tableLayoutPanel.RowCount = 5;
+      this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
+      this.tableLayoutPanel.Size = new System.Drawing.Size(854, 619);
+      this.tableLayoutPanel.TabIndex = 0;
       // 
       // innerDefault
       // 
@@ -187,31 +191,36 @@
       // 
       // flowLayoutPanel1
       // 
-      this.flowLayoutPanel1.Controls.Add(this.button1);
+      this.flowLayoutPanel1.Controls.Add(this.buttonRestart);
       this.flowLayoutPanel1.Controls.Add(this.buttonDLL);
       this.flowLayoutPanel1.Controls.Add(this.buttonOpenFolder);
       this.flowLayoutPanel1.Controls.Add(this.buttonWork);
+      this.flowLayoutPanel1.Controls.Add(this.comboBoxLang);
       this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 619);
       this.flowLayoutPanel1.Name = "flowLayoutPanel1";
       this.flowLayoutPanel1.Size = new System.Drawing.Size(854, 58);
       this.flowLayoutPanel1.TabIndex = 1;
       // 
-      // button1
+      // buttonRestart
       // 
-      this.button1.Location = new System.Drawing.Point(3, 3);
-      this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(75, 23);
-      this.button1.TabIndex = 0;
-      this.button1.Text = "Restart";
-      this.button1.UseVisualStyleBackColor = true;
-      this.button1.Click += new System.EventHandler(this.button1_Click);
+      this.buttonRestart.AutoSize = true;
+      this.buttonRestart.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.buttonRestart.Location = new System.Drawing.Point(3, 3);
+      this.buttonRestart.Name = "buttonRestart";
+      this.buttonRestart.Size = new System.Drawing.Size(51, 23);
+      this.buttonRestart.TabIndex = 0;
+      this.buttonRestart.Text = "Restart";
+      this.buttonRestart.UseVisualStyleBackColor = true;
+      this.buttonRestart.Click += new System.EventHandler(this.button1_Click);
       // 
       // buttonDLL
       // 
-      this.buttonDLL.Location = new System.Drawing.Point(84, 3);
+      this.buttonDLL.AutoSize = true;
+      this.buttonDLL.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.buttonDLL.Location = new System.Drawing.Point(60, 3);
       this.buttonDLL.Name = "buttonDLL";
-      this.buttonDLL.Size = new System.Drawing.Size(75, 23);
+      this.buttonDLL.Size = new System.Drawing.Size(50, 23);
       this.buttonDLL.TabIndex = 1;
       this.buttonDLL.Text = "Run dll";
       this.buttonDLL.UseVisualStyleBackColor = true;
@@ -219,9 +228,11 @@
       // 
       // buttonOpenFolder
       // 
-      this.buttonOpenFolder.Location = new System.Drawing.Point(165, 3);
+      this.buttonOpenFolder.AutoSize = true;
+      this.buttonOpenFolder.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.buttonOpenFolder.Location = new System.Drawing.Point(116, 3);
       this.buttonOpenFolder.Name = "buttonOpenFolder";
-      this.buttonOpenFolder.Size = new System.Drawing.Size(75, 23);
+      this.buttonOpenFolder.Size = new System.Drawing.Size(72, 23);
       this.buttonOpenFolder.TabIndex = 2;
       this.buttonOpenFolder.Text = "Open folder";
       this.buttonOpenFolder.UseVisualStyleBackColor = true;
@@ -229,33 +240,54 @@
       // 
       // buttonWork
       // 
-      this.buttonWork.Location = new System.Drawing.Point(246, 3);
+      this.buttonWork.AutoSize = true;
+      this.buttonWork.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.buttonWork.Location = new System.Drawing.Point(194, 3);
       this.buttonWork.Name = "buttonWork";
-      this.buttonWork.Size = new System.Drawing.Size(75, 23);
+      this.buttonWork.Size = new System.Drawing.Size(101, 23);
       this.buttonWork.TabIndex = 3;
       this.buttonWork.Text = "Background work";
       this.buttonWork.UseVisualStyleBackColor = true;
       this.buttonWork.Click += new System.EventHandler(this.button2_Click);
+      // 
+      // languageSwitcher
+      // 
+      this.languageSwitcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.languageSwitcher_LanguageChanged);
+      // 
+      // comboBoxLang
+      // 
+      this.comboBoxLang.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.comboBoxLang.FormattingEnabled = true;
+      this.comboBoxLang.Items.AddRange(new object[] {
+            "EN",
+            "RU"});
+      this.comboBoxLang.Location = new System.Drawing.Point(301, 3);
+      this.comboBoxLang.Name = "comboBoxLang";
+      this.comboBoxLang.Size = new System.Drawing.Size(73, 21);
+      this.comboBoxLang.TabIndex = 4;
+      this.comboBoxLang.SelectedIndexChanged += new System.EventHandler(this.comboBoxLang_SelectedIndexChanged);
       // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(854, 677);
-      this.Controls.Add(this.tableLayoutPanel1);
+      this.Controls.Add(this.tableLayoutPanel);
       this.Controls.Add(this.flowLayoutPanel1);
       this.Name = "Form1";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Configurator GUI Test";
-      this.tableLayoutPanel1.ResumeLayout(false);
+      this.tableLayoutPanel.ResumeLayout(false);
       this.flowLayoutPanel1.ResumeLayout(false);
+      this.flowLayoutPanel1.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.languageSwitcher)).EndInit();
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
     private System.Windows.Forms.PropertyGrid innerDefault;
     private System.Windows.Forms.PropertyGrid innerContract;
     private System.Windows.Forms.PropertyGrid innerContractName;
@@ -267,10 +299,12 @@
     private System.Windows.Forms.PropertyGrid outerXml;
     private System.Windows.Forms.PropertyGrid outerXmlName;
     private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-    private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Button buttonRestart;
     private System.Windows.Forms.Button buttonDLL;
     private System.Windows.Forms.Button buttonOpenFolder;
     private System.Windows.Forms.Button buttonWork;
+    private Notung.ComponentModel.LanguageSwitcher languageSwitcher;
+    private System.Windows.Forms.ComboBox comboBoxLang;
   }
 }
 
