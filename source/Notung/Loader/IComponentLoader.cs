@@ -38,7 +38,6 @@ namespace Notung.Loader
     private static readonly Func<object[], object> _factory_method;
     private static readonly Type[] _constructor_types;
 
-
     private static readonly List<KeyValuePair<PropertyInfo, Action<object, object>>> _properties
       = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
     private static readonly bool _synchronization_required;

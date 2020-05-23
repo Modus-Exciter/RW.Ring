@@ -98,20 +98,7 @@ namespace Notung.Helm
 
           try
           {
-            var dlgt = new LoadSymbolDelegate(LoadSymbolImpl);
-            GC.KeepAlive(dlgt);
-
-            IntPtr collector = Marshal.GetFunctionPointerForDelegate(dlgt);
-
-            _strings = new List<string>();
-
-            if (!SymEnumerateSymbols(procId, module_handle, collector, IntPtr.Zero))
-              _strings = null;
-
-            if (_strings != null)
-              return _strings.ToArray();
-            else
-              return ArrayExtensions.Empty<string>();
+            return LoadSymbols(procId, module_handle);
           }
           finally
           {
@@ -156,7 +143,25 @@ namespace Notung.Helm
 
     #endregion
 
-    #region API Helpers ---------------------------------------------------------------------------
+    #region Symbol enumeration --------------------------------------------------------------------
+
+    private static string[] LoadSymbols(IntPtr procId, IntPtr moduleHandle)
+    {
+      var dlgt = new LoadSymbolDelegate(LoadSymbolImpl);
+      GC.KeepAlive(dlgt);
+
+      IntPtr collector = Marshal.GetFunctionPointerForDelegate(dlgt);
+
+      _strings = new List<string>();
+
+      if (!SymEnumerateSymbols(procId, moduleHandle, collector, IntPtr.Zero))
+        _strings = null;
+
+      if (_strings != null)
+        return _strings.ToArray();
+      else
+        return ArrayExtensions.Empty<string>();
+    }
 
     private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
     {
@@ -165,6 +170,12 @@ namespace Notung.Helm
 
       return true;
     }
+
+    private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
+
+    #endregion
+
+    #region API Helpers ---------------------------------------------------------------------------
 
     private enum SymSetOptionsType : uint
     {
@@ -195,8 +206,6 @@ namespace Notung.Helm
       LOAD_LIBRARY_REQUIRE_SIGNED_TARGET = 0x00000080,
       LOAD_LIBRARY_SAFE_CURRENT_DIRS = 0x00002000
     }
-
-    private delegate bool LoadSymbolDelegate(string name, IntPtr symbolAddress, uint size, IntPtr context);
 
     [DllImport("Imagehlp.dll", CharSet = CharSet.Ansi)]
     private static extern bool SymEnumerateSymbols(IntPtr process, IntPtr baseDll, IntPtr callback, IntPtr context);
