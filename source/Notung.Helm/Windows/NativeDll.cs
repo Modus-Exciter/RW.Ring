@@ -15,9 +15,6 @@ namespace Notung.Helm.Windows
     private readonly string m_path;
     private HandleRef m_handle;
 
-    [ThreadStatic]
-    private static List<string> _strings = null;
-
     /// <summary>
     /// Загрузка dll для запуска объявленных в ней функций
     /// </summary>
@@ -144,6 +141,9 @@ namespace Notung.Helm.Windows
     #endregion
 
     #region Symbol enumeration --------------------------------------------------------------------
+
+    [ThreadStatic]
+    private static List<string> _strings = null;
 
     private static string[] LoadSymbols(IntPtr procId, IntPtr moduleHandle)
     {

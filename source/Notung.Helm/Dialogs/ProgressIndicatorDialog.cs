@@ -44,7 +44,7 @@ namespace Notung.Helm.Dialogs
       set { m_button.Enabled = value; }
     }
 
-    DialogResult IProcessIndicatorView.ButtonDialogResultOK
+    DialogResult IProcessIndicatorView.ButtonDialogResult
     {
       get { return m_button.DialogResult; }
       set { m_button.DialogResult = value; }

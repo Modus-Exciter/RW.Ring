@@ -93,7 +93,7 @@ namespace Notung.Helm.Dialogs
       }
       else
       {
-        m_view.ButtonDialogResultOK = DialogResult.OK;
+        m_view.ButtonDialogResult = DialogResult.OK;
         m_view.ButtonText = Resources.READY;
         m_view.ProgressValue = 100;
       }
@@ -112,7 +112,7 @@ namespace Notung.Helm.Dialogs
 
     bool ButtonEnabled { get; set; }
 
-    DialogResult ButtonDialogResultOK { get; set; }
+    DialogResult ButtonDialogResult { get; set; }
 
     string ButtonText { get; set; }
 

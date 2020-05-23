@@ -53,7 +53,6 @@ namespace Notung.Services
       var operation = CreateOperation(ref runBase, ref parameters);
 
       operation.Start();
-
       var ret = Complete(operation, parameters);
 
       if (operation.Error != null)

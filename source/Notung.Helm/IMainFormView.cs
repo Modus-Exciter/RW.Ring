@@ -6,12 +6,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Notung.ComponentModel;
 using Notung.Data;
+using Notung.Helm.Dialogs;
 using Notung.Helm.Windows;
 using Notung.Logging;
 using Notung.Services;
 using Notung.Threading;
-using Notung.Helm.Dialogs;
 
 namespace Notung.Helm
 {
@@ -84,7 +85,12 @@ namespace Notung.Helm
 
     public virtual void ShowErrorBox(string title, string content)
     {
-      MessageBox.Show(content, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+      using (var dlg = new ErrorBox())
+      {
+        dlg.Text = title;
+        dlg.Content = content;
+        dlg.ShowDialog(m_main_form);
+      }
     }
 
     public bool SendArgsToProcess(Process previous, IList<string> args)
@@ -144,9 +150,36 @@ namespace Notung.Helm
 
     public virtual bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
     {
-      return this.Alert(new Info(summary + Environment.NewLine
-        + string.Join(Environment.NewLine, buffer.Select(i => i.Message)),
-        summaryLevel), confirm);
+      using (var dialog = new InfoBufferForm())
+      {
+        dialog.Summary = summary;
+        dialog.SetInfoBuffer(buffer);
+        dialog.Text = summaryLevel.GetLabel();
+        if (confirm == ConfirmationRegime.None)
+        {
+          dialog.Buttons = MessageBoxButtons.OK;
+          dialog.ShowDialog(m_main_form);
+          return null;
+        }
+        else if (confirm == ConfirmationRegime.Confirm)
+        {
+          dialog.Buttons = MessageBoxButtons.OKCancel;
+          return dialog.ShowDialog(m_main_form) == DialogResult.OK;
+        }
+        else
+        {
+          dialog.Buttons = MessageBoxButtons.YesNoCancel;
+          switch (dialog.ShowDialog(m_main_form))
+          {
+            case DialogResult.Yes:
+              return true;
+            case DialogResult.No:
+              return false;
+            default:
+              return null;
+          }
+        }
+      }
     }
 
     public static string[] GetStringArgs(Message message)
