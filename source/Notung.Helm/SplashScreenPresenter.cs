@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Notung.Loader;
 using System.ComponentModel;
-using Notung.Threading;
 using System.Drawing;
 using System.Windows.Forms;
+using Notung.Loader;
+using Notung.Threading;
 
 namespace Notung.Helm
 {

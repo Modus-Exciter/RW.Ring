@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using Notung.Data;
 
 namespace Notung.Loader
 {
@@ -42,8 +43,8 @@ namespace Notung.Loader
       = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
     private static readonly bool _synchronization_required;
 
-    private readonly ReadOnlyCollection<Type> m_mandatory_dependencies;
-    private readonly ReadOnlyCollection<Type> m_optional_dependencies;
+    private readonly ReadOnlySet<Type> m_mandatory_dependencies;
+    private readonly ReadOnlySet<Type> m_optional_dependencies;
 
     static ApplicationLoader()
     {
@@ -93,13 +94,13 @@ namespace Notung.Loader
 
     public ApplicationLoader()
     {
-      m_mandatory_dependencies = new ReadOnlyCollection<Type>(
-        new HashSet<Type>(_constructor_types).ToList());
+      m_mandatory_dependencies = new ReadOnlySet<Type>(
+        new HashSet<Type>(_constructor_types));
 
-      m_optional_dependencies = new ReadOnlyCollection<Type>(
+      m_optional_dependencies = new ReadOnlySet<Type>(
         new HashSet<Type>(_properties
           .Where(kv => this.FilterProperty(kv.Key))
-          .Select(kv => kv.Key.PropertyType)).ToList());
+          .Select(kv => kv.Key.PropertyType)));
     }
 
     protected virtual bool FilterProperty(PropertyInfo property)

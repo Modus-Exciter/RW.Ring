@@ -144,7 +144,7 @@ namespace Notung.Helm
 
         using (var ms = rm.GetStream(_splash_resource.ToLowerInvariant()))
         {
-          return new Bitmap(Image.FromStream(ms));
+          return Image.FromStream(ms);
         }
       }
       else if (this.AlternativeSplashScreen != null)
