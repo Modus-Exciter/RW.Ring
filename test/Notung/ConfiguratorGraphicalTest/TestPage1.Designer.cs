@@ -30,23 +30,23 @@
     {
       this.components = new System.ComponentModel.Container();
       this.m_group = new System.Windows.Forms.GroupBox();
-      this.m_contract_source = new System.Windows.Forms.BindingSource(this.components);
-      this.m_xml_source = new System.Windows.Forms.BindingSource(this.components);
-      this.numericUpDown = new System.Windows.Forms.NumericUpDown();
-      this.label1 = new System.Windows.Forms.Label();
-      this.label2 = new System.Windows.Forms.Label();
       this.textBox1 = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.label1 = new System.Windows.Forms.Label();
+      this.numericUpDown = new System.Windows.Forms.NumericUpDown();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.textBox2 = new System.Windows.Forms.TextBox();
       this.label3 = new System.Windows.Forms.Label();
       this.label4 = new System.Windows.Forms.Label();
       this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+      this.m_xml_source = new System.Windows.Forms.BindingSource(this.components);
+      this.m_contract_source = new System.Windows.Forms.BindingSource(this.components);
       this.m_group.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.m_contract_source)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.m_xml_source)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).BeginInit();
       this.groupBox1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_xml_source)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_contract_source)).BeginInit();
       this.SuspendLayout();
       // 
       // m_group
@@ -59,46 +59,10 @@
       this.m_group.Controls.Add(this.numericUpDown);
       this.m_group.Location = new System.Drawing.Point(13, 13);
       this.m_group.Name = "m_group";
-      this.m_group.Size = new System.Drawing.Size(321, 112);
+      this.m_group.Size = new System.Drawing.Size(321, 81);
       this.m_group.TabIndex = 0;
       this.m_group.TabStop = false;
       this.m_group.Text = "Contract settings";
-      // 
-      // m_contract_source
-      // 
-      this.m_contract_source.DataSource = typeof(ConfiguratorGraphicalTest.OuterSectionDataContract);
-      // 
-      // m_xml_source
-      // 
-      this.m_xml_source.DataSource = typeof(ConfiguratorGraphicalTest.OuterSectionXml);
-      // 
-      // numericUpDown
-      // 
-      this.numericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                  | System.Windows.Forms.AnchorStyles.Right)));
-      this.numericUpDown.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.m_contract_source, "Number", true));
-      this.numericUpDown.Location = new System.Drawing.Point(68, 19);
-      this.numericUpDown.Name = "numericUpDown";
-      this.numericUpDown.Size = new System.Drawing.Size(247, 20);
-      this.numericUpDown.TabIndex = 0;
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(6, 21);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(44, 13);
-      this.label1.TabIndex = 1;
-      this.label1.Text = "Number";
-      // 
-      // label2
-      // 
-      this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(6, 48);
-      this.label2.Name = "label2";
-      this.label2.Size = new System.Drawing.Size(28, 13);
-      this.label2.TabIndex = 2;
-      this.label2.Text = "Text";
       // 
       // textBox1
       // 
@@ -110,6 +74,34 @@
       this.textBox1.Size = new System.Drawing.Size(247, 20);
       this.textBox1.TabIndex = 3;
       // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(6, 48);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(28, 13);
+      this.label2.TabIndex = 2;
+      this.label2.Text = "Text";
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(6, 21);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(44, 13);
+      this.label1.TabIndex = 1;
+      this.label1.Text = "Number";
+      // 
+      // numericUpDown
+      // 
+      this.numericUpDown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                  | System.Windows.Forms.AnchorStyles.Right)));
+      this.numericUpDown.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.m_contract_source, "Number", true));
+      this.numericUpDown.Location = new System.Drawing.Point(68, 19);
+      this.numericUpDown.Name = "numericUpDown";
+      this.numericUpDown.Size = new System.Drawing.Size(247, 20);
+      this.numericUpDown.TabIndex = 0;
+      // 
       // groupBox1
       // 
       this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
@@ -118,9 +110,9 @@
       this.groupBox1.Controls.Add(this.label3);
       this.groupBox1.Controls.Add(this.label4);
       this.groupBox1.Controls.Add(this.numericUpDown1);
-      this.groupBox1.Location = new System.Drawing.Point(13, 131);
+      this.groupBox1.Location = new System.Drawing.Point(13, 100);
       this.groupBox1.Name = "groupBox1";
-      this.groupBox1.Size = new System.Drawing.Size(321, 112);
+      this.groupBox1.Size = new System.Drawing.Size(321, 83);
       this.groupBox1.TabIndex = 1;
       this.groupBox1.TabStop = false;
       this.groupBox1.Text = "XML settings";
@@ -163,6 +155,16 @@
       this.numericUpDown1.Size = new System.Drawing.Size(247, 20);
       this.numericUpDown1.TabIndex = 0;
       // 
+      // m_xml_source
+      // 
+      this.m_xml_source.DataSource = typeof(ConfiguratorGraphicalTest.OuterSectionXml);
+      this.m_xml_source.CurrentItemChanged += new System.EventHandler(this.HandleChanged);
+      // 
+      // m_contract_source
+      // 
+      this.m_contract_source.DataSource = typeof(ConfiguratorGraphicalTest.OuterSectionDataContract);
+      this.m_contract_source.CurrentItemChanged += new System.EventHandler(this.HandleChanged);
+      // 
       // TestPage1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -173,12 +175,12 @@
       this.Size = new System.Drawing.Size(348, 412);
       this.m_group.ResumeLayout(false);
       this.m_group.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.m_contract_source)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.m_xml_source)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
       this.groupBox1.ResumeLayout(false);
       this.groupBox1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_xml_source)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_contract_source)).EndInit();
       this.ResumeLayout(false);
 
     }

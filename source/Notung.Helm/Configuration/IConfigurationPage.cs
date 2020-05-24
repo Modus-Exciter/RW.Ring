@@ -20,7 +20,7 @@ namespace Notung.Helm.Configuration
     SettingsBindingSourceCollection Sections { get; }
 
     /// <summary>
-    /// Страница настроек
+    /// Страница настроек (как правило, это свойство возвращает текущий объект, реализующий данный интерфейс)
     /// </summary>
     Control Page { get; }
 
@@ -33,6 +33,11 @@ namespace Notung.Helm.Configuration
     /// Выполнять ли проверку настроек в потоке пользовательского интерфейса
     /// </summary>
     bool UIThreadValidation { get; }
+
+    /// <summary>
+    /// Происходит при изменении настроек пользователем
+    /// </summary>
+    event EventHandler Changed;
   }
 
   /// <summary>
@@ -121,6 +126,9 @@ namespace Notung.Helm.Configuration
     /// <returns>Экземпляр редактируемой конфигурационной секции</returns>
     public override ConfigurationSection GetEditingSection()
     {
+      if (this.EditingSection == null)
+        this.LoadCurrentSettings();
+
       return this.EditingSection;
     }
 
@@ -177,7 +185,6 @@ namespace Notung.Helm.Configuration
           var ser = new DataContractSerializer(typeof(TSection));
 
           ser.WriteObject(ms, original);
-
           ms.Position = 0;
 
           return (TSection)ser.ReadObject(ms);
@@ -187,7 +194,6 @@ namespace Notung.Helm.Configuration
           var ser = new XmlSerializer(typeof(TSection));
 
           ser.Serialize(ms, original);
-
           ms.Position = 0;
 
           return (TSection)ser.Deserialize(ms);

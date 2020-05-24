@@ -45,5 +45,7 @@ namespace ConfiguratorGraphicalTest
     {
       return "Second section with named roots!";
     }
+
+    public event EventHandler Changed;
   }
 }

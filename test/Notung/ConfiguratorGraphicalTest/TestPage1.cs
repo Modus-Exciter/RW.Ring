@@ -38,12 +38,20 @@ namespace ConfiguratorGraphicalTest
 
     public bool UIThreadValidation
     {
-      get { return false; }
+      get { return true; }
     }
 
     public override string ToString()
     {
       return "First section!";
+    }
+
+    public event EventHandler Changed;
+
+    private void HandleChanged(object sender, EventArgs e)
+    {
+      if (this.Changed != null)
+        this.Changed(this, e);
     }
   }
 }
