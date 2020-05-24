@@ -122,6 +122,15 @@ namespace ConfiguratorGraphicalTest.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string SETTINGS {
+            get {
+                return ResourceManager.GetString("SETTINGS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Some state {0}.
         /// </summary>
         internal static string SOME_STATE {

@@ -192,6 +192,11 @@ namespace Notung.Helm
         this.ExitCode = -1;
         Application.Exit();
       }
+      else if (m_view != null && m_view.RestartOnCriticalError)
+      {
+        this.ExitCode = 1;
+        AppManager.Instance.Restart();
+      }
     }
 
     #endregion
@@ -243,11 +248,6 @@ namespace Notung.Helm
         }
       }
 
-      private bool ShowSettingsForm(InfoBuffer buffer)
-      {
-        return m_view.ShowSettingsForm(buffer);
-      }
-
       private void HandleMainFormLoad(object sender, EventArgs e)
       {
         var queue = m_starter.GetLoadingQueue(sender);
@@ -277,7 +277,7 @@ namespace Notung.Helm
             return;
           }
 
-          if (!this.ShowSettingsForm(res.Buffer))
+          if (!m_view.ShowSettingsForm(res.Buffer))
           {
             m_starter.ExitCode = 2;
             Application.Exit();

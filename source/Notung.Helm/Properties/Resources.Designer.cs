@@ -181,5 +181,23 @@ namespace Notung.Helm.Properties {
                 return ResourceManager.GetString("READY", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validating section {0}.
+        /// </summary>
+        internal static string VALIDATING_SECTION {
+            get {
+                return ResourceManager.GetString("VALIDATING_SECTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Validating sections.
+        /// </summary>
+        internal static string VALIDATING_SECTIONS {
+            get {
+                return ResourceManager.GetString("VALIDATING_SECTIONS", resourceCulture);
+            }
+        }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -19,6 +18,8 @@ namespace Notung.Helm
   public interface IMainFormView : IAppInstanceView, IOperationLauncherView, INotificatorView
   {
     Form MainForm { get; }
+
+    bool RestartOnCriticalError { get; }
 
     ISplashScreenView GetSplashScreenView();
 
@@ -64,14 +65,22 @@ namespace Notung.Helm
       }
     }
 
-    public static readonly DataTypeCode StringArgsMessageCode = 1;
-
-    public static TimeSpan SendMessageTimeout = TimeSpan.FromMilliseconds(0x100);
-
     public Form MainForm
     {
       get { return m_main_form; }
     }
+
+    public virtual bool RestartOnCriticalError
+    {
+      get { return false; }
+    }
+
+    public void Restart(string startPath, IList<string> args)
+    {
+      System.Windows.Forms.Application.Restart();
+    }
+
+    #region Dialog factory ------------------------------------------------------------------------
 
     public virtual ISplashScreenView GetSplashScreenView()
     {
@@ -80,7 +89,10 @@ namespace Notung.Helm
 
     public virtual bool ShowSettingsForm(InfoBuffer infoBuffer)
     {
-      return true;
+      using (var dlg = new SettingsDialog())
+      {
+        return dlg.ShowDialog(m_main_form) == DialogResult.OK;
+      }
     }
 
     public virtual void ShowErrorBox(string title, string content)
@@ -91,26 +103,6 @@ namespace Notung.Helm
         dlg.Content = content;
         dlg.ShowDialog(m_main_form);
       }
-    }
-
-    public bool SendArgsToProcess(Process previous, IList<string> args)
-    {
-      var text_to_send = string.Join("\n", args);
-
-      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
-
-      if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
-      {
-        WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
-        return true;
-      }
-
-      return false;
-    }
-
-    public void Restart(string startPath, IList<string> args)
-    {
-      System.Windows.Forms.Application.Restart();
     }
 
     public void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
@@ -127,25 +119,15 @@ namespace Notung.Helm
       return new ProgressIndicatorDialog();
     }
 
+    #endregion
+
+    #region Alerts --------------------------------------------------------------------------------
+
     public virtual bool? Alert(Info info, ConfirmationRegime confirm)
     {
-      if (confirm == ConfirmationRegime.None)
-        MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OK, GetIconForLevel(info.Level, false));
-      else if (confirm == ConfirmationRegime.Confirm)
-        return MessageBox.Show(info.Message, m_main_form.Text, MessageBoxButtons.OKCancel,
-          GetIconForLevel(info.Level, true)) == DialogResult.OK;
-      else
-      {
-        var res = MessageBox.Show(info.Message, m_main_form.Text,
-          MessageBoxButtons.YesNoCancel, GetIconForLevel(info.Level, true));
-
-        if (res == DialogResult.Yes)
-          return true;
-        else if (res == DialogResult.No)
-          return false;
-      }
-
-      return null;
+      return PerformAlert(buttons => MessageBox.Show(m_main_form, 
+        info.Message, m_main_form.Text, buttons, 
+        GetIconForLevel(info.Level, confirm != ConfirmationRegime.None)), confirm);
     }
 
     public virtual bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
@@ -155,45 +137,36 @@ namespace Notung.Helm
         dialog.Summary = summary;
         dialog.SetInfoBuffer(buffer);
         dialog.Text = summaryLevel.GetLabel();
-        if (confirm == ConfirmationRegime.None)
+
+        return PerformAlert(delegate(MessageBoxButtons buttons)
         {
-          dialog.Buttons = MessageBoxButtons.OK;
-          dialog.ShowDialog(m_main_form);
-          return null;
-        }
-        else if (confirm == ConfirmationRegime.Confirm)
-        {
-          dialog.Buttons = MessageBoxButtons.OKCancel;
-          return dialog.ShowDialog(m_main_form) == DialogResult.OK;
-        }
-        else
-        {
-          dialog.Buttons = MessageBoxButtons.YesNoCancel;
-          switch (dialog.ShowDialog(m_main_form))
-          {
-            case DialogResult.Yes:
-              return true;
-            case DialogResult.No:
-              return false;
-            default:
-              return null;
-          }
-        }
+          dialog.Buttons = buttons;
+          return dialog.ShowDialog(m_main_form);
+        }, confirm);
       }
     }
 
-    public static string[] GetStringArgs(Message message)
+    protected bool? PerformAlert(Func<MessageBoxButtons, DialogResult> dialogFunction, ConfirmationRegime confirm)
     {
-      if (message.Msg == WinAPIHelper.WM_COPYDATA)
+      if (confirm == ConfirmationRegime.None)
       {
-        var cd = new CopyData(message.LParam, StringArgsMessageCode);
-
-        _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
-        if (cd.Data != null)
-          return Encoding.Unicode.GetString(cd.Data).Split('\n');
+        dialogFunction(MessageBoxButtons.OK);
+        return null;
       }
-
-      return ArrayExtensions.Empty<string>();
+      else if (confirm == ConfirmationRegime.Confirm)
+        return dialogFunction(MessageBoxButtons.OKCancel) == DialogResult.OK;
+      else
+      {
+        switch (dialogFunction(MessageBoxButtons.YesNoCancel))
+        {
+          case DialogResult.Yes:
+            return true;
+          case DialogResult.No:
+            return false;
+          default:
+            return null;
+        }
+      }
     }
 
     protected MessageBoxIcon GetIconForLevel(InfoLevel level, bool confirm)
@@ -214,5 +187,44 @@ namespace Notung.Helm
           return MessageBoxIcon.None;
       }
     }
+
+    #endregion
+
+    #region Command line arguments sending --------------------------------------------------------
+
+    public static readonly DataTypeCode StringArgsMessageCode = 1;
+
+    public static TimeSpan SendMessageTimeout = TimeSpan.FromMilliseconds(0x100);
+
+    public bool SendArgsToProcess(Process previous, IList<string> args)
+    {
+      var text_to_send = string.Join("\n", args);
+
+      var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
+
+      if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)
+      {
+        WinAPIHelper.SetForegroundWindow(previous.MainWindowHandle);
+        return true;
+      }
+
+      return false;
+    }
+
+    public static string[] GetStringArgs(Message message)
+    {
+      if (message.Msg == WinAPIHelper.WM_COPYDATA)
+      {
+        var cd = new CopyData(message.LParam, StringArgsMessageCode);
+
+        _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
+        if (cd.Data != null)
+          return Encoding.Unicode.GetString(cd.Data).Split('\n');
+      }
+
+      return ArrayExtensions.Empty<string>();
+    }
+
+    #endregion
   }
 }

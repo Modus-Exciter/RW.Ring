@@ -139,6 +139,9 @@
   <data name="RESTART" xml:space="preserve">
     <value>Restart</value>
   </data>
+  <data name="SETTINGS" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="SOME_STATE" xml:space="preserve">
     <value>Some state {0}</value>
   </data>

@@ -117,28 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ALL_RIGHT" xml:space="preserve">
-    <value>Всё хорошо!</value>
-  </data>
-  <data name="BACKGROUND" xml:space="preserve">
-    <value>Фоновый поток</value>
-  </data>
-  <data name="DLL" xml:space="preserve">
-    <value>Запустить библиотеку</value>
-  </data>
-  <data name="MESSAGE" xml:space="preserve">
-    <value>Сообщение от задачи {0}</value>
-  </data>
-  <data name="OPEN_FOLDER" xml:space="preserve">
-    <value>Открыть папку</value>
-  </data>
-  <data name="RESTART" xml:space="preserve">
-    <value>Перезапуск</value>
-  </data>
-  <data name="SETTINGS" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
-  <data name="SOME_STATE" xml:space="preserve">
-    <value>Некий статус {0}</value>
-  </data>
+  <metadata name="m_contract_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="m_xml_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>145, 17</value>
+  </metadata>
 </root>

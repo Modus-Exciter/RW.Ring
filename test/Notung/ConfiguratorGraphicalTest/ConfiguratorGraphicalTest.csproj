@@ -46,6 +46,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestPage2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TestPage2.Designer.cs">
+      <DependentUpon>TestPage2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -60,6 +66,15 @@
     <Compile Include="SelectFunctionDialog.Designer.cs">
       <DependentUpon>SelectFunctionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="TestPage1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TestPage1.Designer.cs">
+      <DependentUpon>TestPage1.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="TestPage2.resx">
+      <DependentUpon>TestPage2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -77,9 +92,16 @@
     <EmbeddedResource Include="SelectFunctionDialog.resx">
       <DependentUpon>SelectFunctionDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TestPage1.resx">
+      <DependentUpon>TestPage1.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\DataSources\OuterSectionDataContract.datasource" />
+    <None Include="Properties\DataSources\OuterSectionDataContractName.datasource" />
+    <None Include="Properties\DataSources\OuterSectionXml.datasource" />
+    <None Include="Properties\DataSources\OuterSectionXmlName.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

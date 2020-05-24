@@ -146,6 +146,19 @@ namespace ConfiguratorGraphicalTest
 
     [DataMember]
     public OuterEnum Nom { get; set; }
+
+    public override bool Validate(InfoBuffer buffer)
+    {
+      System.Threading.Thread.Sleep(2000);
+      
+      if (this.Number < 1)
+      {
+        buffer.Add("Number must be more than 1", InfoLevel.Warning);
+        return false;
+      }
+
+      return true;
+    }
   }
 
   [DataContract(Name = "Outer_CONTRACT")]

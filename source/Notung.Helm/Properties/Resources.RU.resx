@@ -153,4 +153,10 @@
   <data name="READY" xml:space="preserve">
     <value>Готово</value>
   </data>
+  <data name="VALIDATING_SECTION" xml:space="preserve">
+    <value>Проверка секции {0}</value>
+  </data>
+  <data name="VALIDATING_SECTIONS" xml:space="preserve">
+    <value>Проверка секций</value>
+  </data>
 </root>

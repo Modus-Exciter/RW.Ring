@@ -12,6 +12,7 @@ using Notung.Helm;
 using Notung.Helm.Windows;
 using Notung.Logging;
 using Notung.Services;
+using Notung.Helm.Dialogs;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -262,11 +263,20 @@ namespace ConfiguratorGraphicalTest
       buttonOpenFolder.Text = Resources.OPEN_FOLDER;
       buttonRestart.Text = Resources.RESTART;
       buttonWork.Text = Resources.BACKGROUND;
+      m_settings_button.Text = Resources.SETTINGS;
     }
 
     private void comboBoxLang_SelectedIndexChanged(object sender, EventArgs e)
     {
       LanguageSwitcher.Switch(comboBoxLang.Text);
+    }
+
+    private void m_settings_button_Click(object sender, EventArgs e)
+    {
+      using (var dlg = new SettingsDialog())
+      {
+        dlg.ShowDialog(this);
+      }
     }
   }
 }

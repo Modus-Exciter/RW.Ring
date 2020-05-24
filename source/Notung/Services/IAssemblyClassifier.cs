@@ -279,10 +279,13 @@ namespace Notung.Services
     {
       lock (m_assemblies)
       {
-        m_assemblies.Add(args.LoadedAssembly);
+        if (!m_assemblies.Contains(args.LoadedAssembly.ManifestModule.FullyQualifiedName))
+        {
+          m_assemblies.Add(args.LoadedAssembly);
 
-        if (!m_prefix_tree.MatchAny(args.LoadedAssembly.FullName))
-          m_tracking_assemblies.Add(args.LoadedAssembly);
+          if (!m_prefix_tree.MatchAny(args.LoadedAssembly.FullName))
+            m_tracking_assemblies.Add(args.LoadedAssembly);
+        }
       }
 
       if (args.LoadedAssembly.IsDefined(typeof(LibraryInitializerAttribute), false))
@@ -491,7 +494,6 @@ namespace Notung.Services
       AssemblyName IPluginLoader.LoadAssemblyFromFile(string fileName)
       {
         var asm = this.LoadAssemblyFromFile(fileName);
-
         return asm != null ? asm.GetName() : null;
       }
 

@@ -83,7 +83,7 @@ namespace Notung.Configuration
 
       try
       {
-        ret = Validate(buffer);
+        ret = QuickValidate(buffer);
       }
       catch(Exception ex)
       {
@@ -134,9 +134,14 @@ namespace Notung.Configuration
 
     protected virtual void BeforeSave() { }
 
-    public virtual bool Validate(InfoBuffer buffer)
+    protected virtual bool QuickValidate(InfoBuffer buffer)
     {
       return true;
+    }
+
+    public virtual bool Validate(InfoBuffer buffer)
+    {
+      return QuickValidate(buffer);
     }
 
     public virtual void ApplySettings() { }
