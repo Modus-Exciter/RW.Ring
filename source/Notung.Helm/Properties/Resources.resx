@@ -157,7 +157,7 @@
   <data name="EXCEPTION_MESSAGE" xml:space="preserve">
     <value>Message</value>
   </data>
-  <data name="error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="VALIDATING_SECTION" xml:space="preserve">
@@ -165,5 +165,8 @@
   </data>
   <data name="VALIDATING_SECTIONS" xml:space="preserve">
     <value>Validating sections</value>
+  </data>
+  <data name="Inspector" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\inspector.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

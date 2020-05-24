@@ -112,9 +112,9 @@ namespace Notung.Helm.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap error {
+        internal static System.Drawing.Bitmap Error {
             get {
-                object obj = ResourceManager.GetObject("error", resourceCulture);
+                object obj = ResourceManager.GetObject("Error", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -161,6 +161,13 @@ namespace Notung.Helm.Properties {
         internal static string INIT_FAIL_DESCRIPTION {
             get {
                 return ResourceManager.GetString("INIT_FAIL_DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Inspector {
+            get {
+                object obj = ResourceManager.GetObject("Inspector", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -9,6 +9,7 @@ using Notung.ComponentModel;
 using Notung.Configuration;
 using Notung.Helm.Properties;
 using Notung.Logging;
+using Notung.Services;
 
 namespace Notung.Helm.Configuration
 {
@@ -241,8 +242,9 @@ namespace Notung.Helm.Configuration
     private bool ValidateBackgroundThreadSections(Dictionary<ConfigurationSection, Type> backgrounds, bool can_save)
     {
       var wrk = new ValidateSectionWork(backgrounds);
+      var launch = new LaunchParameters { Bitmap = Resources.Inspector };
 
-      if (AppManager.OperationLauncher.Run(wrk) != TaskStatus.RanToCompletion)
+      if (AppManager.OperationLauncher.Run(wrk, launch) != TaskStatus.RanToCompletion)
         can_save = false;
 
       can_save = wrk.Success && can_save;
