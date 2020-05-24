@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Notung.Helm.Dialogs
 {
@@ -34,10 +27,13 @@ namespace Notung.Helm.Dialogs
       get { return m_buttons; }
       set
       {
-        m_buttons = value;
+        if (value == m_buttons)
+          return;
 
-        //foreach (Control control in m_bottom_panel.Controls)
-        //  control.Visible = false;
+        foreach (Control control in m_bottom_panel.Controls)
+          control.Visible = false;
+
+        m_buttons = value;
 
         switch (value)
         {
