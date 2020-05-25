@@ -33,6 +33,8 @@ namespace Notung.Helm.Configuration
         container.Add(this);
     }
 
+    #region Properties ----------------------------------------------------------------------------
+
     /// <summary>
     /// Элемент управления, содержащий текущую секцию
     /// </summary>
@@ -58,6 +60,10 @@ namespace Notung.Helm.Configuration
     {
       get { return m_pages.Values; }
     }
+
+    #endregion
+
+    #region Events --------------------------------------------------------------------------------
 
     /// <summary>
     /// Происходит в момент загрузки страницы, позволяя отменить загрузку
@@ -89,6 +95,8 @@ namespace Notung.Helm.Configuration
           this.Events.RemoveHandler("PageChanged", value);
       }
     }
+
+    #endregion
 
     /// <summary>
     /// Выбор страницы настроек по типу
@@ -365,8 +373,9 @@ namespace Notung.Helm.Configuration
           }
 
           var res = section.Key.Validate(buffer);
+
           m_page_results[section.Value] = m_page_results[section.Value] && res;
-          this.Success = res && this.Success;
+          this.Success = this.Success && res;
         }
       }
 
