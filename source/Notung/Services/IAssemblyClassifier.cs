@@ -279,7 +279,7 @@ namespace Notung.Services
     {
       lock (m_assemblies)
       {
-        if (!m_assemblies.Contains(args.LoadedAssembly.ManifestModule.FullyQualifiedName))
+        if (args.LoadedAssembly.ManifestModule.FullyQualifiedName != "<Unknown>")
         {
           m_assemblies.Add(args.LoadedAssembly);
 

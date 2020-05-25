@@ -34,6 +34,7 @@ namespace Notung.Helm.Dialogs
 
       if (m_operation == null)
         throw new ArgumentException();
+
       m_cancel_source = m_operation.GetCancellationTokenSource();
 
       if (m_cancel_source == null)
@@ -43,7 +44,6 @@ namespace Notung.Helm.Dialogs
 
       m_operation.ProgressChanged += HandleProgressChanged;
       m_operation.ShowCurrentProgress();
-
       m_operation.Completed += HandleOperationCompleted;
 
       m_view.ButtonEnabled = m_operation.CanCancel;

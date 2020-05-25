@@ -20,7 +20,7 @@ namespace Notung.Helm.Configuration
   {
     private readonly BindingList<SettingsError> m_errors = new BindingList<SettingsError>();
     private readonly Dictionary<Type, IConfigurationPage> m_pages = new Dictionary<Type, IConfigurationPage>();
-    private readonly Dictionary<Type, ValidationStatus> m_page_statuses = new Dictionary<Type, ValidationStatus>();
+    private readonly Dictionary<Type, bool?> m_page_statuses = new Dictionary<Type, bool?>();
     private readonly SettingsBindingSourceCollection m_sections = new SettingsBindingSourceCollection();
 
     private readonly ILog _log = LogManager.GetLogger(typeof(SettingsController));
@@ -134,7 +134,7 @@ namespace Notung.Helm.Configuration
               foreach (var section in page.Sections)
                 section.LoadCurrentSettings();
 
-              m_page_statuses[type] = new ValidationStatus();
+              m_page_statuses[type] = null;
               page.Changed += this.HandleSettingsChanged;
             }
           }
@@ -217,8 +217,6 @@ namespace Notung.Helm.Configuration
       if (page == null)
         return;
 
-      m_page_statuses[page.GetType()].Changed = true;
-
       if (page.UIThreadValidation)
       {
         var buffer = new InfoBuffer();
@@ -228,13 +226,13 @@ namespace Notung.Helm.Configuration
           page_valid = section.GetEditingSection().Validate(buffer) && page_valid;
 
         this.ReplaceErrors(page.GetType(), buffer);
-        m_page_statuses[page.GetType()].Valid = page_valid;
+        m_page_statuses[page.GetType()] = page_valid;
 
         if (this.ValidationResults != null)
           this.ValidationResults.Visible = m_errors.Count > 0;
       }
       else
-        m_page_statuses[page.GetType()].Valid = null;
+        m_page_statuses[page.GetType()] = null;
 
       this.Events["PageChanged"].InvokeSynchronized(this, new PageEventArgs(page));
     }
@@ -263,9 +261,9 @@ namespace Notung.Helm.Configuration
 
       foreach (var page in m_pages)
       {
-        if (m_page_statuses[page.Key].Valid != null)
+        if (m_page_statuses[page.Key] != null)
         {
-          can_save = can_save && m_page_statuses[page.Key].Valid.Value;
+          can_save = can_save && m_page_statuses[page.Key].Value;
           continue;
         }
 
@@ -281,7 +279,7 @@ namespace Notung.Helm.Configuration
             this.ReplaceErrors(page.Key, buffer);
           }
 
-          m_page_statuses[page.Key].Valid = page_valid;
+          m_page_statuses[page.Key] = page_valid;
           can_save = can_save && page_valid;
         }
         else
@@ -308,7 +306,7 @@ namespace Notung.Helm.Configuration
         this.ReplaceErrors(kv.Key, kv.Value);
 
       foreach (var kv in wrk.PageResults)
-        m_page_statuses[kv.Key].Valid = kv.Value;
+        m_page_statuses[kv.Key] = kv.Value;
 
       return can_save;
     }
@@ -335,13 +333,6 @@ namespace Notung.Helm.Configuration
           Level = info.Level
         });
       }
-    }
-
-    private class ValidationStatus
-    {
-      public bool Changed { get; set; }
-
-      public bool? Valid { get; set; }
     }
 
     private class ValidateSectionWork : RunBase
