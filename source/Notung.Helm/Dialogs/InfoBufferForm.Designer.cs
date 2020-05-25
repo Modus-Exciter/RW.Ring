@@ -85,7 +85,6 @@
       this.m_button_ok.TabIndex = 1;
       this.m_button_ok.Text = "OK";
       this.m_button_ok.UseVisualStyleBackColor = true;
-      this.m_button_ok.Visible = false;
       // 
       // m_button_no
       // 

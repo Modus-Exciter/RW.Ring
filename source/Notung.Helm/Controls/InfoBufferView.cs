@@ -20,6 +20,7 @@ namespace Notung.Helm.Controls
       {
         var node = nodes.Add(info.Message);
         node.ImageKey = info.Level.ToString();
+        node.SelectedImageKey = node.ImageKey;
 
         node.Tag = info.Details;
 
