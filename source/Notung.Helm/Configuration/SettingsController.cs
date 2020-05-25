@@ -76,6 +76,20 @@ namespace Notung.Helm.Configuration
       }
     }
 
+    public event EventHandler<PageEventArgs> PageChanged
+    {
+      add
+      {
+        lock (this.Events)
+          this.Events.AddHandler("PageChanged", value);
+      }
+      remove
+      {
+        lock (this.Events)
+          this.Events.RemoveHandler("PageChanged", value);
+      }
+    }
+
     /// <summary>
     /// Выбор страницы настроек по типу
     /// </summary>
@@ -158,15 +172,6 @@ namespace Notung.Helm.Configuration
       return true;
     }
 
-    private bool IsPageSkipped(IConfigurationPage page)
-    {
-      var args = new SkipPageEventArgs(page);
-
-      this.Events["SkipPage"].InvokeSynchronized(this, args);
-
-      return args.Cancel;
-    }
-
     #region IListSource members -------------------------------------------------------------------
 
     bool IListSource.ContainsListCollection
@@ -182,6 +187,15 @@ namespace Notung.Helm.Configuration
     #endregion
 
     #region Private methods -----------------------------------------------------------------------
+
+    private bool IsPageSkipped(IConfigurationPage page)
+    {
+      var args = new SkipPageEventArgs(page);
+
+      this.Events["SkipPage"].InvokeSynchronized(this, args);
+
+      return args.Cancel;
+    }
 
     private Type[] GetAssemblyTypes(Assembly assembly)
     {
@@ -207,31 +221,22 @@ namespace Notung.Helm.Configuration
 
       if (page.UIThreadValidation)
       {
-        var deletee = new List<SettingsError>();
-
-        foreach (var err in m_errors)
-        {
-          if (err.SectionType == page.GetType())
-            deletee.Add(err);
-        }
-
-        foreach (var del in deletee)
-          m_errors.Remove(del);
-
         var buffer = new InfoBuffer();
         var page_valid = true;
 
         foreach (var section in page.Sections)
           page_valid = section.GetEditingSection().Validate(buffer) && page_valid;
 
-        this.AddErrors(page.GetType(), buffer);
+        this.ReplaceErrors(page.GetType(), buffer);
         m_page_statuses[page.GetType()].Valid = page_valid;
 
         if (this.ValidationResults != null)
           this.ValidationResults.Visible = m_errors.Count > 0;
       }
       else
-        m_page_statuses[page.GetType()] = null;
+        m_page_statuses[page.GetType()].Valid = null;
+
+      this.Events["PageChanged"].InvokeSynchronized(this, new PageEventArgs(page));
     }
 
     #endregion
@@ -240,8 +245,6 @@ namespace Notung.Helm.Configuration
 
     private bool ValidateAllSections()
     {
-      m_errors.Clear();
-
       var backgrounds = new Dictionary<ConfigurationSection, Type>();
       var can_save = ValidateUIThreadSections(backgrounds);
 
@@ -260,6 +263,12 @@ namespace Notung.Helm.Configuration
 
       foreach (var page in m_pages)
       {
+        if (m_page_statuses[page.Key].Valid != null)
+        {
+          can_save = can_save && m_page_statuses[page.Key].Valid.Value;
+          continue;
+        }
+
         if (page.Value.UIThreadValidation)
         {
           var page_valid = true;
@@ -269,7 +278,7 @@ namespace Notung.Helm.Configuration
             var buffer = new InfoBuffer();
             page_valid = settings.GetEditingSection().Validate(buffer) & page_valid;
 
-            this.AddErrors(page.Key, buffer);
+            this.ReplaceErrors(page.Key, buffer);
           }
 
           m_page_statuses[page.Key].Valid = page_valid;
@@ -296,13 +305,27 @@ namespace Notung.Helm.Configuration
       can_save = wrk.Success && can_save;
 
       foreach (var kv in wrk.Details)
-        this.AddErrors(kv.Key, kv.Value);
+        this.ReplaceErrors(kv.Key, kv.Value);
+
+      foreach (var kv in wrk.PageResults)
+        m_page_statuses[kv.Key].Valid = kv.Value;
 
       return can_save;
     }
 
-    private void AddErrors(Type pageType, InfoBuffer buffer)
+    private void ReplaceErrors(Type pageType, InfoBuffer buffer)
     {
+      var deletee = new List<SettingsError>();
+
+      foreach (var err in m_errors)
+      {
+        if (err.SectionType == pageType)
+          deletee.Add(err);
+      }
+
+      foreach (var del in deletee)
+        m_errors.Remove(del);
+      
       foreach (var info in buffer)
       {
         m_errors.Add(new SettingsError
@@ -325,6 +348,7 @@ namespace Notung.Helm.Configuration
     {
       private readonly Dictionary<ConfigurationSection, Type> m_section;
       private readonly Dictionary<Type, InfoBuffer> m_results = new Dictionary<Type, InfoBuffer>();
+      private readonly Dictionary<Type, bool> m_page_results = new Dictionary<Type, bool>();
 
       public ValidateSectionWork(Dictionary<ConfigurationSection, Type> section)
       {
@@ -346,15 +370,23 @@ namespace Notung.Helm.Configuration
           {
             buffer = new InfoBuffer();
             m_results.Add(section.Value, buffer);
+            m_page_results[section.Value] = true;
           }
 
-          this.Success = section.Key.Validate(buffer) && this.Success;
+          var res = section.Key.Validate(buffer);
+          m_page_results[section.Value] = m_page_results[section.Value] && res;
+          this.Success = res && this.Success;
         }
       }
 
       public Dictionary<Type, InfoBuffer> Details
       {
         get { return m_results; }
+      }
+
+      public Dictionary<Type, bool> PageResults
+      {
+        get { return m_page_results; }
       }
 
       public override string ToString()
@@ -364,51 +396,5 @@ namespace Notung.Helm.Configuration
     }
 
     #endregion
-  }
-
-  /// <summary>
-  /// Описание ошибки конфигурации, по которой можно перейти к нужной странице настроек
-  /// </summary>
-  public sealed class SettingsError
-  {
-    /// <summary>
-    /// Соообщение об ошибке
-    /// </summary>
-    public string Message { get; set; }
-
-    /// <summary>
-    /// Уровень сообщения
-    /// </summary>
-    public InfoLevel Level { get; set; }
-
-    /// <summary>
-    /// Тип конфигурационной секции, к которой привязано сообщение
-    /// </summary>
-    [Browsable(false)]
-    public Type SectionType { get; set; }
-  }
-
-  /// <summary>
-  /// Аргументы события, возникающего передс созданием страницы настроек
-  /// </summary>
-  public class SkipPageEventArgs : CancelEventArgs
-  {
-    private readonly IConfigurationPage m_page;
-
-    public SkipPageEventArgs(IConfigurationPage page) : base(false)
-    {
-      if (page == null)
-        throw new ArgumentNullException("page");
-
-      m_page = page;
-    }
-
-    /// <summary>
-    /// Создаваемая страница настроек
-    /// </summary>
-    public IConfigurationPage Page
-    {
-      get { return m_page; }
-    }
   }
 }

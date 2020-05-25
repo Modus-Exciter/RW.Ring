@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Notung.Helm.Configuration;
 
 namespace Notung.Helm.Dialogs
 {
@@ -44,8 +45,7 @@ namespace Notung.Helm.Dialogs
         if (section.Image != null)
         {
           m_image_list.Images.Add(section.Image);
-          node.ImageIndex = m_image_list.Images.Count - 1;
-          node.SelectedImageIndex = node.ImageIndex;
+          node.SelectedImageIndex = node.ImageIndex = m_image_list.Images.Count - 1;
         }
 
         m_nodes[section.GetType()] = node;
@@ -55,6 +55,12 @@ namespace Notung.Helm.Dialogs
     private void m_button_apply_Click(object sender, EventArgs e)
     {
       m_settings_controller.SaveAllSections(true);
+    }
+
+    private void m_settings_controller_PageChanged(object sender, PageEventArgs e)
+    {
+      if (!m_nodes[e.Page.GetType()].Text.EndsWith("*"))
+        m_nodes[e.Page.GetType()].Text += "*";
     }
   }
 }

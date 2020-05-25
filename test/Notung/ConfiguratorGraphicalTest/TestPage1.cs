@@ -38,7 +38,7 @@ namespace ConfiguratorGraphicalTest
 
     public bool UIThreadValidation
     {
-      get { return true; }
+      get { return false; }
     }
 
     public override string ToString()

@@ -55,6 +55,7 @@
     <Compile Include="Configuration\SettingsController.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Configuration\SettingsError.cs" />
     <Compile Include="Dialogs\ErrorBox.cs">
       <SubType>Form</SubType>
     </Compile>

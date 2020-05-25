@@ -149,7 +149,7 @@ namespace ConfiguratorGraphicalTest
 
     public override bool Validate(InfoBuffer buffer)
     {
-      //System.Threading.Thread.Sleep(2000);
+      System.Threading.Thread.Sleep(2000);
       
       if (this.Number < 1)
       {

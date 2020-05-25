@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       this.m_section_panel = new System.Windows.Forms.Panel();
       this.m_button_panel = new System.Windows.Forms.FlowLayoutPanel();
       this.m_button_cancel = new System.Windows.Forms.Button();
@@ -130,14 +130,14 @@
       this.m_errors_view.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.messageDataGridViewTextBoxColumn});
       this.m_errors_view.DataSource = this.m_settings_controller;
-      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.m_errors_view.DefaultCellStyle = dataGridViewCellStyle2;
+      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.m_errors_view.DefaultCellStyle = dataGridViewCellStyle1;
       this.m_errors_view.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.m_errors_view.Location = new System.Drawing.Point(5, 487);
       this.m_errors_view.Name = "m_errors_view";
@@ -159,6 +159,7 @@
       // 
       this.m_settings_controller.PagePlace = this.m_section_panel;
       this.m_settings_controller.ValidationResults = this.m_errors_view;
+      this.m_settings_controller.PageChanged += new System.EventHandler<Notung.Helm.Configuration.PageEventArgs>(this.m_settings_controller_PageChanged);
       // 
       // SettingsDialog
       // 

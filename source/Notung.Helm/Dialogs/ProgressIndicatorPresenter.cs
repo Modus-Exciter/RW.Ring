@@ -52,6 +52,16 @@ namespace Notung.Helm.Dialogs
       m_view.IsMarquee = !m_launch_parameters.SupportsPercentNotification;
 
       m_view.ButtonClick += this.ButtonClick;
+      m_view.Load += HandleLoad;
+    }
+
+    private void HandleLoad(object sender, EventArgs e)
+    {
+      if (m_operation.Status == TaskStatus.RanToCompletion)
+      {
+        m_view.Load -= HandleLoad;
+        m_view.Close();
+      }
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
@@ -80,6 +90,7 @@ namespace Notung.Helm.Dialogs
       m_view.IsMarquee = false;
 
       m_view.ButtonClick -= this.ButtonClick;
+      m_view.Load -= HandleLoad;
 
       if (m_operation.Status != TaskStatus.RanToCompletion)
       {
@@ -133,5 +144,7 @@ namespace Notung.Helm.Dialogs
     void Close();
 
     event EventHandler ButtonClick;
+
+    event EventHandler Load;
   }
 }
