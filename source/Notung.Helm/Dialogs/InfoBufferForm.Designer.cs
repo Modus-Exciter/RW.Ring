@@ -28,7 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.m_buffer_view = new Notung.Helm.Controls.InfoBufferView();
       this.m_bottom_panel = new System.Windows.Forms.FlowLayoutPanel();
       this.m_button_cancel = new System.Windows.Forms.Button();
       this.m_button_ok = new System.Windows.Forms.Button();
@@ -36,18 +35,10 @@
       this.m_button_yes = new System.Windows.Forms.Button();
       this.m_top_panel = new System.Windows.Forms.Panel();
       this.m_summary_label = new System.Windows.Forms.Label();
+      this.m_buffer_view = new Notung.Helm.Controls.InfoBufferView();
       this.m_bottom_panel.SuspendLayout();
       this.m_top_panel.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // m_buffer_view
-      // 
-      this.m_buffer_view.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-      this.m_buffer_view.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_buffer_view.Location = new System.Drawing.Point(5, 42);
-      this.m_buffer_view.Name = "m_buffer_view";
-      this.m_buffer_view.Size = new System.Drawing.Size(466, 220);
-      this.m_buffer_view.TabIndex = 0;
       // 
       // m_bottom_panel
       // 
@@ -130,6 +121,15 @@
       this.m_summary_label.Size = new System.Drawing.Size(466, 32);
       this.m_summary_label.TabIndex = 0;
       this.m_summary_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // m_buffer_view
+      // 
+      this.m_buffer_view.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+      this.m_buffer_view.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.m_buffer_view.Location = new System.Drawing.Point(5, 42);
+      this.m_buffer_view.Name = "m_buffer_view";
+      this.m_buffer_view.Size = new System.Drawing.Size(466, 220);
+      this.m_buffer_view.TabIndex = 0;
       // 
       // InfoBufferForm
       // 
