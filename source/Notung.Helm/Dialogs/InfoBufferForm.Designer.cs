@@ -113,12 +113,13 @@
       // 
       // m_summary_label
       // 
+      this.m_summary_label.AutoSize = true;
       this.m_summary_label.BackColor = System.Drawing.Color.White;
       this.m_summary_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.m_summary_label.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_summary_label.Location = new System.Drawing.Point(0, 0);
       this.m_summary_label.Name = "m_summary_label";
-      this.m_summary_label.Size = new System.Drawing.Size(466, 32);
+      this.m_summary_label.Size = new System.Drawing.Size(2, 15);
       this.m_summary_label.TabIndex = 0;
       this.m_summary_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       // 
@@ -146,6 +147,7 @@
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.m_bottom_panel.ResumeLayout(false);
       this.m_top_panel.ResumeLayout(false);
+      this.m_top_panel.PerformLayout();
       this.ResumeLayout(false);
 
     }
