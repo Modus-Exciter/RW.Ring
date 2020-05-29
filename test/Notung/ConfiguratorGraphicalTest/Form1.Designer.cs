@@ -48,6 +48,7 @@
       this.buttonWork = new System.Windows.Forms.Button();
       this.m_settings_button = new System.Windows.Forms.Button();
       this.comboBoxLang = new System.Windows.Forms.ComboBox();
+      this.buttonInfoBufferView = new System.Windows.Forms.Button();
       this.languageSwitcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
       this.tableLayoutPanel.SuspendLayout();
       this.flowLayoutPanel1.SuspendLayout();
@@ -147,6 +148,7 @@
       this.flowLayoutPanel1.Controls.Add(this.buttonWork);
       this.flowLayoutPanel1.Controls.Add(this.m_settings_button);
       this.flowLayoutPanel1.Controls.Add(this.comboBoxLang);
+      this.flowLayoutPanel1.Controls.Add(this.buttonInfoBufferView);
       resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
       this.flowLayoutPanel1.Name = "flowLayoutPanel1";
       // 
@@ -196,6 +198,13 @@
       this.comboBoxLang.Name = "comboBoxLang";
       this.comboBoxLang.SelectedIndexChanged += new System.EventHandler(this.comboBoxLang_SelectedIndexChanged);
       // 
+      // buttonInfoBufferView
+      // 
+      resources.ApplyResources(this.buttonInfoBufferView, "buttonInfoBufferView");
+      this.buttonInfoBufferView.Name = "buttonInfoBufferView";
+      this.buttonInfoBufferView.UseVisualStyleBackColor = true;
+      this.buttonInfoBufferView.Click += new System.EventHandler(this.buttonInfoBufferView_Click);
+      // 
       // languageSwitcher
       // 
       this.languageSwitcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.languageSwitcher_LanguageChanged);
@@ -236,6 +245,7 @@
     private Notung.ComponentModel.LanguageSwitcher languageSwitcher;
     private System.Windows.Forms.ComboBox comboBoxLang;
     private System.Windows.Forms.Button m_settings_button;
+    private System.Windows.Forms.Button buttonInfoBufferView;
   }
 }
 

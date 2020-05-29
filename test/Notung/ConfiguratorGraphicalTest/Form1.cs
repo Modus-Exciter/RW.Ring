@@ -264,6 +264,7 @@ namespace ConfiguratorGraphicalTest
       buttonRestart.Text = Resources.RESTART;
       buttonWork.Text = Resources.BACKGROUND;
       m_settings_button.Text = Resources.SETTINGS;
+      buttonInfoBufferView.Text = Resources.INFO_VIEW;
     }
 
     private void comboBoxLang_SelectedIndexChanged(object sender, EventArgs e)
@@ -277,6 +278,16 @@ namespace ConfiguratorGraphicalTest
       {
         dlg.ShowDialog(this);
       }
+    }
+
+    private void buttonInfoBufferView_Click(object sender, EventArgs e)
+    {
+      AppManager.Notificator.Show(new InfoBuffer
+          {
+            new Info("Good message", InfoLevel.Info),
+            new Info("Bad message" ,InfoLevel.Warning)
+          }, "aaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaa aaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbb   bbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbb        bbbbbbbbbbb   aaaa aaaaaaaaaaaa aaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaa aaaaaaaa a aaaaaaaaaa aaaaaaaaa aaaaaa aaaaaa aaa nnnnnnnnnn");
+
     }
   }
 }

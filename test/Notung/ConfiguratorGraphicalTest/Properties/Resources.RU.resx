@@ -126,6 +126,9 @@
   <data name="DLL" xml:space="preserve">
     <value>Запустить библиотеку</value>
   </data>
+  <data name="INFO_VIEW" xml:space="preserve">
+    <value>Отображение текста</value>
+  </data>
   <data name="MESSAGE" xml:space="preserve">
     <value>Сообщение от задачи {0}</value>
   </data>

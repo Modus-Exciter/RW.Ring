@@ -16,7 +16,7 @@ namespace Notung.Helm.Controls
 
     private void SetInfoBuffer(InfoBuffer buffer, TreeNodeCollection nodes)
     {
-      foreach (var info in buffer)
+      foreach (var info in buffer)      
       {
         var node = nodes.Add(info.Message);
         node.ImageKey = info.Level.ToString();

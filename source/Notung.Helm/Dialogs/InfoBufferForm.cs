@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Notung.Helm.Dialogs
 {
@@ -19,8 +21,26 @@ namespace Notung.Helm.Dialogs
     public string Summary
     {
       get { return m_summary_label.Text; }
-      set { m_summary_label.Text = value; }
+      set
+      {
+        m_summary_label.Text = value;
+        AdaptSummary();
+      }
     }
+
+    protected override void OnResize(EventArgs e)
+    {
+      base.OnResize(e);
+      AdaptSummary();
+    }
+
+    //private void MeasureText1(PaintEventArgs e)
+    //{
+    //  String text1 = m_summary_label.Text;
+    //  Font arialBold = new Font("Arial", 12.0F);
+    //  Size textSize = TextRenderer.MeasureText(text1, arialBold);
+    //  TextRenderer.MeasureText(m_summary_label.ToString(), arialBold);
+    //}
 
     public MessageBoxButtons Buttons
     {
@@ -52,6 +72,16 @@ namespace Notung.Helm.Dialogs
             m_button_cancel.Visible = true;
             break;
         }
+      }
+    }
+    void AdaptSummary ()
+    {
+      using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+      {
+        SizeF stringSize = new SizeF();
+        stringSize = g.MeasureString(m_summary_label.Text, m_summary_label.Font);
+        float rowCounter = (float)Math.Ceiling(stringSize.Width / m_summary_label.Width);
+        m_top_panel.Height = (int)((rowCounter + 1) * stringSize.Height);
       }
     }
   }
