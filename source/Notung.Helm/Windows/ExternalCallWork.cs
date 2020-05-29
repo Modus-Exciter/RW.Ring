@@ -64,10 +64,5 @@ namespace Notung.Helm.Windows
         m_exception = ex;
       }
     }
-
-    public override string ToString()
-    {
-      return string.Format(Resources.CALLING_FUNCTION, m_function_name, Path.GetFileName(m_file_name));
-    }
   }
 }

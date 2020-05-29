@@ -241,6 +241,11 @@ namespace Notung.Services
       m_plugin_loader.Dispose();
     }
 
+    /// <summary>
+    /// Перекрыв этот метод, можно изменить способ чтения плагинов из файла
+    /// </summary>
+    /// <param name="path">Путь к файлу с манифестом плагина</param>
+    /// <returns>Сведения о плагине для загрузки</returns>
     protected virtual PluginInfo GetPluginInfo(string path)
     {
 #if DEBUG
