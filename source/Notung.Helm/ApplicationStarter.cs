@@ -10,7 +10,6 @@ using Notung.Helm.Properties;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Services;
-using Application = System.Windows.Forms.Application;
 
 namespace Notung.Helm
 {
@@ -124,7 +123,7 @@ namespace Notung.Helm
     /// Исключает префиксы внешних библиотек из классификатора сборок
     /// </summary>
     /// <param name="exclude">Метод, который надо вызвать, чтобы исключить префиксы</param>
-    protected virtual void ExcludePrefixes(Action<string> exclude) { exclude("Presentation"); }
+    protected virtual void ExcludePrefixes(Action<string> exclude) { }
 
     #endregion
 
@@ -243,6 +242,7 @@ namespace Notung.Helm
         {
           var presenter = new SplashScreenPresenter(work, dlg);
           presenter.Picture = splashScreen;
+
           dlg.ShowDialog(m_view.MainForm);
           return presenter.Result;
         }
