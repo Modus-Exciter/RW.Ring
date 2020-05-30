@@ -201,7 +201,7 @@ namespace ConfiguratorGraphicalTest
       {
         AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters 
         { 
-          Bitmap = Resources.DOS_TRACK,
+          //Bitmap = Resources.DOS_TRACK,
           CloseOnFinish = false
         });
       }
@@ -213,7 +213,7 @@ namespace ConfiguratorGraphicalTest
        private bool m_ok = false;
 
       private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
-      
+
       public override void Run()
       {
         this.CanCancel = false;
@@ -251,6 +251,8 @@ namespace ConfiguratorGraphicalTest
             new Info("Good message", InfoLevel.Info),
             new Info("Bad message" ,InfoLevel.Warning)
           };
+        else if (serviceType == typeof(Image))
+          return Resources.DOS_TRACK;
         else
           return null;
       }

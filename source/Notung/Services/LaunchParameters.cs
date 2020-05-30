@@ -14,7 +14,7 @@ namespace Notung.Services
   public sealed class LaunchParameters 
   {
     [NonSerialized]
-    private Bitmap m_bitmap;
+    private Image m_bitmap;
     private byte[] m_image_data;
     
     /// <summary>
@@ -58,7 +58,7 @@ namespace Notung.Services
     /// <summary>
     /// Картинка, отображающаяся при выполнении задачи
     /// </summary>
-    public Bitmap Bitmap
+    public Image Bitmap
     {
       get { return m_bitmap; }
       set
@@ -94,6 +94,9 @@ namespace Notung.Services
         if (string.IsNullOrWhiteSpace(this.Caption))
           this.Caption = GetDefaultCaption(work);
       }
+     
+      if (m_bitmap == null && work is IServiceProvider)
+        m_bitmap = (Image)((IServiceProvider)work).GetService(typeof(Image));
     }
 
     internal static string GetDefaultCaption(IRunBase work)

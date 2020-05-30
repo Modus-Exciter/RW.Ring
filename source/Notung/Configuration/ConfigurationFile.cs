@@ -103,7 +103,7 @@ namespace Notung.Configuration
 
         using (m_lock.WriteLock())
         {
-          LoadFile();
+          this.LoadFile();
           return m_file_cache;
         }
       }

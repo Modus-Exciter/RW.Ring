@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Threading;
+using System.Drawing.Imaging;
 
 namespace Notung.Services
 {
@@ -76,7 +79,7 @@ namespace Notung.Services
     public object GetService(Type serviceType)
     {
       if (m_run_base is IServiceProvider)
-        return ((IServiceProvider)m_run_base).GetService(serviceType);
+        return PrepareForMarshaling(((IServiceProvider)m_run_base).GetService(serviceType));
 
       return null;
     }
@@ -103,7 +106,22 @@ namespace Notung.Services
         indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
     }
 
-    public event ProgressChangedEventHandler ProgressChanged { add { } remove { } }
+    private static object PrepareForMarshaling(object source)
+    {
+      if (source is Image)
+      {
+        using (var ms = new MemoryStream())
+        {
+          ((Image)source).Save(ms, ImageFormat.Png);
+
+          return ms.ToArray();
+        }
+      }
+
+      return source;
+    }
+
+    event ProgressChangedEventHandler IRunBase.ProgressChanged { add { } remove { } }
 
     #region ISynchronizeInvoke members
 
@@ -210,7 +228,15 @@ namespace Notung.Services
 
     public object GetService(Type serviceType)
     {
-      return m_caller.GetService(serviceType);
+      var ret = m_caller.GetService(serviceType);
+
+      if (serviceType == typeof(Image) && ret is byte[])
+      {
+        using (var ms = new MemoryStream((byte[])ret))
+          ret = Image.FromStream(ms);
+      }
+
+      return ret;
     }
 
     public void ReportProgress(int percentage, string state)
