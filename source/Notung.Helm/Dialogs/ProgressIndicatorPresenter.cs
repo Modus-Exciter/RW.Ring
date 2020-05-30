@@ -32,9 +32,6 @@ namespace Notung.Helm.Dialogs
       m_operation = operation;
       m_view = view;
 
-      if (m_operation == null)
-        throw new ArgumentException();
-
       m_cancel_source = m_operation.GetCancellationTokenSource();
 
       if (m_cancel_source == null)
@@ -43,13 +40,11 @@ namespace Notung.Helm.Dialogs
         m_operation.CanCancelChanged += HandleCanCancelChanged;
 
       m_operation.ProgressChanged += HandleProgressChanged;
-      m_operation.ShowCurrentProgress();
       m_operation.Completed += HandleOperationCompleted;
 
       m_view.ButtonEnabled = m_operation.CanCancel;
       m_view.Text = m_launch_parameters.Caption;
       m_view.Image = m_launch_parameters.Bitmap;
-      m_view.IsMarquee = !m_launch_parameters.SupportsPercentNotification;
 
       m_view.ButtonClick += this.ButtonClick;
       m_view.Load += HandleLoad;
@@ -59,8 +54,12 @@ namespace Notung.Helm.Dialogs
     {
       if (m_operation.Status == TaskStatus.RanToCompletion)
       {
-        m_view.Load -= HandleLoad;
+        this.Unsubscribe();
         m_view.Close();
+      }
+      else
+      {
+        m_operation.ShowCurrentProgress();
       }
     }
 
@@ -71,26 +70,24 @@ namespace Notung.Helm.Dialogs
 
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
     {
-      if (m_launch_parameters.SupportsPercentNotification)
+      if (e.ProgressPercentage != ProgressPercentage.Unknown)
+      {
+        m_view.IsMarquee = false;
         m_view.ProgressValue = e.ProgressPercentage;
+      }
+      else
+        m_view.IsMarquee = true;
 
       m_view.StateText = (e.UserState ?? string.Empty).ToString();
     }
 
     private void HandleOperationCompleted(object sender, EventArgs e)
     {
-      m_operation.ProgressChanged -= HandleProgressChanged;
-      m_operation.Completed -= HandleOperationCompleted;
-      
-      if (m_cancel_source != null)
-        m_operation.CanCancelChanged -= HandleCanCancelChanged;
+      this.Unsubscribe();
       
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;
       m_view.IsMarquee = false;
-
-      m_view.ButtonClick -= this.ButtonClick;
-      m_view.Load -= HandleLoad;
 
       if (m_operation.Status != TaskStatus.RanToCompletion)
       {
@@ -106,8 +103,20 @@ namespace Notung.Helm.Dialogs
       {
         m_view.ButtonDialogResult = DialogResult.OK;
         m_view.ButtonText = Resources.READY;
-        m_view.ProgressValue = 100;
+        m_view.ProgressValue = ProgressPercentage.Completed;
       }
+    }
+
+    private void Unsubscribe()
+    {
+      m_operation.ProgressChanged -= HandleProgressChanged;
+      m_operation.Completed -= HandleOperationCompleted;
+
+      if (m_cancel_source != null)
+        m_operation.CanCancelChanged -= HandleCanCancelChanged;
+
+      m_view.ButtonClick -= this.ButtonClick;
+      m_view.Load -= HandleLoad;
     }
 
     private void ButtonClick(object sender, EventArgs e)

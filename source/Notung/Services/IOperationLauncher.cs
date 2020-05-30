@@ -150,7 +150,7 @@ namespace Notung.Services
 
       public void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
       {
-        if (m_parameters.SupportsPercentNotification)
+        if (e.ProgressPercentage != ProgressPercentage.Unknown)
           Console.WriteLine("{0,3} %, {1}", e.ProgressPercentage, e.UserState);
         else
           Console.WriteLine(e.UserState);
