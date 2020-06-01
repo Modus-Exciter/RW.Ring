@@ -66,19 +66,18 @@ namespace Notung.Helm.Dialogs
         }
       }
     }
-    void AdaptSummary ()
+
+    private void AdaptSummary()
     {
       using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
       {
-        SizeF stringSize = new SizeF();
-        string[] paragraph = m_summary_label.Text.Split(new char[] { '\n' });
-        int h = 0;
+        int h = (int)g.MeasureString(" ", m_summary_label.Font).Height;
 
-        foreach (string s in paragraph)
+        foreach (string s in m_summary_label.Text.Split(new char[] { '\n' }))
         {
-          stringSize = g.MeasureString(s, m_summary_label.Font);
-          float rowCounter = (float)Math.Ceiling(stringSize.Width / m_summary_label.Width);
-          h += (int)((rowCounter) * stringSize.Height);
+          SizeF string_size = g.MeasureString(s, m_summary_label.Font);
+          double row_counter = Math.Ceiling(string_size.Width / m_summary_label.Width);
+          h += (int)((row_counter) * string_size.Height);
         }
 
         m_top_panel.Height = h;
