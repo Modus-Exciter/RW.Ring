@@ -41,35 +41,45 @@ namespace Notung
     /// </summary>
     event EventHandler CanCancelChanged;
   }
-  
+
   /// <summary>
-  /// Этим атрибутом следует пометить задачу, если она поддерживает
-  /// оповещение о прогрессе операции в процентах
+  /// Управление отображением процента выполнения операции
   /// </summary>
-  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
-  public sealed class PercentNotificationAttribute : Attribute { }
+  public static class ProgressPercentage
+  {
+    /// <summary>
+    /// Минимальное значение процента выполнения (0 %)
+    /// </summary>
+    public const int Started = 0;
+
+    /// <summary>
+    /// Максимальное значение процента выполнения (100 %)
+    /// </summary>
+    public const int Completed = 100;
+
+    /// <summary>
+    /// Процент выполнения неизвестен
+    /// </summary>
+    public const int Unknown = -1;
+  }
 
   /// <summary>
   /// Базовая реализация интерфейса IRunBase
   /// </summary>
   public abstract class RunBase : IRunBase
   {
-    private volatile int m_percent;
+    private volatile int m_percent = ProgressPercentage.Unknown;
     private volatile object m_state;
-    private readonly bool m_percent_notification;
     private readonly InfoBuffer m_infolog = new InfoBuffer();
 
-    protected RunBase()
-    {
-      m_percent_notification = this.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
-    }
+    protected RunBase() { }
 
     /// <summary>
     /// Поддерживается ли оповещение о прогрессе операции
     /// </summary>
     protected bool SupportsPercentNotification
     {
-      get { return m_percent_notification; }
+      get { return m_percent != ProgressPercentage.Unknown; }
     }
 
     /// <summary>
@@ -86,16 +96,10 @@ namespace Notung
 
     protected void ReportProgress(int percent, object state)
     {
-      if (m_percent_notification)
-      {
-        if (m_percent == percent && object.Equals(m_state, state))
-          return;
-
-        m_percent = percent;
-      }
-      else if (object.Equals(state, m_state))
+      if (m_percent == percent && object.Equals(m_state, state))
         return;
 
+      m_percent = percent;
       m_state = state;
 
       this.OnProgressChanged();
@@ -103,7 +107,7 @@ namespace Notung
 
     protected void ReportProgress(int percent)
     {
-      if (!m_percent_notification || m_percent == percent)
+      if (m_percent == percent)
         return;
 
       m_percent = percent;

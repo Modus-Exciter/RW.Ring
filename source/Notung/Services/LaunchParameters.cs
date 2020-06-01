@@ -73,16 +73,6 @@ namespace Notung.Services
     /// </summary>
     public bool CloseOnFinish { get; set; }
 
-    /// <summary>
-    /// Поддерживается ли оповещение о прогрессе операции в процентах
-    /// </summary>
-    public bool SupportsPercentNotification { get; internal set; }
-
-    /// <summary>
-    /// Поддерживается ли отмена задачи
-    /// </summary>
-    public bool SupportsCancellation { get; internal set; }
-
     public override string ToString()
     {
       return !string.IsNullOrWhiteSpace(this.Caption) ? this.Caption : base.ToString();
@@ -98,18 +88,12 @@ namespace Notung.Services
 
         if (string.IsNullOrWhiteSpace(this.Caption))
           this.Caption = proxy.Caption;
-
-        this.SupportsPercentNotification = proxy.SupportsPercentNotification;
       }
       else
       {
         if (string.IsNullOrWhiteSpace(this.Caption))
           this.Caption = GetDefaultCaption(work);
-
-        this.SupportsPercentNotification = work.GetType().IsDefined(typeof(PercentNotificationAttribute), false);
       }
-
-      this.SupportsCancellation = work is ICancelableRunBase;
     }
 
     internal static string GetDefaultCaption(IRunBase work)

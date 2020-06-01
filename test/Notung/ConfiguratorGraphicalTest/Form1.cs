@@ -207,7 +207,6 @@ namespace ConfiguratorGraphicalTest
       }
     }
 
-    [PercentNotification]
     [DisplayName("Tesovo worka")]
     private class TestWork : CancelableRunBase, IServiceProvider
     {

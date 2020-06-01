@@ -40,7 +40,6 @@ namespace AppInfoConsoleTest
       Console.ReadKey();
     }
 
-    [PercentNotification]
     private class TestWork : CancelableRunBase
     {
       public override void Run()

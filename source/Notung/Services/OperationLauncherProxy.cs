@@ -66,11 +66,6 @@ namespace Notung.Services
       m_run_base = runBase;
     }
     
-    public bool SupportPercentNotification
-    {
-      get { return m_run_base.GetType().IsDefined(typeof(PercentNotificationAttribute), false); }
-    }
-
     public IProgressIndicatorWithCancel ProgressIndicator { get; set; }
 
     public string GetCaption()
@@ -193,12 +188,8 @@ namespace Notung.Services
         throw new ArgumentNullException("caller");
 
       m_caller = caller;
-
-      this.SupportsPercentNotification = caller.SupportPercentNotification;
       this.Caption = caller.GetCaption();
     }
-
-    public bool SupportsPercentNotification { get; private set; }
 
     public string Caption { get; private set; }
 
