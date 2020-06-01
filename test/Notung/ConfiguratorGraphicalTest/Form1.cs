@@ -287,8 +287,7 @@ namespace ConfiguratorGraphicalTest
           {
             new Info("Good message", InfoLevel.Info),
             new Info("Bad message" ,InfoLevel.Warning)
-          }, "aaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaa aaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbb   bbbbbbbbbbbbbbbbbbbbbb bbbbbbbbbbbbbbbbb        bbbbbbbbbbb   aaaa aaaaaaaaaaaa aaaaaaaa aaaaaaaaaaaaaa aaaaaaaaaaaa aaaaaaaa a aaaaaaaaaa aaaaaaaaa aaaaaa aaaaaa aaa nnnnnnnnnn");
-
+          }, "aaaaaaaa aaaaa\naaaaaaaaaaa aaaaaaa\naaaaaaaa bbbbbb\nbbbbbb bbbbb\nbbbbb bbbbbbb\nbbbbbbb bbbbbb bbbbbbbbbb bbbbbbb nnnnnn\nnnnnnn");
     }
   }
 }
