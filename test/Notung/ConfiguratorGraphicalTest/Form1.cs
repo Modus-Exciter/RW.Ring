@@ -194,7 +194,6 @@ namespace ConfiguratorGraphicalTest
       });
 #endif
     }
-
     private class RunWorkMain : MarshalByRefObject
     {
       public void Run()

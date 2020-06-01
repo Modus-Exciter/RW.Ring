@@ -34,14 +34,6 @@ namespace Notung.Helm.Dialogs
       AdaptSummary();
     }
 
-    //private void MeasureText1(PaintEventArgs e)
-    //{
-    //  String text1 = m_summary_label.Text;
-    //  Font arialBold = new Font("Arial", 12.0F);
-    //  Size textSize = TextRenderer.MeasureText(text1, arialBold);
-    //  TextRenderer.MeasureText(m_summary_label.ToString(), arialBold);
-    //}
-
     public MessageBoxButtons Buttons
     {
       get { return m_buttons; }
@@ -88,6 +80,7 @@ namespace Notung.Helm.Dialogs
           float rowCounter = (float)Math.Ceiling(stringSize.Width / m_summary_label.Width);
           h += (int)((rowCounter) * stringSize.Height);
         }
+
         m_top_panel.Height = h;
       }
     }
