@@ -80,14 +80,15 @@ namespace Notung.Helm.Dialogs
       {
         SizeF stringSize = new SizeF();
         string[] paragraph = m_summary_label.Text.Split(new char[] { '\n' });
-        m_top_panel.Height = 0;
+        int h = 0;
+
         foreach (string s in paragraph)
         {
-          //stringSize = g.MeasureString(m_summary_label.Text, m_summary_label.Font);
           stringSize = g.MeasureString(s, m_summary_label.Font);
           float rowCounter = (float)Math.Ceiling(stringSize.Width / m_summary_label.Width);
-          m_top_panel.Height += (int)((rowCounter) * stringSize.Height);
+          h += (int)((rowCounter) * stringSize.Height);
         }
+        m_top_panel.Height = h;
       }
     }
   }
