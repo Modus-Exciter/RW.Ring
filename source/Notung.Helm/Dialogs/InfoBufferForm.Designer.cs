@@ -116,6 +116,7 @@
       this.m_summary_label.BackColor = System.Drawing.Color.White;
       this.m_summary_label.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.m_summary_label.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.m_summary_label.Font = new System.Drawing.Font("Tahoma", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.m_summary_label.Location = new System.Drawing.Point(0, 0);
       this.m_summary_label.Name = "m_summary_label";
       this.m_summary_label.Size = new System.Drawing.Size(466, 32);
