@@ -96,7 +96,7 @@ namespace Notung.Network
 
         foreach (var itf in typeof(TContract).GetInterfaces())
         {
-          if (overwrite != LocalServiceOverride.No && m_local_services.ContainsKey(itf))
+          if (overwrite == LocalServiceOverride.No && m_local_services.ContainsKey(itf))
             continue;
 
           m_local_services[itf] = localService;
