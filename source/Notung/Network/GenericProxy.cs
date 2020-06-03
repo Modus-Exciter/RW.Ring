@@ -1,25 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Runtime.Remoting.Proxies;
-using System.Runtime.Remoting.Messaging;
-using System.Runtime.Remoting;
 using System.Reflection;
+using System.Runtime.Remoting;
+using System.Runtime.Remoting.Messaging;
+using System.Runtime.Remoting.Proxies;
 using Notung.Threading;
 
 namespace Notung.Network
 {
-  public abstract class GenericProxy<T> : RealProxy, IRemotingTypeInfo where T : class
+  /// <summary>
+  /// Базовый класс для прокси к произвольным серверам
+  /// </summary>
+  /// <typeparam name="T">Тип контракта сервиса, для которого создаётся прокси</typeparam>
+  public abstract class GenericProxy<T> : RealProxy, IRemotingTypeInfo, IDisposable where T : class
   {
     private readonly Dictionary<Type, object> m_local_services = new Dictionary<Type, object>();
     private readonly SharedLock m_lock = new SharedLock(false);
 
+    /// <summary>
+    /// Создание прокси с настройками по умолчанию
+    /// </summary>
     protected GenericProxy() : base(typeof(T)) { }
 
+    /// <summary>
+    /// Создание прокси с указанием заглушки
+    /// </summary>
+    /// <param name="stub">Указатель на заглушку</param>
+    /// <param name="stubData">Данные заглушки</param>
     protected GenericProxy(IntPtr stub, object stubData) : base(typeof(T), stub, stubData) { }
     
-    public override IMessage Invoke(IMessage msg)
+    /// <summary>
+    /// Обеспечивает общую инфраструктуру локальных и удалённых вызовов
+    /// </summary>
+    public sealed override IMessage Invoke(IMessage msg)
     {
       IMethodCallMessage message = (IMethodCallMessage)msg;
 
@@ -52,44 +66,92 @@ namespace Notung.Network
       return this.Invoke(message);
     }
 
+    /// <summary>
+    /// Получение экземпляра прозрачного прокси для работы с сервисом
+    /// </summary>
+    /// <returns>Экземпляр прозрачного прокси нужного типа</returns>
     public new T GetTransparentProxy()
     {
       return (T)base.GetTransparentProxy();
     }
 
-    protected void AddLocalService<TContract>(TContract localService) where TContract : class 
+    /// <summary>
+    /// Добавление дополнительных интерфейсов, которые должен реализовывать прозрачный прокси
+    /// </summary>
+    /// <typeparam name="TContract">Тип интерфейса, реализуемый прозрачным прокси</typeparam>
+    /// <param name="localService">Локальный объект, реализующий этот объект</param>
+    /// <param name="overwrite">Затереть ли существующие сервисы того же типа или его предков</param>
+    protected void AddLocalService<TContract>(TContract localService, LocalServiceOverride overwrite = LocalServiceOverride.No) where TContract : class 
     {
       if (localService == null)
         throw new ArgumentNullException("localService");
 
       using (m_lock.WriteLock())
       {
-        m_local_services.Add(typeof(TContract), localService);
+        if (overwrite == LocalServiceOverride.All)
+          m_local_services[typeof(TContract)] = localService;
+        else
+          m_local_services.Add(typeof(TContract), localService);
 
         foreach (var itf in typeof(TContract).GetInterfaces())
+        {
+          if (overwrite != LocalServiceOverride.No && m_local_services.ContainsKey(itf))
+            continue;
+
           m_local_services[itf] = localService;
+        }
       }
     }
 
+    public enum LocalServiceOverride : byte
+    {
+      No,
+      OnlyParent,
+      All
+    }
+
+    /// <summary>
+    /// Создание результата, возвращаемого методом, для передачи прозрачному прокси
+    /// для случая, когда у метода нет ни ref, ни out параметров
+    /// </summary>
+    /// <param name="value">Возвращаемое значение метода</param>
+    /// <param name="message">Сообщение, описывающее вызов метода прозрачного прокси</param>
+    /// <returns>Сообщение, в котором помещён результат вызова метода прозрачного прокси</returns>
+    protected ReturnMessage CreateReturnMesage(object value, IMethodCallMessage message)
+    {
+      return new ReturnMessage(value, null, 0, message.LogicalCallContext, message);
+    }
+
+    /// <summary>
+    /// Получение текстового представления прозрачного прокси
+    /// </summary>
+    /// <returns>То, что должен вернуть метод ToString() прозрачного прокси</returns>
     protected virtual string GetProxyName()
     {
       return typeof(T).FullName;
     }
 
+    /// <summary>
+    /// При перекрытии в произвольном классе, реализует специфическую логику вызова метода через прокси
+    /// </summary>
+    /// <param name="message">Сообщение, описывающее вызов метода</param>
+    /// <returns>Сообщение, описывающее результат вызова метода</returns>
     protected abstract ReturnMessage Invoke(IMethodCallMessage message);
 
-    protected IMethodReturnMessage CreateReturnMesage(object value, IMethodCallMessage message)
-    {
-      return new ReturnMessage(value, null, 0, message.LogicalCallContext, message);
-    }
+    #region Implementation
 
     private static IMethodReturnMessage InvokeByReflection(IMethodCallMessage message, object item)
     {
       try
       {
-        var ret = message.MethodBase.Invoke(item, message.Args);
+        var args = message.Args;
 
-        return new ReturnMessage(ret, null, 0, message.LogicalCallContext, message);
+        var ret = message.MethodBase.Invoke(item, args);
+
+        if (message.MethodBase.GetParameters().Any(pi => pi.ParameterType.IsByRef))
+          return new ReturnMessage(ret, args, args.Length, message.LogicalCallContext, message);
+        else
+          return new ReturnMessage(ret, null, 0, message.LogicalCallContext, message);
       }
       catch (TargetInvocationException ex)
       {
@@ -116,5 +178,23 @@ namespace Notung.Network
       get { return typeof(T).FullName; }
       set { }
     }
+
+    #endregion
+
+    #region Destroy
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (disposing)
+        new Action(m_lock.Close).BeginInvoke(null, null);
+    }
+
+    #endregion
   }
 }
