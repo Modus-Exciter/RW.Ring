@@ -58,6 +58,7 @@
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
+    <Compile Include="Network\GenericProxy.cs" />
     <Compile Include="Services\INotificator.cs" />
     <Compile Include="Loader\ApplicationLoadingWork.cs" />
     <Compile Include="Services\IAssemblyClassifier.cs" />
