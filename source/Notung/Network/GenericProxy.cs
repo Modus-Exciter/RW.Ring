@@ -81,7 +81,8 @@ namespace Notung.Network
     /// <typeparam name="TContract">Тип интерфейса, реализуемый прозрачным прокси</typeparam>
     /// <param name="localService">Локальный объект, реализующий этот объект</param>
     /// <param name="overwrite">Затереть ли существующие сервисы того же типа или его предков</param>
-    protected void AddLocalService<TContract>(TContract localService, LocalServiceOverride overwrite = LocalServiceOverride.No) where TContract : class 
+    protected void AddLocalService<TContract>(TContract localService, 
+      LocalServiceOverride overwrite = LocalServiceOverride.No) where TContract : class
     {
       if (localService == null)
         throw new ArgumentNullException("localService");
@@ -138,14 +139,13 @@ namespace Notung.Network
     /// <returns>Сообщение, описывающее результат вызова метода</returns>
     protected abstract ReturnMessage Invoke(IMethodCallMessage message);
 
-    #region Implementation
+    #region Implementation ------------------------------------------------------------------------
 
     private static IMethodReturnMessage InvokeByReflection(IMethodCallMessage message, object item)
     {
       try
       {
         var args = message.Args;
-
         var ret = message.MethodBase.Invoke(item, args);
 
         if (message.MethodBase.GetParameters().Any(pi => pi.ParameterType.IsByRef))
@@ -181,7 +181,7 @@ namespace Notung.Network
 
     #endregion
 
-    #region Destroy
+    #region Destroy -------------------------------------------------------------------------------
 
     public void Dispose()
     {
