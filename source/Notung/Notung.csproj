@@ -59,6 +59,11 @@
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
     <Compile Include="Network\GenericProxy.cs" />
+    <Compile Include="Network\Host.cs" />
+    <Compile Include="Network\ICommandSerializer.cs" />
+    <Compile Include="Network\ITransport.cs" />
+    <Compile Include="Network\NetworkProxy.cs" />
+    <Compile Include="Network\IRemotableCommand.cs" />
     <Compile Include="Services\INotificator.cs" />
     <Compile Include="Loader\ApplicationLoadingWork.cs" />
     <Compile Include="Services\IAssemblyClassifier.cs" />
