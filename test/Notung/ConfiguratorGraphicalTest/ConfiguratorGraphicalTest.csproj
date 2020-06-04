@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO MULTI_DOMAIN</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO MULTI_DOMAIN1</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -127,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\DOS TRACK.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Akunin.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

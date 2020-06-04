@@ -41,7 +41,7 @@ namespace Notung.Helm
         throw new ArgumentNullException("loadingQueueFactory");
 
       m_form_factory = mainFormFactory;
-      m_queue_factory = loadingQueueFactory;
+      m_queue_factory = loadingQueueFactory; 
     }
 
     /// <summary>

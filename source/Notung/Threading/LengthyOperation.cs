@@ -1,9 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Logging;
+using Notung.Services;
 
 namespace Notung.Threading
 {
@@ -131,12 +133,28 @@ namespace Notung.Threading
       }
     }
 
+    public string GetWorkCaption()
+    {
+      if (m_run_base is RunBaseProxyWrapper)
+        return ((RunBaseProxyWrapper)m_run_base).Caption;
+      else
+        return LaunchParameters.GetDefaultCaption(m_run_base);
+    }
+
+    public Image GetWorkImage()
+    {
+      IServiceProvider provider = m_run_base as IServiceProvider;
+
+      return provider.GetService<Image>();
+    }
+
     private void Run()
     {
 #if MULTI_LANG
       LanguageSwitcher.RegisterThread(Thread.CurrentThread);
 #endif
       m_run_base.ProgressChanged += HandleProgressChanged;
+
       try
       {
         this.Status = TaskStatus.Running;
@@ -190,7 +208,9 @@ namespace Notung.Threading
 
       if (!object.Equals(m_current_state, e.UserState))
       {
-        m_current_state = e.UserState;
+        if (!(e.UserState is LaunchParametersChange))
+          m_current_state = e.UserState;
+
         changed = true;
       }
 
