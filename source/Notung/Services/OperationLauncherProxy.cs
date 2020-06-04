@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Threading;
-using System.Drawing.Imaging;
 
 namespace Notung.Services
 {
@@ -44,12 +44,14 @@ namespace Notung.Services
 #endif
   }
 
+  /// <summary>
+  /// Расширенная версия индикатора прогресса
+  /// </summary>
   internal interface IProgressIndicatorWithCancel : IProgressIndicator
   {
-    /// <summary>
-    /// Отправляет обёртке сообщение о том, что изменилась возможность отмены задачи
-    /// </summary>
     void RaiseCanCancelChanged(EventArgs e);
+
+    void ReportProgress(int percentage, LaunchParametersChange state);
   }
 
   /// <summary>
@@ -103,7 +105,12 @@ namespace Notung.Services
       var indicator = this.ProgressIndicator;
 
       if (indicator != null)
-        indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
+      {
+        if (e.UserState is LaunchParametersChange)
+          indicator.ReportProgress(e.ProgressPercentage, (LaunchParametersChange)e.UserState);
+        else
+          indicator.ReportProgress(e.ProgressPercentage, (e.UserState ?? string.Empty).ToString());
+      }
     }
 
     private static object PrepareForMarshaling(object source)
@@ -233,7 +240,9 @@ namespace Notung.Services
       if (serviceType == typeof(Image) && ret is byte[])
       {
         using (var ms = new MemoryStream((byte[])ret))
+        {
           ret = Image.FromStream(ms);
+        }
       }
 
       return ret;
@@ -241,6 +250,14 @@ namespace Notung.Services
 
     public void ReportProgress(int percentage, string state)
     {
+      this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
+    }
+
+    public void ReportProgress(int percentage, LaunchParametersChange state)
+    {
+      if ((state & LaunchParametersChange.Caption) != 0)
+        this.Caption = m_caller.GetCaption();
+
       this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
     }
 

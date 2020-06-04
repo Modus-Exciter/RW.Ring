@@ -210,6 +210,7 @@ namespace ConfiguratorGraphicalTest
     private class TestWork : CancelableRunBase, IServiceProvider
     {
        private bool m_ok = false;
+       private bool m_before = true;
 
       private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
 
@@ -231,16 +232,22 @@ namespace ConfiguratorGraphicalTest
           if (i % 10 == 0)
             _log.DebugFormat(Resources.MESSAGE, i / 10);
 
+          if (i == 70)
+          {
+            m_before = false;
+            this.ReportProgress(LaunchParametersChange.Caption | LaunchParametersChange.Image);
+          }
+
           this.CancellationToken.ThrowIfCancellationRequested();
         }
         m_ok = true;
         _log.Debug(Resources.ALL_RIGHT);
       }
 
-      //public override string ToString()
-      //{
-      //  return "Gotterdammerung";
-      //}
+      public override string ToString()
+      {
+        return m_before ? "Siegfried" : "Gotterdammerung";
+      }
 
       public override object GetService(Type serviceType)
       {
@@ -251,7 +258,7 @@ namespace ConfiguratorGraphicalTest
             new Info("Bad message" ,InfoLevel.Warning)
           };
         else if (serviceType == typeof(Image))
-          return Resources.DOS_TRACK;
+          return m_before ? Resources.DOS_TRACK : Resources.Akunin;
         else
           return null;
       }

@@ -90,11 +90,17 @@ namespace ConfiguratorGraphicalTest
         return true;
       }
 
+      private DateTime m_current;
+
       private void Report(LoadingContext context, int start, string section)
       {
+        if (start == 0)
+          m_current = DateTime.Now;
+        
         context.Indicator.ReportProgress(start, string.Format("Loading section {0}...", section));
-        System.Threading.Thread.Sleep(200);
+        System.Threading.Thread.Sleep(DateTime.Now - m_current);
         context.Indicator.ReportProgress(start + 5, string.Format("Loading section {0}...", section));
+        m_current = DateTime.Now;
       }
     }
   }
@@ -149,7 +155,7 @@ namespace ConfiguratorGraphicalTest
 
     public override bool Validate(InfoBuffer buffer)
     {
-      System.Threading.Thread.Sleep(2000);
+      System.Threading.Thread.Sleep(700);
       
       if (this.Number < 1)
       {

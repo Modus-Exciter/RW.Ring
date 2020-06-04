@@ -10,6 +10,9 @@ using Notung.Threading;
 
 namespace Notung.Helm.Dialogs
 {
+  /// <summary>
+  /// Основная логика работы диалога с индикатором прогресса задачи
+  /// </summary>
   public sealed class ProgressIndicatorPresenter
   {
     private readonly IProcessIndicatorView m_view;
@@ -58,9 +61,7 @@ namespace Notung.Helm.Dialogs
         m_view.Close();
       }
       else
-      {
         m_operation.ShowCurrentProgress();
-      }
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
@@ -77,6 +78,15 @@ namespace Notung.Helm.Dialogs
       }
       else
         m_view.IsMarquee = true;
+
+      if (e.UserState is LaunchParametersChange)
+      {
+        if (((LaunchParametersChange)e.UserState & LaunchParametersChange.Caption) != 0)
+          m_view.Text = m_operation.GetWorkCaption();
+
+        if (((LaunchParametersChange)e.UserState & LaunchParametersChange.Image) != 0)
+          m_view.Image = m_operation.GetWorkImage();
+      }
 
       m_view.StateText = (e.UserState ?? string.Empty).ToString();
     }

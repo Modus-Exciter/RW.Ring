@@ -65,6 +65,23 @@ namespace Notung
   }
 
   /// <summary>
+  /// Изменение параметров запуска задачи в ходе выполнения
+  /// </summary>
+  [Flags]
+  public enum LaunchParametersChange : byte
+  {
+    /// <summary>
+    /// Заголовок задачи
+    /// </summary>
+    Caption = 1,
+
+    /// <summary>
+    /// Изображение
+    /// </summary>
+    Image = 2
+  }
+
+  /// <summary>
   /// Базовая реализация интерфейса IRunBase
   /// </summary>
   public abstract class RunBase : IRunBase

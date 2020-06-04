@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
+using Notung.ComponentModel;
 
 namespace Notung.Services
 {
@@ -94,9 +95,9 @@ namespace Notung.Services
         if (string.IsNullOrWhiteSpace(this.Caption))
           this.Caption = GetDefaultCaption(work);
       }
-     
+
       if (m_bitmap == null && work is IServiceProvider)
-        m_bitmap = (Image)((IServiceProvider)work).GetService(typeof(Image));
+        m_bitmap = ((IServiceProvider)work).GetService<Image>();
     }
 
     internal static string GetDefaultCaption(IRunBase work)

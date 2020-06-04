@@ -1,11 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
-using Notung.ComponentModel;
 using System.Xml;
-using System.ComponentModel;
+using Notung.ComponentModel;
 
 namespace Notung.Net
 {
