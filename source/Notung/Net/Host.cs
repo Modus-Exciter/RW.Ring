@@ -3,6 +3,10 @@ using System.Linq;
 using System.Threading;
 using Notung.Logging;
 using System.Reflection;
+using System.Text;
+using System.IO;
+using System.Xml;
+using System.Runtime.Serialization;
 
 namespace Notung.Net
 {
@@ -52,6 +56,8 @@ namespace Notung.Net
   {
     private readonly IServerTransportFactory m_transport_factory;
     private readonly ICommandSerializer m_serializer;
+    private Type m_service_type;
+    private SessionManager m_session_manager;
 
     [ThreadStatic]
     private static ProcessHeaders _command_headers;
@@ -74,7 +80,20 @@ namespace Notung.Net
       m_serializer = serializer;
     }
 
-    public Type ServiceType { get; internal set; }
+    public Type ServiceType
+    {
+      get { return m_service_type; }
+      set
+      {
+        if (m_service_type == value)
+          return;
+
+        m_service_type = value;
+
+        if (m_service_type != null)
+          m_session_manager = new SessionManager(m_service_type);
+      }
+    }
 
     public static ProcessHeaders GlobalHeaders
     {
@@ -97,6 +116,8 @@ namespace Notung.Net
         ThreadPool.QueueUserWorkItem(Accept, m_transport_factory.Create());
     }
 
+#if DEBUG
+
     private void Accept(object state)
     {
       using (var transport = (ITransport)state)
@@ -114,8 +135,11 @@ namespace Notung.Net
 
         try
         {
-          transport.PrepareResponse(m_serializer.Format);
-          m_serializer.WriteResult(transport.ResponseStream, command.Execute(this));
+          var result = command.Execute(this);
+
+          transport.PrepareResponse(m_serializer.Format, result);
+
+          m_serializer.WriteResult(transport.ResponseStream, result);
           transport.EndResponse();
         }
         finally
@@ -129,13 +153,39 @@ namespace Notung.Net
       }
     }
 
+#endif
+
+    private static void WriteToConsole(IRemotableCommand command, RemotableResult result)
+    {
+      var xml_writer = new XmlTextWriter(Console.Out);
+      {
+        var ser = new DataContractSerializer(command.GetType());
+        xml_writer.Formatting = Formatting.Indented;
+        ser.WriteObject(xml_writer, command);
+
+        Console.WriteLine();
+
+        ser = new DataContractSerializer(result.GetType());
+        ser.WriteObject(xml_writer, result);
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine();
+      }
+    }
+
     public void Dispose()
     {
       m_transport_factory.Dispose();
+
+      if (m_session_manager != null)
+        m_session_manager.Dispose();
     }
 
     public object GetService(Type serviceType)
     {
+      if (serviceType == typeof(ISessionManager))
+        return m_session_manager;      
       if (serviceType.IsAssignableFrom(this.GetType()))
         return this;
       else if (this.ServiceType != null && serviceType.IsAssignableFrom(this.ServiceType))

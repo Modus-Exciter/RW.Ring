@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Notung.Loader;
+using System.Runtime.Serialization;
 
 namespace Notung.Net
 {
@@ -25,61 +26,66 @@ namespace Notung.Net
   /// <summary>
   /// Результат выполнения команды
   /// </summary>
-  [Serializable]
+  [Serializable, DataContract(Namespace = "http://ari.ru/notung")]
   public class RemotableResult
   {
     /// <summary>
     /// Исключение, возникшее при выполнении команды
     /// </summary>
+    [DataMember]
     public Exception Exception { get; internal set; }
 
     /// <summary>
     /// Успешность выполнения команды
     /// </summary>
+    [DataMember]
     public RemotableResultState State { get; internal set; }
   }
 
   /// <summary>
   /// Успех выполнения команды
   /// </summary>
-  [Serializable]
+  [Serializable, DataContract(Namespace = "http://ari.ru/notung")]
   public enum RemotableResultState
   {
     /// <summary>
     /// Команда выполнена успешно
     /// </summary>
-    Success,
+    [EnumMember] Success,
 
     /// <summary>
     /// Ошибка при выполнении команды
     /// </summary>
-    Error,
+    [EnumMember] Error,
 
     /// <summary>
     /// Команда запросила обратную связь
     /// </summary>
-    Callback
+    [EnumMember] Callback
   }
 
   /// <summary>
   /// Заголовки команды
   /// </summary>
-  [Serializable]
+  [Serializable, DataContract(Name = "Headers")]
   public sealed class ProcessHeaders
   {
     /// <summary>
     /// Имя пользователя, запустившего команду
     /// </summary>
+    [DataMember(Name="User")]
     public string UserName { get; internal set; }
 
     /// <summary>
     /// Приложение, через которое запущена команда
     /// </summary>
+    [DataMember(Name = "App")]
     public string Application { get; internal set; }
 
     /// <summary>
     /// Имя компьютера, с которого запущена команда
     /// </summary>
+    [DataMember(Name = "Machine")]
     public string MachineName { get; internal set; }
   }
 
@@ -87,9 +93,14 @@ namespace Notung.Net
   /// Базовая реализация интерфейса удалённых команд
   /// </summary>
   /// <typeparam name="TResult">Тип результата</typeparam>
-  [Serializable]
+  [Serializable, DataContract]
   public abstract class RemotableCommand<TResult> : IRemotableCommand where TResult : RemotableResult
   {
+    /// <summary>
+    /// Запуск команды на выполнение
+    /// </summary>
+    /// <param name="caller">Объект запуска команды</param>
+    /// <returns>Результат выполнения команды</returns>
     public TResult Execute(IRemotableCaller caller)
     {
       if (caller == null)
@@ -124,6 +135,7 @@ namespace Notung.Net
 
     protected abstract void Fill(TResult result, IServiceProvider service);
 
+    [DataMember(Name = "Headers")]
     ProcessHeaders IRemotableCommand.Headers { get; set; }
   }
 
@@ -181,16 +193,11 @@ namespace Notung.Net
     
     public RemotableResult Call(IRemotableCommand command)
     {
-      command.Headers = new ProcessHeaders
-      {
-         Application = (Assembly.GetEntryAssembly() ?? this.GetType().Assembly).GetName().Name,
-         MachineName = Environment.MachineName,
-         UserName = Environment.UserName
-      };
+      command.Headers = HostedService.GlobalHeaders;
       
       using (var transport = m_transport_factory.Create())
       {
-        transport.PrepareRequest(m_serializer.Format);
+        transport.PrepareRequest(m_serializer.Format, command);
         m_serializer.WriteCommand(transport.RequestStream, command);
         transport.EndRequest();
         return m_serializer.ReadResult(transport.ResponseStream);

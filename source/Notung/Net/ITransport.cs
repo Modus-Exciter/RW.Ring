@@ -25,7 +25,7 @@ namespace Notung.Net
     /// Подготовка запроса к серверу
     /// </summary>
     /// <param name="format">Формат данных, в которых будет сохранён запрос</param>
-    void PrepareRequest(CommandSerializationFormat format);
+    void PrepareRequest(CommandSerializationFormat format, object item);
 
     /// <summary>
     /// Завершение запроса к серверу
@@ -36,7 +36,7 @@ namespace Notung.Net
     /// Подготовка ответа от сервера
     /// </summary>
     /// <param name="format">Формат данных, в которых будет сохранён ответ</param>
-    void PrepareResponse(CommandSerializationFormat format);
+    void PrepareResponse(CommandSerializationFormat format, object item);
 
     /// <summary>
     /// Завершение ответа от сервера
@@ -81,14 +81,14 @@ namespace Notung.Net
       get { return m_stream; }
     }
 
-    public void PrepareRequest(CommandSerializationFormat format) { }
+    public void PrepareRequest(CommandSerializationFormat format, object item) { }
 
     public void EndRequest()
     {
       m_socket.Shutdown(SocketShutdown.Send);
     }
 
-    public void PrepareResponse(CommandSerializationFormat format) { }
+    public void PrepareResponse(CommandSerializationFormat format, object item) { }
 
     public void EndResponse()
     {

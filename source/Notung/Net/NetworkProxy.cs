@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
+using System.Runtime.Serialization;
 using Notung.ComponentModel;
-using Notung.Loader;
-using Notung.Threading;
 
 namespace Notung.Net
 {
@@ -47,6 +45,8 @@ namespace Notung.Net
     public NetworkProxy(IClientTransportFactory transportFactory, ICommandSerializer serializer)
       : this(new RemoteCaller(transportFactory, serializer)) { }
 
+    #region Overridables --------------------------------------------------------------------------
+
     protected override ReturnMessage Invoke(IMethodCallMessage message)
     {
       var result = new MethodCallCommand(message.MethodName, message.Args, m_object_id).Execute(m_caller);
@@ -67,30 +67,39 @@ namespace Notung.Net
         m_caller.Call(new ClearItemCommand(m_object_id));
     }
 
+    #endregion
+
     #region Create reference ----------------------------------------------------------------------
 
-    [Serializable]
+    [Serializable, DataContract(Name = "Ref", Namespace = "http://ari.ru/notung")]
     internal class CreateReferenceResult : RemotableResult
     {
-      public Guid ObjectGuid { get; set; }
+      [DataMember(Name = "Guid")]
+      public Guid ObjectGuid;
     }
 
-    [Serializable]
+    [Serializable, DataContract(Name = "CreateRef", Namespace = "http://ari.ru/notung")]
     private class CreateReferenceCommand : RemotableCommand<CreateReferenceResult>
     {
       protected override void Fill(CreateReferenceResult result, IServiceProvider service)
       {
         result.ObjectGuid = InstanceDictionary<T>.AddInstance(service.GetService<T>());
+
+        var session = service.GetService<ISessionManager>();
+
+        if (session != null && session.SupportsSession)
+          session.Init(result.ObjectGuid, typeof(T));
       }
     }
 
     #endregion
 
-    #region Clear session -------------------------------------------------------------------------
+    #region Clear cache ---------------------------------------------------------------------------
 
-    [Serializable]
+    [Serializable, DataContract(Name = "Clear", Namespace = "http://ari.ru/notung")]
     internal class ClearItemCommand : RemotableCommand<RemotableResult>
     {
+      [DataMember(Name = "Guid")]
       private readonly Guid m_guid;
 
       public ClearItemCommand(Guid guid)
@@ -108,19 +117,26 @@ namespace Notung.Net
 
     #region Method call ---------------------------------------------------------------------------
 
-    [Serializable]
+    [Serializable, DataContract(Name = "CallResult", Namespace = "http://ari.ru/notung")]
     internal class MethodCallResult : RemotableResult
     {
-      public object ReturnValue { get; internal set; }
+      [DataMember]
+      public object ReturnValue;
 
-      public object[] RefParameters { get; internal set; }
+      [DataMember]
+      public object[] RefParameters;
     }
 
-    [Serializable]
+    [Serializable, DataContract(Name = "Call", Namespace = "http://ari.ru/notung")]
     private class MethodCallCommand : RemotableCommand<MethodCallResult>
     {
+      [DataMember(Name = "Method")]
       private readonly string m_method;
+
+      [DataMember(Name = "Params")]
       private readonly object[] m_parameters;
+
+      [DataMember(Name = "Guid")]
       private readonly Guid m_object_id;
 
       public MethodCallCommand(string method, object[] parameters, Guid objectId)
@@ -136,6 +152,11 @@ namespace Notung.Net
 
         if (instance == null)
           throw new NullReferenceException();
+
+        var session = service.GetService<ISessionManager>();
+
+        if (session != null && session.SupportsSession)
+          session.Renew(m_object_id, typeof(T));
 
         try
         {
@@ -155,46 +176,5 @@ namespace Notung.Net
     }
 
     #endregion
-  }
-
-  /// <summary>
-  /// Хранилище экземпляров объектов разных сервисов на стороне сервера
-  /// </summary>
-  /// <typeparam name="T">Тип контракта сервиса</typeparam>
-  public static class InstanceDictionary<T> where T : class
-  {
-    private static readonly Dictionary<Guid, T> _instances = new Dictionary<Guid, T>();
-    private static readonly SharedLock _lock = new SharedLock(false);
-
-    public static Guid AddInstance(T instance)
-    {
-      if (instance == null)
-        throw new ArgumentNullException("instance");
-
-      using (_lock.WriteLock())
-      {
-        var guid = Guid.NewGuid();
-        _instances[guid] = instance;
-        return guid;
-      }
-    }
-
-    public static T GetInstance(Guid guid)
-    {
-      using (_lock.ReadLock())
-      {
-        T ret;
-        _instances.TryGetValue(guid, out ret);
-        return ret;
-      }
-    }
-
-    public static void Clear(Guid guid)
-    {
-      using (_lock.WriteLock())
-      {
-        _instances.Remove(guid);
-      }
-    }
   }
 }
