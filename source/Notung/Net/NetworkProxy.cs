@@ -119,9 +119,9 @@ namespace Notung.Net
 
     #region Serialization helper ------------------------------------------------------------------
 
-    private static XmlElement WriteParameters(string m_method, object[] m_parameters)
+    private static XmlElement WriteParameters(string method, object[] parameters)
     {
-      if (m_parameters == null || m_parameters.Length == 0)
+      if (parameters == null || parameters.Length == 0)
         return null;
 
       XmlDocument doc = new XmlDocument();
@@ -129,22 +129,22 @@ namespace Notung.Net
       {
         writer.WriteStartElement("List");
 
-        var parameters = typeof(T).GetMethod(m_method).GetParameters();
-        for (int i = 0; i < parameters.Length; i++)
+        var method_parameters = typeof(T).GetMethod(method).GetParameters();
+        for (int i = 0; i < method_parameters.Length; i++)
         {
-          var type = parameters[i].ParameterType;
+          var type = method_parameters[i].ParameterType;
 
           if (type.IsByRef)
             type = type.GetElementType();
 
           writer.WriteStartElement("P");
 
-          if (m_parameters[i] != null)
+          if (parameters[i] != null)
           {
             if (TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string)))
-              writer.WriteAttributeString("value", m_parameters[i].ToString());
+              writer.WriteAttributeString("value", parameters[i].ToString());
             else
-              new DataContractSerializer(type).WriteObject(writer, m_parameters[i]);
+              new DataContractSerializer(type).WriteObject(writer, parameters[i]);
           }
 
           writer.WriteEndElement();
@@ -156,15 +156,15 @@ namespace Notung.Net
       return doc.DocumentElement;
     }
 
-    private static object[] ReadParameters(XmlElement value, string m_method)
+    private static object[] ReadParameters(XmlElement value, string method)
     {
       if (value == null)
         return null;
 
       var node_list = value.SelectNodes("P");
-      var m_parameters = new object[node_list.Count];
+      var parameters = new object[node_list.Count];
       int i = 0;
-      foreach (var param in typeof(T).GetMethod(m_method).GetParameters())
+      foreach (var param in typeof(T).GetMethod(method).GetParameters())
       {
         var t = param.ParameterType;
 
@@ -174,20 +174,20 @@ namespace Notung.Net
         if (((XmlElement)node_list[i]).HasAttribute("value"))
         {
           if (t == typeof(string))
-            m_parameters[i] = ((XmlElement)node_list[i]).GetAttribute("value");
+            parameters[i] = ((XmlElement)node_list[i]).GetAttribute("value");
           else
-            m_parameters[i] = TypeDescriptor.GetConverter(t).ConvertFrom(
+            parameters[i] = TypeDescriptor.GetConverter(t).ConvertFrom(
               ((XmlElement)node_list[i]).GetAttribute("value"));
         }
         else if (node_list[i].HasChildNodes)
         {
-          m_parameters[i] = new DataContractSerializer(t).ReadObject(
+          parameters[i] = new DataContractSerializer(t).ReadObject(
             new XmlNodeReader(((XmlElement)node_list[i]).ChildNodes[0]));
         }
         i++;
       }
 
-      return m_parameters;
+      return parameters;
     }
 
     #endregion
