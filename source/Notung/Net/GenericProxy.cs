@@ -7,7 +7,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Runtime.Remoting.Proxies;
 using Notung.Threading;
 
-namespace Notung.Network
+namespace Notung.Net
 {
   /// <summary>
   /// Базовый класс для прокси к произвольным серверам
