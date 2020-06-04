@@ -116,8 +116,6 @@ namespace Notung.Net
         ThreadPool.QueueUserWorkItem(Accept, m_transport_factory.Create());
     }
 
-#if DEBUG
-
     private void Accept(object state)
     {
       using (var transport = (ITransport)state)
@@ -153,7 +151,7 @@ namespace Notung.Net
       }
     }
 
-#endif
+#if DEBUG
 
     private static void WriteToConsole(IRemotableCommand command, RemotableResult result)
     {
@@ -173,6 +171,8 @@ namespace Notung.Net
         Console.WriteLine();
       }
     }
+
+#endif
 
     public void Dispose()
     {
