@@ -26,7 +26,7 @@ namespace Notung.Net
   /// <summary>
   /// Результат выполнения команды
   /// </summary>
-  [Serializable, DataContract(Namespace = "http://ari.ru/notung")]
+  [Serializable, DataContract]
   public class RemotableResult
   {
     /// <summary>
@@ -45,7 +45,7 @@ namespace Notung.Net
   /// <summary>
   /// Успех выполнения команды
   /// </summary>
-  [Serializable, DataContract(Namespace = "http://ari.ru/notung")]
+  [Serializable, DataContract]
   public enum RemotableResultState
   {
     /// <summary>

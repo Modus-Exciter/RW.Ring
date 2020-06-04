@@ -134,7 +134,7 @@ namespace Notung.Net
         try
         {
           var result = command.Execute(this);
-
+          //WriteToConsole(command, result);
           transport.PrepareResponse(m_serializer.Format, result);
 
           m_serializer.WriteResult(transport.ResponseStream, result);
