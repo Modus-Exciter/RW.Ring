@@ -40,7 +40,10 @@ namespace Notung.Helm.Dialogs
       if (m_cancel_source == null)
         m_view.ButtonVisible = false;
       else
+      {
         m_operation.CanCancelChanged += HandleCanCancelChanged;
+        m_view.ButtonText = WinResources.CANCEL;
+      }
 
       m_operation.ProgressChanged += HandleProgressChanged;
       m_operation.Completed += HandleOperationCompleted;
@@ -48,7 +51,6 @@ namespace Notung.Helm.Dialogs
       m_view.ButtonEnabled = m_operation.CanCancel;
       m_view.Text = m_launch_parameters.Caption;
       m_view.Image = m_launch_parameters.Bitmap;
-
       m_view.ButtonClick += this.ButtonClick;
       m_view.Load += HandleLoad;
     }
@@ -87,8 +89,8 @@ namespace Notung.Helm.Dialogs
         if (((LaunchParametersChange)e.UserState & LaunchParametersChange.Image) != 0)
           m_view.Image = m_operation.GetWorkImage();
       }
-
-      m_view.StateText = (e.UserState ?? string.Empty).ToString();
+      else
+        m_view.StateText = (e.UserState ?? string.Empty).ToString();
     }
 
     private void HandleOperationCompleted(object sender, EventArgs e)

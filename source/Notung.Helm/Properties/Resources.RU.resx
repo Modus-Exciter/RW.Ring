@@ -120,9 +120,6 @@
   <data name="CALLING_FUNCTION" xml:space="preserve">
     <value>Вызов функции {0} из {1}</value>
   </data>
-  <data name="CANCEL" xml:space="preserve">
-    <value>Отмена</value>
-  </data>
   <data name="COPY_DATA_SEND_RECIEVE" xml:space="preserve">
     <value>Этот метод не может быть вызван в процессе-приёмнике</value>
   </data>

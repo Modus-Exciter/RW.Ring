@@ -176,7 +176,7 @@ namespace Notung.Helm
         case InfoLevel.Debug:
           return MessageBoxIcon.None;
         case InfoLevel.Info:
-          return confirm ? MessageBoxIcon.Information : MessageBoxIcon.Question;
+          return confirm ? MessageBoxIcon.Question : MessageBoxIcon.Information;
         case InfoLevel.Warning:
           return MessageBoxIcon.Warning;
         case InfoLevel.Error:

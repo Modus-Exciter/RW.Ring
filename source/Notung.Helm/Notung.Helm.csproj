@@ -99,6 +99,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WinResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WinResources.resx</DependentUpon>
+    </Compile>
     <None Include="Helm.snk" />
     <Compile Include="Dialogs\SplashScreenDialog.cs">
       <SubType>Form</SubType>
@@ -144,6 +149,11 @@
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU.resx" />
+    <EmbeddedResource Include="WinResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WinResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinResources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\defaultsplash.jpg" />
@@ -156,6 +166,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Inspector.PNG" />
+    <None Include="Resources\p_48_warning.png" />
+    <None Include="Resources\p_48_question.png" />
+    <None Include="Resources\p_48_info.png" />
+    <None Include="Resources\p_48_error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

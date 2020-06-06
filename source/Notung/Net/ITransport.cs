@@ -150,6 +150,7 @@ namespace Notung.Net
 
     public void Dispose()
     {
+      m_socket.Shutdown(SocketShutdown.Both);
       m_socket.Dispose();
     }
   }
