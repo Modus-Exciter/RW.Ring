@@ -151,4 +151,7 @@
   <data name="YES" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="SETTINGS" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

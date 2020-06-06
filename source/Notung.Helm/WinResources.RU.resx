@@ -135,6 +135,9 @@
   <data name="RETRY" xml:space="preserve">
     <value>Повторить</value>
   </data>
+  <data name="SETTINGS" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
   <data name="YES" xml:space="preserve">
     <value>Да</value>
   </data>

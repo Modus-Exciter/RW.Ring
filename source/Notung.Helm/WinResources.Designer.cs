@@ -143,6 +143,15 @@ namespace Notung.Helm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string SETTINGS {
+            get {
+                return ResourceManager.GetString("SETTINGS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         public static string YES {
