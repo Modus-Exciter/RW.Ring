@@ -70,6 +70,24 @@ namespace Notung.Helm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string APPLY {
+            get {
+                return ResourceManager.GetString("APPLY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Message buffer is overfulled. Please set up buffer size in log settings.
+        /// </summary>
+        public static string BUFFER_OVER {
+            get {
+                return ResourceManager.GetString("BUFFER_OVER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string CANCEL {
@@ -88,6 +106,15 @@ namespace Notung.Helm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Message window.
+        /// </summary>
+        public static string INFO_WND {
+            get {
+                return ResourceManager.GetString("INFO_WND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string NO {
@@ -102,6 +129,41 @@ namespace Notung.Helm {
         public static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        public static System.Drawing.Bitmap p_16_debug {
+            get {
+                object obj = ResourceManager.GetObject("p_16_debug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap p_16_error {
+            get {
+                object obj = ResourceManager.GetObject("p_16_error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap p_16_info {
+            get {
+                object obj = ResourceManager.GetObject("p_16_info", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap p_16_warning {
+            get {
+                object obj = ResourceManager.GetObject("p_16_warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap p_48_debug {
+            get {
+                object obj = ResourceManager.GetObject("p_48_debug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

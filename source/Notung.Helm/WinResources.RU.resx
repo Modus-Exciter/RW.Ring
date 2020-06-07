@@ -120,11 +120,20 @@
   <data name="ABORT" xml:space="preserve">
     <value>Прервать</value>
   </data>
+  <data name="APPLY" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="BUFFER_OVER" xml:space="preserve">
+    <value>Буфер сообщений переполнен. Настройте размер буфера в настройках протокола</value>
+  </data>
   <data name="CANCEL" xml:space="preserve">
     <value>Отмена</value>
   </data>
   <data name="IGNORE" xml:space="preserve">
     <value>Пропустить</value>
+  </data>
+  <data name="INFO_WND" xml:space="preserve">
+    <value>Окно сообщений</value>
   </data>
   <data name="NO" xml:space="preserve">
     <value>Нет</value>

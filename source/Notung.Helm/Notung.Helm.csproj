@@ -81,6 +81,10 @@
     <Compile Include="Dialogs\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogEntrySet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LogSection.cs" />
     <Compile Include="Windows\Atom.cs" />
     <Compile Include="Windows\CopyData.cs" />
     <Compile Include="Windows\ExternalCallWork.cs" />
@@ -131,6 +135,9 @@
     <EmbeddedResource Include="Dialogs\InfoBufferForm.resx">
       <DependentUpon>InfoBufferForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\InfoBufferForm.ru.resx">
+      <DependentUpon>InfoBufferForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ProgressIndicatorDialog.resx">
       <DependentUpon>ProgressIndicatorDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,7 +172,12 @@
     <None Include="Resources\error.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\idr_dll.ico" />
     <Content Include="Resources\Inspector.PNG" />
+    <None Include="Resources\p_16_warning.png" />
+    <None Include="Resources\p_16_info.png" />
+    <None Include="Resources\p_16_error.png" />
+    <None Include="Resources\p_48_debug.png" />
     <None Include="Resources\p_48_warning.png" />
     <None Include="Resources\p_48_question.png" />
     <None Include="Resources\p_48_info.png" />

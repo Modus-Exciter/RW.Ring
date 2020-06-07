@@ -145,7 +145,7 @@ namespace Notung.Threading
     {
       IServiceProvider provider = m_run_base as IServiceProvider;
 
-      return provider.GetService<Image>();
+      return provider != null ? provider.GetService<Image>() : null;
     }
 
     private void Run()

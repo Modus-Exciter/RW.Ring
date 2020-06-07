@@ -126,9 +126,9 @@ namespace Notung.Helm.Configuration
       AppManager.AssemblyClassifier.LoadDependencies(
         AppManager.Instance.Invoker.GetType().Assembly);
 
-      foreach (var asm in AppManager.AssemblyClassifier.TrackingAssemblies)
+      for (int i = 0; i < AppManager.AssemblyClassifier.TrackingAssemblies.Count; i++)
       {
-        foreach (var type in GetAssemblyTypes(asm))
+        foreach (var type in GetAssemblyTypes(AppManager.AssemblyClassifier.TrackingAssemblies[i]))
         {
           if (!type.IsAbstract && typeof(IConfigurationPage).IsAssignableFrom(type)
             && type.GetConstructor(Type.EmptyTypes) != null)
