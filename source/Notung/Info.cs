@@ -89,20 +89,20 @@ namespace Notung
     }
   }
 
-  [DisplayNameRes("INFO_LEVEL", typeof(Resources))]
+  [DisplayNameRes("INFO_LEVEL", typeof(CoreResources))]
   [TypeConverter(typeof(EnumLabelConverter))]
   [Serializable]
   public enum InfoLevel
   {
-    [DisplayNameRes("DEBUG", typeof(Resources))]
+    [DisplayNameRes("DEBUG", typeof(CoreResources))]
     Debug = 0,
-    [DisplayNameRes("INFO", typeof(Resources))]
+    [DisplayNameRes("INFO", typeof(CoreResources))]
     Info = 1,
-    [DisplayNameRes("WARNING", typeof(Resources))]
+    [DisplayNameRes("WARNING", typeof(CoreResources))]
     Warning = 2,
-    [DisplayNameRes("ERROR", typeof(Resources))]
+    [DisplayNameRes("ERROR", typeof(CoreResources))]
     Error = 3,
-    [DisplayNameRes("FATAL", typeof(Resources))]
+    [DisplayNameRes("FATAL", typeof(CoreResources))]
     Fatal = 4
   }
   
