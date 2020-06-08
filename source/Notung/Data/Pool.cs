@@ -95,6 +95,9 @@ namespace Notung.Data
       var ret = m_root;
       ret.Busy = true;
       m_root = m_root.Next;
+
+      m_signal.Reset();
+
       return ret.Index;
     }
 
@@ -125,7 +128,7 @@ namespace Notung.Data
     }
   }
 
-  public class Rent<T> : IDisposable
+  public sealed class Rent<T> : IDisposable
   {
     private readonly Pool<T> m_pool;
     private readonly int m_index;
