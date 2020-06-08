@@ -100,8 +100,6 @@ namespace Notung.Net
       m_stream.Dispose();
       m_socket.Dispose();
     }
-
-    public static AddressFamily AddressFamily = AddressFamily.InterNetwork;
   }
 
   /// <summary>
@@ -121,7 +119,7 @@ namespace Notung.Net
 
     public ITransport Create()
     {
-      var socket = new Socket(StreamSocketTransport.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+      var socket = new Socket(m_endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       socket.Connect(m_endpoint);
 
       return new StreamSocketTransport(socket);
@@ -140,7 +138,7 @@ namespace Notung.Net
       if (endPoint == null)
         throw new ArgumentNullException("endPoint");
 
-      m_socket = new Socket(StreamSocketTransport.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+      m_socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       m_socket.Bind(endPoint);
       m_socket.Listen(listeners);
     }
@@ -152,6 +150,7 @@ namespace Notung.Net
 
     public void Dispose()
     {
+      m_socket.Shutdown(SocketShutdown.Both);
       m_socket.Dispose();
     }
   }

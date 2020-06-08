@@ -81,6 +81,10 @@
     <Compile Include="Dialogs\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="LogEntrySet.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LogSection.cs" />
     <Compile Include="Windows\Atom.cs" />
     <Compile Include="Windows\CopyData.cs" />
     <Compile Include="Windows\ExternalCallWork.cs" />
@@ -98,6 +102,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="WinResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WinResources.resx</DependentUpon>
     </Compile>
     <None Include="Helm.snk" />
     <Compile Include="Dialogs\SplashScreenDialog.cs">
@@ -126,6 +135,9 @@
     <EmbeddedResource Include="Dialogs\InfoBufferForm.resx">
       <DependentUpon>InfoBufferForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\InfoBufferForm.ru.resx">
+      <DependentUpon>InfoBufferForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ProgressIndicatorDialog.resx">
       <DependentUpon>ProgressIndicatorDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -144,6 +156,11 @@
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU.resx" />
+    <EmbeddedResource Include="WinResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WinResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinResources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\defaultsplash.jpg" />
@@ -155,7 +172,16 @@
     <None Include="Resources\error.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\idr_dll.ico" />
     <Content Include="Resources\Inspector.PNG" />
+    <None Include="Resources\p_16_warning.png" />
+    <None Include="Resources\p_16_info.png" />
+    <None Include="Resources\p_16_error.png" />
+    <None Include="Resources\p_48_debug.png" />
+    <None Include="Resources\p_48_warning.png" />
+    <None Include="Resources\p_48_question.png" />
+    <None Include="Resources\p_48_info.png" />
+    <None Include="Resources\p_48_error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

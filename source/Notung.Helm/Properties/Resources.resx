@@ -132,9 +132,6 @@
   <data name="CALLING_FUNCTION" xml:space="preserve">
     <value>Calling function {0} from {1}</value>
   </data>
-  <data name="CANCEL" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
   <data name="NO_LINK_MESSAGE_CODE" xml:space="preserve">
     <value>Message code {0} cannot be used to get command line arguments. Use {1}.StringArgsMessageCode or WM_COPYDATA.</value>
   </data>

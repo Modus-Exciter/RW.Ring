@@ -117,43 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CALLING_FUNCTION" xml:space="preserve">
-    <value>Вызов функции {0} из {1}</value>
+  <data name="ABORT" xml:space="preserve">
+    <value>Прервать</value>
   </data>
-  <data name="COPY_DATA_SEND_RECIEVE" xml:space="preserve">
-    <value>Этот метод не может быть вызван в процессе-приёмнике</value>
+  <data name="APPLY" xml:space="preserve">
+    <value>Применить</value>
   </data>
-  <data name="DLL_FUNCTIONS_ENUM_FAIL" xml:space="preserve">
-    <value>Не удалось загрузить библиотеку. Невозможно перебрать функции</value>
+  <data name="BUFFER_OVER" xml:space="preserve">
+    <value>Буфер сообщений переполнен. Настройте размер буфера в настройках протокола</value>
   </data>
-  <data name="DLL_NO_FUNCTION" xml:space="preserve">
-    <value>Не выбрана функция в библиотеке</value>
+  <data name="CANCEL" xml:space="preserve">
+    <value>Отмена</value>
   </data>
-  <data name="EXCEPTION_CALLSTACK" xml:space="preserve">
-    <value>Стек вызовов</value>
+  <data name="IGNORE" xml:space="preserve">
+    <value>Пропустить</value>
   </data>
-  <data name="EXCEPTION_MESSAGE" xml:space="preserve">
-    <value>Сообщение</value>
+  <data name="INFO_WND" xml:space="preserve">
+    <value>Окно сообщений</value>
   </data>
-  <data name="EXCEPTION_SOURCE" xml:space="preserve">
-    <value>Источник</value>
+  <data name="NO" xml:space="preserve">
+    <value>Нет</value>
   </data>
-  <data name="EXCEPTION_TYPE" xml:space="preserve">
-    <value>Тип</value>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
   </data>
-  <data name="INIT_FAIL_DESCRIPTION" xml:space="preserve">
-    <value>Не удалось запустить приложение. Не хотите ли проверить настройки?</value>
+  <data name="RETRY" xml:space="preserve">
+    <value>Повторить</value>
   </data>
-  <data name="NO_LINK_MESSAGE_CODE" xml:space="preserve">
-    <value>Код сообщения {0} не может быть использован для передачи аргументов командной строки. Используйте {1}.StringArgsMessageCode или WM_COPYDATA.</value>
+  <data name="SETTINGS" xml:space="preserve">
+    <value>Настройки</value>
   </data>
-  <data name="READY" xml:space="preserve">
-    <value>Готово</value>
-  </data>
-  <data name="VALIDATING_SECTION" xml:space="preserve">
-    <value>Проверка секции {0}</value>
-  </data>
-  <data name="VALIDATING_SECTIONS" xml:space="preserve">
-    <value>Проверка секций</value>
+  <data name="YES" xml:space="preserve">
+    <value>Да</value>
   </data>
 </root>

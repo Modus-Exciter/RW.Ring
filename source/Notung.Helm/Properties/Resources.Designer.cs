@@ -70,15 +70,6 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cancel.
-        /// </summary>
-        internal static string CANCEL {
-            get {
-                return ResourceManager.GetString("CANCEL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to This method cannot be called in recieving process.
         /// </summary>
         internal static string COPY_DATA_SEND_RECIEVE {

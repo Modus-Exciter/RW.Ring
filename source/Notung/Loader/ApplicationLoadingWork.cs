@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Notung.Data;
 using Notung.Logging;
 using Notung.Threading;
 
@@ -61,7 +60,7 @@ namespace Notung.Loader
 
         foreach (IApplicationLoader item in items)
         {
-          worker.ReportProgress(0, string.Empty);
+          worker.ReportProgress(ProgressPercentage.Unknown, string.Empty);
 
           try
           {
@@ -118,12 +117,12 @@ namespace Notung.Loader
 
       public ICollection<Type> MandatoryDependencies
       {
-        get { return ArrayExtensions.Empty<Type>(); }
+        get { return Type.EmptyTypes; }
       }
 
       public ICollection<Type> OptionalDependencies
       {
-        get { return ArrayExtensions.Empty<Type>(); }
+        get { return Type.EmptyTypes; }
       }
 
       #endregion
