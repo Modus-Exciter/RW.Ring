@@ -76,21 +76,27 @@ namespace NotungTest
         "One", "Two", "Three"
       }))
       {
-        using (var r1 = Rent.Create(pool))
+        Assert.AreEqual(0, pool.Trottle);
+        using (var r1 = PoolItem.Create(pool))
         {
+          Assert.AreEqual(1, pool.Trottle);
           Assert.AreEqual("One", r1.Data);
 
-          using (var r2 = Rent.Create(pool))
+          using (var r2 = PoolItem.Create(pool))
           {
+            Assert.AreEqual(2, pool.Trottle);
             Assert.AreEqual("Two", r2.Data);
-            using (var r3 = Rent.Create(pool))
+            using (var r3 = PoolItem.Create(pool))
             {
+              Assert.AreEqual(3, pool.Trottle);
               Assert.AreEqual("Three", r3.Data);
 
               Assert.AreEqual(-1, pool.Accuire(false));
             }
           }
         }
+
+        Assert.AreEqual(0, pool.Trottle);
       }
     }
 
@@ -104,7 +110,7 @@ namespace NotungTest
       {
         Thread t1 = new Thread(() =>
           {
-            using (var r1 = Rent.Create(pool))
+            using (var r1 = PoolItem.Create(pool))
             {
               Assert.AreEqual("One", r1.Data);
               Thread.Sleep(500);
@@ -112,7 +118,7 @@ namespace NotungTest
           });
         Thread t2 = new Thread(() =>
         {
-          using (var r1 = Rent.Create(pool))
+          using (var r1 = PoolItem.Create(pool))
           {
             Assert.AreEqual("Two", r1.Data);
             Thread.Sleep(700);
@@ -120,12 +126,12 @@ namespace NotungTest
         });
         Thread t3 = new Thread(() =>
         {
-          using (var r1 = Rent.Create(pool))
+          using (var r1 = PoolItem.Create(pool))
           {
             Assert.AreEqual("Three", r1.Data);
             Thread.Sleep(500);
 
-            using (var r2 = Rent.Create(pool))
+            using (var r2 = PoolItem.Create(pool))
             {
               Assert.AreEqual("One", r2.Data);
               Thread.Sleep(500);
@@ -142,7 +148,7 @@ namespace NotungTest
         t3.Start();
 
         t1.Join();
-        using (var r3 = Rent.Create(pool))
+        using (var r3 = PoolItem.Create(pool))
         {
           Assert.AreEqual("One", r3.Data);
         }
