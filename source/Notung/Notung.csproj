@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\DataTypeCode.cs" />
+    <Compile Include="Data\Pool.cs" />
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
