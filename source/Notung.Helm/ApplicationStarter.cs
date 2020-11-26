@@ -5,6 +5,7 @@ using System.Resources;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
+using Notung.Data;
 using Notung.Helm.Dialogs;
 using Notung.Helm.Properties;
 using Notung.Loader;
@@ -242,7 +243,6 @@ namespace Notung.Helm
         {
           var presenter = new SplashScreenPresenter(work, dlg);
           presenter.Picture = splashScreen;
-
           dlg.ShowDialog(m_view.MainForm);
           return presenter.Result;
         }

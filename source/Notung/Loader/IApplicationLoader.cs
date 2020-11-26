@@ -9,22 +9,16 @@ using Notung.Data;
 namespace Notung.Loader
 {
   /// <summary>
-  /// Загрузчик компонента приложения
+  /// Загрузчик компонента приложения с зависимостями
   /// </summary>
-  public interface IComponentLoader
-  {
-    /// <summary>
+  public interface IApplicationLoader : IDependencyItem<Type>
+  {    /// <summary>
     /// Загрузка компонента приложения
     /// </summary>
     /// <param name="context">Контекст загрузки</param>
     /// <returns><code>true</code>, если компонент загружен. <code>false</code>, если не загружен</returns>
     bool Load(LoadingContext context);
   }
-
-  /// <summary>
-  /// Загрузчик компонента приложения с зависимостями
-  /// </summary>
-  public interface IApplicationLoader : IDependencyItem<Type>, IComponentLoader { }
 
   /// <summary>
   /// Загрузчик компонента по типу
@@ -71,41 +65,39 @@ namespace Notung.Loader
 
       foreach (var pi in typeof(TService).GetProperties())
       {
-        if (IsScalar(pi.PropertyType) || pi.GetIndexParameters().Length > 0)
+        if (IsScalar(pi.PropertyType))
+          continue;
+ 
+        if (pi.GetIndexParameters().Length > 0)
           continue;
 
-        var set = pi.GetSetMethod(false);
-
-        if (set == null)
+        if (pi.GetSetMethod(false) == null)
           continue;
 
-        _properties.Add(new KeyValuePair<PropertyInfo, Action<object, object>>(pi, 
-          (obj, val) => pi.SetValue(obj, val, null)));
+        _properties.Add(new KeyValuePair<PropertyInfo, Action<object, object>>(pi, CreateSetter(pi)));
       }
+    }
+
+    private static Action<object, object> CreateSetter(PropertyInfo pi)
+    {
+      return (obj, val) => pi.SetValue(obj, val, null);
     }
 
     private static bool IsScalar(Type type)
     {
-      if (type == null) throw new ArgumentNullException("type");
-
       return type.IsValueType || type == typeof(string);
     }
 
     public ApplicationLoader()
     {
-      m_mandatory_dependencies = new ReadOnlySet<Type>(
-        new HashSet<Type>(_constructor_types));
+      m_mandatory_dependencies = new ReadOnlySet<Type>(new HashSet<Type>(_constructor_types));
 
-      m_optional_dependencies = new ReadOnlySet<Type>(
-        new HashSet<Type>(_properties
-          .Where(kv => this.FilterProperty(kv.Key))
-          .Select(kv => kv.Key.PropertyType)));
+      m_optional_dependencies = new ReadOnlySet<Type>(new HashSet<Type>(_properties
+          .Where(kv => this.FilterProperty(kv.Key)).Select(kv => kv.Key.PropertyType)));
     }
 
     protected virtual bool FilterProperty(PropertyInfo property)
     {
-      if (property == null) throw new ArgumentNullException("property");
-
       return true;
     }
 
@@ -113,7 +105,8 @@ namespace Notung.Loader
 
     public bool Load(LoadingContext context)
     {
-      if (context == null) throw new ArgumentNullException("context");
+      if (context == null) 
+        throw new ArgumentNullException("context");
 
       var ctor_params = new object[_constructor_types.Length];
       var lookup = new Dictionary<Type, object>();
@@ -167,6 +160,7 @@ namespace Notung.Loader
       }
 
       context.Container.SetService(typeof(TContract), item);
+
       return true;
     }
 
