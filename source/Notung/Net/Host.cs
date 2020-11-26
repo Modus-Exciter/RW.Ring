@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
-using Notung.Logging;
 using System.Reflection;
-using System.Text;
-using System.IO;
-using System.Xml;
 using System.Runtime.Serialization;
+using System.Threading;
+using System.Xml;
+using Notung.Logging;
 
 namespace Notung.Net
 {

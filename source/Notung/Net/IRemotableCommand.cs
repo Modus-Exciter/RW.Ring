@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Reflection;
-using Notung.Loader;
 using System.Runtime.Serialization;
 
 namespace Notung.Net
