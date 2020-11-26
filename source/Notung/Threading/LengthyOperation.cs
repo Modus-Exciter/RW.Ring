@@ -15,7 +15,7 @@ namespace Notung.Threading
   public sealed class LengthyOperation
   {
     private readonly IRunBase m_run_base;
-    private int m_current_progress;
+    private int m_current_progress = ProgressPercentage.Unknown;
     private object m_current_state;
     private IAsyncResult m_operation;
     private CancellationTokenSource m_cancel_source;
