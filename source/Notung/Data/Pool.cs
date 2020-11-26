@@ -98,11 +98,15 @@ namespace Notung.Data
 
       if (wait)
       {
-        m_signal.WaitOne();
-
-        using (m_lock.WriteLock())
+        while (true)
         {
-          return GetRootEntryHandle();
+          m_signal.WaitOne();
+
+          using (m_lock.WriteLock())
+          {
+            if (m_root != null) 
+              return GetRootEntryHandle();
+          }
         }
       }
       else
