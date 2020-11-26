@@ -129,6 +129,9 @@
   <data name="INFO" xml:space="preserve">
     <value>Information</value>
   </data>
+  <data name="INFO_LEVEL" xml:space="preserve">
+    <value>Info level</value>
+  </data>
   <data name="LANGUAGE" xml:space="preserve">
     <value>Language</value>
   </data>

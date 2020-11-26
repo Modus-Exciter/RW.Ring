@@ -120,26 +120,11 @@
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Ключ '{0}' зарезервирован</value>
   </data>
-  <data name="DEBUG" xml:space="preserve">
-    <value>Отладочное сообщение</value>
-  </data>
   <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
     <value>Другая конфигурационная секция {0} имеет то же имя, что и {1}</value>
   </data>
   <data name="EMPTY_DEFAULT_LOGGER" xml:space="preserve">
     <value>Логгер по умолчанию не может быть пустым или состоять только из пробельных символов</value>
-  </data>
-  <data name="ERROR" xml:space="preserve">
-    <value>Ошибка</value>
-  </data>
-  <data name="FATAL" xml:space="preserve">
-    <value>Фатальная ошибка</value>
-  </data>
-  <data name="INFO" xml:space="preserve">
-    <value>Информация</value>
-  </data>
-  <data name="INFO_LEVEL" xml:space="preserve">
-    <value>Уровень сообщения</value>
   </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Конфигурационная секция должна быть неабстрактным классом с конструктором без параметров, унаследованным от Toolbox.Configuration.ConfigurationSection</value>
@@ -179,9 +164,6 @@
   </data>
   <data name="UNLOAD_PLUGIN_NO_CONTAINER" xml:space="preserve">
     <value>Этот плагин не был корректно загружен. Он не может быть выгружен</value>
-  </data>
-  <data name="WARNING" xml:space="preserve">
-    <value>Предупреждение</value>
   </data>
   <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
     <value>Имя файла содержит недопустимые знаки</value>

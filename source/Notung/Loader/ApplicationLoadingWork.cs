@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Notung.Data;
 using Notung.Logging;
 using Notung.Threading;
 
@@ -35,7 +36,7 @@ namespace Notung.Loader
     }
 
     /// <summary>
-    /// Загружает компоненты приложения
+    /// Загружает компоненты приложения с возможностью показа их на указанном элементе пользовательского интерфейса
     /// </summary>
     /// <param name="invoker">Объект синхронизации для компонентов, требующих синхронизации при загрузке</param>
     /// <param name="worker">Индикатор прогресса</param>

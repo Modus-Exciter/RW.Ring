@@ -59,6 +59,7 @@
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
     <Compile Include="Data\WeakSet.cs" />
+    <Compile Include="Data\DependencyContainer.cs" />
     <Compile Include="Net\GenericProxy.cs" />
     <Compile Include="Net\Host.cs" />
     <Compile Include="Net\ICommandSerializer.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Services\INotificator.cs" />
     <Compile Include="Loader\ApplicationLoadingWork.cs" />
     <Compile Include="Services\IAssemblyClassifier.cs" />
-    <Compile Include="Loader\IComponentLoader.cs" />
+    <Compile Include="Loader\IApplicationLoader.cs" />
     <Compile Include="Loader\IDependencyItem.cs" />
     <Compile Include="Loader\IFactory.cs" />
     <Compile Include="Loader\ILoadingQueue.cs" />

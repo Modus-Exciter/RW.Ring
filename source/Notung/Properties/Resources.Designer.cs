@@ -70,15 +70,6 @@ namespace Notung.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Debug message.
-        /// </summary>
-        internal static string DEBUG {
-            get {
-                return ResourceManager.GetString("DEBUG", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Another configuration section {0} already has the same name as {1}.
         /// </summary>
         internal static string DUPLICATE_SECTION_NAME {
@@ -93,42 +84,6 @@ namespace Notung.Properties {
         internal static string EMPTY_DEFAULT_LOGGER {
             get {
                 return ResourceManager.GetString("EMPTY_DEFAULT_LOGGER", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error.
-        /// </summary>
-        internal static string ERROR {
-            get {
-                return ResourceManager.GetString("ERROR", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fatal error.
-        /// </summary>
-        internal static string FATAL {
-            get {
-                return ResourceManager.GetString("FATAL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Information.
-        /// </summary>
-        internal static string INFO {
-            get {
-                return ResourceManager.GetString("INFO", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Info level.
-        /// </summary>
-        internal static string INFO_LEVEL {
-            get {
-                return ResourceManager.GetString("INFO_LEVEL", resourceCulture);
             }
         }
         
@@ -246,15 +201,6 @@ namespace Notung.Properties {
         internal static string UNLOADING_PLUGIN_CURRENT_DOMAIN {
             get {
                 return ResourceManager.GetString("UNLOADING_PLUGIN_CURRENT_DOMAIN", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Warning.
-        /// </summary>
-        internal static string WARNING {
-            get {
-                return ResourceManager.GetString("WARNING", resourceCulture);
             }
         }
         

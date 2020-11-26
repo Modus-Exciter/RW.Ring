@@ -97,6 +97,15 @@ namespace Notung {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Info level.
+        /// </summary>
+        public static string INFO_LEVEL {
+            get {
+                return ResourceManager.GetString("INFO_LEVEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Language.
         /// </summary>
         public static string LANGUAGE {

@@ -120,26 +120,11 @@
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Key '{0}' is reserved</value>
   </data>
-  <data name="DEBUG" xml:space="preserve">
-    <value>Debug message</value>
-  </data>
   <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
     <value>Another configuration section {0} already has the same name as {1}</value>
   </data>
   <data name="EMPTY_DEFAULT_LOGGER" xml:space="preserve">
     <value>Default logger cannot be empty or whitespace</value>
-  </data>
-  <data name="ERROR" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="FATAL" xml:space="preserve">
-    <value>Fatal error</value>
-  </data>
-  <data name="INFO" xml:space="preserve">
-    <value>Information</value>
-  </data>
-  <data name="INFO_LEVEL" xml:space="preserve">
-    <value>Info level</value>
   </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection</value>
@@ -179,9 +164,6 @@
   </data>
   <data name="UNLOAD_PLUGIN_NO_CONTAINER" xml:space="preserve">
     <value>This plugin was not loaded correctly. It cannot be unloaded</value>
-  </data>
-  <data name="WARNING" xml:space="preserve">
-    <value>Warning</value>
   </data>
   <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
     <value>File name contains wrong symbols</value>
