@@ -58,7 +58,7 @@ namespace Notung.Loader
 
         ret.Buffer = context.Buffer;
 
-        foreach (var index in TopologicalSort.Kan(loaders.ToUnweightedGraph()))
+        foreach (var index in TopologicalSort.Kahn(loaders.ToUnweightedGraph()))
         {
           worker.ReportProgress(ProgressPercentage.Unknown, string.Empty);
           ProcessLoader(ret, context, loaders[index]);

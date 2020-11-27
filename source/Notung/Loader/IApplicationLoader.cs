@@ -63,7 +63,7 @@ namespace Notung.Loader
                          orderby item.Params.Length descending
                          select item).First();
 
-      _factory_method = (pr) => constructor.Method.Invoke(pr);
+      _factory_method = constructor.Method.Invoke;
       _constructor_types = new Type[constructor.Params.Length];
 
       for (int i = 0; i < _constructor_types.Length; i++)

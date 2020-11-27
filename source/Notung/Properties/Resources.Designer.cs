@@ -97,6 +97,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Graph must be oriented for topologogical sort.
+        /// </summary>
+        internal static string GRAPH_MUST_BE_ORIENTED {
+            get {
+                return ResourceManager.GetString("GRAPH_MUST_BE_ORIENTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection.
         /// </summary>
         internal static string INVALID_CONFIG_SECTION_TYPE {

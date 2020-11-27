@@ -16,13 +16,13 @@ namespace Notung.Data
     /// </summary>
     /// <param name="graph">Граф, который требуется отсортировать</param>
     /// <returns>Массив номеров вершин, отсортированный в нужном порядке</returns>
-    public static int[] Kan(IUnweightedGraph graph)
+    public static int[] Kahn(IUnweightedGraph graph)
     {
       if (graph == null)
         throw new ArgumentNullException("graph");
 
       if (!graph.IsOriented)
-        throw new ArgumentException("Graph must be oriented");
+        throw new ArgumentException(Resources.GRAPH_MUST_BE_ORIENTED);
 
       int[] results = new int[graph.PeakCount];
       int[] arc_counts = new int[graph.PeakCount];
@@ -68,6 +68,47 @@ namespace Notung.Data
       }
 
       return results;
+    }
+
+    /// <summary>
+    /// Топологическая сортировка методом Тарьяна
+    /// </summary>
+    /// <param name="graph">Граф, который требуется отсортировать</param>
+    /// <returns>Массив номеров вершин, отсортированный в нужном порядке</returns>
+    public static int[] Tarjan(IUnweightedGraph graph)
+    {
+      List<int> result = new List<int>(graph.PeakCount);
+      PeakMark[] marks = new PeakMark[graph.PeakCount];
+
+      for (int i = 0; i < graph.PeakCount; i++)
+        TarjanImplementation(graph, i, marks, result);
+
+      return result.ToArray();
+    }
+
+    private static void TarjanImplementation(IUnweightedGraph graph, int peak, PeakMark[] marks, List<int> result)
+    {
+      if (marks[peak] == PeakMark.Ready)
+        return;
+
+      if (marks[peak] == PeakMark.InProcess)
+        throw new ArgumentException(Resources.GRAPH_CYCLE);
+
+      marks[peak] = PeakMark.InProcess;
+
+      foreach (var i in graph.IncomingArcs(peak))
+        TarjanImplementation(graph, i, marks, result);
+
+      result.Add(peak);
+
+      marks[peak] = PeakMark.Ready;
+    }
+
+    private enum PeakMark : byte
+    {
+      NotReady,
+      InProcess,
+      Ready
     }
   }
 }

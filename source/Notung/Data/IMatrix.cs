@@ -34,7 +34,6 @@ namespace Notung.Data
     /// <returns>Итератор, перебирающий все элементы строки</returns>
     IEnumerable<T> GetRowData(int row);
 
-
     /// <summary>
     /// Перебор всех элементов столбца матрицы
     /// </summary>

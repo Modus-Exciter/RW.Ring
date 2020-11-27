@@ -8,7 +8,7 @@ namespace Notung.Data
   /// Невзвешенный граф, хранимый в виде списка смежных вершин
   /// </summary>
   [Serializable] 
-  public sealed class UnweightedNestedList : IUnweightedGraph
+  public sealed class UnweightedListGraph : IUnweightedGraph
   {
     private readonly HashSet<int>[] m_forward;
     private readonly HashSet<int>[] m_reverse;
@@ -18,7 +18,7 @@ namespace Notung.Data
     /// </summary>
     /// <param name="peakCount">Количество вершин графа</param>
     /// <param name="isOriented">Будет ли граф ориентированным</param>
-    public UnweightedNestedList(int peakCount, bool isOriented)
+    public UnweightedListGraph(int peakCount, bool isOriented)
     {
       m_forward = ArrayExtensions.CreateAndFill(peakCount, () => new HashSet<int>());
 

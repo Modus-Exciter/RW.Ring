@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Notung.Threading;
 
-namespace Notung.Data
+namespace Notung.Helm.Windows
 {
   /// <summary>
   /// Код типа данных для передачи данных между приложениями
@@ -17,7 +14,8 @@ namespace Notung.Data
 
     public static readonly DataTypeCode Empty = default(DataTypeCode);
 
-    public DataTypeCode(uint code) : this()
+    public DataTypeCode(uint code)
+      : this()
     {
       m_code = code;
     }

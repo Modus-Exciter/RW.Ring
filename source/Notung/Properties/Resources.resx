@@ -129,6 +129,9 @@
   <data name="GRAPH_CYCLE" xml:space="preserve">
     <value>Arc cycle detected. Unable to perform topological sort</value>
   </data>
+  <data name="GRAPH_MUST_BE_ORIENTED" xml:space="preserve">
+    <value>Graph must be oriented for topologogical sort</value>
+  </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection</value>
   </data>

@@ -129,6 +129,9 @@
   <data name="GRAPH_CYCLE" xml:space="preserve">
     <value>В графе обнаружен цикл. Топологическая сортировка невозможна</value>
   </data>
+  <data name="GRAPH_MUST_BE_ORIENTED" xml:space="preserve">
+    <value>Граф должен быть ориентированным для топологической сортировки</value>
+  </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Конфигурационная секция должна быть неабстрактным классом с конструктором без параметров, унаследованным от Toolbox.Configuration.ConfigurationSection</value>
   </data>

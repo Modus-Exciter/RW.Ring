@@ -87,6 +87,7 @@
     <Compile Include="LogSection.cs" />
     <Compile Include="Windows\Atom.cs" />
     <Compile Include="Windows\CopyData.cs" />
+    <Compile Include="Windows\DataTypeCode.cs" />
     <Compile Include="Windows\ExternalCallWork.cs" />
     <Compile Include="IMainFormView.cs" />
     <Compile Include="Windows\NativeDll.cs" />
