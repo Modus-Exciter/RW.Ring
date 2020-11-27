@@ -73,7 +73,7 @@ namespace Notung.Data
       return (m_reverse ?? m_forward)[peak];
     }
 
-    public int OutGoingCount(int peak)
+    public int OutgoingCount(int peak)
     {
       return m_forward[peak];
     }

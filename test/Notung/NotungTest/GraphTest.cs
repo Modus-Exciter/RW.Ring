@@ -35,10 +35,10 @@ namespace NotungTest
       Assert.AreEqual(1, graph.IncomingCount(2));
       Assert.AreEqual(2, graph.IncomingCount(4));
 
-      Assert.AreEqual(2, graph.OutGoingCount(0));
-      Assert.AreEqual(0, graph.OutGoingCount(3));
-      Assert.AreEqual(1, graph.OutGoingCount(2));
-      Assert.AreEqual(1, graph.OutGoingCount(4));
+      Assert.AreEqual(2, graph.OutgoingCount(0));
+      Assert.AreEqual(0, graph.OutgoingCount(3));
+      Assert.AreEqual(1, graph.OutgoingCount(2));
+      Assert.AreEqual(1, graph.OutgoingCount(4));
     }
 
     [TestMethod]
@@ -65,10 +65,10 @@ namespace NotungTest
       Assert.AreEqual(1, graph.IncomingCount(2));
       Assert.AreEqual(2, graph.IncomingCount(4));
 
-      Assert.AreEqual(2, graph.OutGoingCount(0));
-      Assert.AreEqual(1, graph.OutGoingCount(3));
-      Assert.AreEqual(1, graph.OutGoingCount(2));
-      Assert.AreEqual(2, graph.OutGoingCount(4));
+      Assert.AreEqual(2, graph.OutgoingCount(0));
+      Assert.AreEqual(1, graph.OutgoingCount(3));
+      Assert.AreEqual(1, graph.OutgoingCount(2));
+      Assert.AreEqual(2, graph.OutgoingCount(4));
     }
 
     [TestMethod]

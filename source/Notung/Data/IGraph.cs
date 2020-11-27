@@ -47,7 +47,7 @@ namespace Notung.Data
     /// </summary>
     /// <param name="peak">Номер вершины</param>
     /// <returns>Количество дуг, исходящих из указанной вершины</returns>
-    int OutGoingCount(int peak);
+    int OutgoingCount(int peak);
   }
 
   /// <summary>
@@ -172,9 +172,9 @@ namespace Notung.Data
       return m_graph.IncomingCount(peak);
     }
 
-    public int OutGoingCount(int peak)
+    public int OutgoingCount(int peak)
     {
-      return m_graph.OutGoingCount(peak);
+      return m_graph.OutgoingCount(peak);
     }
   }
 }
