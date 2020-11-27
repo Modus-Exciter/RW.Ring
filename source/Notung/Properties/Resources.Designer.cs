@@ -61,6 +61,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Component type &quot;{0}&quot; is abstract.
+        /// </summary>
+        internal static string ABSTRACT_COMPONENT_TYPE {
+            get {
+                return ResourceManager.GetString("ABSTRACT_COMPONENT_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key &apos;{0}&apos; is reserved.
         /// </summary>
         internal static string CONTEXT_KEY_RESERVED {

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Notung.Data;
+using Notung.Properties;
 
 namespace Notung.Loader
 {
@@ -24,7 +25,7 @@ namespace Notung.Loader
     /// Дополнительные действия после того, как всё будет загружено
     /// </summary>
     /// <param name="context">Контекст загрузки</param>
-    void Prepare(LoadingContext context);
+    void Setup(LoadingContext context);
   }
 
   /// <summary>
@@ -36,92 +37,25 @@ namespace Notung.Loader
     where TService : TContract
     where TContract : class
   {
-    private static readonly Func<object[], object> _factory_method;
-    private static readonly Type[] _constructor_types;
-
-    private static readonly List<KeyValuePair<PropertyInfo, Action<object, object>>> _properties
-      = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
-    private static readonly bool _synchronization_required;
-
-    private readonly ReadOnlySet<Type> m_mandatory_dependencies;
-
-    static ApplicationLoader()
-    {
-      if (typeof(TService).IsAbstract)
-        throw new InvalidProgramException(string.Format("Тип компонента \"{0}\" абстрактный", typeof(TService)));
-
-      _synchronization_required = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
-
-      var constructor = (from ci in typeof(TService).GetConstructors()
-                         let item = new
-                         {
-                           Method = ci,
-                           Params = ci.GetParameters()
-                         }
-                         where item.Params.Length == 0 ||
-                         item.Params.All(p => !IsScalar(p.ParameterType))
-                         orderby item.Params.Length descending
-                         select item).First();
-
-      _factory_method = constructor.Method.Invoke;
-      _constructor_types = new Type[constructor.Params.Length];
-
-      for (int i = 0; i < _constructor_types.Length; i++)
-        _constructor_types[i] = constructor.Params[i].ParameterType;
-
-      foreach (var pi in typeof(TService).GetProperties())
-      {
-        if (IsScalar(pi.PropertyType))
-          continue;
- 
-        if (pi.GetIndexParameters().Length > 0)
-          continue;
-
-        if (pi.GetSetMethod(false) == null)
-          continue;
-
-        _properties.Add(new KeyValuePair<PropertyInfo, Action<object, object>>(pi, CreateSetter(pi)));
-      }
-    }
-
-    private static Action<object, object> CreateSetter(PropertyInfo pi)
-    {
-      return (obj, val) => pi.SetValue(obj, val, null);
-    }
-
-    private static bool IsScalar(Type type)
-    {
-      return type.IsValueType || type == typeof(string);
-    }
-
-    public ApplicationLoader()
-    {
-      m_mandatory_dependencies = new ReadOnlySet<Type>(new HashSet<Type>(_constructor_types));
-    }
-
-    protected virtual bool FilterProperty(PropertyInfo property)
-    {
-      return true;
-    }
-
-    #region IApplicationLoader Members
+    public static readonly bool _synchronization_required
+      = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
 
     public bool Load(LoadingContext context)
     {
-      if (context == null) 
+      if (context == null)
         throw new ArgumentNullException("context");
 
-      var ctor_params = new object[_constructor_types.Length];
+      var ctor_params = new object[Ctor.Types.Length];
       var lookup = new Dictionary<Type, object>();
 
       for (int i = 0; i < ctor_params.Length; i++)
       {
         object value;
 
-        if (!lookup.TryGetValue(_constructor_types[i], out value))
+        if (!lookup.TryGetValue(Ctor.Types[i], out value))
         {
-          value = context.Container.GetService(_constructor_types[i]);
-          lookup[_constructor_types[i]] = value;
+          value = context.Container.GetService(Ctor.Types[i]);
+          lookup[Ctor.Types[i]] = value;
         }
 
         ctor_params[i] = value;
@@ -133,9 +67,9 @@ namespace Notung.Loader
       object item = null;
 
       if (_synchronization_required && context.Invoker.InvokeRequired)
-        item = context.Invoker.Invoke(_factory_method, new object[] { ctor_params });
+        item = context.Invoker.Invoke(Ctor.Method, new object[] { ctor_params });
       else
-        item = _factory_method(ctor_params);
+        item = Ctor.Method(ctor_params);
 
       if (item == null)
         return false;
@@ -145,12 +79,12 @@ namespace Notung.Loader
       return true;
     }
 
-    public void Prepare(LoadingContext context)
+    public void Setup(LoadingContext context)
     {
       var lookup = new Dictionary<Type, object>();
       var item = context.Container.GetService(typeof(TContract));
 
-      foreach (var pi in _properties)
+      foreach (var pi in Props.List)
       {
         if (!this.FilterProperty(pi.Key))
           continue;
@@ -173,7 +107,13 @@ namespace Notung.Loader
       }
     }
 
-    #endregion
+    /// <summary>
+    /// Фильтрация свойств, участвующих в обмене данными при вызове Setup
+    /// </summary>
+    protected virtual bool FilterProperty(PropertyInfo property)
+    {
+      return true;
+    }
 
     #region IDependencyItem<Type> Members
 
@@ -184,9 +124,77 @@ namespace Notung.Loader
 
     ICollection<Type> IDependencyItem<Type>.Dependencies
     {
-      get { return m_mandatory_dependencies; }
+      get { return Ctor.Dependencies; }
     }
 
     #endregion
+
+    private static Action<object, object> CreateSetter(PropertyInfo pi)
+    {
+      return (obj, val) => pi.SetValue(obj, val, null);
+    }
+
+    private static bool IsScalar(Type type)
+    {
+      return type.IsValueType || type == typeof(string);
+    }
+
+    private static class Ctor
+    {
+      public static readonly Func<object[], object> Method;
+      public static readonly Type[] Types;
+      public static readonly ReadOnlySet<Type> Dependencies;
+
+      static Ctor()
+      {
+        if (typeof(TService).IsAbstract)
+          throw new InvalidProgramException(string.Format(Resources.ABSTRACT_COMPONENT_TYPE, typeof(TService)));
+
+        var constructor = (from ci in typeof(TService).GetConstructors()
+                           let item = new
+                           {
+                             Method = ci,
+                             Params = ci.GetParameters()
+                           }
+                           where item.Params.Length == 0 ||
+                           item.Params.All(p => !IsScalar(p.ParameterType))
+                           orderby item.Params.Length descending
+                           select item).First();
+
+        Method = constructor.Method.Invoke;
+        Types = new Type[constructor.Params.Length];
+
+        for (int i = 0; i < Types.Length; i++)
+          Types[i] = constructor.Params[i].ParameterType;
+
+        Dependencies = new ReadOnlySet<Type>(new HashSet<Type>(Types));
+      }
+    }
+
+    private static class Props
+    {
+      public static readonly ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>> List;
+        
+      static Props()
+      {
+        var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
+        
+        foreach (var pi in typeof(TService).GetProperties())
+        {
+          if (IsScalar(pi.PropertyType))
+            continue;
+
+          if (pi.GetIndexParameters().Length > 0)
+            continue;
+
+          if (pi.GetSetMethod(false) == null)
+            continue;
+
+          properties.Add(new KeyValuePair<PropertyInfo, Action<object, object>>(pi, CreateSetter(pi)));
+        }
+
+        List = new ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>>(properties);
+      }
+    }
   }
 }

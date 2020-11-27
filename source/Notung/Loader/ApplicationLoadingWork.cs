@@ -98,7 +98,7 @@ namespace Notung.Loader
     {
       try
       {
-        item.Prepare(context);
+        item.Setup(context);
       }
       catch (Exception ex)
       {
@@ -142,7 +142,7 @@ namespace Notung.Loader
         get { return Type.EmptyTypes; }
       }
 
-      public void Prepare(LoadingContext context) { }
+      public void Setup(LoadingContext context) { }
 
       #endregion
     }

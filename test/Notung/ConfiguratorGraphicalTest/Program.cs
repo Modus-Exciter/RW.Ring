@@ -65,7 +65,7 @@ namespace ConfiguratorGraphicalTest
         get { return ArrayExtensions.Empty<Type>(); }
       }
 
-      public void Prepare(LoadingContext context) { }
+      public void Setup(LoadingContext context) { }
 
       public bool Load(LoadingContext context)
       {
