@@ -88,6 +88,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Arc cycle detected. Unable to perform topological sort.
+        /// </summary>
+        internal static string GRAPH_CYCLE {
+            get {
+                return ResourceManager.GetString("GRAPH_CYCLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection.
         /// </summary>
         internal static string INVALID_CONFIG_SECTION_TYPE {

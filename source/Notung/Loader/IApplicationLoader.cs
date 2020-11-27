@@ -12,12 +12,19 @@ namespace Notung.Loader
   /// Загрузчик компонента приложения с зависимостями
   /// </summary>
   public interface IApplicationLoader : IDependencyItem<Type>
-  {    /// <summary>
+  {    
+    /// <summary>
     /// Загрузка компонента приложения
     /// </summary>
     /// <param name="context">Контекст загрузки</param>
     /// <returns><code>true</code>, если компонент загружен. <code>false</code>, если не загружен</returns>
     bool Load(LoadingContext context);
+
+    /// <summary>
+    /// Дополнительные действия после того, как всё будет загружено
+    /// </summary>
+    /// <param name="context">Контекст загрузки</param>
+    void Prepare(LoadingContext context);
   }
 
   /// <summary>
@@ -137,6 +144,16 @@ namespace Notung.Loader
       if (item == null)
         return false;
 
+      context.Container.SetService(typeof(TContract), item);
+
+      return true;
+    }
+
+    public void Prepare(LoadingContext context)
+    {
+      var lookup = new Dictionary<Type, object>();
+      var item = context.Container.GetService(typeof(TContract));
+
       foreach (var pi in _properties)
       {
         if (!this.FilterProperty(pi.Key))
@@ -158,10 +175,6 @@ namespace Notung.Loader
             pi.Value(item, value);
         }
       }
-
-      context.Container.SetService(typeof(TContract), item);
-
-      return true;
     }
 
     #endregion
@@ -173,14 +186,9 @@ namespace Notung.Loader
       get { return typeof(TContract); }
     }
 
-    ICollection<Type> IDependencyItem<Type>.MandatoryDependencies
+    ICollection<Type> IDependencyItem<Type>.Dependencies
     {
       get { return m_mandatory_dependencies; }
-    }
-
-    ICollection<Type> IDependencyItem<Type>.OptionalDependencies
-    {
-      get { return m_optional_dependencies; }
     }
 
     #endregion

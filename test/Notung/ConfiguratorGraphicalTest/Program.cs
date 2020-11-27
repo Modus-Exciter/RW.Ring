@@ -26,8 +26,20 @@ namespace ConfiguratorGraphicalTest
         new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
         Factory.Default<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
 
+
+
       return starter.RunApplication();
     }
+  }
+
+  class A
+  {
+    public B Bp { get; set; }
+  }
+
+  class B
+  {
+    public A AP { get; set; }
   }
 
 
@@ -35,7 +47,10 @@ namespace ConfiguratorGraphicalTest
   {
     public IApplicationLoader[] GetLoaders()
     {
-      return new IApplicationLoader[] { new LongApplicationLoader() };
+      return new IApplicationLoader[] { new LongApplicationLoader(),
+      new ApplicationLoader<A, A>(),
+      new ApplicationLoader<B, B>()
+      };
     }
 
     private class LongApplicationLoader : IApplicationLoader
@@ -45,15 +60,12 @@ namespace ConfiguratorGraphicalTest
         get { return typeof(HelpItem); }
       }
 
-      public ICollection<Type> MandatoryDependencies
+      public ICollection<Type> Dependencies
       {
         get { return ArrayExtensions.Empty<Type>(); }
       }
 
-      public ICollection<Type> OptionalDependencies
-      {
-        get { return ArrayExtensions.Empty<Type>(); }
-      }
+      public void Prepare(LoadingContext context) { }
 
       public bool Load(LoadingContext context)
       {

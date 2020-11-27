@@ -50,39 +50,63 @@ namespace Notung.Loader
         throw new ArgumentNullException("worker");
 
       var ret = new ApplicationLoadingResult();
+      var loaders = m_queue.GetLoaders();
 
-      var items = new TopologicalSort<Type>(m_queue.GetLoaders()).Sort();
-
-      if (items.Count > 0)
+      if (loaders.Length > 0)
       {
         var context = new LoadingContext(m_container, invoker, worker);
 
         ret.Buffer = context.Buffer;
 
-        foreach (IApplicationLoader item in items)
+        foreach (var index in TopologicalSort.Kan(loaders.ToUnweightedGraph()))
         {
           worker.ReportProgress(ProgressPercentage.Unknown, string.Empty);
+          ProcessLoader(ret, context, loaders[index]);
+        }
 
-          try
-          {
-            var loaded = item.Load(context);
-
-            ret[item.Key] = loaded ? new EmptyApplicationLoader(item.Key) : item;
-
-            if (!loaded)
-              ret.Success = false;
-          }
-          catch (Exception ex)
-          {
-            context.Buffer.Add(ex);
-            _log.Error("Run(): exception", ex);
-            ret[item.Key] = item;
-            ret.Success = false;
-          }
+        if (ret.Success)
+        {
+          foreach (var item in loaders)
+            PrepareLoader(ret, context, item);
         }
       }
 
       return ret;
+    }
+
+    private static void ProcessLoader(ApplicationLoadingResult ret, LoadingContext context, IApplicationLoader item)
+    {
+      try
+      {
+        var loaded = item.Load(context);
+
+        ret[item.Key] = loaded ? new EmptyApplicationLoader(item.Key) : item;
+
+        if (!loaded)
+          ret.Success = false;
+      }
+      catch (Exception ex)
+      {
+        context.Buffer.Add(ex);
+        _log.Error("ProcessLoader(): exception", ex);
+        ret[item.Key] = item;
+        ret.Success = false;
+      }
+    }
+
+    private static void PrepareLoader(ApplicationLoadingResult ret, LoadingContext context, IApplicationLoader item)
+    {
+      try
+      {
+        item.Prepare(context);
+      }
+      catch (Exception ex)
+      {
+        context.Buffer.Add(ex);
+        _log.Error("PrepareLoader(): exception", ex);
+        ret[item.Key] = item;
+        ret.Success = false;
+      }
     }
 
     /// <summary>
@@ -101,9 +125,6 @@ namespace Notung.Loader
 
       public bool Load(LoadingContext context)
       {
-        if (context == null) 
-          throw new ArgumentNullException("context");
-
         return true;
       }
 
@@ -116,15 +137,12 @@ namespace Notung.Loader
         get { return m_type; }
       }
 
-      public ICollection<Type> MandatoryDependencies
+      public ICollection<Type> Dependencies
       {
         get { return Type.EmptyTypes; }
       }
 
-      public ICollection<Type> OptionalDependencies
-      {
-        get { return Type.EmptyTypes; }
-      }
+      public void Prepare(LoadingContext context) { }
 
       #endregion
     }

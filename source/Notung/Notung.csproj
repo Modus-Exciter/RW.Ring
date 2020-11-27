@@ -55,11 +55,16 @@
     </Compile>
     <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\DataTypeCode.cs" />
+    <Compile Include="Data\IGraph.cs" />
+    <Compile Include="Data\IMatrix.cs" />
     <Compile Include="Data\Pool.cs" />
     <Compile Include="Data\PrefixTree.cs" />
     <Compile Include="Data\ReadOnlySet.cs" />
+    <Compile Include="Data\TopologicalSort.cs" />
+    <Compile Include="Data\UnweightedNestedList.cs" />
     <Compile Include="Data\WeakSet.cs" />
     <Compile Include="Data\DependencyContainer.cs" />
+    <Compile Include="Data\WeightedNestedList.cs" />
     <Compile Include="Net\GenericProxy.cs" />
     <Compile Include="Net\Host.cs" />
     <Compile Include="Net\ICommandSerializer.cs" />
