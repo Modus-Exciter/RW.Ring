@@ -44,7 +44,6 @@ namespace Notung.Loader
     private static readonly bool _synchronization_required;
 
     private readonly ReadOnlySet<Type> m_mandatory_dependencies;
-    private readonly ReadOnlySet<Type> m_optional_dependencies;
 
     static ApplicationLoader()
     {
@@ -98,9 +97,6 @@ namespace Notung.Loader
     public ApplicationLoader()
     {
       m_mandatory_dependencies = new ReadOnlySet<Type>(new HashSet<Type>(_constructor_types));
-
-      m_optional_dependencies = new ReadOnlySet<Type>(new HashSet<Type>(_properties
-          .Where(kv => this.FilterProperty(kv.Key)).Select(kv => kv.Key.PropertyType)));
     }
 
     protected virtual bool FilterProperty(PropertyInfo property)
