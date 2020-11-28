@@ -70,6 +70,24 @@ namespace Notung
     }
 
     /// <summary>
+    /// Получение всех типов, доступных в сборке,
+    /// даже если при загрузке сборки возникла ошибка
+    /// </summary>
+    /// <param name="assembly">Сборка</param>
+    /// <returns>Массив доступных типов</returns>
+    public static Type[] GetAvailableTypes(this Assembly assembly)
+    {
+      try
+      {
+        return assembly.GetTypes();
+      }
+      catch (ReflectionTypeLoadException ex)
+      {
+        return Array.FindAll(ex.Types, t => t != null);
+      }
+    }
+
+    /// <summary>
     /// Создание делегата для вызова статического метода указанного типа
     /// </summary>
     /// <typeparam name="T">Тип делегата</typeparam>

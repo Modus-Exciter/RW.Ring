@@ -137,6 +137,11 @@ namespace Notung.Data
       throw new NotSupportedException();
     }
 
+    bool IGraph.RemoveArc(int from, int to)
+    {
+      throw new NotSupportedException();
+    }
+
     public IEnumerable<int> IncomingArcs(int peak)
     {
       return m_graph.IncomingArcs(peak).Select(t => t.Item1);
@@ -160,11 +165,6 @@ namespace Notung.Data
     public bool HasArc(int from, int to)
     {
       return m_graph.HasArc(from, to);
-    }
-
-    public bool RemoveArc(int from, int to)
-    {
-      return m_graph.RemoveArc(from, to);
     }
 
     public int IncomingCount(int peak)

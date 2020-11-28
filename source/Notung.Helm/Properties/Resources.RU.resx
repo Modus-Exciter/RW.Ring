@@ -120,6 +120,9 @@
   <data name="CALLING_FUNCTION" xml:space="preserve">
     <value>Вызов функции {0} из {1}</value>
   </data>
+  <data name="CONTRACT_NOT_INTERFACE" xml:space="preserve">
+    <value>Тип контракта должен быть интерфейсом</value>
+  </data>
   <data name="COPY_DATA_SEND_RECIEVE" xml:space="preserve">
     <value>Этот метод не может быть вызван в процессе-приёмнике</value>
   </data>
