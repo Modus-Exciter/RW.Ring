@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Data;
 using Notung.Loader;
+using System.ComponentModel;
 
 namespace NotungTest
 {
@@ -232,131 +233,6 @@ namespace NotungTest
 
 
     [TestMethod]
-    public void FillMatrixWithDiagonal()
-    {
-      TriangleMatrix<int> matrix = new TriangleMatrix<int>(5, true);
-
-      matrix[0, 0] = 1;
-      matrix[0, 1] = 2;
-      matrix[0, 2] = 3;
-      matrix[0, 3] = 4;
-      matrix[0, 4] = 5;
-      matrix[1, 1] = 6;
-      matrix[1, 2] = 7;
-      matrix[3, 1] = 8;
-      matrix[1, 4] = 9;
-      matrix[2, 2] = 10;
-      matrix[2, 3] = 11;
-      matrix[2, 4] = 12;
-      matrix[3, 3] = 13;
-      matrix[3, 4] = 14;
-      matrix[4, 4] = 15;
-
-      Assert.AreEqual(1, matrix[0, 0]);
-      Assert.AreEqual(2, matrix[0, 1]);
-      Assert.AreEqual(3, matrix[0, 2]);
-      Assert.AreEqual(4, matrix[0, 3]);
-      Assert.AreEqual(5, matrix[0, 4]);
-      Assert.AreEqual(6, matrix[1, 1]);
-      Assert.AreEqual(7, matrix[1, 2]);
-      Assert.AreEqual(8, matrix[1, 3]);
-      Assert.AreEqual(9, matrix[1, 4]);
-      Assert.AreEqual(10, matrix[2, 2]);
-      Assert.AreEqual(11, matrix[3, 2]);
-      Assert.AreEqual(12, matrix[2, 4]);
-      Assert.AreEqual(13, matrix[3, 3]);
-      Assert.AreEqual(14, matrix[3, 4]);
-      Assert.AreEqual(15, matrix[4, 4]);
-    }
-
-    [TestMethod]
-    public void FillMatrixWithoutDiagonal()
-    {
-      TriangleMatrix<int> matrix = new TriangleMatrix<int>(5, false);
-
-      matrix[0, 1] = 2;
-      matrix[0, 2] = 3;
-      matrix[0, 3] = 4;
-      matrix[0, 4] = 5;
-      matrix[1, 2] = 7;
-      matrix[3, 1] = 8;
-      matrix[1, 4] = 9;
-      matrix[2, 3] = 11;
-      matrix[2, 4] = 12;
-      matrix[3, 4] = 14;
-
-      Assert.AreEqual(2, matrix[0, 1]);
-      Assert.AreEqual(3, matrix[2, 0]);
-      Assert.AreEqual(4, matrix[0, 3]);
-      Assert.AreEqual(5, matrix[0, 4]);
-      Assert.AreEqual(7, matrix[1, 2]);
-      Assert.AreEqual(8, matrix[1, 3]);
-      Assert.AreEqual(9, matrix[1, 4]);
-      Assert.AreEqual(11, matrix[3, 2]);
-      Assert.AreEqual(12, matrix[2, 4]);
-      Assert.AreEqual(14, matrix[3, 4]);
-    }
-
-    [TestMethod]
-    public void MatrixRowWithDiagonal()
-    {
-      TriangleMatrix<int> matrix = new TriangleMatrix<int>(5, true);
-
-      matrix[0, 0] = 1;
-      matrix[0, 1] = 2;
-      matrix[0, 2] = 3;
-      matrix[0, 3] = 4;
-      matrix[0, 4] = 5;
-      matrix[1, 1] = 6;
-      matrix[1, 2] = 7;
-      matrix[3, 1] = 8;
-      matrix[1, 4] = 9;
-      matrix[2, 2] = 10;
-      matrix[2, 3] = 11;
-      matrix[2, 4] = 12;
-      matrix[3, 3] = 13;
-      matrix[3, 4] = 14;
-      matrix[4, 4] = 15;
-
-      var row = matrix.GetRowData(3).ToArray();
-
-      Assert.AreEqual(5, row.Length);
-
-      Assert.AreEqual(4, row[0]);
-      Assert.AreEqual(8, row[1]);
-      Assert.AreEqual(11, row[2]);
-      Assert.AreEqual(13, row[3]);
-      Assert.AreEqual(14, row[4]);
-    }
-
-    [TestMethod]
-    public void MatrixRowWithoutDiagonal()
-    {
-      TriangleMatrix<int> matrix = new TriangleMatrix<int>(5, false);
-
-      matrix[0, 1] = 2;
-      matrix[0, 2] = 3;
-      matrix[0, 3] = 4;
-      matrix[0, 4] = 5;
-      matrix[1, 2] = 7;
-      matrix[3, 1] = 8;
-      matrix[1, 4] = 9;
-      matrix[2, 3] = 11;
-      matrix[2, 4] = 12;
-      matrix[3, 4] = 14;
-
-      var row = matrix.GetRowData(3).ToArray();
-
-      Assert.AreEqual(5, row.Length);
-
-      Assert.AreEqual(4, row[0]);
-      Assert.AreEqual(8, row[1]);
-      Assert.AreEqual(11, row[2]);
-      Assert.AreEqual(0, row[3]);
-      Assert.AreEqual(14, row[4]);
-    }
-
-    [TestMethod]
     public void ConvertAndSortKahn()
     {
       CharItem[] items = new CharItem[]
@@ -478,6 +354,57 @@ namespace NotungTest
       Assert.IsTrue(graph.HasArc(6, 3));
       Assert.IsFalse(graph.HasArc(6, 4));
       Assert.IsFalse(graph.HasArc(6, 5));
+    }
+
+    [TestMethod]
+    public void FixSequence()
+    {
+      var items = new List<CharItem>
+      {
+        new CharItem('A', new char[] { 'E', 'C', 'D'}),
+        new CharItem('B', new char[] { 'C', 'G', 'R'}),
+        new CharItem('C', new char[0]),
+        new CharItem('B', new char[] { 'C', 'G'}),
+        new CharItem('D', new char[] { 'F', 'G' }),
+        new CharItem('E', new char[0]),
+        new CharItem('B', new char[] { 'C', 'G', 'A'}),
+        new CharItem('F', new char[0]),
+        new CharItem('G', new char[] { 'C' }),
+      };
+
+      items.Fix<char, CharItem>();
+      Assert.AreEqual(7, items.Count);
+      Assert.AreEqual('A', items[0].Key);
+      Assert.AreEqual('B', items[1].Key);
+      Assert.AreEqual('C', items[2].Key);
+      Assert.AreEqual('D', items[3].Key);
+      Assert.AreEqual('E', items[4].Key);
+      Assert.AreEqual('F', items[5].Key);
+      Assert.AreEqual('G', items[6].Key);
+
+      Assert.AreEqual(2, items[1].Dependencies.Count);
+      Assert.AreEqual('C', items[1].Dependencies.First());
+      Assert.AreEqual('G', items[1].Dependencies.Skip(1).First());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void FixFailure()
+    {
+      var items = new List<CharItem>
+      {
+        new CharItem('A', new char[] { 'E', 'C', 'D'}),
+        new CharItem('B', new char[] { 'C', 'G', 'R'}),
+        new CharItem('C', new char[0]),
+        new CharItem('B', new char[] { 'C', 'S'}),
+        new CharItem('D', new char[] { 'F', 'G' }),
+        new CharItem('E', new char[0]),
+        new CharItem('B', new char[] { 'C', 'G', 'M'}),
+        new CharItem('F', new char[0]),
+        new CharItem('G', new char[] { 'C' }),
+      };
+
+      items.Fix<char, CharItem>();
     }
 
     private class CharItem : IDependencyItem<char>

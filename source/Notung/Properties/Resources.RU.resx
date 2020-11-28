@@ -120,6 +120,9 @@
   <data name="ABSTRACT_COMPONENT_TYPE" xml:space="preserve">
     <value>Тип компонента "{0}" абстрактный</value>
   </data>
+  <data name="BAD_DUPLICATES" xml:space="preserve">
+    <value>Невозможно найти в коллекции подходящий выбор среди дубликатов</value>
+  </data>
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Ключ '{0}' зарезервирован</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="GRAPH_MUST_BE_ORIENTED" xml:space="preserve">
     <value>Граф должен быть ориентированным для топологической сортировки</value>
+  </data>
+  <data name="IMPOSSIBLE_FIX" xml:space="preserve">
+    <value>Коллекция требует коррекции, но это невозможно, потому что она имеет фиксированный размер</value>
   </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Конфигурационная секция должна быть неабстрактным классом с конструктором без параметров, унаследованным от Toolbox.Configuration.ConfigurationSection</value>

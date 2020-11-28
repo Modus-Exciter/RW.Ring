@@ -120,6 +120,9 @@
   <data name="ABSTRACT_COMPONENT_TYPE" xml:space="preserve">
     <value>Component type "{0}" is abstract</value>
   </data>
+  <data name="BAD_DUPLICATES" xml:space="preserve">
+    <value>Unable to find any suitable alternative for duplicates</value>
+  </data>
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Key '{0}' is reserved</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="GRAPH_MUST_BE_ORIENTED" xml:space="preserve">
     <value>Graph must be oriented for topologogical sort</value>
+  </data>
+  <data name="IMPOSSIBLE_FIX" xml:space="preserve">
+    <value>This collection needs to be be fixed, but it is impossible, because it has fixed size</value>
   </data>
   <data name="INVALID_CONFIG_SECTION_TYPE" xml:space="preserve">
     <value>Configuration section must be a non-abstract class with paramrterless constructor and inherited from Toolbox.Configuration.ConfigurationSection</value>

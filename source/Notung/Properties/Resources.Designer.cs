@@ -70,6 +70,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find any suitable alternative for duplicates.
+        /// </summary>
+        internal static string BAD_DUPLICATES {
+            get {
+                return ResourceManager.GetString("BAD_DUPLICATES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Key &apos;{0}&apos; is reserved.
         /// </summary>
         internal static string CONTEXT_KEY_RESERVED {
@@ -111,6 +120,15 @@ namespace Notung.Properties {
         internal static string GRAPH_MUST_BE_ORIENTED {
             get {
                 return ResourceManager.GetString("GRAPH_MUST_BE_ORIENTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This collection needs to be be fixed, but it is impossible, because it has fixed size.
+        /// </summary>
+        internal static string IMPOSSIBLE_FIX {
+            get {
+                return ResourceManager.GetString("IMPOSSIBLE_FIX", resourceCulture);
             }
         }
         
