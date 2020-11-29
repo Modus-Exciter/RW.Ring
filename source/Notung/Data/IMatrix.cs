@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Notung.Data
@@ -26,20 +27,6 @@ namespace Notung.Data
     /// <param name="column">Номер столбца</param>
     /// <returns>Значение элемента матрицы</returns>
     T this[int row, int column] { get; set; }
-
-    /// <summary>
-    /// Перебор всех элементов строки матрицы
-    /// </summary>
-    /// <param name="row">Номер строки</param>
-    /// <returns>Итератор, перебирающий все элементы строки</returns>
-    IEnumerable<T> GetRowData(int row);
-
-    /// <summary>
-    /// Перебор всех элементов столбца матрицы
-    /// </summary>
-    /// <param name="row">Номер столбца</param>
-    /// <returns>Итератор, перебирающий все элементы столбца</returns>
-    IEnumerable<T> GetColumnData(int column);
   }
 
   /// <summary>
@@ -79,18 +66,6 @@ namespace Notung.Data
     {
       get { return m_data[row, column]; }
       set { m_data[row, column] = value; }
-    }
-
-    public IEnumerable<T> GetRowData(int row)
-    {
-      for (int i = 0; i < m_data.GetLength(0); i++)
-        yield return m_data[row, i];
-    }
-
-    public IEnumerable<T> GetColumnData(int column)
-    {
-      for (int i = 0; i < m_data.GetLength(1); i++)
-        yield return m_data[column, column];
     }
   }
 
@@ -163,26 +138,100 @@ namespace Notung.Data
       get { return m_data[GetIndex(row, column)]; }
       set { m_data[GetIndex(row, column)] = value; }
     }
+  }
 
-    private IEnumerable<T> GetEnumerator(int index)
+  /// <summary>
+  /// Прямоугольная матрица логических значений с компактным размещением в памяти
+  /// </summary>
+  [Serializable]
+  public sealed class RectangleMatrix : IMatrix<bool>
+  {
+    private readonly BitArray m_data;
+    private readonly int m_size;
+    private readonly int m_columns;
+
+    public RectangleMatrix(int rowCount, int columnCount)
     {
-      for (int i = 0; i < m_size; i++)
+      m_size = rowCount;
+      m_columns = columnCount;
+      m_data = new BitArray(rowCount * columnCount);
+    }
+
+    public RectangleMatrix(int size)
+    {
+      m_size = size;
+      m_columns = size;
+      m_data = new BitArray(size* size);
+    }
+
+    public int RowCount
+    {
+      get { return m_size; }
+    }
+
+    public int ColumnCount
+    {
+      get { return m_columns; }
+    }
+
+    public bool this[int row, int column]
+    {
+      get { return m_data[row * m_columns + column]; }
+      set { m_data[row * m_columns + column] = value; }
+    }
+  }
+
+  /// <summary>
+  /// Треугольная матрица логических значений с компактным размещением в памяти
+  /// </summary>
+  [Serializable]
+  public sealed class TriangleMatrix : IMatrix<bool>
+  {
+    private readonly BitArray m_data;
+    private readonly int m_size;
+
+    public TriangleMatrix(int size)
+    {
+      m_size = size;
+      m_data = new BitArray(size * (size - 1) / 2 + 1);
+    }
+
+    public int RowCount
+    {
+      get { return m_size; }
+    }
+
+    public int ColumnCount
+    {
+      get { return m_size; }
+    }
+
+    private int GetIndex(int row, int column)
+    {
+      if (row < 0 || row >= m_size)
+        throw new ArgumentOutOfRangeException("row");
+
+      if (column < 0 || column >= m_size)
+        throw new ArgumentOutOfRangeException("column");
+
+      if (column > row)
+        return row * (2 * m_size - row - 3) / 2 + column;
+      else if (row < column)
+        return column * (2 * m_size - column - 3) / 2 + row;
+      else
+        return 0;
+    }
+
+    public bool this[int row, int column]
+    {
+      get { return m_data[GetIndex(row, column)]; }
+      set
       {
-        if (!m_with_diagonal && i == index)
-          yield return default(T);
-        else
-          yield return m_data[GetIndex(index, i)];
+        var index = this.GetIndex(row, column);
+
+        if (index > 0)
+          m_data[index] = value;
       }
-    }
-
-    public IEnumerable<T> GetRowData(int row)
-    {
-      return this.GetEnumerator(row);
-    }
-
-    public IEnumerable<T> GetColumnData(int column)
-    {
-      return this.GetEnumerator(column);
     }
   }
 }

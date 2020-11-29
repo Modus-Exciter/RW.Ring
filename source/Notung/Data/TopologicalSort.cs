@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,7 +79,7 @@ namespace Notung.Data
     public static int[] Tarjan(IUnweightedGraph graph)
     {
       List<int> result = new List<int>(graph.PeakCount);
-      PeakMark[] marks = new PeakMark[graph.PeakCount];
+      PeakMarkList marks = new PeakMarkList(graph.PeakCount);
 
       for (int i = 0; i < graph.PeakCount; i++)
         TarjanImplementation(graph, i, marks, result);
@@ -86,7 +87,7 @@ namespace Notung.Data
       return result.ToArray();
     }
 
-    private static void TarjanImplementation(IUnweightedGraph graph, int peak, PeakMark[] marks, List<int> result)
+    private static void TarjanImplementation(IUnweightedGraph graph, int peak, PeakMarkList marks, List<int> result)
     {
       if (marks[peak] == PeakMark.Ready)
         return;
@@ -102,6 +103,50 @@ namespace Notung.Data
       result.Add(peak);
 
       marks[peak] = PeakMark.Ready;
+    }
+
+    private struct PeakMarkList
+    {
+      private readonly BitArray m_bits;
+
+      public PeakMarkList(int length)
+      {
+        m_bits = new BitArray(length * 2);
+      }
+
+      public PeakMark this[int index]
+      {
+        get
+        {
+          if (m_bits[index * 2])
+          {
+            if (m_bits[index * 2 + 1])
+              return PeakMark.Ready;
+            else
+              return PeakMark.InProcess;
+          }
+          else
+            return PeakMark.NotReady;
+        }
+        set
+        {
+          switch (value)
+          {
+            case PeakMark.NotReady:
+              m_bits[index * 2] = false;
+              m_bits[index * 2 + 1] = false;
+              break;
+            case PeakMark.InProcess:
+              m_bits[index * 2] = true;
+              m_bits[index * 2 + 1] = false;
+              break;
+            case PeakMark.Ready:
+              m_bits[index * 2] = true;
+              m_bits[index * 2 + 1] = true;
+              break;
+          }
+        }
+      }
     }
 
     private enum PeakMark : byte

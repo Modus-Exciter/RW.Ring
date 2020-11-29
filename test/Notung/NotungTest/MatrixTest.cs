@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Data;
+using System.Collections.Generic;
 
 namespace NotungTest
 {
@@ -74,6 +75,18 @@ namespace NotungTest
       Assert.AreEqual(14, matrix[3, 4]);
     }
 
+    private IEnumerable<T> GetRowData<T>(IMatrix<T> matrix, int index)
+    {
+      for (int i = 0; i < matrix.ColumnCount; i++)
+      {
+        if (i == index && matrix is TriangleMatrix<T>
+          && !((TriangleMatrix<T>)matrix).WithDiagonal)
+          yield return default(T);
+        else
+          yield return matrix[index, i];
+      }
+    }
+
     [TestMethod]
     public void MatrixRowWithDiagonal()
     {
@@ -95,7 +108,7 @@ namespace NotungTest
       matrix[3, 4] = 14;
       matrix[4, 4] = 15;
 
-      var row = matrix.GetRowData(3).ToArray();
+      var row = GetRowData(matrix,3).ToArray();
 
       Assert.AreEqual(5, row.Length);
 
@@ -122,7 +135,7 @@ namespace NotungTest
       matrix[2, 4] = 12;
       matrix[3, 4] = 14;
 
-      var row = matrix.GetRowData(3).ToArray();
+      var row = GetRowData(matrix, 3).ToArray();
 
       Assert.AreEqual(5, row.Length);
 
