@@ -100,9 +100,6 @@ namespace Notung.Configuration
         if (!m_sections.TryGetValue(typeof(TSection), out ret))
         {
           ret = ReadSection(typeof(TSection));
-
-          InfoBuffer buffer = new InfoBuffer();
-
           m_sections.Add(typeof(TSection), ret);
         }
       }

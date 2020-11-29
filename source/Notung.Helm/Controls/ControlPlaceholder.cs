@@ -21,7 +21,7 @@ namespace Notung.Helm.Controls
     private string m_replacing_type;
     private volatile bool m_loading;
     private IApplicationLoader m_inner_loader;
-    IOperationWrapper m_op_wrapper;
+    private readonly IOperationWrapper m_op_wrapper;
 
     public ControlPlaceholder()
     {

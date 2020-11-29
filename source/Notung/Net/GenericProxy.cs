@@ -104,7 +104,7 @@ namespace Notung.Net
       }
     }
 
-    public enum LocalServiceOverride : byte
+    protected enum LocalServiceOverride : byte
     {
       No,
       OnlyParent,
