@@ -99,6 +99,8 @@ namespace ConfiguratorGraphicalTest
         Report(context, 90, "OuterSectionXmlName");
         AppManager.Configurator.GetSection<OuterSectionXmlName>();
 
+        context.Container.SetService(new HelpItem());
+
         return true;
       }
 

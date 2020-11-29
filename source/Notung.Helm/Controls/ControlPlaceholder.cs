@@ -272,7 +272,7 @@ namespace Notung.Helm.Controls
 
       public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
       {
-        var ret = new List<string>();
+        var ret = new HashSet<string>();
         foreach (var asm in AppManager.AssemblyClassifier.TrackingAssemblies)
         {
           try
@@ -293,7 +293,7 @@ namespace Notung.Helm.Controls
           catch { }
         }
 
-        return new StandardValuesCollection(ret);
+        return new StandardValuesCollection(ret.ToArray());
       }
     }
 
