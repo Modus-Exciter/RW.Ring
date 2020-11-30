@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfiguratorGraphicalTest",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginsTest", "..\test\Notung\PluginsTest\PluginsTest.csproj", "{AB642C81-9465-4072-93F2-2B4E999141A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastArraysTest", "FastArraysTest\FastArraysTest.csproj", "{B369E63C-198A-4B32-B2F4-FFCF4CCB3F20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastArraysTest", "..\test\Notung\FastArraysTest\FastArraysTest.csproj", "{B369E63C-198A-4B32-B2F4-FFCF4CCB3F20}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
