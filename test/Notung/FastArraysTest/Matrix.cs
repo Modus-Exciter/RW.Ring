@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FastArraysTest
 {
-  partial  class Program
+  partial class Program
   {
     /// <summary>
     /// Это умножение матриц штатными средствами, без оптимизаций

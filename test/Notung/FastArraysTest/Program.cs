@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 
@@ -7,7 +7,6 @@ namespace FastArraysTest
 {
   partial class Program
   {
-
     static void Fill(double[,] matrix)
     {
       var rnd = new Random();
@@ -33,7 +32,6 @@ namespace FastArraysTest
     {
       double[,] ret = new double[size, size];
 
-
       for (int i = 0; i < size; i++)
         ret[i, i] = 1;
 
@@ -43,9 +41,49 @@ namespace FastArraysTest
 
     static void Main(string[] args)
     {
-      PerformanceTest();
+      TestBlock();
 
       Console.ReadKey();
+    }
+
+    private static void TestBlock()
+    {
+      Console.WriteLine("Optimized run");
+
+      var date = DateTime.Now;
+      using (var arr = new FastBitArray(513))
+      {
+        for (int j = 0; j < 100000; j++)
+        {
+          for (int i = 1; i < arr.Length; i++)
+          {
+            arr[i] = i % 3 != 0;
+
+            if (arr[i])
+              arr[i - 1] = !arr[i - 1];
+          }
+        }
+      }
+
+      DateTime date2 = DateTime.Now;
+
+      Console.WriteLine(date2 - date);
+
+      Console.WriteLine("Safe run");
+      date = DateTime.Now;
+      var arr1 = new BitArray(513);
+      for (int j = 0; j < 100000; j++)
+      {
+        for (int i = 1; i < arr1.Length; i++)
+        {
+          arr1[i] = i % 3 != 0;
+
+          if (arr1[i])
+            arr1[i - 1] = !arr1[i - 1];
+        }
+      }
+      date2 = DateTime.Now;
+      Console.WriteLine(date2 - date);
     }
 
     private static void PerformanceTest()
