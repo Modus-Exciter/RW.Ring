@@ -84,6 +84,22 @@ namespace FastArraysTest
       }
       date2 = DateTime.Now;
       Console.WriteLine(date2 - date);
+
+      Console.WriteLine("Duplicate run");
+      date = DateTime.Now;
+      var arr2 = new SimpleBitArray(513);
+      for (int j = 0; j < 100000; j++)
+      {
+        for (int i = 1; i < arr2.Length; i++)
+        {
+          arr2[i] = i % 3 != 0;
+
+          if (arr2[i])
+            arr2[i - 1] = !arr2[i - 1];
+        }
+      }
+      date2 = DateTime.Now;
+      Console.WriteLine(date2 - date);
     }
 
     private static void PerformanceTest()

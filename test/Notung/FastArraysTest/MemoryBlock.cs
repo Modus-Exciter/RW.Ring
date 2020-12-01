@@ -37,13 +37,15 @@ namespace FastArraysTest
     }
   }
 
-  public class FastBitArray : MemoryBlock
+  public unsafe class FastBitArray : MemoryBlock
   {
     public readonly int Length;
+    private readonly int* m_data;
     public FastBitArray(int length)
       : base(GetSize(length))
     {
       this.Length = length;
+      m_data = (int*)this.Pointer;
     }
 
     private static int GetSize(int length)
@@ -54,23 +56,82 @@ namespace FastArraysTest
       return ((length - 1) / 0x20) + 1;
     }
 
-    public unsafe bool this[int index]
+    public bool this[int index]
     {
       get
       {
-        return (((int*)this.Pointer)[index / 0x20] & (1 << (index % 0x20))) != 0;
+        return (m_data[index / 0x20] & (1 << (index % 0x20))) != 0;
       }
       set
       {
         if (value)
         {
-          ((int*)this.Pointer)[index / 0x20] |= (1 << (index % 0x20));
+          m_data[index / 0x20] |= (1 << (index % 0x20));
         }
         else
         {
-          ((int*)this.Pointer)[index / 0x20] &= ~(1 << (index % 0x20));
+          m_data[index / 0x20] &= ~(1 << (index % 0x20));
         }
       }
     }
+  }
+
+    public class SimpleBitArray
+    {
+      private readonly int[] m_array;
+      public readonly int Length;
+      private int _version;
+
+      private static int GetSize(int length)
+      {
+        if (length < 0)
+          throw new ArgumentOutOfRangeException("length");
+
+        return ((length - 1) / 0x20) + 1;
+      }
+
+      public SimpleBitArray(int length)
+      {
+        m_array = new int[GetSize(length)];
+        this.Length = length;
+      }
+
+      public bool Get(int index)
+      {
+        if ((index < 0) || (index >= this.Length))
+        {
+          throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
+        }
+        return ((this.m_array[index / 0x20] & (((int)1) << (index % 0x20))) != 0);
+      }
+
+      public void Set(int index, bool value)
+      {
+        if ((index < 0) || (index >= this.Length))
+        {
+          throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
+        }
+        if (value)
+        {
+          this.m_array[index / 0x20] |= ((int)1) << (index % 0x20);
+        }
+        else
+        {
+          this.m_array[index / 0x20] &= ~(((int)1) << (index % 0x20));
+        }
+        this._version++;
+      }
+
+      public bool this[int index]
+      {
+        get
+        {
+          return this.Get(index);
+        }
+        set
+        {
+          this.Set(index, value);
+        }
+      }
   }
 }
