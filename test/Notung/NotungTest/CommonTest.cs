@@ -21,6 +21,23 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void FillArray()
+    {
+      string[] texts = new string[241];
+      texts.Fill("Seven");
+
+      double[] nums = new double[342];
+      nums.Fill(7.7);
+
+      char[] atm = new char[256];
+      atm.Fill('7');
+
+      Assert.IsTrue(Array.TrueForAll(texts, t => t == "Seven"));
+      Assert.IsTrue(Array.TrueForAll(nums, t => t == 7.7));
+      Assert.IsTrue(Array.TrueForAll(atm, t => t == '7'));
+    }
+
+    [TestMethod]
     public void PrefixTreeTest()
     {
       PrefixTree tree = new PrefixTree();

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
 
 namespace FastArraysTest
 {
@@ -42,6 +40,8 @@ namespace FastArraysTest
     static void Main(string[] args)
     {
       TestBlock();
+      Console.WriteLine();
+      PerformanceTest();
 
       Console.ReadKey();
     }

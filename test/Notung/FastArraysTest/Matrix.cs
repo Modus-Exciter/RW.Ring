@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FastArraysTest
 {
@@ -17,13 +14,17 @@ namespace FastArraysTest
 
       double[,] result = new double[first.GetLength(0), second.GetLength(1)];
 
-      for (int i = 0; i < first.GetLength(0); ++i)
+      int rows = first.GetLength(0);
+      int columns = second.GetLength(1);
+      int middle = first.GetLength(1);
+
+      for (int i = 0; i < rows; ++i)
       {
-        for (int j = 0; j < second.GetLength(1); ++j)
+        for (int j = 0; j < columns; ++j)
         {
           double sum = 0;
 
-          for (int k = 0; k < first.GetLength(1); ++k)
+          for (int k = 0; k < middle; ++k)
             sum += first[i, k] * second[k, j];
 
           result[i, j] = sum;

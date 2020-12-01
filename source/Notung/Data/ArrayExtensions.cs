@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace Notung.Data
 {
@@ -29,8 +30,29 @@ namespace Notung.Data
 
     public static void Fill<T>(this T[] array, T value)
     {
-      for (int i = 0; i < array.Length; i++)
-        array[i] = value;
+      if (array.Length == 0)
+        return;
+
+      array[0] = value;
+      int half = array.Length / 2;
+      int count;
+
+      if (typeof(T).IsPrimitive)
+      {
+        int size = typeof(T) == typeof(char) ? 2 : Marshal.SizeOf(typeof(T));
+
+        for (count = 1; count <= half; count <<= 1)
+          Buffer.BlockCopy(array, 0, array, count * size, count * size);
+
+        Buffer.BlockCopy(array, 0, array, count * size, (array.Length - count) * size);
+      }
+      else
+      {
+        for (count = 1; count <= half; count <<= 1)
+          Array.Copy(array, 0, array, count, count);
+
+        Array.Copy(array, 0, array, count, array.Length - count);
+      }
     }
 
     public static T[] CreateAndFill<T>(int length, Func<T> filler)
