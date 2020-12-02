@@ -118,9 +118,10 @@ namespace Notung.Data
       {
         get
         {
-          if (m_bits[index << 1])
+          index <<= 1;
+          if (m_bits[index])
           {
-            if (m_bits[(index << 1) + 1])
+            if (m_bits[index + 1])
               return PeakMark.Ready;
             else
               return PeakMark.InProcess;
@@ -130,19 +131,20 @@ namespace Notung.Data
         }
         set
         {
+          index <<= 1;
           switch (value)
           {
             case PeakMark.NotReady:
-              m_bits[index << 1] = false;
-              m_bits[(index << 1) + 1] = false;
+              m_bits[index] = false;
+              m_bits[index + 1] = false;
               break;
             case PeakMark.InProcess:
-              m_bits[index << 1] = true;
-              m_bits[(index << 1) + 1] = false;
+              m_bits[index] = true;
+              m_bits[index + 1] = false;
               break;
             case PeakMark.Ready:
-              m_bits[index << 1] = true;
-              m_bits[(index << 1) + 1] = true;
+              m_bits[index] = true;
+              m_bits[index + 1] = true;
               break;
           }
         }
