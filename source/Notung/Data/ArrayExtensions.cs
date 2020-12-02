@@ -39,7 +39,14 @@ namespace Notung.Data
 
       if (typeof(T).IsPrimitive)
       {
-        int size = typeof(T) == typeof(char) ? 2 : Marshal.SizeOf(typeof(T));
+        int size;
+
+        if (typeof(T) == typeof(char))
+          size = 2;
+        else if (typeof(T) == typeof(bool))
+          size = 1;
+        else
+          size = Marshal.SizeOf(typeof(T));
 
         for (count = 1; count <= half; count <<= 1)
           Buffer.BlockCopy(array, 0, array, count * size, count * size);

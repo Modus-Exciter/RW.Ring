@@ -38,6 +38,19 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void FillBoolArray()
+    {
+      bool[] vals = new bool[2341];
+      vals.Fill(true);
+
+      Assert.IsTrue(Array.TrueForAll(vals, t => t));
+
+      vals.Fill(false);
+
+      Assert.IsTrue(Array.TrueForAll(vals, t => !t));
+    }
+
+    [TestMethod]
     public void PrefixTreeTest()
     {
       PrefixTree tree = new PrefixTree();
