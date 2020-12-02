@@ -107,20 +107,20 @@ namespace Notung.Data
 
     private struct PeakMarkList
     {
-      private readonly BitArray m_bits;
+      private BitArrayHelper m_bits;
 
       public PeakMarkList(int length)
       {
-        m_bits = new BitArray(length * 2);
+        m_bits = new BitArrayHelper(length * 2);
       }
 
       public PeakMark this[int index]
       {
         get
         {
-          if (m_bits[index * 2])
+          if (m_bits[index << 1])
           {
-            if (m_bits[index * 2 + 1])
+            if (m_bits[(index << 1) + 1])
               return PeakMark.Ready;
             else
               return PeakMark.InProcess;
@@ -133,16 +133,16 @@ namespace Notung.Data
           switch (value)
           {
             case PeakMark.NotReady:
-              m_bits[index * 2] = false;
-              m_bits[index * 2 + 1] = false;
+              m_bits[index << 1] = false;
+              m_bits[(index << 1) + 1] = false;
               break;
             case PeakMark.InProcess:
-              m_bits[index * 2] = true;
-              m_bits[index * 2 + 1] = false;
+              m_bits[index << 1] = true;
+              m_bits[(index << 1) + 1] = false;
               break;
             case PeakMark.Ready:
-              m_bits[index * 2] = true;
-              m_bits[index * 2 + 1] = true;
+              m_bits[index << 1] = true;
+              m_bits[(index << 1) + 1] = true;
               break;
           }
         }

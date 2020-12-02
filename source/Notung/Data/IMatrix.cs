@@ -146,7 +146,7 @@ namespace Notung.Data
   [Serializable]
   public sealed class RectangleMatrix : IMatrix<bool>
   {
-    private readonly BitArray m_data;
+    private BitArrayHelper m_data;
     private readonly int m_rows;
     private readonly int m_columns;
 
@@ -154,23 +154,25 @@ namespace Notung.Data
     {
       m_rows = rowCount;
       m_columns = columnCount;
-      m_data = new BitArray(rowCount * columnCount);
+      m_data = new BitArrayHelper(rowCount * columnCount);
     }
 
     public RectangleMatrix(int size)
     {
       m_rows = size;
       m_columns = size;
-      m_data = new BitArray(size* size);
+      m_data = new BitArrayHelper(size * size);
     }
 
-    private void CheckIndexes(int row, int column)
+    private int GetIndex(int row, int column)
     {
       if (row < 0 || row >= m_rows)
         throw new IndexOutOfRangeException("row");
 
       if (column < 0 || column >= m_columns)
         throw new IndexOutOfRangeException("column");
+
+      return row * m_columns + column;
     }
 
     public int RowCount
@@ -185,16 +187,8 @@ namespace Notung.Data
 
     public bool this[int row, int column]
     {
-      get
-      {
-        CheckIndexes(row, column);
-        return m_data[row * m_columns + column];
-      }
-      set
-      {
-        CheckIndexes(row, column);
-        m_data[row * m_columns + column] = value;
-      }
+      get { return m_data[GetIndex(row, column)]; }
+      set { m_data[GetIndex(row, column)] = value; }
     }
   }
 
@@ -204,13 +198,13 @@ namespace Notung.Data
   [Serializable]
   public sealed class TriangleMatrix : IMatrix<bool>
   {
-    private readonly BitArray m_data;
+    private BitArrayHelper m_data;
     private readonly int m_size;
 
     public TriangleMatrix(int size)
     {
       m_size = size;
-      m_data = new BitArray(size * (size - 1) / 2 + 1);
+      m_data = new BitArrayHelper(size * (size - 1) / 2 + 1);
     }
 
     public int RowCount
@@ -244,7 +238,7 @@ namespace Notung.Data
       get { return m_data[GetIndex(row, column)]; }
       set
       {
-        var index = this.GetIndex(row, column);
+        var index = GetIndex(row, column);
 
         if (index > 0)
           m_data[index] = value;

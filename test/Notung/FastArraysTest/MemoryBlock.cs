@@ -36,13 +36,14 @@ namespace FastArraysTest
 
   public unsafe class FastBitArray : MemoryBlock
   {
+    private const int POWER = 5; // показатель двойки для 32 - размер int в битах
     public readonly int Length;
-    private readonly int* m_data;
+    private readonly int* m_array;
     public FastBitArray(int length)
       : base(GetSize(length))
     {
       this.Length = length;
-      m_data = (int*)this.Pointer;
+      m_array = (int*)this.Pointer;
     }
 
     private static int GetSize(int length)
@@ -57,24 +58,24 @@ namespace FastArraysTest
     {
       get
       {
-        return (m_data[index / 0x20] & (1 << (index % 0x20))) != 0;
+        int num = index >> POWER;
+        return (m_array[num] & (1 << (index - (num << POWER)))) != 0;
       }
       set
       {
+        int num = index >> POWER;
+
         if (value)
-        {
-          m_data[index / 0x20] |= (1 << (index % 0x20));
-        }
+          m_array[num] |= 1 << (index - (num << POWER));
         else
-        {
-          m_data[index / 0x20] &= ~(1 << (index % 0x20));
-        }
+          m_array[num] &= ~(1 << (index - (num << POWER)));
       }
     }
   }
 
-  public class SimpleBitArray
+  public struct SimpleBitArray
   {
+    private const int POWER = 5; // показатель двойки для 32 - размер int в битах
     private readonly int[] m_array;
     public readonly int Length;
     private int _version;
@@ -91,31 +92,23 @@ namespace FastArraysTest
     {
       m_array = new int[GetSize(length)];
       this.Length = length;
+      _version = 0;
     }
 
     public bool Get(int index)
     {
-      if ((index < 0) || (index >= this.Length))
-      {
-        throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
-      }
-      return ((this.m_array[index / 0x20] & (((int)1) << (index % 0x20))) != 0);
+      int num = index >> POWER;
+      return (m_array[num] & (1 << (index - (num << POWER)))) != 0;
     }
 
     public void Set(int index, bool value)
     {
-      if ((index < 0) || (index >= this.Length))
-      {
-        throw new ArgumentOutOfRangeException("index", "ArgumentOutOfRange_Index");
-      }
+      int num = index >> POWER;
+
       if (value)
-      {
-        this.m_array[index / 0x20] |= ((int)1) << (index % 0x20);
-      }
+        m_array[num] |= 1 << (index - (num << POWER));
       else
-      {
-        this.m_array[index / 0x20] &= ~(((int)1) << (index % 0x20));
-      }
+        m_array[num] &= ~(1 << (index - (num << POWER)));
       this._version++;
     }
 

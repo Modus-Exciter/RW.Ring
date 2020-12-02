@@ -54,6 +54,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Data\ArrayExtensions.cs" />
+    <Compile Include="Data\BitArrayHelper.cs" />
     <Compile Include="Data\IGraph.cs" />
     <Compile Include="Data\IMatrix.cs" />
     <Compile Include="Data\Pool.cs" />
