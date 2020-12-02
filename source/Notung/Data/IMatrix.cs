@@ -225,7 +225,7 @@ namespace Notung.Data
       if (column < 0 || column >= m_size)
         throw new IndexOutOfRangeException("column");
 
-      if (column > row)
+      if (row < column)
         return row * (2 * m_size - row - 3) / 2 + column;
       else if (row > column)
         return column * (2 * m_size - column - 3) / 2 + row;

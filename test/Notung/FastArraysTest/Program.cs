@@ -39,9 +39,9 @@ namespace FastArraysTest
 
     static void Main(string[] args)
     {
-      TestBlock();
-      Console.WriteLine();
       TestArray();
+      Console.WriteLine();
+      TestBlock();
       Console.WriteLine();
       PerformanceTest();
 

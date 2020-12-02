@@ -51,7 +51,7 @@ namespace FastArraysTest
       if (length < 0)
         throw new ArgumentOutOfRangeException("length");
 
-      return ((length - 1) / 0x20) + 1;
+      return (((length - 1) >> POWER) + 1) << (POWER - 1);
     }
 
     public bool this[int index]
