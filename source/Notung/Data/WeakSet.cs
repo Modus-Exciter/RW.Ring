@@ -69,13 +69,10 @@ namespace Notung.Data
       {
         foreach (var reference in m_set)
         {
-          if (reference.IsAlive)
-          {
-            var tg = reference.Target;
+          var tg = reference.Target;
 
-            if (tg != null)
-              yield return tg;
-          }
+          if (tg != null)
+            yield return tg;
         }
       }
     }
