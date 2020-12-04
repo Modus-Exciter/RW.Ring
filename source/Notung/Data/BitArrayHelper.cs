@@ -31,17 +31,14 @@ namespace Notung.Data
     {
       get
       {
-        int num = index >> POWER;
-        return (m_array[num] & (1 << (index - (num << POWER)))) != 0;
+        return (m_array[index >> POWER] & (1 << index)) != 0;
       }
       set
       {
-        int num = index >> POWER;
-
         if (value)
-          m_array[num] |= 1 << (index - (num << POWER));
+          m_array[index >> POWER] |= 1 << index;
         else
-          m_array[num] &= ~(1 << (index - (num << POWER)));
+          m_array[index >> POWER] &= ~(1 << index);
       }
     }
   }

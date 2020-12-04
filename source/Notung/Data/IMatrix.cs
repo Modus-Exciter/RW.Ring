@@ -111,10 +111,10 @@ namespace Notung.Data
 
     private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_size)
+      if ((uint)row >= (uint)m_size)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_size)
+      if ((uint)column >= (uint)m_size)
         throw new IndexOutOfRangeException("column");
 
       if (!m_with_diagonal && row == column)
@@ -166,10 +166,10 @@ namespace Notung.Data
 
     private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_rows)
+      if ((uint)row >= (uint)m_rows)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_columns)
+      if ((uint)column >= (uint)m_columns)
         throw new IndexOutOfRangeException("column");
 
       return row * m_columns + column;
@@ -219,10 +219,10 @@ namespace Notung.Data
 
     private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_size)
+      if ((uint)row >= (uint)m_size)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_size)
+      if ((uint)column >= (uint)m_size)
         throw new IndexOutOfRangeException("column");
 
       if (row < column)

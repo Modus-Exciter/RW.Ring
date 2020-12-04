@@ -58,17 +58,14 @@ namespace FastArraysTest
     {
       get
       {
-        int num = index >> POWER;
-        return (m_array[num] & (1 << (index - (num << POWER)))) != 0;
+        return (m_array[index >> POWER] & (1 << index)) != 0;
       }
       set
       {
-        int num = index >> POWER;
-
         if (value)
-          m_array[num] |= 1 << (index - (num << POWER));
+          m_array[index >> POWER] |= 1 << index;
         else
-          m_array[num] &= ~(1 << (index - (num << POWER)));
+          m_array[index >> POWER] &= ~(1 << index);
       }
     }
   }
@@ -97,18 +94,15 @@ namespace FastArraysTest
 
     public bool Get(int index)
     {
-      int num = index >> POWER;
-      return (m_array[num] & (1 << (index - (num << POWER)))) != 0;
+      return (m_array[index >> POWER] & (1 << index)) != 0;
     }
 
     public void Set(int index, bool value)
     {
-      int num = index >> POWER;
-
       if (value)
-        m_array[num] |= 1 << (index - (num << POWER));
+        m_array[index >> POWER] |= 1 << index;
       else
-        m_array[num] &= ~(1 << (index - (num << POWER)));
+        m_array[index >> POWER] &= ~(1 << index);
       this._version++;
     }
 

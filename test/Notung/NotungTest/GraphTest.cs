@@ -87,7 +87,7 @@ namespace NotungTest
     {
       IUnweightedGraph graph = new UnweightedListGraph(6, true);
 
-      graph.AddArc(6, 2);
+      graph.AddArc(-1, 2);
     }
 
     [TestMethod]
