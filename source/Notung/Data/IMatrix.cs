@@ -144,20 +144,20 @@ namespace Notung.Data
   /// Прямоугольная матрица логических значений с компактным размещением в памяти
   /// </summary>
   [Serializable]
-  public sealed class RectangleMatrix : IMatrix<bool>
+  public sealed class RectangleBitMatrix : IMatrix<bool>
   {
     private BitArrayHelper m_data;
     private readonly int m_rows;
     private readonly int m_columns;
 
-    public RectangleMatrix(int rowCount, int columnCount)
+    public RectangleBitMatrix(int rowCount, int columnCount)
     {
       m_rows = rowCount;
       m_columns = columnCount;
       m_data = new BitArrayHelper(rowCount * columnCount);
     }
 
-    public RectangleMatrix(int size)
+    public RectangleBitMatrix(int size)
     {
       m_rows = size;
       m_columns = size;
@@ -196,12 +196,12 @@ namespace Notung.Data
   /// Треугольная матрица логических значений с компактным размещением в памяти
   /// </summary>
   [Serializable]
-  public sealed class TriangleMatrix : IMatrix<bool>
+  public sealed class TriangleBitMatrix : IMatrix<bool>
   {
     private BitArrayHelper m_data;
     private readonly int m_size;
 
-    public TriangleMatrix(int size)
+    public TriangleBitMatrix(int size)
     {
       m_size = size;
       m_data = new BitArrayHelper(size * (size - 1) / 2 + 1);
