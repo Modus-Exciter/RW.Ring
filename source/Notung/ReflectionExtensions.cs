@@ -50,20 +50,6 @@ namespace Notung
     }
 
     /// <summary>
-    /// Создание делегата для вызова метода указанного объекта
-    /// </summary>
-    /// <typeparam name="T">Тип делегата</typeparam>
-    /// <param name="item">Объект, метод которого требуется вызвать</param>
-    /// <param name="methodName">Имя метода, который требуется вызвать</param>
-    /// <returns>Делегат, позволяющий вызвать нужный метод</returns>
-    public static T CreateDelegate<T>(this object item, string methodName) where T : class
-    {
-      var method = GetSuitableMethod<T>(item.GetType(), methodName, true);
-
-      return (T)(object)Delegate.CreateDelegate(typeof(T), item, method, true);
-    }
-
-    /// <summary>
     /// Получение всех типов, доступных в сборке,
     /// даже если при загрузке сборки возникла ошибка
     /// </summary>
@@ -82,6 +68,20 @@ namespace Notung
         
         return Array.FindAll(ex.Types, t => t != null);
       }
+    }
+
+    /// <summary>
+    /// Создание делегата для вызова метода указанного объекта
+    /// </summary>
+    /// <typeparam name="T">Тип делегата</typeparam>
+    /// <param name="item">Объект, метод которого требуется вызвать</param>
+    /// <param name="methodName">Имя метода, который требуется вызвать</param>
+    /// <returns>Делегат, позволяющий вызвать нужный метод</returns>
+    public static T CreateDelegate<T>(this object item, string methodName) where T : class
+    {
+      var method = GetSuitableMethod<T>(item.GetType(), methodName, true);
+
+      return (T)(object)Delegate.CreateDelegate(typeof(T), item, method, true);
     }
 
     /// <summary>
