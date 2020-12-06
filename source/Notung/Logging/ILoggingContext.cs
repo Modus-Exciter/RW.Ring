@@ -21,6 +21,7 @@ namespace Notung.Logging
     void Clear();
   }
 
+  [AppDomainShare]
   public static class LoggingContext
   {
     [ThreadStatic]
@@ -61,7 +62,7 @@ namespace Notung.Logging
       }
     }
 
-    internal static void Share(AppDomain newDomain)
+    private static void Share(AppDomain newDomain)
     {
       var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);

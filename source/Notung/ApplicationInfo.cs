@@ -8,6 +8,7 @@ using Process = System.Diagnostics.Process;
 namespace Notung
 {
   [Serializable]
+  [AppDomainShare]
   public sealed class ApplicationInfo
   {
     private readonly Assembly m_product_assembly;
@@ -204,7 +205,7 @@ namespace Notung
       }
     }
 
-    internal static void Share(AppDomain newDomain)
+    private static void Share(AppDomain newDomain)
     {
       var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);
