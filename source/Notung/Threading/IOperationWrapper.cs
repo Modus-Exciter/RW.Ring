@@ -43,6 +43,7 @@ namespace Notung.Threading
     #endregion
   }
 
+  [Serializable]
   public sealed class ApartmentStateOperationWrapper : IOperationWrapper
   {
     public TType Invoke<TType>(Func<TType> action)
