@@ -19,6 +19,7 @@ namespace Notung.Threading
   /// </summary>
   public class SynchronizeProviderStub : ISynchronizeProvider
   {
+    [Serializable]
     private class Synchronizer : ISynchronizeInvoke
     {
       #region ISynchronizeInvoke Members
