@@ -99,7 +99,6 @@ namespace Notung.Helm.Windows
           }
           finally
           {
-            _strings = null;
             SymUnloadModule(procId, module_handle);
           }
         }
@@ -142,9 +141,6 @@ namespace Notung.Helm.Windows
 
     #region Symbol enumeration --------------------------------------------------------------------
 
-    [ThreadStatic]
-    private static List<string> _strings = null;
-
     private static string[] LoadSymbols(IntPtr procId, IntPtr moduleHandle)
     {
       var dlgt = new LoadSymbolDelegate(LoadSymbolImpl);
@@ -152,21 +148,27 @@ namespace Notung.Helm.Windows
 
       IntPtr collector = Marshal.GetFunctionPointerForDelegate(dlgt);
 
-      _strings = new List<string>();
-
-      if (!SymEnumerateSymbols(procId, moduleHandle, collector, IntPtr.Zero))
-        _strings = null;
-
-      if (_strings != null)
-        return _strings.ToArray();
-      else
-        return ArrayExtensions.Empty<string>();
+      var strings = new List<string>();
+      GCHandle handle = GCHandle.Alloc(strings);
+      try
+      {
+        if (SymEnumerateSymbols(procId, moduleHandle, collector, (IntPtr)handle))
+          return strings.ToArray();
+        else
+          return ArrayExtensions.Empty<string>();
+      }
+      finally
+      {
+        handle.Free();
+      }
     }
 
     private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
     {
-      if (_strings != null)
-        _strings.Add(name);
+      var strings = (List<string>)((GCHandle)context).Target;
+      
+      if (strings != null)
+        strings.Add(name);
 
       return true;
     }

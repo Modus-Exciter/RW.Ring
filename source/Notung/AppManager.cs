@@ -10,6 +10,7 @@ namespace Notung
   /// <summary>
   /// Набор сервисов для управления приложением
   /// </summary>
+  [AppDomainShare]
   public static class AppManager
   {
     private static IConfigurator _configurator;
@@ -136,7 +137,7 @@ namespace Notung
       }
     }
 
-    internal static void Share(AppDomain newDomain)
+    private static void Share(AppDomain newDomain)
     {
       var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);

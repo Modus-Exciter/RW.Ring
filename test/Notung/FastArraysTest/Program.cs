@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Text;
 
 namespace FastArraysTest
 {
@@ -41,9 +39,26 @@ namespace FastArraysTest
 
     static void Main(string[] args)
     {
+      TestArray();
+      Console.WriteLine();
       TestBlock();
+      Console.WriteLine();
+      PerformanceTest();
 
       Console.ReadKey();
+    }
+
+    static void TestArray()
+    {
+      SimpleBitArray sim = new SimpleBitArray(513);
+
+      for (int i = 0; i < sim.Length; i++)
+        sim[i] = i % 3 != 0;
+
+      for (int i = 0; i < sim.Length; i++)
+        Console.Write(sim[i] ? '1':'0');
+
+      Console.WriteLine();
     }
 
     private static void TestBlock()
@@ -53,7 +68,7 @@ namespace FastArraysTest
       var date = DateTime.Now;
       using (var arr = new FastBitArray(513))
       {
-        for (int j = 0; j < 100000; j++)
+        for (int j = 0; j < 200000; j++)
         {
           for (int i = 1; i < arr.Length; i++)
           {
@@ -72,7 +87,7 @@ namespace FastArraysTest
       Console.WriteLine("Safe run");
       date = DateTime.Now;
       var arr1 = new BitArray(513);
-      for (int j = 0; j < 100000; j++)
+      for (int j = 0; j < 200000; j++)
       {
         for (int i = 1; i < arr1.Length; i++)
         {
@@ -88,7 +103,7 @@ namespace FastArraysTest
       Console.WriteLine("Duplicate run");
       date = DateTime.Now;
       var arr2 = new SimpleBitArray(513);
-      for (int j = 0; j < 100000; j++)
+      for (int j = 0; j < 200000; j++)
       {
         for (int i = 1; i < arr2.Length; i++)
         {

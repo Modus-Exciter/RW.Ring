@@ -54,6 +54,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Data\ArrayExtensions.cs" />
+    <Compile Include="Data\BitArrayHelper.cs" />
     <Compile Include="Data\IGraph.cs" />
     <Compile Include="Data\IMatrix.cs" />
     <Compile Include="Data\Pool.cs" />
@@ -67,7 +68,9 @@
     <Compile Include="Data\WeightedListGraph.cs" />
     <Compile Include="Net\GenericProxy.cs" />
     <Compile Include="Net\Host.cs" />
+    <Compile Include="Net\ICallSerializer.cs" />
     <Compile Include="Net\ICommandSerializer.cs" />
+    <Compile Include="Net\IParametersList.cs" />
     <Compile Include="Net\ISessionManager.cs" />
     <Compile Include="Net\IStreamMessage.cs" />
     <Compile Include="Net\ITransport.cs" />

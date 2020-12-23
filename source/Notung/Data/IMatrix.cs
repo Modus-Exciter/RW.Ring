@@ -111,10 +111,10 @@ namespace Notung.Data
 
     private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_size)
+      if ((uint)row >= (uint)m_size)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_size)
+      if ((uint)column >= (uint)m_size)
         throw new IndexOutOfRangeException("column");
 
       if (!m_with_diagonal && row == column)
@@ -144,33 +144,35 @@ namespace Notung.Data
   /// Прямоугольная матрица логических значений с компактным размещением в памяти
   /// </summary>
   [Serializable]
-  public sealed class RectangleMatrix : IMatrix<bool>
+  public sealed class RectangleBitMatrix : IMatrix<bool>
   {
-    private readonly BitArray m_data;
+    private BitArrayHelper m_data;
     private readonly int m_rows;
     private readonly int m_columns;
 
-    public RectangleMatrix(int rowCount, int columnCount)
+    public RectangleBitMatrix(int rowCount, int columnCount)
     {
       m_rows = rowCount;
       m_columns = columnCount;
-      m_data = new BitArray(rowCount * columnCount);
+      m_data = new BitArrayHelper(rowCount * columnCount);
     }
 
-    public RectangleMatrix(int size)
+    public RectangleBitMatrix(int size)
     {
       m_rows = size;
       m_columns = size;
-      m_data = new BitArray(size* size);
+      m_data = new BitArrayHelper(size * size);
     }
 
-    private void CheckIndexes(int row, int column)
+    private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_rows)
+      if ((uint)row >= (uint)m_rows)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_columns)
+      if ((uint)column >= (uint)m_columns)
         throw new IndexOutOfRangeException("column");
+
+      return row * m_columns + column;
     }
 
     public int RowCount
@@ -185,16 +187,8 @@ namespace Notung.Data
 
     public bool this[int row, int column]
     {
-      get
-      {
-        CheckIndexes(row, column);
-        return m_data[row * m_columns + column];
-      }
-      set
-      {
-        CheckIndexes(row, column);
-        m_data[row * m_columns + column] = value;
-      }
+      get { return m_data[GetIndex(row, column)]; }
+      set { m_data[GetIndex(row, column)] = value; }
     }
   }
 
@@ -202,15 +196,15 @@ namespace Notung.Data
   /// Треугольная матрица логических значений с компактным размещением в памяти
   /// </summary>
   [Serializable]
-  public sealed class TriangleMatrix : IMatrix<bool>
+  public sealed class TriangleBitMatrix : IMatrix<bool>
   {
-    private readonly BitArray m_data;
+    private BitArrayHelper m_data;
     private readonly int m_size;
 
-    public TriangleMatrix(int size)
+    public TriangleBitMatrix(int size)
     {
       m_size = size;
-      m_data = new BitArray(size * (size - 1) / 2 + 1);
+      m_data = new BitArrayHelper(size * (size - 1) / 2 + 1);
     }
 
     public int RowCount
@@ -225,15 +219,15 @@ namespace Notung.Data
 
     private int GetIndex(int row, int column)
     {
-      if (row < 0 || row >= m_size)
+      if ((uint)row >= (uint)m_size)
         throw new IndexOutOfRangeException("row");
 
-      if (column < 0 || column >= m_size)
+      if ((uint)column >= (uint)m_size)
         throw new IndexOutOfRangeException("column");
 
-      if (column > row)
+      if (row < column)
         return row * (2 * m_size - row - 3) / 2 + column;
-      else if (row < column)
+      else if (row > column)
         return column * (2 * m_size - column - 3) / 2 + row;
       else
         return 0;
@@ -244,7 +238,7 @@ namespace Notung.Data
       get { return m_data[GetIndex(row, column)]; }
       set
       {
-        var index = this.GetIndex(row, column);
+        var index = GetIndex(row, column);
 
         if (index > 0)
           m_data[index] = value;

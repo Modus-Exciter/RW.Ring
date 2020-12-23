@@ -19,11 +19,11 @@ namespace Notung.Data
 
       if (isOriented)
       {
-        m_matrix = new RectangleMatrix(peakCount);
+        m_matrix = new RectangleBitMatrix(peakCount);
         m_reverse = new int[peakCount];
       }
       else
-        m_matrix = new TriangleMatrix(peakCount);
+        m_matrix = new TriangleBitMatrix(peakCount);
     }
     
     public int PeakCount
@@ -33,7 +33,7 @@ namespace Notung.Data
 
     public bool IsOriented
     {
-      get { return m_matrix is RectangleMatrix; }
+      get { return m_matrix is RectangleBitMatrix; }
     }
 
     public bool AddArc(int from, int to)

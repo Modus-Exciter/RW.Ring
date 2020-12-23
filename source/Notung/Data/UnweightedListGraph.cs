@@ -38,7 +38,7 @@ namespace Notung.Data
 
     public bool HasArc(int from, int to)
     {
-      if (to < 0 || to >= m_forward.Length)
+      if ((uint)to >= (uint)m_forward.Length)
         throw new IndexOutOfRangeException();
 
       if (from == to)
