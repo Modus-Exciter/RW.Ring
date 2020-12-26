@@ -30,10 +30,10 @@
     {
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnovaResultsForm));
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnovaResultsForm));
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.factorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -69,11 +69,8 @@
       dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
       this.m_grid.DefaultCellStyle = dataGridViewCellStyle4;
-      this.m_grid.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_grid.Location = new System.Drawing.Point(0, 0);
+      resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.Name = "m_grid";
-      this.m_grid.Size = new System.Drawing.Size(609, 482);
-      this.m_grid.TabIndex = 0;
       this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellDoubleClick);
       this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_grid_CellPainting);
       // 
@@ -84,7 +81,7 @@
       // factorDataGridViewTextBoxColumn
       // 
       this.factorDataGridViewTextBoxColumn.DataPropertyName = "Factor";
-      this.factorDataGridViewTextBoxColumn.HeaderText = "Factor";
+      resources.ApplyResources(this.factorDataGridViewTextBoxColumn, "factorDataGridViewTextBoxColumn");
       this.factorDataGridViewTextBoxColumn.Name = "factorDataGridViewTextBoxColumn";
       this.factorDataGridViewTextBoxColumn.ReadOnly = true;
       // 
@@ -93,7 +90,7 @@
       this.kdfDataGridViewTextBoxColumn.DataPropertyName = "Kdf";
       dataGridViewCellStyle1.Format = "0";
       this.kdfDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
-      this.kdfDataGridViewTextBoxColumn.HeaderText = "Kdf";
+      resources.ApplyResources(this.kdfDataGridViewTextBoxColumn, "kdfDataGridViewTextBoxColumn");
       this.kdfDataGridViewTextBoxColumn.Name = "kdfDataGridViewTextBoxColumn";
       this.kdfDataGridViewTextBoxColumn.ReadOnly = true;
       // 
@@ -102,28 +99,28 @@
       this.ndfDataGridViewTextBoxColumn.DataPropertyName = "Ndf";
       dataGridViewCellStyle2.Format = "0";
       this.ndfDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle2;
-      this.ndfDataGridViewTextBoxColumn.HeaderText = "Ndf";
+      resources.ApplyResources(this.ndfDataGridViewTextBoxColumn, "ndfDataGridViewTextBoxColumn");
       this.ndfDataGridViewTextBoxColumn.Name = "ndfDataGridViewTextBoxColumn";
       this.ndfDataGridViewTextBoxColumn.ReadOnly = true;
       // 
       // fDataGridViewTextBoxColumn
       // 
       this.fDataGridViewTextBoxColumn.DataPropertyName = "F";
-      this.fDataGridViewTextBoxColumn.HeaderText = "F";
+      resources.ApplyResources(this.fDataGridViewTextBoxColumn, "fDataGridViewTextBoxColumn");
       this.fDataGridViewTextBoxColumn.Name = "fDataGridViewTextBoxColumn";
       this.fDataGridViewTextBoxColumn.ReadOnly = true;
       // 
       // f005DataGridViewTextBoxColumn
       // 
       this.f005DataGridViewTextBoxColumn.DataPropertyName = "F005";
-      this.f005DataGridViewTextBoxColumn.HeaderText = "F 5%";
+      resources.ApplyResources(this.f005DataGridViewTextBoxColumn, "f005DataGridViewTextBoxColumn");
       this.f005DataGridViewTextBoxColumn.Name = "f005DataGridViewTextBoxColumn";
       this.f005DataGridViewTextBoxColumn.ReadOnly = true;
       // 
       // f001DataGridViewTextBoxColumn
       // 
       this.f001DataGridViewTextBoxColumn.DataPropertyName = "F001";
-      this.f001DataGridViewTextBoxColumn.HeaderText = "F 1%";
+      resources.ApplyResources(this.f001DataGridViewTextBoxColumn, "f001DataGridViewTextBoxColumn");
       this.f001DataGridViewTextBoxColumn.Name = "f001DataGridViewTextBoxColumn";
       this.f001DataGridViewTextBoxColumn.ReadOnly = true;
       // 
@@ -132,20 +129,16 @@
       this.pDataGridViewTextBoxColumn.DataPropertyName = "P";
       dataGridViewCellStyle3.Format = "g";
       this.pDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-      this.pDataGridViewTextBoxColumn.HeaderText = "p";
+      resources.ApplyResources(this.pDataGridViewTextBoxColumn, "pDataGridViewTextBoxColumn");
       this.pDataGridViewTextBoxColumn.Name = "pDataGridViewTextBoxColumn";
       this.pDataGridViewTextBoxColumn.ReadOnly = true;
       // 
       // AnovaResultsForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(609, 482);
       this.Controls.Add(this.m_grid);
-      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "AnovaResultsForm";
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-      this.Text = "AnovaResultsForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
       this.ResumeLayout(false);

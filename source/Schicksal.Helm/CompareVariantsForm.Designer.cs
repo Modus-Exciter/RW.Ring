@@ -28,11 +28,12 @@
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompareVariantsForm));
       System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
       System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompareVariantsForm));
       this.m_splitter = new System.Windows.Forms.SplitContainer();
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_tab_control = new System.Windows.Forms.TabControl();
@@ -40,6 +41,14 @@
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_details_page = new System.Windows.Forms.TabPage();
       this.m_nsr_grid = new System.Windows.Forms.DataGridView();
+      this.factor1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.mean1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.factor2DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.mean2DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.actualDifferenceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.minimalDifferenceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.probabilityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.differenceInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).BeginInit();
       this.m_splitter.Panel1.SuspendLayout();
       this.m_splitter.Panel2.SuspendLayout();
@@ -50,14 +59,13 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
       this.m_details_page.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_nsr_grid)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.differenceInfoBindingSource)).BeginInit();
       this.SuspendLayout();
       // 
       // m_splitter
       // 
-      this.m_splitter.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_splitter.Location = new System.Drawing.Point(0, 0);
+      resources.ApplyResources(this.m_splitter, "m_splitter");
       this.m_splitter.Name = "m_splitter";
-      this.m_splitter.Orientation = System.Windows.Forms.Orientation.Horizontal;
       // 
       // m_splitter.Panel1
       // 
@@ -66,9 +74,6 @@
       // m_splitter.Panel2
       // 
       this.m_splitter.Panel2.Controls.Add(this.m_tab_control);
-      this.m_splitter.Size = new System.Drawing.Size(747, 619);
-      this.m_splitter.SplitterDistance = 346;
-      this.m_splitter.TabIndex = 0;
       // 
       // m_chart
       // 
@@ -77,8 +82,7 @@
       chartArea1.AxisX.LabelStyle.Angle = 90;
       chartArea1.Name = "MeansArea";
       this.m_chart.ChartAreas.Add(chartArea1);
-      this.m_chart.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_chart.Location = new System.Drawing.Point(0, 0);
+      resources.ApplyResources(this.m_chart, "m_chart");
       this.m_chart.Name = "m_chart";
       series1.BorderWidth = 2;
       series1.ChartArea = "MeansArea";
@@ -92,30 +96,20 @@
       series1.YValuesPerPoint = 6;
       series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
       this.m_chart.Series.Add(series1);
-      this.m_chart.Size = new System.Drawing.Size(747, 346);
-      this.m_chart.TabIndex = 0;
-      this.m_chart.Text = "chart1";
       // 
       // m_tab_control
       // 
       this.m_tab_control.Controls.Add(this.m_summary_page);
       this.m_tab_control.Controls.Add(this.m_details_page);
-      this.m_tab_control.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_tab_control.Location = new System.Drawing.Point(0, 0);
+      resources.ApplyResources(this.m_tab_control, "m_tab_control");
       this.m_tab_control.Name = "m_tab_control";
       this.m_tab_control.SelectedIndex = 0;
-      this.m_tab_control.Size = new System.Drawing.Size(747, 269);
-      this.m_tab_control.TabIndex = 0;
       // 
       // m_summary_page
       // 
       this.m_summary_page.Controls.Add(this.m_grid);
-      this.m_summary_page.Location = new System.Drawing.Point(4, 22);
+      resources.ApplyResources(this.m_summary_page, "m_summary_page");
       this.m_summary_page.Name = "m_summary_page";
-      this.m_summary_page.Padding = new System.Windows.Forms.Padding(3);
-      this.m_summary_page.Size = new System.Drawing.Size(739, 243);
-      this.m_summary_page.TabIndex = 0;
-      this.m_summary_page.Text = "Summary";
       this.m_summary_page.UseVisualStyleBackColor = true;
       // 
       // m_grid
@@ -132,27 +126,30 @@
       dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
       this.m_grid.DefaultCellStyle = dataGridViewCellStyle1;
-      this.m_grid.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_grid.Location = new System.Drawing.Point(3, 3);
+      resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.Name = "m_grid";
       this.m_grid.ReadOnly = true;
-      this.m_grid.Size = new System.Drawing.Size(733, 237);
-      this.m_grid.TabIndex = 0;
       // 
       // m_details_page
       // 
       this.m_details_page.Controls.Add(this.m_nsr_grid);
-      this.m_details_page.Location = new System.Drawing.Point(4, 22);
+      resources.ApplyResources(this.m_details_page, "m_details_page");
       this.m_details_page.Name = "m_details_page";
-      this.m_details_page.Padding = new System.Windows.Forms.Padding(3);
-      this.m_details_page.Size = new System.Drawing.Size(739, 243);
-      this.m_details_page.TabIndex = 1;
-      this.m_details_page.Text = "Details";
       this.m_details_page.UseVisualStyleBackColor = true;
       // 
       // m_nsr_grid
       // 
+      this.m_nsr_grid.AutoGenerateColumns = false;
       this.m_nsr_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.m_nsr_grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.factor1DataGridViewTextBoxColumn,
+            this.mean1DataGridViewTextBoxColumn,
+            this.factor2DataGridViewTextBoxColumn,
+            this.mean2DataGridViewTextBoxColumn,
+            this.actualDifferenceDataGridViewTextBoxColumn,
+            this.minimalDifferenceDataGridViewTextBoxColumn,
+            this.probabilityDataGridViewTextBoxColumn});
+      this.m_nsr_grid.DataSource = this.differenceInfoBindingSource;
       dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -162,25 +159,71 @@
       dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
       this.m_nsr_grid.DefaultCellStyle = dataGridViewCellStyle2;
-      this.m_nsr_grid.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_nsr_grid.Location = new System.Drawing.Point(3, 3);
+      resources.ApplyResources(this.m_nsr_grid, "m_nsr_grid");
       this.m_nsr_grid.Name = "m_nsr_grid";
-      this.m_nsr_grid.Size = new System.Drawing.Size(733, 237);
-      this.m_nsr_grid.TabIndex = 0;
       this.m_nsr_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_nsr_grid_CellDoubleClick);
       this.m_nsr_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_nsr_grid_CellPainting);
       // 
+      // factor1DataGridViewTextBoxColumn
+      // 
+      this.factor1DataGridViewTextBoxColumn.DataPropertyName = "Factor1";
+      resources.ApplyResources(this.factor1DataGridViewTextBoxColumn, "factor1DataGridViewTextBoxColumn");
+      this.factor1DataGridViewTextBoxColumn.Name = "factor1DataGridViewTextBoxColumn";
+      this.factor1DataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // mean1DataGridViewTextBoxColumn
+      // 
+      this.mean1DataGridViewTextBoxColumn.DataPropertyName = "Mean1";
+      resources.ApplyResources(this.mean1DataGridViewTextBoxColumn, "mean1DataGridViewTextBoxColumn");
+      this.mean1DataGridViewTextBoxColumn.Name = "mean1DataGridViewTextBoxColumn";
+      this.mean1DataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // factor2DataGridViewTextBoxColumn
+      // 
+      this.factor2DataGridViewTextBoxColumn.DataPropertyName = "Factor2";
+      resources.ApplyResources(this.factor2DataGridViewTextBoxColumn, "factor2DataGridViewTextBoxColumn");
+      this.factor2DataGridViewTextBoxColumn.Name = "factor2DataGridViewTextBoxColumn";
+      this.factor2DataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // mean2DataGridViewTextBoxColumn
+      // 
+      this.mean2DataGridViewTextBoxColumn.DataPropertyName = "Mean2";
+      resources.ApplyResources(this.mean2DataGridViewTextBoxColumn, "mean2DataGridViewTextBoxColumn");
+      this.mean2DataGridViewTextBoxColumn.Name = "mean2DataGridViewTextBoxColumn";
+      this.mean2DataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // actualDifferenceDataGridViewTextBoxColumn
+      // 
+      this.actualDifferenceDataGridViewTextBoxColumn.DataPropertyName = "ActualDifference";
+      resources.ApplyResources(this.actualDifferenceDataGridViewTextBoxColumn, "actualDifferenceDataGridViewTextBoxColumn");
+      this.actualDifferenceDataGridViewTextBoxColumn.Name = "actualDifferenceDataGridViewTextBoxColumn";
+      this.actualDifferenceDataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // minimalDifferenceDataGridViewTextBoxColumn
+      // 
+      this.minimalDifferenceDataGridViewTextBoxColumn.DataPropertyName = "MinimalDifference";
+      resources.ApplyResources(this.minimalDifferenceDataGridViewTextBoxColumn, "minimalDifferenceDataGridViewTextBoxColumn");
+      this.minimalDifferenceDataGridViewTextBoxColumn.Name = "minimalDifferenceDataGridViewTextBoxColumn";
+      this.minimalDifferenceDataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // probabilityDataGridViewTextBoxColumn
+      // 
+      this.probabilityDataGridViewTextBoxColumn.DataPropertyName = "Probability";
+      resources.ApplyResources(this.probabilityDataGridViewTextBoxColumn, "probabilityDataGridViewTextBoxColumn");
+      this.probabilityDataGridViewTextBoxColumn.Name = "probabilityDataGridViewTextBoxColumn";
+      this.probabilityDataGridViewTextBoxColumn.ReadOnly = true;
+      // 
+      // differenceInfoBindingSource
+      // 
+      this.differenceInfoBindingSource.DataSource = typeof(Schicksal.Anova.DifferenceInfo);
+      // 
       // CompareVariantsForm
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(747, 619);
       this.Controls.Add(this.m_splitter);
-      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.Name = "CompareVariantsForm";
       this.ShowInTaskbar = false;
-      this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-      this.Text = "AnovaDetailsForm";
       this.m_splitter.Panel1.ResumeLayout(false);
       this.m_splitter.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).EndInit();
@@ -191,6 +234,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
       this.m_details_page.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_nsr_grid)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.differenceInfoBindingSource)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -204,5 +248,13 @@
     private System.Windows.Forms.DataGridView m_grid;
     private System.Windows.Forms.TabPage m_details_page;
     private System.Windows.Forms.DataGridView m_nsr_grid;
+    private System.Windows.Forms.BindingSource differenceInfoBindingSource;
+    private System.Windows.Forms.DataGridViewTextBoxColumn factor1DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn mean1DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn factor2DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn mean2DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn actualDifferenceDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn minimalDifferenceDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn probabilityDataGridViewTextBoxColumn;
   }
 }

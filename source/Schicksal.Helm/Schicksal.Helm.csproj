@@ -92,11 +92,17 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AnovaResultsForm.ru-RU.resx">
+      <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CompareVariantsForm.resx">
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AnovaResultsForm.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompareVariantsForm.ru-RU.resx">
+      <DependentUpon>CompareVariantsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaDialog.resx">
       <DependentUpon>AnovaDialog.cs</DependentUpon>
@@ -105,6 +111,9 @@
       <DependentUpon>AnovaDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditColumnsDialog.resx">
+      <DependentUpon>EditColumnsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EditColumnsDialog.ru-RU.resx">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
@@ -125,6 +134,7 @@
       <DependentUpon>TableForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\Program.Preferences.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Anova.DifferenceInfo.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />

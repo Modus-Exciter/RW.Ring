@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Schicksal.Anova;
 using Notung;
+using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
@@ -20,7 +21,7 @@ namespace Schicksal.Helm
     {
       InitializeComponent();
 
-      this.Text = string.Format("{0} = f({1}) [{2}]", result, factor.Replace("+", ", "), filter);
+      this.Text = string.Format("{0}({1}) [{2}]", result, factor.Replace("+", ", "), filter);
 
       m_comparator = new VariantsComparator(table, factor, result, filter);
       m_probability = p;
@@ -31,9 +32,19 @@ namespace Schicksal.Helm
       base.OnShown(e);
       DataTable res = m_comparator.CreateDescriptiveTable(m_probability);
       m_grid.DataSource = res;
+
       m_grid.Columns["Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
+      m_grid.Columns["Count"].HeaderText = Resources.COUNT;
       m_grid.Columns["Factor"].Visible = false;
+      m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
+      m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
+      m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
+
+      m_summary_page.Text = Resources.STATISTICS;
+      m_details_page.Text = Resources.COMPARISON;
+
       m_grid.AutoResizeColumns();
+
       var series = m_chart.Series["Means"];
 
       series.Points.Clear();

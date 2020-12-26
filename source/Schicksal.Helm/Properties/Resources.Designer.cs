@@ -109,6 +109,24 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comparison in pairs.
+        /// </summary>
+        internal static string COMPARISON {
+            get {
+                return ResourceManager.GetString("COMPARISON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        internal static string COUNT {
+            get {
+                return ResourceManager.GetString("COUNT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create new table.
         /// </summary>
         internal static string CREATE_NEW_TABLE {
@@ -154,6 +172,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confidence interval.
+        /// </summary>
+        internal static string INTERVAL {
+            get {
+                return ResourceManager.GetString("INTERVAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recent files.
         /// </summary>
         internal static string LAST_FILES {
@@ -166,6 +193,15 @@ namespace Schicksal.Helm.Properties {
             get {
                 object obj = ResourceManager.GetObject("Logo_24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mean.
+        /// </summary>
+        internal static string MEAN {
+            get {
+                return ResourceManager.GetString("MEAN", resourceCulture);
             }
         }
         
@@ -224,6 +260,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SCHICKSAL_DATA_FILES {
+            get {
+                return ResourceManager.GetString("SCHICKSAL_DATA_FILES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string SETTINGS {
@@ -238,6 +283,24 @@ namespace Schicksal.Helm.Properties {
         internal static string STANDARD_TABLES {
             get {
                 return ResourceManager.GetString("STANDARD_TABLES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Statistics.
+        /// </summary>
+        internal static string STATISTICS {
+            get {
+                return ResourceManager.GetString("STATISTICS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Standard error.
+        /// </summary>
+        internal static string STD_ERROR {
+            get {
+                return ResourceManager.GetString("STD_ERROR", resourceCulture);
             }
         }
         

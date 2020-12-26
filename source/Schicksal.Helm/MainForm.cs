@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung;
 using Notung.ComponentModel;
+using Notung.Helm;
+using Notung.Helm.Windows;
 using Notung.Loader;
 using Notung.Services;
 using Schicksal.Anova;
@@ -33,6 +35,12 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
+      foreach (var arg in AppManager.Instance.CommandLineArgs)
+      {
+        if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
+          this.OpenFile(arg);
+      }
+
       FillLastFilesMenu();
     }
 
@@ -50,6 +58,20 @@ namespace Schicksal.Helm
       {
         m_menu_last_files.Visible = false;
         m_last_files_separator.Visible = false;
+      }
+    }
+
+    protected override void WndProc(ref Message msg)
+    {
+      base.WndProc(ref msg);
+
+      if (msg.Msg == WinAPIHelper.WM_COPYDATA)
+      {
+        foreach (var arg in MainFormView.GetStringArgs(msg))
+        {
+          if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
+            this.OpenFile(arg);
+        }
       }
     }
 

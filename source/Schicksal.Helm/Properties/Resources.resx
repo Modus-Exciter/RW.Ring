@@ -187,4 +187,25 @@
   <data name="column_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\column-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="COMPARISON" xml:space="preserve">
+    <value>Comparison in pairs</value>
+  </data>
+  <data name="COUNT" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="INTERVAL" xml:space="preserve">
+    <value>Confidence interval</value>
+  </data>
+  <data name="MEAN" xml:space="preserve">
+    <value>Mean</value>
+  </data>
+  <data name="SCHICKSAL_DATA_FILES" xml:space="preserve">
+    <value />
+  </data>
+  <data name="STATISTICS" xml:space="preserve">
+    <value>Statistics</value>
+  </data>
+  <data name="STD_ERROR" xml:space="preserve">
+    <value>Standard error</value>
+  </data>
 </root>

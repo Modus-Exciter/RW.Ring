@@ -7,6 +7,7 @@ using Schicksal.Basic;
 using System.ComponentModel;
 using System.Globalization;
 using Notung;
+using Schicksal.Properties;
 
 namespace Schicksal.Anova
 {
@@ -204,16 +205,16 @@ namespace Schicksal.Anova
     {
       var list = new Tuple<string, string>[10];
 
-      list[1] = new Tuple<string, string>("1. ", Factor1.ToString());
+      list[1] = new Tuple<string, string>(string.Format("{0} 1. ", Resources.FACTOR), Factor1.ToString());
       list[2] = new Tuple<string, string>(Result, Mean1.ToString("0.0000", CultureInfo.InvariantCulture));
 
-      list[4] = new Tuple<string, string>("2. ", Factor2.ToString());
+      list[4] = new Tuple<string, string>(string.Format("{0} 2. ", Resources.FACTOR), Factor2.ToString());
       list[5] = new Tuple<string, string>(Result, Mean2.ToString("0.0000", CultureInfo.InvariantCulture));
 
-      list[7] = new Tuple<string, string>("Actual difference",
+      list[7] = new Tuple<string, string>(Resources.ACTUAL_DIFFERENCE,
         ActualDifference.ToString("0.0000", CultureInfo.InvariantCulture));
 
-      list[8] = new Tuple<string, string>("Critical difference",
+      list[8] = new Tuple<string, string>(Resources.CRITICAL_DIFFERENCE,
         MinimalDifference.ToString("0.0000", CultureInfo.InvariantCulture));
 
       list[9] = new Tuple<string, string>("P ",

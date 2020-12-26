@@ -118,65 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="factorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Factor</value>
-  </data>
-  <data name="kdfDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>K - 1</value>
-  </data>
-  <data name="ndfDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>N - K</value>
-  </data>
-  <data name="fDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>F</value>
-  </data>
-  <data name="f005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>F 5%</value>
-  </data>
-  <data name="f001DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>F 1%</value>
-  </data>
-  <data name="pDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>p</value>
-  </data>
-  <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="m_grid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+    <value>Фактор</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;m_grid.Name" xml:space="preserve">
-    <value>m_grid</value>
-  </data>
-  <data name="&gt;&gt;m_grid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_grid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_grid.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
-  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAgAEBAAAAEACABoBQAAhgAAABAQAAABACAAaAQAAO4FAAAYGAAAAQAIAMgGAABWCgAAGBgAAAEA
@@ -625,65 +569,5 @@
         AADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAA
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
-  </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>AnovaResultsForm</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
-    <value>m_binding_source</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>factorDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;kdfDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>kdfDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;kdfDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ndfDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>ndfDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;ndfDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;fDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>fDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;fDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;f005DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>f005DataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;f005DataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;f001DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>f001DataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;f001DataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>pDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;pDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>AnovaResultsForm</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

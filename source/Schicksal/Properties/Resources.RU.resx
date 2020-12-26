@@ -117,79 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ANALYZE" xml:space="preserve">
-    <value>Анализ</value>
+  <data name="ACTUAL_DIFFERENCE" xml:space="preserve">
+    <value>Разность</value>
   </data>
-  <data name="ANOVA" xml:space="preserve">
-    <value>Дисперсионный анализ</value>
+  <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
+    <value>НСР</value>
   </data>
-  <data name="BASIC_STATISTICS" xml:space="preserve">
-    <value>Базовые статистики</value>
-  </data>
-  <data name="COMPARISON" xml:space="preserve">
-    <value>Попарное сравнение</value>
-  </data>
-  <data name="COUNT" xml:space="preserve">
-    <value>Количество</value>
-  </data>
-  <data name="CREATE_NEW_TABLE" xml:space="preserve">
-    <value>Создать новую таблицу</value>
-  </data>
-  <data name="DISTRIBUTION" xml:space="preserve">
-    <value>распределение</value>
-  </data>
-  <data name="FILE" xml:space="preserve">
-    <value>Файл</value>
-  </data>
-  <data name="FISHER" xml:space="preserve">
-    <value>Распределение Фишера</value>
-  </data>
-  <data name="IMPORT" xml:space="preserve">
-    <value>Импорт</value>
-  </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Доверительный интервал</value>
-  </data>
-  <data name="LAST_FILES" xml:space="preserve">
-    <value>Недавние файлы</value>
-  </data>
-  <data name="MEAN" xml:space="preserve">
-    <value>Среднее</value>
-  </data>
-  <data name="NEW" xml:space="preserve">
-    <value>Создать</value>
-  </data>
-  <data name="NEW_TABLE" xml:space="preserve">
-    <value>Новая таблица</value>
-  </data>
-  <data name="OPEN" xml:space="preserve">
-    <value>Открыть</value>
-  </data>
-  <data name="SAVE" xml:space="preserve">
-    <value>Сохранить</value>
-  </data>
-  <data name="SAVE_AS" xml:space="preserve">
-    <value>Сохранитькак</value>
-  </data>
-  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
-    <value>Сохранить изменения в таблице '{0}'?</value>
-  </data>
-  <data name="SETTINGS" xml:space="preserve">
-    <value>Настройки</value>
-  </data>
-  <data name="STANDARD_TABLES" xml:space="preserve">
-    <value>Справочные таблицы</value>
-  </data>
-  <data name="STATISTICS" xml:space="preserve">
-    <value>Статистика</value>
-  </data>
-  <data name="STD_ERROR" xml:space="preserve">
-    <value>Стандартное отклонение</value>
-  </data>
-  <data name="STUDENT" xml:space="preserve">
-    <value>Распределение Стьюдента</value>
-  </data>
-  <data name="WINDOWS" xml:space="preserve">
-    <value>Окна</value>
+  <data name="FACTOR" xml:space="preserve">
+    <value>Фактор</value>
   </data>
 </root>
