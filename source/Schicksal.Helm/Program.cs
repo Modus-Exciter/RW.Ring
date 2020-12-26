@@ -23,8 +23,8 @@ namespace Schicksal.Helm
 
     static int RunApplication()
     {
-      return new ApplicationStarter(
-        Factory.Default<Form, MainForm>())
+      return new ApplicationStarter(Factory.Default<Form, MainForm>(), 
+        Factory.Default<ILoadingQueue, SchicksalLoadingQueue>())
         {
           AllowOnlyOneInstance = true
         }.RunApplication();
@@ -35,10 +35,23 @@ namespace Schicksal.Helm
     {
       [DataMember(Name = "LastFiles")]
       private readonly HashSet<string> m_last_files = new HashSet<string>();
+      [DataMember(Name = "AnovaSettings")]
+      private Dictionary<string, string[]> m_anova_settings = new Dictionary<string, string[]>();
 
       public HashSet<string> LastFiles
       {
         get { return m_last_files; }
+      }
+
+      public Dictionary<string, string[]> AnovaSettings
+      {
+        get
+        {
+          if (m_anova_settings == null)
+            m_anova_settings = new Dictionary<string, string[]>();
+
+          return m_anova_settings;
+        }
       }
     }
   }

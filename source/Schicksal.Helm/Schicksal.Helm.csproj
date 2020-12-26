@@ -43,9 +43,28 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompareVariantsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompareVariantsForm.Designer.cs">
+      <DependentUpon>CompareVariantsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AnovaResultsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnovaResultsForm.Designer.cs">
+      <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AnovaDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\AnovaDialog.Designer.cs">
+      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\EditColumnsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -58,6 +77,12 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NSRForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NSRForm.Designer.cs">
+      <DependentUpon>NSRForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchicksalLoadingQueue.cs" />
@@ -67,6 +92,18 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="CompareVariantsForm.resx">
+      <DependentUpon>CompareVariantsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AnovaResultsForm.resx">
+      <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AnovaDialog.resx">
+      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AnovaDialog.ru-RU.resx">
+      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditColumnsDialog.resx">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -88,6 +125,8 @@
       <DependentUpon>TableForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\DataSources\Program.Preferences.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -104,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\yinyang.png" />
+    <None Include="Resources\arrow_right_blue.png" />
+    <None Include="Resources\arrow_left_blue.png" />
+    <None Include="Resources\column-chart.png" />
     <Content Include="yinyang.ico" />
   </ItemGroup>
   <ItemGroup>

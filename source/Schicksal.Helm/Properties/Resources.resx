@@ -117,65 +117,74 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="STANDARD_TABLES" xml:space="preserve">
+    <value>Standard tables</value>
+  </data>
+  <data name="NEW" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="STUDENT" xml:space="preserve">
+    <value>Student distribution</value>
+  </data>
+  <data name="NEW_TABLE" xml:space="preserve">
+    <value>New table</value>
+  </data>
   <data name="ANALYZE" xml:space="preserve">
     <value>Analyze</value>
-  </data>
-  <data name="ANOVA" xml:space="preserve">
-    <value>Analysis of variance</value>
   </data>
   <data name="BASIC_STATISTICS" xml:space="preserve">
     <value>Basic statistics</value>
   </data>
-  <data name="CREATE_NEW_TABLE" xml:space="preserve">
-    <value>Create new table</value>
+  <data name="IMPORT" xml:space="preserve">
+    <value>Import</value>
   </data>
   <data name="DISTRIBUTION" xml:space="preserve">
     <value>distribution</value>
   </data>
+  <data name="SAVE" xml:space="preserve">
+    <value>Save</value>
+  </data>
   <data name="FILE" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="FISHER" xml:space="preserve">
-    <value>Fisher distribution</value>
-  </data>
-  <data name="IMPORT" xml:space="preserve">
-    <value>Import</value>
+  <data name="OPEN" xml:space="preserve">
+    <value>Open</value>
   </data>
   <data name="LAST_FILES" xml:space="preserve">
     <value>Recent files</value>
+  </data>
+  <data name="SAVE_AS" xml:space="preserve">
+    <value>Save A</value>
+  </data>
+  <data name="ANOVA" xml:space="preserve">
+    <value>Analysis of variance</value>
+  </data>
+  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
+    <value>Do you want to save changes in table {0}?</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Logo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\yinyang.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NEW" xml:space="preserve">
-    <value>New</value>
-  </data>
-  <data name="NEW_TABLE" xml:space="preserve">
-    <value>New table</value>
-  </data>
-  <data name="OPEN" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="SAVE" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="SAVE_AS" xml:space="preserve">
-    <value>Save A</value>
-  </data>
-  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
-    <value>Do you want to save changes in table {0}?</value>
-  </data>
   <data name="SETTINGS" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="STANDARD_TABLES" xml:space="preserve">
-    <value>Standard tables</value>
+  <data name="CREATE_NEW_TABLE" xml:space="preserve">
+    <value>Create new table</value>
   </data>
-  <data name="STUDENT" xml:space="preserve">
-    <value>Student distribution</value>
+  <data name="FISHER" xml:space="preserve">
+    <value>Fisher distribution</value>
   </data>
   <data name="WINDOWS" xml:space="preserve">
     <value>Windows</value>
+  </data>
+  <data name="arrow_right_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow_right_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="arrow_left_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow_left_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="column_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\column-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

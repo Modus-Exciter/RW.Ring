@@ -15,8 +15,6 @@ namespace Schicksal.Helm
       add(new ImportMenuLoader());
     }
 
-    private abstract class ImportMenu { }
-
     private class ImportMenuLoader : IApplicationLoader
     {
       public bool Load(LoadingContext context)
@@ -27,10 +25,14 @@ namespace Schicksal.Helm
 
         foreach (var plugin in AppManager.AssemblyClassifier.Plugins)
         {
-          foreach (var type in plugin.Domain.Load(plugin.AssemblyName).GetTypes())
+          foreach (var type in plugin.Domain.Load(plugin.AssemblyName).GetAvailableTypes())
           {
+            if (typeof(ITableImport).IsAssignableFrom(type))
+              list.Add((ITableImport)Activator.CreateInstance(type));
           }
         }
+
+        context.Container.SetService<IList<ITableImport>>(list);
 
         return true;
       }

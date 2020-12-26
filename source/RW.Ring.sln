@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schicksal.Exchange", "Schic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{85466309-C38B-473A-977B-B44F0762BD5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportWofostResults", "ImportWofostResults\ImportWofostResults.csproj", "{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = RW.Ring.vsmdi
@@ -163,6 +165,16 @@ Global
 		{4FA6AF3E-D5A1-4D37-8D35-6DE3A22CBD63}.Release|Mixed Platforms.Build.0 = Release|x86
 		{4FA6AF3E-D5A1-4D37-8D35-6DE3A22CBD63}.Release|x86.ActiveCfg = Release|x86
 		{4FA6AF3E-D5A1-4D37-8D35-6DE3A22CBD63}.Release|x86.Build.0 = Release|x86
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -180,5 +192,6 @@ Global
 		{F7908156-8FB0-4882-A463-B8904D3F8E6D} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 		{E8CD576D-BDBD-40C0-880F-B64C02EA1184} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 		{AB642C81-9465-4072-93F2-2B4E999141A0} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26} = {85466309-C38B-473A-977B-B44F0762BD5F}
 	EndGlobalSection
 EndGlobal

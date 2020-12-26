@@ -78,12 +78,33 @@ namespace Schicksal.Helm.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap arrow_left_blue {
+            get {
+                object obj = ResourceManager.GetObject("arrow_left_blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap arrow_right_blue {
+            get {
+                object obj = ResourceManager.GetObject("arrow_right_blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Basic statistics.
         /// </summary>
         internal static string BASIC_STATISTICS {
             get {
                 return ResourceManager.GetString("BASIC_STATISTICS", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap column_chart {
+            get {
+                object obj = ResourceManager.GetObject("column_chart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung;
 using Notung.ComponentModel;
+using Notung.Loader;
+using Notung.Services;
+using Schicksal.Anova;
+using Schicksal.Exchange;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
-  public partial class MainForm : Form
+  public partial class MainForm : Form, ILoadingQueue, IApplicationLoader
   {
     public MainForm()
     {
@@ -94,6 +100,7 @@ namespace Schicksal.Helm
     {
       using (var dlg = new OpenFileDialog())
       {
+        dlg.Filter = "Schicksal data files|*.sks";
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
           this.OpenFile(dlg.FileName);
       }
@@ -101,6 +108,7 @@ namespace Schicksal.Helm
 
     private void OpenFile(string fileName)
     {
+      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles.Add(fileName);
       var table_form = this.MdiChildren.OfType<TableForm>().FirstOrDefault(f => f.FileName == fileName);
 
       if (table_form == null)
@@ -153,7 +161,7 @@ namespace Schicksal.Helm
       var table_form = this.ActiveMdiChild as TableForm;
 
       m_cmd_save.Enabled = m_cmd_save_as.Enabled = table_form != null;
-      m_menu_analyze.Enabled = table_form != null && !table_form.FileName.StartsWith("<");
+      m_menu_analyze.Enabled = table_form != null && !(table_form.FileName ?? "").StartsWith("<");
     }
 
     private void OpenReadOnlyTable(string key, string text, Func<DataTable> loader)
@@ -197,7 +205,116 @@ namespace Schicksal.Helm
 
     private void m_cmd_anova_Click(object sender, EventArgs e)
     {
+      var table_form = this.ActiveMdiChild as TableForm;
 
+      if (table_form == null)
+        return;
+
+      var table = table_form.DataSource as DataTable;
+
+      if (table == null)
+        return;
+
+      using (var dlg = new AnovaDialog())
+      {
+        dlg.Text = Resources.ANOVA;
+        dlg.DataSource = new AnovaDialogData(table);
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          var processor = new FisherTableProcessor(table, dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result);
+
+          if (!string.IsNullOrEmpty(dlg.DataSource.Filter))
+            processor.Filter = dlg.DataSource.Filter;
+
+          processor.RunInParrallel = true;
+
+          if (AppManager.OperationLauncher.Run(processor, 
+            new LaunchParameters
+            {
+              Caption = Resources.ANOVA,
+              Bitmap = Resources.column_chart
+            }) == TaskStatus.RanToCompletion)
+          {
+            dlg.DataSource.Save();
+            var results_form = new AnovaResultsForm();
+            results_form.Text = string.Format("{0}: {1}, p={2}", 
+              Resources.ANOVA, table_form.Text, dlg.DataSource.Probability);
+            results_form.DataSource = processor.Result;
+            results_form.SourceTable = table;
+            results_form.ResultColumn = dlg.DataSource.Result;
+            results_form.Filter = dlg.DataSource.Filter;
+            results_form.Probability = dlg.DataSource.Probability;
+            results_form.Show(this);
+          }
+        }
+      }
+    }
+
+    public IApplicationLoader[] GetLoaders()
+    {
+      return new IApplicationLoader[] { this };
+    }
+
+    bool IApplicationLoader.Load(LoadingContext context)
+    {
+      var imports = context.Container.GetService<IList<ITableImport>>();
+
+      if (this.InvokeRequired)
+        this.Invoke(new Action<IList<ITableImport>>(this.CreateImportMenu), imports);
+      else
+        CreateImportMenu(imports);
+
+      return true;
+    }
+
+    private void CreateImportMenu(IList<ITableImport> imports)
+    {
+      m_menu_import.DropDownItems.Clear();
+      
+      foreach (var import in imports)
+        m_menu_import.DropDownItems.Add(import.ToString()).Tag = import;
+
+      if (m_menu_import.DropDownItems.Count == 0)
+        m_menu_import.Visible = false;
+    }
+
+    void IApplicationLoader.Setup(LoadingContext context) { }
+
+    Type IDependencyItem<Type>.Key
+    {
+      get { return typeof(Form); }
+    }
+
+    ICollection<Type> IDependencyItem<Type>.Dependencies
+    {
+      get { return new [] {typeof(IList<ITableImport>)}; }
+    }
+
+    private void m_menu_import_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    {
+      var import = e.ClickedItem.Tag as ITableImport;
+
+      if (import != null)
+      {
+        try
+        {
+          var result = import.Import(this);
+
+          if (result == null)
+            return;
+
+          var table_form = new TableForm();
+          table_form.DataSource = result.Table;
+          table_form.Text = result.Description;
+          table_form.MdiParent = this;
+          table_form.Show();
+          table_form.WindowState = FormWindowState.Maximized;
+        }
+        catch (Exception ex)
+        {
+          AppManager.Notificator.Show(new Info(ex));
+        }
+      }
     }
   }
 }

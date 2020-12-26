@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Data;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
@@ -20,6 +21,7 @@ namespace Schicksal.Helm
       set
       {
         m_grid.DataSource = value;
+
         this.Changed = false;
       }
     }
@@ -39,6 +41,14 @@ namespace Schicksal.Helm
         if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
           col.DefaultCellStyle.Format = "0.000";
       }
+    }
+
+    protected override void OnShown(System.EventArgs e)
+    {
+      base.OnShown(e);
+
+      if (m_grid.Rows.Count < (1 << 10))
+        m_grid.AutoResizeColumns();
     }
 
     private void SetChanged()
@@ -80,6 +90,10 @@ namespace Schicksal.Helm
         var bf = new BinaryFormatter();
         bf.Serialize(fs, graph);
       }
+      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles.Add(fileName);
+      this.Changed = false;
+      this.FileName = Path.GetFileName(this.FileName);
+      this.Text = Path.GetFileName(this.FileName);
     }
 
     public void Save()
@@ -88,9 +102,6 @@ namespace Schicksal.Helm
         this.SaveAs();
       else
         this.SaveFile(this.FileName, this.DataSource);
-
-      this.Changed = false;
-      this.FileName = Path.GetFileName(this.FileName);
     }
 
     public void SaveAs()
@@ -98,13 +109,11 @@ namespace Schicksal.Helm
       using (var dlg = new SaveFileDialog())
       {
         dlg.Filter = "Schicksal data files|*.sks";
+
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
         {
           this.FileName = dlg.FileName;
           this.SaveFile(this.FileName, this.DataSource);
-          AppManager.Configurator.GetSection<Program.Preferences>().LastFiles.Add(dlg.FileName);
-          this.Changed = false;
-          this.FileName = Path.GetFileName(this.FileName);
         }
       }
     }

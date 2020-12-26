@@ -152,6 +152,7 @@
       this.m_menu_import.Name = "m_menu_import";
       this.m_menu_import.Size = new System.Drawing.Size(51, 20);
       this.m_menu_import.Text = "Import";
+      this.m_menu_import.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_menu_import_DropDownItemClicked);
       // 
       // m_menu_analyze
       // 
@@ -175,6 +176,7 @@
       this.m_cmd_basic.Name = "m_cmd_basic";
       this.m_cmd_basic.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_basic.Text = "Basic statistics";
+      this.m_cmd_basic.Visible = false;
       // 
       // m_menu_standard_tables
       // 

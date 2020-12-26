@@ -92,49 +92,6 @@ namespace Schicksal.Anova
       return res;
     }
 
-    public sealed class MultiVariantsComparator : RunBase
-    {
-      private readonly VariantsComparator m_comparator;
-      private readonly DataTable m_source;
-      private readonly double m_probability;
-
-      public MultiVariantsComparator(VariantsComparator comparator, double p, DataTable table = null)
-      {
-        if (comparator == null)
-          throw new ArgumentNullException("comparator");
-
-        m_comparator = comparator;
-        m_probability = p;
-        m_source = table ?? m_comparator.CreateDescriptiveTable(p);
-      }
-
-      public DifferenceInfo[] Results { get; private set; }
-
-      public override void Run()
-      {
-        Tuple<int, int>[] pairs = new Tuple<int, int>[m_source.Rows.Count * (m_source.Rows.Count - 1) / 2];
-        int k = 0;
-
-        for (int i = 0; i < m_source.Rows.Count - 1; i++)
-        {
-          for (int j = i + 1; j < m_source.Rows.Count; j++)
-            pairs[k++] = new Tuple<int, int>(i, j);
-        }
-
-        DifferenceInfo[] result = new DifferenceInfo[pairs.Length];
-
-        for (k = 0; k < result.Length; k++)
-        {
-          this.ReportProgress(k * 100 / result.Length, null);
-
-          result[k] = m_comparator.GetDifferenceInfo(
-            m_source.DefaultView[pairs[k].Item1], m_source.DefaultView[pairs[k].Item2], m_probability);
-        }
-
-        this.Results = result;
-      }
-    }
-
     public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
     {
       int df;
@@ -173,6 +130,49 @@ namespace Schicksal.Anova
       df = count1 + count2 - 2;
 
       return Math.Sqrt(std_err1 * std_err1 / count1 + std_err2 * std_err2 / count2);
+    }
+  }
+
+  public sealed class MultiVariantsComparator : RunBase
+  {
+    private readonly VariantsComparator m_comparator;
+    private readonly DataTable m_source;
+    private readonly double m_probability;
+
+    public MultiVariantsComparator(VariantsComparator comparator, double p, DataTable table = null)
+    {
+      if (comparator == null)
+        throw new ArgumentNullException("comparator");
+
+      m_comparator = comparator;
+      m_probability = p;
+      m_source = table ?? m_comparator.CreateDescriptiveTable(p);
+    }
+
+    public DifferenceInfo[] Results { get; private set; }
+
+    public override void Run()
+    {
+      Tuple<int, int>[] pairs = new Tuple<int, int>[m_source.Rows.Count * (m_source.Rows.Count - 1) / 2];
+      int k = 0;
+
+      for (int i = 0; i < m_source.Rows.Count - 1; i++)
+      {
+        for (int j = i + 1; j < m_source.Rows.Count; j++)
+          pairs[k++] = new Tuple<int, int>(i, j);
+      }
+
+      DifferenceInfo[] result = new DifferenceInfo[pairs.Length];
+
+      for (k = 0; k < result.Length; k++)
+      {
+        this.ReportProgress(k * 100 / result.Length, null);
+
+        result[k] = m_comparator.GetDifferenceInfo(
+          m_source.DefaultView[pairs[k].Item1], m_source.DefaultView[pairs[k].Item2], m_probability);
+      }
+
+      this.Results = result;
     }
   }
 
