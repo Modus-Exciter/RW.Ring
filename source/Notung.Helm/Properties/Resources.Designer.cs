@@ -70,6 +70,15 @@ namespace Notung.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contract type must be an interface type.
+        /// </summary>
+        internal static string CONTRACT_NOT_INTERFACE {
+            get {
+                return ResourceManager.GetString("CONTRACT_NOT_INTERFACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This method cannot be called in recieving process.
         /// </summary>
         internal static string COPY_DATA_SEND_RECIEVE {

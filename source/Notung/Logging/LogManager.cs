@@ -7,6 +7,7 @@ namespace Notung.Logging
   /// <summary>
   /// Пока не решил, использовать log4net или свои асинхронные логи, частично дублируем его API
   /// </summary> 
+  [AppDomainShare]
   public static partial class LogManager
   {
     private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>
@@ -179,7 +180,7 @@ namespace Notung.Logging
 
     #region Sharing log between domains
 
-    internal static void Share(AppDomain newDomain)
+    private static void Share(AppDomain newDomain)
     {
       var acceptor = (DomainAcceptor)newDomain.CreateInstanceAndUnwrap(
         Assembly.GetExecutingAssembly().FullName, typeof(DomainAcceptor).FullName);

@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
-using Notung.Logging;
 
 namespace Notung
 {
@@ -45,14 +45,29 @@ namespace Notung
       if (newDomain == AppDomain.CurrentDomain)
         return;
 
-#if APP_MANAGER
-      AppManager.Share(newDomain);
-#endif
-      LogManager.Share(newDomain);
-      LoggingContext.Share(newDomain);
-#if APPLICATION_INFO
-      ApplicationInfo.Share(newDomain);
-#endif    
+      foreach (var action in ShareableTypes.List)
+        action(newDomain);
+    }
+
+    /// <summary>
+    /// Получение всех типов, доступных в сборке,
+    /// даже если при загрузке сборки возникла ошибка
+    /// </summary>
+    /// <param name="assembly">Сборка</param>
+    /// <returns>Массив доступных типов</returns>
+    public static Type[] GetAvailableTypes(this Assembly assembly, Action<Exception> handler = null)
+    {
+      try
+      {
+        return assembly.GetTypes();
+      }
+      catch (ReflectionTypeLoadException ex)
+      {
+        if (handler != null)
+          handler(ex);
+        
+        return Array.FindAll(ex.Types, t => t != null);
+      }
     }
 
     /// <summary>
@@ -97,5 +112,35 @@ namespace Notung
 
       return method;
     }
+
+    private static class ShareableTypes
+    {
+      public static readonly HashSet<Action<AppDomain>> List = new HashSet<Action<AppDomain>>();
+
+      static ShareableTypes()
+      {
+        var parameters = new Type[] { typeof(AppDomain) };
+        
+        foreach (var type in typeof(ShareableTypes).Assembly.GetTypes())
+        {
+          if (type.IsDefined(typeof(AppDomainShareAttribute), false))
+          {
+            var method = type.GetMethod("Share",
+              BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static,
+              Type.DefaultBinder, parameters, null);
+
+            if (method != null)
+              List.Add((Action<AppDomain>)Delegate.CreateDelegate(typeof(Action<AppDomain>), method, true));
+          }
+        }
+      }
+    }
   }
+
+  /// <summary>
+  /// Помечает класс для расшаривания находящихся в нём сервисов между доменами приложений,
+  /// за это отвечает метод static void Share(AppDomain newDomain)
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
+  public sealed class AppDomainShareAttribute : Attribute { }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Notung.Data;
-using System.Collections;
 using Notung.Properties;
 
 namespace Notung.Loader
@@ -35,7 +35,7 @@ namespace Notung.Loader
     /// <returns>Взвешенный граф, описывающий структуру зависимостей</returns>
     public static IUnweightedGraph ToUnweightedGraph<T>(this IList<IDependencyItem<T>> dependencyItems, bool useMatrix = false)
     {
-      Dictionary<T, int> converter = new Dictionary<T, int>();
+      Dictionary<T, int> converter = new Dictionary<T, int>(dependencyItems.Count);
 
       for (int i = 0; i < dependencyItems.Count; i++)
         converter.Add(dependencyItems[i].Key, i);
@@ -64,15 +64,22 @@ namespace Notung.Loader
     /// <param name="dependencyItems">Список объектов, зависящих друг от друга</param>
     public static void Fix<T, TItem>(this IList<TItem> dependencyItems) where TItem : IDependencyItem<T>
     {
-      Dictionary<T, TItem> collection = new Dictionary<T, TItem>();
-      Dictionary<T, int> numbers = new Dictionary<T, int>();
+      Dictionary<T, TItem> collection = new Dictionary<T, TItem>(dependencyItems.Count);
+      Dictionary<T, int> numbers = new Dictionary<T, int>(dependencyItems.Count);
       Dictionary<T, List<TItem>> duplicates = new Dictionary<T, List<TItem>>();
+
+      bool impossible_fix;
+
+      if (dependencyItems is IList)
+        impossible_fix = ((IList)dependencyItems).IsFixedSize;
+      else
+        impossible_fix = dependencyItems.IsReadOnly;
 
       foreach (var item in dependencyItems)
       {
         if (item == null || item.Key == null)
         {
-          if (IsFixImpossible<T, TItem>(dependencyItems))
+          if (impossible_fix)
             throw new ArgumentException(Resources.IMPOSSIBLE_FIX);
 
           continue;
@@ -80,7 +87,7 @@ namespace Notung.Loader
 
         if (collection.ContainsKey(item.Key))
         {
-          if (IsFixImpossible<T, TItem>(dependencyItems))
+          if (impossible_fix)
             throw new ArgumentException(Resources.IMPOSSIBLE_FIX);
 
           List<TItem> list;
@@ -116,18 +123,6 @@ namespace Notung.Loader
 
       foreach (var kv in numbers)
         dependencyItems[kv.Value] = collection[kv.Key];
-    }
-
-    private static bool IsFixImpossible<T, TItem>(IList<TItem> dependencyItems) where TItem : IDependencyItem<T>
-    {
-      bool impossible;
-
-      if (dependencyItems is IList)
-        impossible = ((IList)dependencyItems).IsFixedSize;
-      else
-        impossible = dependencyItems.IsReadOnly;
-
-      return impossible;
     }
   }
 }

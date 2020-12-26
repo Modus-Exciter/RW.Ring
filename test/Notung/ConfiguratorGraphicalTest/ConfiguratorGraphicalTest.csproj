@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO MULTI_DOMAIN1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO MULTI_DOMAIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -46,6 +46,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationGrids.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ConfigurationGrids.Designer.cs">
+      <DependentUpon>ConfigurationGrids.cs</DependentUpon>
+    </Compile>
     <Compile Include="TestPage2.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -72,6 +78,9 @@
     <Compile Include="TestPage1.Designer.cs">
       <DependentUpon>TestPage1.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConfigurationGrids.resx">
+      <DependentUpon>ConfigurationGrids.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestPage2.resx">
       <DependentUpon>TestPage2.cs</DependentUpon>
     </EmbeddedResource>

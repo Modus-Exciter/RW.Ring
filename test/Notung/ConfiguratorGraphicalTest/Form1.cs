@@ -13,10 +13,11 @@ using Notung.Helm.Windows;
 using Notung.Logging;
 using Notung.Services;
 using Notung.Helm.Dialogs;
+using Notung.Loader;
 
 namespace ConfiguratorGraphicalTest
 {
-  public partial class Form1 : Form
+  public partial class Form1 : Form, ILoadingQueue
   {
     public enum InnerEnum
     {
@@ -106,18 +107,6 @@ namespace ConfiguratorGraphicalTest
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
-
-      innerDefault.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDefault>();
-      innerContract.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDataContract>();
-      innerContractName.SelectedObject = AppManager.Configurator.GetSection<InnerSectionDataContractName>();
-      innerXml.SelectedObject = AppManager.Configurator.GetSection<InnerSectionXml>();
-      innerXmlName.SelectedObject = AppManager.Configurator.GetSection<InnerSectionXmlName>();
-
-      outerDefault.SelectedObject = AppManager.Configurator.GetSection<OuterSectionDefault>();
-      outerContract.SelectedObject = AppManager.Configurator.GetSection<OuterSectionDataContract>();
-      outerContractName.SelectedObject = AppManager.Configurator.GetSection<OuterSectionDataContractName>();
-      outerXml.SelectedObject = AppManager.Configurator.GetSection<OuterSectionXml>();
-      outerXmlName.SelectedObject = AppManager.Configurator.GetSection<OuterSectionXmlName>();
     }
 
     private void button1_Click(object sender, System.EventArgs e)
@@ -294,6 +283,16 @@ namespace ConfiguratorGraphicalTest
             new Info("Good message", InfoLevel.Info),
             new Info("Bad message" ,InfoLevel.Warning)
           }, "aaaaaaaa aaaaa\naaaaaaaaaaa aaaaaaa\naaaaaaaa bbbbbb\nbbbbbb bbbbb\nbbbbb bbbbbbb\nbbbbbbb bbbbbb bbbbbbbbbb bbbbbbb nnnnnn\nnnnnnn");
+    }
+
+    public IApplicationLoader[] GetLoaders()
+    {
+      return new IApplicationLoader[] { m_placeholder };
+    }
+
+    private void m_placeholder_LoadingCompleted(object sender, Notung.Helm.Controls.LoadingCompletedEventArgs e)
+    {
+      m_placeholder.GetControl<ConfigurationGrids>().HandleFormShown();
     }
   }
 }

@@ -25,6 +25,9 @@ namespace Notung.Helm.Configuration
 
     private readonly ILog _log = LogManager.GetLogger(typeof(SettingsController));
 
+    /// <summary>
+    /// Инициализация нового экземпляра компонента для конфигурирования
+    /// </summary>
     public SettingsController() : base() { }
 
     public SettingsController(IContainer container) : base()
@@ -82,6 +85,9 @@ namespace Notung.Helm.Configuration
       }
     }
 
+    /// <summary>
+    /// Происходит, когда настройки на странице меняются
+    /// </summary>
     public event EventHandler<PageEventArgs> PageChanged
     {
       add
@@ -109,6 +115,7 @@ namespace Notung.Helm.Configuration
 
       this.PagePlace.Controls.Clear();
       this.PagePlace.Controls.Add(m_pages[pageType].Page);
+
       m_pages[pageType].Page.Dock = DockStyle.Fill;
     }
 
@@ -128,7 +135,8 @@ namespace Notung.Helm.Configuration
 
       for (int i = 0; i < AppManager.AssemblyClassifier.TrackingAssemblies.Count; i++)
       {
-        foreach (var type in GetAssemblyTypes(AppManager.AssemblyClassifier.TrackingAssemblies[i]))
+        foreach (var type in AppManager.AssemblyClassifier
+          .TrackingAssemblies[i].GetAvailableTypes(HandleTypeError))
         {
           if (!type.IsAbstract && typeof(IConfigurationPage).IsAssignableFrom(type)
             && type.GetConstructor(Type.EmptyTypes) != null)
@@ -205,17 +213,9 @@ namespace Notung.Helm.Configuration
       return args.Cancel;
     }
 
-    private Type[] GetAssemblyTypes(Assembly assembly)
+    private void HandleTypeError(Exception ex)
     {
-      try
-      {
-        return assembly.GetTypes();
-      }
-      catch (ReflectionTypeLoadException ex)
-      {
-        _log.Error("GetAssemblyTypes(): exception", ex);
-        return ex.Types.Where(t => t != null).ToArray();
-      }
+      _log.Error("LoadAllPages(): exception", ex);
     }
 
     private void HandleSettingsChanged(object sender, EventArgs e)

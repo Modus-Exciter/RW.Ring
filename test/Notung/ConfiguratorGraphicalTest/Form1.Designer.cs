@@ -30,17 +30,6 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-      this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-      this.innerDefault = new System.Windows.Forms.PropertyGrid();
-      this.innerContract = new System.Windows.Forms.PropertyGrid();
-      this.innerContractName = new System.Windows.Forms.PropertyGrid();
-      this.innerXml = new System.Windows.Forms.PropertyGrid();
-      this.innerXmlName = new System.Windows.Forms.PropertyGrid();
-      this.outerDefault = new System.Windows.Forms.PropertyGrid();
-      this.outerContract = new System.Windows.Forms.PropertyGrid();
-      this.outerContractName = new System.Windows.Forms.PropertyGrid();
-      this.outerXml = new System.Windows.Forms.PropertyGrid();
-      this.outerXmlName = new System.Windows.Forms.PropertyGrid();
       this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
       this.buttonRestart = new System.Windows.Forms.Button();
       this.buttonDLL = new System.Windows.Forms.Button();
@@ -50,95 +39,10 @@
       this.comboBoxLang = new System.Windows.Forms.ComboBox();
       this.buttonInfoBufferView = new System.Windows.Forms.Button();
       this.languageSwitcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
-      this.tableLayoutPanel.SuspendLayout();
+      this.m_placeholder = new Notung.Helm.Controls.ControlPlaceholder();
       this.flowLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.languageSwitcher)).BeginInit();
       this.SuspendLayout();
-      // 
-      // tableLayoutPanel
-      // 
-      resources.ApplyResources(this.tableLayoutPanel, "tableLayoutPanel");
-      this.tableLayoutPanel.Controls.Add(this.innerDefault, 0, 0);
-      this.tableLayoutPanel.Controls.Add(this.innerContract, 0, 1);
-      this.tableLayoutPanel.Controls.Add(this.innerContractName, 0, 2);
-      this.tableLayoutPanel.Controls.Add(this.innerXml, 0, 3);
-      this.tableLayoutPanel.Controls.Add(this.innerXmlName, 0, 4);
-      this.tableLayoutPanel.Controls.Add(this.outerDefault, 1, 0);
-      this.tableLayoutPanel.Controls.Add(this.outerContract, 1, 1);
-      this.tableLayoutPanel.Controls.Add(this.outerContractName, 1, 2);
-      this.tableLayoutPanel.Controls.Add(this.outerXml, 1, 3);
-      this.tableLayoutPanel.Controls.Add(this.outerXmlName, 1, 4);
-      this.tableLayoutPanel.Name = "tableLayoutPanel";
-      // 
-      // innerDefault
-      // 
-      resources.ApplyResources(this.innerDefault, "innerDefault");
-      this.innerDefault.Name = "innerDefault";
-      this.innerDefault.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerDefault.ToolbarVisible = false;
-      // 
-      // innerContract
-      // 
-      resources.ApplyResources(this.innerContract, "innerContract");
-      this.innerContract.Name = "innerContract";
-      this.innerContract.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerContract.ToolbarVisible = false;
-      // 
-      // innerContractName
-      // 
-      resources.ApplyResources(this.innerContractName, "innerContractName");
-      this.innerContractName.Name = "innerContractName";
-      this.innerContractName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerContractName.ToolbarVisible = false;
-      // 
-      // innerXml
-      // 
-      resources.ApplyResources(this.innerXml, "innerXml");
-      this.innerXml.Name = "innerXml";
-      this.innerXml.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerXml.ToolbarVisible = false;
-      // 
-      // innerXmlName
-      // 
-      resources.ApplyResources(this.innerXmlName, "innerXmlName");
-      this.innerXmlName.Name = "innerXmlName";
-      this.innerXmlName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.innerXmlName.ToolbarVisible = false;
-      // 
-      // outerDefault
-      // 
-      resources.ApplyResources(this.outerDefault, "outerDefault");
-      this.outerDefault.Name = "outerDefault";
-      this.outerDefault.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerDefault.ToolbarVisible = false;
-      // 
-      // outerContract
-      // 
-      resources.ApplyResources(this.outerContract, "outerContract");
-      this.outerContract.Name = "outerContract";
-      this.outerContract.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerContract.ToolbarVisible = false;
-      // 
-      // outerContractName
-      // 
-      resources.ApplyResources(this.outerContractName, "outerContractName");
-      this.outerContractName.Name = "outerContractName";
-      this.outerContractName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerContractName.ToolbarVisible = false;
-      // 
-      // outerXml
-      // 
-      resources.ApplyResources(this.outerXml, "outerXml");
-      this.outerXml.Name = "outerXml";
-      this.outerXml.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerXml.ToolbarVisible = false;
-      // 
-      // outerXmlName
-      // 
-      resources.ApplyResources(this.outerXmlName, "outerXmlName");
-      this.outerXmlName.Name = "outerXmlName";
-      this.outerXmlName.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-      this.outerXmlName.ToolbarVisible = false;
       // 
       // flowLayoutPanel1
       // 
@@ -209,14 +113,21 @@
       // 
       this.languageSwitcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.languageSwitcher_LanguageChanged);
       // 
+      // m_placeholder
+      // 
+      this.m_placeholder.ControlDescription = "Гриды конфигурации";
+      resources.ApplyResources(this.m_placeholder, "m_placeholder");
+      this.m_placeholder.Name = "m_placeholder";
+      this.m_placeholder.ReplacingType = "ConfiguratorGraphicalTest.ConfigurationGrids, ConfiguratorGraphicalTest";
+      this.m_placeholder.LoadingCompleted += new System.EventHandler<Notung.Helm.Controls.LoadingCompletedEventArgs>(this.m_placeholder_LoadingCompleted);
+      // 
       // Form1
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.tableLayoutPanel);
+      this.Controls.Add(this.m_placeholder);
       this.Controls.Add(this.flowLayoutPanel1);
       this.Name = "Form1";
-      this.tableLayoutPanel.ResumeLayout(false);
       this.flowLayoutPanel1.ResumeLayout(false);
       this.flowLayoutPanel1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.languageSwitcher)).EndInit();
@@ -226,17 +137,6 @@
 
     #endregion
 
-    private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-    private System.Windows.Forms.PropertyGrid innerDefault;
-    private System.Windows.Forms.PropertyGrid innerContract;
-    private System.Windows.Forms.PropertyGrid innerContractName;
-    private System.Windows.Forms.PropertyGrid innerXml;
-    private System.Windows.Forms.PropertyGrid innerXmlName;
-    private System.Windows.Forms.PropertyGrid outerDefault;
-    private System.Windows.Forms.PropertyGrid outerContract;
-    private System.Windows.Forms.PropertyGrid outerContractName;
-    private System.Windows.Forms.PropertyGrid outerXml;
-    private System.Windows.Forms.PropertyGrid outerXmlName;
     private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     private System.Windows.Forms.Button buttonRestart;
     private System.Windows.Forms.Button buttonDLL;
@@ -246,6 +146,7 @@
     private System.Windows.Forms.ComboBox comboBoxLang;
     private System.Windows.Forms.Button m_settings_button;
     private System.Windows.Forms.Button buttonInfoBufferView;
+    private Notung.Helm.Controls.ControlPlaceholder m_placeholder;
   }
 }
 

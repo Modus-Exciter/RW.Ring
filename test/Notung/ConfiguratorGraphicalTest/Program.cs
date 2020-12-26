@@ -26,8 +26,6 @@ namespace ConfiguratorGraphicalTest
         new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
         Factory.Default<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
 
-
-
       return starter.RunApplication();
     }
   }
@@ -98,6 +96,8 @@ namespace ConfiguratorGraphicalTest
         
         Report(context, 90, "OuterSectionXmlName");
         AppManager.Configurator.GetSection<OuterSectionXmlName>();
+
+        context.Container.SetService(new HelpItem());
 
         return true;
       }

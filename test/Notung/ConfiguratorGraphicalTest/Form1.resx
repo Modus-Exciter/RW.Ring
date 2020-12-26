@@ -118,317 +118,14 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tableLayoutPanel.ColumnCount" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="innerDefault.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="innerDefault.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="innerDefault.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="innerDefault.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="innerDefault.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;innerDefault.Name" xml:space="preserve">
-    <value>innerDefault</value>
-  </data>
-  <data name="&gt;&gt;innerDefault.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;innerDefault.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;innerDefault.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="innerContract.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="innerContract.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="innerContract.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 126</value>
-  </data>
-  <data name="innerContract.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="innerContract.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;innerContract.Name" xml:space="preserve">
-    <value>innerContract</value>
-  </data>
-  <data name="&gt;&gt;innerContract.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;innerContract.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;innerContract.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="innerContractName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="innerContractName.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="innerContractName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 249</value>
-  </data>
-  <data name="innerContractName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="innerContractName.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;innerContractName.Name" xml:space="preserve">
-    <value>innerContractName</value>
-  </data>
-  <data name="&gt;&gt;innerContractName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;innerContractName.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;innerContractName.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="innerXml.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="innerXml.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="innerXml.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 372</value>
-  </data>
-  <data name="innerXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="innerXml.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;innerXml.Name" xml:space="preserve">
-    <value>innerXml</value>
-  </data>
-  <data name="&gt;&gt;innerXml.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;innerXml.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;innerXml.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="innerXmlName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="innerXmlName.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="innerXmlName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 495</value>
-  </data>
-  <data name="innerXmlName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 121</value>
-  </data>
-  <data name="innerXmlName.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;innerXmlName.Name" xml:space="preserve">
-    <value>innerXmlName</value>
-  </data>
-  <data name="&gt;&gt;innerXmlName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;innerXmlName.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;innerXmlName.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="outerDefault.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="outerDefault.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="outerDefault.Location" type="System.Drawing.Point, System.Drawing">
-    <value>430, 3</value>
-  </data>
-  <data name="outerDefault.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="outerDefault.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;outerDefault.Name" xml:space="preserve">
-    <value>outerDefault</value>
-  </data>
-  <data name="&gt;&gt;outerDefault.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;outerDefault.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;outerDefault.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="outerContract.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="outerContract.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="outerContract.Location" type="System.Drawing.Point, System.Drawing">
-    <value>430, 126</value>
-  </data>
-  <data name="outerContract.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="outerContract.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;outerContract.Name" xml:space="preserve">
-    <value>outerContract</value>
-  </data>
-  <data name="&gt;&gt;outerContract.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;outerContract.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;outerContract.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="outerContractName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="outerContractName.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="outerContractName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>430, 249</value>
-  </data>
-  <data name="outerContractName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="outerContractName.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;outerContractName.Name" xml:space="preserve">
-    <value>outerContractName</value>
-  </data>
-  <data name="&gt;&gt;outerContractName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;outerContractName.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;outerContractName.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="outerXml.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="outerXml.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="outerXml.Location" type="System.Drawing.Point, System.Drawing">
-    <value>430, 372</value>
-  </data>
-  <data name="outerXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 117</value>
-  </data>
-  <data name="outerXml.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;outerXml.Name" xml:space="preserve">
-    <value>outerXml</value>
-  </data>
-  <data name="&gt;&gt;outerXml.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;outerXml.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;outerXml.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="outerXmlName.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="outerXmlName.HelpVisible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="outerXmlName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>430, 495</value>
-  </data>
-  <data name="outerXmlName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>421, 121</value>
-  </data>
-  <data name="outerXmlName.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;outerXmlName.Name" xml:space="preserve">
-    <value>outerXmlName</value>
-  </data>
-  <data name="&gt;&gt;outerXmlName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PropertyGrid, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;outerXmlName.Parent" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;outerXmlName.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="tableLayoutPanel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="tableLayoutPanel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tableLayoutPanel.RowCount" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="tableLayoutPanel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>854, 619</value>
-  </data>
-  <data name="tableLayoutPanel.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tableLayoutPanel.Name" xml:space="preserve">
-    <value>tableLayoutPanel</value>
-  </data>
-  <data name="&gt;&gt;tableLayoutPanel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tableLayoutPanel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tableLayoutPanel.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tableLayoutPanel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="innerDefault" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="innerContract" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="innerContractName" Row="2" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="innerXml" Row="3" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="innerXmlName" Row="4" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="outerDefault" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="outerContract" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="outerContractName" Row="2" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="outerXml" Row="3" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="outerXmlName" Row="4" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Percent,50" /&gt;&lt;Rows Styles="Percent,20,Percent,20,Percent,20,Percent,20,Percent,20" /&gt;&lt;/TableLayoutSettings&gt;</value>
-  </data>
   <data name="buttonRestart.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="buttonRestart.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="buttonRestart.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
   </data>
@@ -648,6 +345,30 @@
   <metadata name="languageSwitcher.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="m_placeholder.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_placeholder.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_placeholder.Size" type="System.Drawing.Size, System.Drawing">
+    <value>854, 619</value>
+  </data>
+  <data name="m_placeholder.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;m_placeholder.Name" xml:space="preserve">
+    <value>m_placeholder</value>
+  </data>
+  <data name="&gt;&gt;m_placeholder.Type" xml:space="preserve">
+    <value>Notung.Helm.Controls.ControlPlaceholder, Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41</value>
+  </data>
+  <data name="&gt;&gt;m_placeholder.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_placeholder.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
