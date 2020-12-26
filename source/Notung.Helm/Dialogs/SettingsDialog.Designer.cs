@@ -172,6 +172,7 @@
       this.Controls.Add(this.m_sections_tree);
       this.Controls.Add(this.m_errors_view);
       this.Controls.Add(this.m_button_panel);
+      this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.MinimumSize = new System.Drawing.Size(480, 320);

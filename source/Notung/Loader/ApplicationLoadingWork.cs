@@ -51,6 +51,7 @@ namespace Notung.Loader
 
       var ret = new ApplicationLoadingResult();
       var loaders = m_queue.GetLoaders();
+      loaders.Fix<Type, IApplicationLoader>();
 
       if (loaders.Length > 0)
       {
