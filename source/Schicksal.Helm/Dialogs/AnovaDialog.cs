@@ -66,11 +66,15 @@ namespace Schicksal.Helm.Dialogs
       var settings = AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings;
       string[] array;
 
-      if (settings.TryGetValue(m_hash, out array))
+      if (settings.TryGetValue(m_hash, out array) && array.Length > 2)
       {
         this.Result = array[0];
         this.Filter = array[1];
-        this.Probability = float.Parse(array[2], CultureInfo.InvariantCulture);
+
+        float p;
+
+        if (float.TryParse(array[2], NumberStyles.Any, CultureInfo.InvariantCulture, out p))
+          this.Probability = p;
 
         for (int i = 3; i < array.Length; i++)
           this.AddPredictor(array[i]);
