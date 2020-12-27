@@ -61,11 +61,14 @@ namespace Schicksal.Helm
 
         using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
         {
-          factor1DataGridViewTextBoxColumn.Width = (int)graphics.MeasureString(mult.Factor1MaxLength,
+          var width1 = (int)graphics.MeasureString(mult.Factor1MaxLength,
             factor1DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
 
-          factor2DataGridViewTextBoxColumn.Width = (int)graphics.MeasureString(mult.Factor2MaxLength,
+          var width2 = (int)graphics.MeasureString(mult.Factor2MaxLength,
             factor2DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
+
+          factor1DataGridViewTextBoxColumn.Width = Math.Max(factor1DataGridViewTextBoxColumn.Width, width1);
+          factor2DataGridViewTextBoxColumn.Width = Math.Max(factor2DataGridViewTextBoxColumn.Width, width2);
         }
       }
     }
