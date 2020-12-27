@@ -201,4 +201,7 @@
   <data name="WINDOWS" xml:space="preserve">
     <value>Окна</value>
   </data>
+  <data name="WRONG_COLUMN_NAME" xml:space="preserve">
+    <value>Символы [,+] нельзя использовать в названиях колонок</value>
+  </data>
 </root>

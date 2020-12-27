@@ -348,5 +348,14 @@ namespace Schicksal.Helm.Properties {
                 return ResourceManager.GetString("WINDOWS", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbols [,+] are not allowed in column names.
+        /// </summary>
+        internal static string WRONG_COLUMN_NAME {
+            get {
+                return ResourceManager.GetString("WRONG_COLUMN_NAME", resourceCulture);
+            }
+        }
     }
 }

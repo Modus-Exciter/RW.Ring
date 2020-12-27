@@ -51,6 +51,9 @@ namespace Schicksal.Helm.Dialogs
       {
         if (string.IsNullOrEmpty(col.ColumnName))
           buffer.Add(Resources.EMPTY_COLUMNS, InfoLevel.Warning);
+        else if (col.ColumnName.Contains('[') || col.ColumnName.Contains(']')
+          || col.ColumnName.Contains('+') || col.ColumnName.Contains(','))
+          buffer.Add(Resources.WRONG_COLUMN_NAME, InfoLevel.Warning);
         else if (!unique.Add(col.ColumnName))
           buffer.Add(string.Format(Resources.DUPLICATE_COLUMN, col.ColumnName), InfoLevel.Warning);
       }

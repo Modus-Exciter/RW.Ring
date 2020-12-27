@@ -73,6 +73,8 @@ namespace Schicksal.Helm
           if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
             this.OpenFile(arg);
         }
+
+        msg.Result = new System.IntPtr(1);
       }
     }
 

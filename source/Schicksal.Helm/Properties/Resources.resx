@@ -217,4 +217,7 @@
   <data name="NO_COLUMNS" xml:space="preserve">
     <value>No columns specified</value>
   </data>
+  <data name="WRONG_COLUMN_NAME" xml:space="preserve">
+    <value>Symbols [,+] are not allowed in column names</value>
+  </data>
 </root>
