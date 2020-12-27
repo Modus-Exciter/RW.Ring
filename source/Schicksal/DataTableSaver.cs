@@ -4,13 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Schicksal.Properties;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Schicksal
 {
   /// <summary>
   /// Класс для компактного сохранения таблиц данных
   /// </summary>
-  public class DataTableSaver
+  public static class DataTableSaver
   {
     /// <summary>
     /// Запись таблицы данных в поток
@@ -31,19 +33,68 @@ namespace Schicksal
         writer.Write(table.Rows.Count);
 
         var runners = new IDataRunner[table.Columns.Count];
+        var mandatories = new BitArray(table.Columns.Count, false);
+        var key_columns = table.PrimaryKey;
 
         foreach (DataColumn col in table.Columns)
         {
+          var type_code = Type.GetTypeCode(col.DataType);
+          var code_with_flags = (int)type_code;
+
+          if (!col.AllowDBNull)
+          {
+            mandatories[col.Ordinal] = true;
+            code_with_flags |= _mandatory_flag;
+          }
+
+          if (Array.Find(key_columns, (c) => c.Ordinal == col.Ordinal) != null)
+            code_with_flags |= _primary_key_flag;
+          
+          runners[col.Ordinal] = Construct(type_code);
+
           writer.Write(col.ColumnName);
-          writer.Write((int)Type.GetTypeCode(col.DataType));
-          runners[col.Ordinal] = Construct(col.DataType);
+          writer.Write(code_with_flags);
+        }
+
+        if (key_columns.Length > 0)
+        {
+          string pk_name = string.Empty;
+          var ucs = new List<UniqueConstraint>(table.Constraints.Count);
+
+          foreach (Constraint c in table.Constraints)
+          {
+            var uc = c as UniqueConstraint;
+
+            if (uc == null)
+              continue;
+
+            if (uc.IsPrimaryKey)
+              pk_name = uc.ConstraintName;
+            else
+              ucs.Add(uc);
+          }
+
+          writer.Write(pk_name);
+          writer.Write(ucs.Count);
+
+          foreach (var c in ucs)
+          {
+            writer.Write(c.Columns.Length);
+
+            foreach (DataColumn col in c.Columns)
+              writer.Write(col.Ordinal);
+
+            writer.Write(c.ConstraintName);
+          }
         }
 
         foreach (DataRow row in table.Rows)
         {
           for (int i = 0; i < table.Columns.Count; i++)
           {
-            if (row.IsNull(i))
+            if (mandatories[i])
+              runners[i].Write(writer, row[i]);
+            else if (row.IsNull(i))
               writer.Write(false);
             else
             {
@@ -69,19 +120,66 @@ namespace Schicksal
 
       DataTable ret = new DataTable();
 
+      ret.BeginLoadData();
+
       using (var reader = new BinaryReader(stream, Encoding.UTF8))
       {
         int columns_count = reader.ReadInt32();
         int rows_count = reader.ReadInt32();
 
         var runners = new IDataRunner[columns_count];
+        var mandatories = new BitArray(columns_count, false);
+        var primary_key = new BitArray(columns_count, false);
+        var primary_key_size = 0;
         
         for (int i = 0; i < columns_count; i++)
         {
           var col_name = reader.ReadString();
-          var col_type = Type.GetType("System." + (TypeCode)reader.ReadInt32());
-          ret.Columns.Add(col_name, col_type);
-          runners[i] = Construct(col_type);
+          var col_type = reader.ReadInt32();
+
+          if ((col_type & _mandatory_flag) != 0)
+          {
+            col_type &= ~_mandatory_flag;
+            mandatories[i] = true;
+          }
+
+          if ((col_type & _primary_key_flag) != 0)
+          {
+            col_type &= ~_primary_key_flag;
+            primary_key[i] = true;
+            primary_key_size++;
+          }
+
+          ret.Columns.Add(col_name, 
+            Type.GetType("System." + (TypeCode)col_type)).AllowDBNull = !mandatories[i];
+
+          runners[i] = Construct((TypeCode)col_type);
+        }
+
+        if (primary_key_size != 0)
+        {
+          var key_columns = new DataColumn[primary_key_size];
+
+          int j = 0;
+          for (int i = 0; i < columns_count; i++)
+          {
+            if (primary_key[i])
+              key_columns[j++] = ret.Columns[i];
+          }
+
+          ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), key_columns, true));
+
+          var other_unique_count = reader.ReadInt32();
+
+          for (int i = 0; i < other_unique_count; i++)
+          {
+            var constraint_columns = new DataColumn[reader.ReadInt32()];
+
+            for (int k = 0; k < constraint_columns.Length; k++)
+              constraint_columns[k] = ret.Columns[reader.ReadInt32()];
+
+            ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), constraint_columns, false));
+          }
         }
 
         for (int i = 0; i < rows_count; i++)
@@ -90,7 +188,7 @@ namespace Schicksal
 
           for (int j = 0; j < columns_count; j++)
           {
-            if (reader.ReadBoolean())
+            if (mandatories[j] || reader.ReadBoolean())
               row[j] = runners[j].Read(reader);
           }
 
@@ -98,10 +196,34 @@ namespace Schicksal
         }
       }
 
+      ret.EndLoadData();
+      ret.AcceptChanges();
+
       return ret;
     }
 
     #region Implementation
+
+    private static readonly int _mandatory_flag;
+    private static readonly int _primary_key_flag;
+
+    static DataTableSaver()
+    {
+      TypeCode max = TypeCode.String;
+
+      foreach (TypeCode code in Enum.GetValues(typeof(TypeCode)))
+      {
+        if (max < code)
+          max = code;
+      }
+
+      _mandatory_flag = 1;
+
+      while (_mandatory_flag < (int)max)
+        _mandatory_flag <<= 1;
+
+      _primary_key_flag = _mandatory_flag << 1;
+    }
 
     private interface IDataRunner
     {
@@ -305,9 +427,9 @@ namespace Schicksal
       }
     }
 
-    private static IDataRunner Construct(Type columnType)
+    private static IDataRunner Construct(TypeCode columnType)
     {
-      switch (Type.GetTypeCode(columnType))
+      switch (columnType)
       {
         case TypeCode.Boolean: return new BooleanDataRunner();
         case TypeCode.Char: return new CharDataRunner();

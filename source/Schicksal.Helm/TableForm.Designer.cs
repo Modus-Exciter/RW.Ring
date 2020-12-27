@@ -42,6 +42,7 @@
       this.m_grid.Size = new System.Drawing.Size(596, 464);
       this.m_grid.TabIndex = 0;
       this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEndEdit);
+      this.m_grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.m_grid_DataError);
       // 
       // TableForm
       // 

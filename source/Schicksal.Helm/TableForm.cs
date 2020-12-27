@@ -123,5 +123,10 @@ namespace Schicksal.Helm
         }
       }
     }
+
+    private void m_grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+    {
+      AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
+    }
   }
 }

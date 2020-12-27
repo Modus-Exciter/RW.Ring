@@ -40,14 +40,16 @@ namespace ImportWofostResults
         cmd.CommandType = CommandType.TableDirect;
 
         var dt = new DataTable();
-        dt.Columns.Add("Variant", typeof(int));
+        dt.Columns.Add("Variant", typeof(int)).AllowDBNull = true;
         dt.Columns.Add("Soil", typeof(string));
         dt.Columns.Add("Place", typeof(string));
         dt.Columns.Add("Season", typeof(string));
         dt.Columns.Add("Year", typeof(string));
-        dt.Columns.Add("Sort", typeof(string));
-        dt.Columns.Add("Level", typeof(int));
+        dt.Columns.Add("Sort", typeof(string)).AllowDBNull = true;
+        dt.Columns.Add("Level", typeof(int)).AllowDBNull = true;
         dt.Columns.Add("TWSO", typeof(double));
+
+        dt.PrimaryKey = new[] { dt.Columns["Variant"], dt.Columns["Sort"], dt.Columns["Level"] };
 
         using (var dr = cmd.ExecuteReader())
         {
