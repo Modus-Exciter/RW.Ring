@@ -61,7 +61,7 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Actual difference.
         /// </summary>
         internal static string ACTUAL_DIFFERENCE {
             get {
@@ -69,8 +69,15 @@ namespace Schicksal.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Comparison {
+            get {
+                object obj = ResourceManager.GetObject("Comparison", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Critical difference.
         /// </summary>
         internal static string CRITICAL_DIFFERENCE {
             get {
@@ -79,11 +86,20 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Factor.
         /// </summary>
         internal static string FACTOR {
             get {
                 return ResourceManager.GetString("FACTOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wariants comparison.
+        /// </summary>
+        internal static string VARIANTS_COMPARISON {
+            get {
+                return ResourceManager.GetString("VARIANTS_COMPARISON", resourceCulture);
             }
         }
     }

@@ -126,4 +126,7 @@
   <data name="FACTOR" xml:space="preserve">
     <value>Фактор</value>
   </data>
+  <data name="VARIANTS_COMPARISON" xml:space="preserve">
+    <value>Сравнение вариантов</value>
+  </data>
 </root>

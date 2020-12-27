@@ -48,10 +48,10 @@ namespace Schicksal.Helm
     {
       var preferences = AppManager.Configurator.GetSection<Program.Preferences>();
 
-      foreach (var file in preferences.LastFiles)
+      foreach (var file in preferences.LastFiles.OrderByDescending(kv => kv.Value))
       {
-        if (File.Exists(file))
-          m_menu_last_files.DropDownItems.Add(file);
+        if (File.Exists(file.Key))
+          m_menu_last_files.DropDownItems.Add(file.Key);
       }
 
       if (m_menu_last_files.DropDownItems.Count == 0)
@@ -112,8 +112,8 @@ namespace Schicksal.Helm
           table_form.DataSource = TableColumnInfo.CreateTable(dlg.Columns);
           table_form.Text = Resources.NEW_TABLE;
           table_form.MdiParent = this;
-          table_form.Show();
           table_form.WindowState = FormWindowState.Maximized;
+          table_form.Show();
         }
       }
     }
@@ -130,7 +130,7 @@ namespace Schicksal.Helm
 
     private void OpenFile(string fileName)
     {
-      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles.Add(fileName);
+      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
       var table_form = this.MdiChildren.OfType<TableForm>().FirstOrDefault(f => f.FileName == fileName);
 
       if (table_form == null)
@@ -146,8 +146,8 @@ namespace Schicksal.Helm
         table_form.Text = Path.GetFileName(fileName);
         table_form.MdiParent = this;
         table_form.FileName = fileName;
-        table_form.Show();
         table_form.WindowState = FormWindowState.Maximized;
+        table_form.Show();
       }
       else
         table_form.Activate();
@@ -198,8 +198,8 @@ namespace Schicksal.Helm
         table_form.FileName = key;
         table_form.MdiParent = this;
         table_form.MarkAsReadOnly();
-        table_form.Show();
         table_form.WindowState = FormWindowState.Maximized;
+        table_form.Show();
       }
       else
         table_form.Activate();

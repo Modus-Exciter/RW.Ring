@@ -34,11 +34,11 @@ namespace Schicksal.Helm
     public class Preferences : ConfigurationSection
     {
       [DataMember(Name = "LastFiles")]
-      private readonly HashSet<string> m_last_files = new HashSet<string>();
+      private readonly Dictionary<string, DateTime> m_last_files = new Dictionary<string, DateTime>();
       [DataMember(Name = "AnovaSettings")]
       private Dictionary<string, string[]> m_anova_settings = new Dictionary<string, string[]>();
 
-      public HashSet<string> LastFiles
+      public Dictionary<string, DateTime> LastFiles
       {
         get { return m_last_files; }
       }

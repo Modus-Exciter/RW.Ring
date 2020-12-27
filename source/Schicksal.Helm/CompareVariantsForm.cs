@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Schicksal.Anova;
 using Notung;
+using Schicksal.Anova;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
@@ -30,6 +26,7 @@ namespace Schicksal.Helm
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
+
       DataTable res = m_comparator.CreateDescriptiveTable(m_probability);
       m_grid.DataSource = res;
 
@@ -59,7 +56,18 @@ namespace Schicksal.Helm
       var mult = new MultiVariantsComparator(m_comparator,  m_probability, m_grid.DataSource as DataTable);
 
       if (AppManager.OperationLauncher.Run(mult) == System.Threading.Tasks.TaskStatus.RanToCompletion)
+      {
         m_nsr_grid.DataSource = mult.Results;
+
+        using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
+        {
+          factor1DataGridViewTextBoxColumn.Width = (int)graphics.MeasureString(mult.Factor1MaxLength,
+            factor1DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
+
+          factor2DataGridViewTextBoxColumn.Width = (int)graphics.MeasureString(mult.Factor2MaxLength,
+            factor2DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
+        }
+      }
     }
 
     private void m_nsr_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)

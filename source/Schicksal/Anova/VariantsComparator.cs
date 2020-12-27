@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using Schicksal.Basic;
 using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using Notung;
+using Schicksal.Basic;
 using Schicksal.Properties;
 
 namespace Schicksal.Anova
@@ -29,6 +28,16 @@ namespace Schicksal.Anova
     public string ResultField
     {
       get { return m_result; }
+    }
+
+    public string[] Factors
+    {
+      get { return m_factors; }
+    }
+
+    public string Filter
+    {
+      get { return m_filter; }
     }
 
     public DataTable CreateDescriptiveTable(double p)
@@ -134,7 +143,7 @@ namespace Schicksal.Anova
     }
   }
 
-  public sealed class MultiVariantsComparator : RunBase
+  public sealed class MultiVariantsComparator : RunBase, IServiceProvider
   {
     private readonly VariantsComparator m_comparator;
     private readonly DataTable m_source;
@@ -148,14 +157,23 @@ namespace Schicksal.Anova
       m_comparator = comparator;
       m_probability = p;
       m_source = table ?? m_comparator.CreateDescriptiveTable(p);
+      this.Factor1MaxLength = string.Empty;
+      this.Factor2MaxLength = string.Empty;
     }
 
     public DifferenceInfo[] Results { get; private set; }
+
+    public string Factor1MaxLength { get; private set; }
+
+    public string Factor2MaxLength { get; private set; }
 
     public override void Run()
     {
       Tuple<int, int>[] pairs = new Tuple<int, int>[m_source.Rows.Count * (m_source.Rows.Count - 1) / 2];
       int k = 0;
+
+      this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField, 
+        string.Join(", ", m_comparator.Factors), m_comparator.Filter));
 
       for (int i = 0; i < m_source.Rows.Count - 1; i++)
       {
@@ -167,13 +185,32 @@ namespace Schicksal.Anova
 
       for (k = 0; k < result.Length; k++)
       {
-        this.ReportProgress(k * 100 / result.Length, null);
+        this.ReportProgress(k * 100 / result.Length);
 
         result[k] = m_comparator.GetDifferenceInfo(
           m_source.DefaultView[pairs[k].Item1], m_source.DefaultView[pairs[k].Item2], m_probability);
+
+        if (result[k].Factor1.Length > this.Factor1MaxLength.Length)
+          this.Factor1MaxLength = result[k].Factor1;
+
+        if (result[k].Factor2.Length > this.Factor2MaxLength.Length)
+          this.Factor2MaxLength = result[k].Factor2;
       }
 
       this.Results = result;
+    }
+
+    public override string ToString()
+    {
+      return Resources.VARIANTS_COMPARISON;
+    }
+
+    public override object GetService(Type serviceType)
+    {
+      if (serviceType == typeof(Image))
+        return Resources.Comparison;
+
+      return base.GetService(serviceType);
     }
   }
 

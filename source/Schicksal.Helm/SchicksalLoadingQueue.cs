@@ -49,6 +49,5 @@ namespace Schicksal.Helm
         get { return Type.EmptyTypes; }
       }
     }
-
   }
 }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using Notung;
 using Schicksal.Helm.Properties;
+using System;
 
 namespace Schicksal.Helm
 {
@@ -41,6 +42,13 @@ namespace Schicksal.Helm
         if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
           col.DefaultCellStyle.Format = "0.000";
       }
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+      base.OnLoad(e);
+
+      this.Icon = this.Icon.Clone() as System.Drawing.Icon;
     }
 
     protected override void OnShown(System.EventArgs e)
@@ -90,7 +98,7 @@ namespace Schicksal.Helm
         var bf = new BinaryFormatter();
         bf.Serialize(fs, graph);
       }
-      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles.Add(fileName);
+      AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
       this.Changed = false;
       this.FileName = Path.GetFileName(this.FileName);
       this.Text = Path.GetFileName(this.FileName);
