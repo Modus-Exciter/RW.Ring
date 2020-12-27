@@ -95,6 +95,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid column type for saving.
+        /// </summary>
+        internal static string INVALID_COLUMN_TYPE {
+            get {
+                return ResourceManager.GetString("INVALID_COLUMN_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wariants comparison.
         /// </summary>
         internal static string VARIANTS_COMPARISON {

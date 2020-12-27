@@ -1,15 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Text;
+using Schicksal.Properties;
 
 namespace Schicksal
 {
+  /// <summary>
+  /// Класс для компактного сохранения таблиц данных
+  /// </summary>
   public class DataTableSaver
   {
+    /// <summary>
+    /// Запись таблицы данных в поток
+    /// </summary>
+    /// <param name="table">Таблица, которую требуется сохранить</param>
+    /// <param name="stream">Поток, куда требуется сохранить таблицу</param>
+    public static void WriteDataTable(DataTable table, Stream stream)
+    {
+      if (table == null)
+        throw new ArgumentNullException("table");
+
+      if (stream == null)
+        throw new ArgumentNullException("stream");
+
+      using (var writer = new BinaryWriter(stream, Encoding.UTF8))
+      {
+        writer.Write(table.Columns.Count);
+        writer.Write(table.Rows.Count);
+
+        var runners = new IDataRunner[table.Columns.Count];
+
+        foreach (DataColumn col in table.Columns)
+        {
+          writer.Write(col.ColumnName);
+          writer.Write((int)Type.GetTypeCode(col.DataType));
+          runners[col.Ordinal] = Construct(col.DataType);
+        }
+
+        foreach (DataRow row in table.Rows)
+        {
+          for (int i = 0; i < table.Columns.Count; i++)
+          {
+            if (row.IsNull(i))
+              writer.Write(false);
+            else
+            {
+              writer.Write(true);
+              runners[i].Write(writer, row[i]);
+            }
+          }
+        }
+
+        writer.Flush();
+      }
+    }
+
+    /// <summary>
+    /// Чтение таблицы данных из потока
+    /// </summary>
+    /// <param name="stream">Поток байт, из которого требуется прочитать таблицу</param>
+    /// <returns>Таблица, прочитанная из потока байт</returns>
+    public static DataTable ReadDataTable(Stream stream)
+    {
+      if (stream == null)
+        throw new ArgumentNullException("stream");
+
+      DataTable ret = new DataTable();
+
+      using (var reader = new BinaryReader(stream, Encoding.UTF8))
+      {
+        int columns_count = reader.ReadInt32();
+        int rows_count = reader.ReadInt32();
+
+        var runners = new IDataRunner[columns_count];
+        
+        for (int i = 0; i < columns_count; i++)
+        {
+          var col_name = reader.ReadString();
+          var col_type = Type.GetType("System." + (TypeCode)reader.ReadInt32());
+          ret.Columns.Add(col_name, col_type);
+          runners[i] = Construct(col_type);
+        }
+
+        for (int i = 0; i < rows_count; i++)
+        {
+          var row = ret.NewRow();
+
+          for (int j = 0; j < columns_count; j++)
+          {
+            if (reader.ReadBoolean())
+              row[j] = runners[j].Read(reader);
+          }
+
+          ret.Rows.Add(row);
+        }
+      }
+
+      return ret;
+    }
+
+    #region Implementation
+
     private interface IDataRunner
     {
       void Write(BinaryWriter writer, object value);
@@ -231,87 +324,10 @@ namespace Schicksal
         case TypeCode.Decimal: return new DecimalDataRunner();
         case TypeCode.DateTime: return new DateTimeDataRunner();
         case TypeCode.String: return new StringDataRunner();
-        default: throw new ArgumentException();
+        default: throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
       }
     }
 
-    public static void WriteDataTable(DataTable table, Stream stream)
-    {
-      if (table == null)
-        throw new ArgumentNullException("table");
-
-      if (stream == null)
-        throw new ArgumentNullException("stream");
-
-      using (var writer = new BinaryWriter(stream, Encoding.UTF8))
-      {
-        writer.Write(table.Columns.Count);
-        writer.Write(table.Rows.Count);
-
-        var runners = new IDataRunner[table.Columns.Count];
-
-        foreach (DataColumn col in table.Columns)
-        {
-          writer.Write(col.ColumnName);
-          writer.Write((int)Type.GetTypeCode(col.DataType));
-          runners[col.Ordinal] = Construct(col.DataType);
-        }
-
-        foreach (DataRow row in table.Rows)
-        {
-          for (int i = 0; i < table.Columns.Count; i++)
-          {
-            if (row.IsNull(i))
-              writer.Write(false);
-            else
-            {
-              writer.Write(true);
-              runners[i].Write(writer, row[i]);
-            }
-          }
-        }
-
-        writer.Flush();
-      }
-    }
-
-    public static DataTable ReadDataTable(Stream stream)
-    {
-      if (stream == null)
-        throw new ArgumentNullException("stream");
-
-      DataTable ret = new DataTable();
-
-      using (var reader = new BinaryReader(stream, Encoding.UTF8))
-      {
-        int columns_count = reader.ReadInt32();
-        int rows_count = reader.ReadInt32();
-
-        var runners = new IDataRunner[columns_count];
-        
-        for (int i = 0; i < columns_count; i++)
-        {
-          var col_name = reader.ReadString();
-          var col_type = Type.GetType("System." + (TypeCode)reader.ReadInt32());
-          ret.Columns.Add(col_name, col_type);
-          runners[i] = Construct(col_type);
-        }
-
-        for (int i = 0; i < rows_count; i++)
-        {
-          var row = ret.NewRow();
-
-          for (int j = 0; j < columns_count; j++)
-          {
-            if (reader.ReadBoolean())
-              row[j] = runners[j].Read(reader);
-          }
-
-          ret.Rows.Add(row);
-        }
-      }
-
-      return ret;
-    }
+    #endregion
   }
 }

@@ -177,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\idr_dll.ico" />
-    <Content Include="Resources\Inspector.PNG" />
+    <None Include="Resources\Inspector.PNG" />
     <None Include="Resources\p_16_warning.png" />
     <None Include="Resources\p_16_info.png" />
     <None Include="Resources\p_16_error.png" />
