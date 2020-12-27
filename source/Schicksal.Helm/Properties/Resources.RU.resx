@@ -138,6 +138,12 @@
   <data name="DISTRIBUTION" xml:space="preserve">
     <value>распределение</value>
   </data>
+  <data name="DUPLICATE_COLUMN" xml:space="preserve">
+    <value>Название колонки {0} не уникально</value>
+  </data>
+  <data name="EMPTY_COLUMNS" xml:space="preserve">
+    <value>Пустое имя колонки</value>
+  </data>
   <data name="FILE" xml:space="preserve">
     <value>Файл</value>
   </data>
@@ -161,6 +167,9 @@
   </data>
   <data name="NEW_TABLE" xml:space="preserve">
     <value>Новая таблица</value>
+  </data>
+  <data name="NO_COLUMNS" xml:space="preserve">
+    <value>Не созданы колонки</value>
   </data>
   <data name="OPEN" xml:space="preserve">
     <value>Открыть</value>

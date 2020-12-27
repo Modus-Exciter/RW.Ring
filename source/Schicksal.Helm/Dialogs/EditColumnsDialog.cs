@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections.ObjectModel;
 using Notung;
+using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm.Dialogs
 {
@@ -46,14 +47,14 @@ namespace Schicksal.Helm.Dialogs
       HashSet<string> unique = new HashSet<string>();
 
       if (this.Columns.Count == 0)
-        buffer.Add("No columns specified", InfoLevel.Warning);
+        buffer.Add(Resources.NO_COLUMNS, InfoLevel.Warning);
 
       foreach (var col in this.Columns)
       {
         if (string.IsNullOrEmpty(col.ColumnName))
-          buffer.Add("Empty column name", InfoLevel.Warning);
+          buffer.Add(Resources.EMPTY_COLUMNS, InfoLevel.Warning);
         else if (!unique.Add(col.ColumnName))
-          buffer.Add(string.Format("Column name {0} is not unique", col.ColumnName), InfoLevel.Warning);
+          buffer.Add(string.Format(Resources.DUPLICATE_COLUMN, col.ColumnName), InfoLevel.Warning);
       }
 
       if (buffer.Count > 0)

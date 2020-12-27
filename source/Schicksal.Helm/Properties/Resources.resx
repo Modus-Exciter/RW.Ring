@@ -208,4 +208,13 @@
   <data name="STD_ERROR" xml:space="preserve">
     <value>Standard error</value>
   </data>
+  <data name="DUPLICATE_COLUMN" xml:space="preserve">
+    <value>Column name {0} is not unique</value>
+  </data>
+  <data name="EMPTY_COLUMNS" xml:space="preserve">
+    <value>Empty column name</value>
+  </data>
+  <data name="NO_COLUMNS" xml:space="preserve">
+    <value>No columns specified</value>
+  </data>
 </root>

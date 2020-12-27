@@ -145,6 +145,24 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Column name {0} is not unique.
+        /// </summary>
+        internal static string DUPLICATE_COLUMN {
+            get {
+                return ResourceManager.GetString("DUPLICATE_COLUMN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty column name.
+        /// </summary>
+        internal static string EMPTY_COLUMNS {
+            get {
+                return ResourceManager.GetString("EMPTY_COLUMNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         internal static string FILE {
@@ -220,6 +238,15 @@ namespace Schicksal.Helm.Properties {
         internal static string NEW_TABLE {
             get {
                 return ResourceManager.GetString("NEW_TABLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No columns specified.
+        /// </summary>
+        internal static string NO_COLUMNS {
+            get {
+                return ResourceManager.GetString("NO_COLUMNS", resourceCulture);
             }
         }
         
