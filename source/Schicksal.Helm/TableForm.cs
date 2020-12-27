@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using Notung;
 using Schicksal.Helm.Properties;
@@ -95,8 +94,7 @@ namespace Schicksal.Helm
 
       using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
       {
-        var bf = new BinaryFormatter();
-        bf.Serialize(fs, graph);
+        DataTableSaver.WriteDataTable(graph as DataTable, fs);
       }
       AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
       this.Changed = false;

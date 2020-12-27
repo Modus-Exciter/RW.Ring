@@ -12,6 +12,7 @@ using Notung.ComponentModel;
 using Notung.Helm;
 using Notung.Helm.Windows;
 using Notung.Loader;
+using Notung.Logging;
 using Notung.Services;
 using Schicksal.Anova;
 using Schicksal.Exchange;
@@ -137,10 +138,20 @@ namespace Schicksal.Helm
       {
         table_form = new TableForm();
 
-        using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+        try
         {
-          var bf = new BinaryFormatter();
-          table_form.DataSource = bf.Deserialize(fs);
+          using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+          {
+            table_form.DataSource = DataTableSaver.ReadDataTable(fs);
+          }
+        }
+        catch (Exception ex)
+        {
+          LogManager.GetLogger(this.GetType()).Error("Serialization exception", ex);
+          using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+          {
+            table_form.DataSource = new BinaryFormatter().Deserialize(fs);
+          }
         }
 
         table_form.Text = Path.GetFileName(fileName);

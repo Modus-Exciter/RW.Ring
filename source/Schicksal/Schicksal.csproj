@@ -47,6 +47,7 @@
     <Compile Include="Basic\JoinedDataGroup.cs" />
     <Compile Include="Basic\MultiArrayDataGroup.cs" />
     <Compile Include="Basic\TableMultyDataGroup.cs" />
+    <Compile Include="DataTableSaver.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
