@@ -399,12 +399,12 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write(((DateTime)value).ToString(CultureInfo.InvariantCulture));
+        writer.Write(((DateTime)value).ToBinary());
       }
 
       public object Read(BinaryReader reader)
       {
-        return DateTime.Parse(reader.ReadString(), CultureInfo.InvariantCulture);
+        return DateTime.FromBinary(reader.ReadInt64());
       }
     }
 

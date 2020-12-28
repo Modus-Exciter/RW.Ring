@@ -82,6 +82,37 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void SaveDateFromTable()
+    {
+      var table = new DataTable();
+      var date = DateTime.Now;
+      var today = DateTime.Today;
+
+      table.Columns.Add("Date", typeof(DateTime));
+      table.Rows.Add(new object[] { date });
+      table.Rows.Add(new object[] { DateTime.MinValue });
+      table.Rows.Add(new object[] { DateTime.MaxValue });
+      table.Rows.Add(new object[] { today });
+
+      byte[] bytes;
+      using (var ms = new MemoryStream())
+      {
+        DataTableSaver.WriteDataTable(table, ms);
+        bytes = ms.ToArray();
+      }
+
+      using (var ms = new MemoryStream(bytes))
+      {
+        table = DataTableSaver.ReadDataTable(ms);
+      }
+
+      Assert.AreEqual(DateTime.MinValue, table.Rows[1][0]);
+      Assert.AreEqual(today, table.Rows[3][0]);
+      Assert.AreEqual(date, table.Rows[0][0]);
+      Assert.AreEqual(DateTime.MaxValue, table.Rows[2][0]);
+    }
+
+    [TestMethod]
     public void SerializeUnserializable()
     {
       byte[] serialized;
