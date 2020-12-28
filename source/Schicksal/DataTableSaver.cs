@@ -129,8 +129,7 @@ namespace Schicksal
 
         var runners = new IDataRunner[columns_count];
         var mandatories = new BitArray(columns_count, false);
-        var primary_key = new BitArray(columns_count, false);
-        var primary_key_size = 0;
+        var primary_key = new List<int>();
         
         for (int i = 0; i < columns_count; i++)
         {
@@ -146,8 +145,7 @@ namespace Schicksal
           if ((col_type & _primary_key_flag) != 0)
           {
             col_type &= ~_primary_key_flag;
-            primary_key[i] = true;
-            primary_key_size++;
+            primary_key.Add(i);
           }
 
           ret.Columns.Add(col_name, 
@@ -156,16 +154,12 @@ namespace Schicksal
           runners[i] = Construct((TypeCode)col_type);
         }
 
-        if (primary_key_size != 0)
+        if (primary_key.Count != 0)
         {
-          var key_columns = new DataColumn[primary_key_size];
+          var key_columns = new DataColumn[primary_key.Count];
 
-          int j = 0;
-          for (int i = 0; i < columns_count; i++)
-          {
-            if (primary_key[i])
-              key_columns[j++] = ret.Columns[i];
-          }
+          for (int i = 0; i < primary_key.Count; i++)
+            key_columns[i] = ret.Columns[primary_key[i]];
 
           ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), key_columns, true));
 
