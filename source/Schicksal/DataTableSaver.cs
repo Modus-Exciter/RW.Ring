@@ -49,43 +49,42 @@ namespace Schicksal
 
           if (Array.Find(key_columns, (c) => c.Ordinal == col.Ordinal) != null)
             code_with_flags |= _primary_key_flag;
-          
+
           runners[col.Ordinal] = Construct(type_code);
 
           writer.Write(col.ColumnName);
           writer.Write(code_with_flags);
         }
 
-        if (key_columns.Length > 0)
+        string pk_name = string.Empty;
+        var ucs = new List<UniqueConstraint>(table.Constraints.Count);
+
+        foreach (Constraint c in table.Constraints)
         {
-          string pk_name = string.Empty;
-          var ucs = new List<UniqueConstraint>(table.Constraints.Count);
+          var uc = c as UniqueConstraint;
 
-          foreach (Constraint c in table.Constraints)
-          {
-            var uc = c as UniqueConstraint;
+          if (uc == null)
+            continue;
 
-            if (uc == null)
-              continue;
+          if (uc.IsPrimaryKey)
+            pk_name = uc.ConstraintName;
+          else
+            ucs.Add(uc);
+        }
 
-            if (uc.IsPrimaryKey)
-              pk_name = uc.ConstraintName;
-            else
-              ucs.Add(uc);
-          }
-
+        if (key_columns.Length > 0)
           writer.Write(pk_name);
-          writer.Write(ucs.Count);
 
-          foreach (var c in ucs)
-          {
-            writer.Write(c.Columns.Length);
+        writer.Write(ucs.Count);
 
-            foreach (DataColumn col in c.Columns)
-              writer.Write(col.Ordinal);
+        foreach (var c in ucs)
+        {
+          writer.Write(c.Columns.Length);
 
-            writer.Write(c.ConstraintName);
-          }
+          foreach (DataColumn col in c.Columns)
+            writer.Write(col.Ordinal);
+
+          writer.Write(c.ConstraintName);
         }
 
         foreach (DataRow row in table.Rows)
@@ -162,18 +161,19 @@ namespace Schicksal
             key_columns[i] = ret.Columns[primary_key[i]];
 
           ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), key_columns, true));
+        }
 
-          var other_unique_count = reader.ReadInt32();
+        var other_unique_count = reader.ReadInt32();
 
-          for (int i = 0; i < other_unique_count; i++)
-          {
-            var constraint_columns = new DataColumn[reader.ReadInt32()];
+        for (int i = 0; i < other_unique_count; i++)
+        {
+          var constraint_columns = new DataColumn[reader.ReadInt32()];
 
-            for (int k = 0; k < constraint_columns.Length; k++)
-              constraint_columns[k] = ret.Columns[reader.ReadInt32()];
+          for (int k = 0; k < constraint_columns.Length; k++)
+            constraint_columns[k] = ret.Columns[reader.ReadInt32()];
 
-            ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), constraint_columns, false));
-          }
+          ret.Constraints.Add(new UniqueConstraint(
+            reader.ReadString(), constraint_columns, false));
         }
 
         for (int i = 0; i < rows_count; i++)
