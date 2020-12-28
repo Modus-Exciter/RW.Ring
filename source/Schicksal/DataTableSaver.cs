@@ -410,14 +410,55 @@ namespace Schicksal
 
     private class StringDataRunner : IDataRunner
     {
+      private Dictionary<object, int> m_values;
+      private List<string> m_strings;
+      private object last;
+      
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((String)value);
+        if (!Equals(value, last))
+        {
+          if (m_values == null)
+            m_values = new Dictionary<object, int>();
+
+          int key;
+
+          if (m_values.TryGetValue(value, out key))
+          {
+            writer.Write((byte)1);
+            writer.Write(key);
+          }
+          else
+          {
+            writer.Write((byte)0);
+            writer.Write((string)value);
+            m_values[value] = m_values.Count;
+          }
+        }
+        else
+          writer.Write((byte)2);
+
+        last = value;
       }
 
       public object Read(BinaryReader reader)
       {
-        return reader.ReadString();
+        if (m_strings == null)
+          m_strings = new List<string>();
+
+        var status = reader.ReadByte();
+
+        if (status == 0)
+        {
+          var ret = reader.ReadString();
+          m_strings.Add(ret);
+          last = ret;
+          return ret;
+        }
+        else if (status == 1)
+          return m_strings[reader.ReadInt32()];
+        else
+          return last;
       }
     }
 

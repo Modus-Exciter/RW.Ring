@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
+        "MsmKey" = "8:_06AE3FD0C266ECCFF8816C7068506E57"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -45,26 +45,38 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
+        "MsmKey" = "8:_B96AA75D509CC09CC0B0F545D31B53B1"
+        "OwnerKey" = "8:_06AE3FD0C266ECCFF8816C7068506E57"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B96AA75D509CC09CC0B0F545D31B53B1"
         "OwnerKey" = "8:_EE1E99D2B1CF997F9F74606E20E8CF79"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
+        "MsmKey" = "8:_B96AA75D509CC09CC0B0F545D31B53B1"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
-        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_EE1E99D2B1CF997F9F74606E20E8CF79"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,25 +94,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
+        "OwnerKey" = "8:_06AE3FD0C266ECCFF8816C7068506E57"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
+        "OwnerKey" = "8:_B96AA75D509CC09CC0B0F545D31B53B1"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -128,6 +128,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0,Profile=Client"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4 Client Profile (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0,Profile=Client"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -147,18 +160,13 @@
         "InstallerBootstrapper" = "3:2"
             "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
             {
-            "Enabled" = "11:TRUE"
+            "Enabled" = "11:FALSE"
             "PromptEnabled" = "11:TRUE"
-            "PrerequisitesLocation" = "2:1"
+            "PrerequisitesLocation" = "2:2"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
-                    {
-                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.0"
-                    }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
                     "Name" = "8:Windows Installer 3.1"
@@ -195,14 +203,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4F69E4B575B181D348E6EFF000578CF9"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_06AE3FD0C266ECCFF8816C7068506E57"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4F69E4B575B181D348E6EFF000578CF9"
+                    "_06AE3FD0C266ECCFF8816C7068506E57"
                     {
                     "Name" = "8:Notung.Helm.dll"
                     "Attributes" = "3:512"
@@ -257,14 +265,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C48241ABE68844ABE1C512F70812CF25"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B96AA75D509CC09CC0B0F545D31B53B1"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Notung, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9a2e5a452b465810, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C48241ABE68844ABE1C512F70812CF25"
+                    "_B96AA75D509CC09CC0B0F545D31B53B1"
                     {
                     "Name" = "8:Notung.dll"
                     "Attributes" = "3:512"
@@ -399,7 +407,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Schicksal"
         "ProductCode" = "8:{17C17387-0EF1-4598-8584-FF91111DE8E4}"
-        "PackageCode" = "8:{63290D54-AA99-4CD3-86A3-915C88FB0761}"
+        "PackageCode" = "8:{C2B559DE-33B9-4463-9C01-915A4FF067E1}"
         "UpgradeCode" = "8:{CB8DEE96-41E6-43D7-AD37-B0A25CA37D1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
