@@ -413,7 +413,11 @@ namespace Schicksal
       private Dictionary<object, int> m_values;
       private List<string> m_strings;
       private object last;
-      
+
+      private const byte FULL_TEXT = 0;
+      private const byte STRING_NUMBER = 1;
+      private const byte REPEAT = 2;
+
       public void Write(BinaryWriter writer, object value)
       {
         if (!Equals(value, last))
@@ -425,18 +429,18 @@ namespace Schicksal
 
           if (m_values.TryGetValue(value, out key))
           {
-            writer.Write((byte)1);
+            writer.Write(STRING_NUMBER);
             writer.Write(key);
           }
           else
           {
-            writer.Write((byte)0);
+            writer.Write(FULL_TEXT);
             writer.Write((string)value);
             m_values[value] = m_values.Count;
           }
         }
         else
-          writer.Write((byte)2);
+          writer.Write(REPEAT);
 
         last = value;
       }
@@ -448,17 +452,23 @@ namespace Schicksal
 
         var status = reader.ReadByte();
 
-        if (status == 0)
+        if (status == FULL_TEXT)
         {
           var ret = reader.ReadString();
           m_strings.Add(ret);
           last = ret;
           return ret;
         }
-        else if (status == 1)
-          return m_strings[reader.ReadInt32()];
-        else
+        else if (status == STRING_NUMBER)
+        {
+          var ret = m_strings[reader.ReadInt32()];
+          last = ret;
+          return ret;
+        }
+        else if (status == REPEAT)
           return last;
+        else
+          throw new DataException();
       }
     }
 

@@ -38,6 +38,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -60,6 +61,10 @@
     <ProjectReference Include="..\..\..\source\Notung\Notung.csproj">
       <Project>{ACB28711-7615-48EF-8096-4BE678E22E19}</Project>
       <Name>Notung</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\source\Schicksal\Schicksal.csproj">
+      <Project>{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}</Project>
+      <Name>Schicksal</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

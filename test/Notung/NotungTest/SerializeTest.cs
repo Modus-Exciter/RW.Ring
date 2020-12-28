@@ -4,6 +4,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung;
 using Notung.Data;
+using Schicksal;
+using System.Data;
 
 namespace NotungTest
 {
@@ -42,6 +44,42 @@ namespace NotungTest
       }
     }
 
+    [TestMethod]
+    public void RepeatTextTest()
+    {
+      var table = new DataTable();
+
+      table.Columns.Add("Name", typeof(string)).AllowDBNull = false;
+      table.Columns.Add("Description", typeof(string)).AllowDBNull = true;
+
+      table.Rows.Add(new[] { "First", "First row" });
+      table.Rows.Add(new[] { "Second", "Second row" });
+      table.Rows.Add(new[] { "First", "Second row" });
+      table.Rows.Add(new[] { "Second", Convert.DBNull });
+
+      byte[] bytes;
+      using (var ms = new MemoryStream())
+      {
+        DataTableSaver.WriteDataTable(table, ms);
+        bytes = ms.ToArray();
+      }
+
+      using (var ms = new MemoryStream(bytes))
+      {
+        table = DataTableSaver.ReadDataTable(ms);
+      }
+
+      Assert.AreEqual("Name", table.Columns[0].ColumnName);
+      Assert.AreEqual("Description", table.Columns[1].ColumnName);
+      Assert.AreEqual("First", table.Rows[0][0]);
+      Assert.AreEqual("First row", table.Rows[0][1]);
+      Assert.AreEqual("Second", table.Rows[1][0]);
+      Assert.AreEqual("Second row", table.Rows[1][1]);
+      Assert.AreEqual("First", table.Rows[2][0]);
+      Assert.AreEqual("Second row", table.Rows[2][1]);
+      Assert.AreEqual("Second", table.Rows[3][0]);
+      Assert.AreEqual(Convert.DBNull, table.Rows[3][1]);
+    }
 
     [TestMethod]
     public void SerializeUnserializable()
