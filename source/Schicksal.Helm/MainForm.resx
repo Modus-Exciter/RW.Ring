@@ -124,6 +124,27 @@
     <value>105, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_cmd_anova.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAAAlwSFlzAAAK7wAA
+        Cu8BfXaKSAAAAztJREFUOE9NktlPE1EUxi8mGgOJJibGxMQlihjji0bjH+CDJsaoD5qoiRs+aYyoiUaJ
+        RlzABdxABFvaghrADaQaBXek7PpAwdKNtlPbKXShlC5TWmc+z9SJeCe/ufdmcr7zzTkn6351QyAnJ2eu
+        KEKUJJEeSACjM0TxtyixrCxRpJtEL8ZmiAxZUjI5FTx/7sB2xliIaR+98kFZU8nf4Fw+pNNAKgWYTE4k
+        EhKiUQlDRifSE8CZkS0oK68XKDifWMg0tc2jcnx6CkhOSnDYfEhNkoAAWE12xCfTCAamYPrBo8pUhFz1
+        AtwqaZQFrhO5rFr93G81c3AOj6HH1oUNn7Oxu34HflkCmFcwgLbWPoRdaTQOqrHu+XyMDISh0bxPUfBt
+        Io9pa18HZAdnfhxGTg2DrrUR+d9X46KhBXO2fcXqc2N4yl1Crp6hs/0nxvg0VDVvZYE7xEpWo9OHVn5j
+        2KrbjphXgsc+jthECpsNi1DbUYlNn1Zh7ZOtaH72AlGfgCR9q6tr+09Aqx9v7+qH2xyEhwvBNGjHuwEJ
+        6wubsL5tJkrqi7G0wIMC3QiONYxhxtEhHDxyT66B7CCPPaxpDtttPFWcg8XihtlowZpiBwzfrOj7PAje
+        Hsarrw4s21OHy1UGaBo6cKNEG/9XA7VWH4lE0vD7EwjyQbT0BrDxch9ZFdDfbwbPx+H3xdDbZYSfT2CU
+        T6Ja9S75T0Cl0UdjJCBQgI2LIPv4Tzxp6sJEKIXeXhPc7hhcrig6O02w2yNwOqO4/+D1tEC1qinW2T+C
+        Uy+8yD7Ujp0nNGj/aKDsFnz40EMiZvT0DKOV2tndbaa7BXfLm6cFKh+2xNmubuy70EQd4GCmWng9cXBc
+        jLIOUcbJTOaOjkFYreHMWXGgtFH7RnBbXRj1hOF0hGA0uui/E4RA2Ybh8STg9QoZF05nDDZbBPcq9NMO
+        yu4+FcqrXqZuVzxLlN6pj14vexy5Vvpo/OoNXaCoWD1adEXFXyh68KvwYiV39nyF4+Tpm0P7809/oSIW
+        Z0aZ1mKiQKmqPJ63iFLipjLv12gvUQKu0H6JKCT2EgtkgdmKSF5mMP6yQlGXM8gsV1hGu8wSJXjWH4nL
+        fwfP9WKSAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAgAEBAAAAEACABoBQAAhgAAABAQAAABACAAaAQAAO4FAAAYGAAAAQAIAMgGAABWCgAAGBgAAAEA

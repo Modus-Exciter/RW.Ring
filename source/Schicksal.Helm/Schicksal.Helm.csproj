@@ -60,11 +60,23 @@
     <Compile Include="AnovaResultsForm.Designer.cs">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AnovaDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\AnovaDialog.Designer.cs">
       <DependentUpon>AnovaDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ComparisonFilterDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ComparisonFilterDialog.Designer.cs">
+      <DependentUpon>ComparisonFilterDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\EditColumnsDialog.cs">
       <SubType>Form</SubType>
@@ -86,6 +98,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SchicksalLoadingQueue.cs" />
     <Compile Include="TableForm.cs">
       <SubType>Form</SubType>
@@ -105,11 +122,23 @@
     <EmbeddedResource Include="CompareVariantsForm.ru-RU.resx">
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CompareVariantsForm.ru.resx">
+      <DependentUpon>CompareVariantsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaDialog.resx">
       <DependentUpon>AnovaDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaDialog.ru-RU.resx">
       <DependentUpon>AnovaDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ComparisonFilterDialog.resx">
+      <DependentUpon>ComparisonFilterDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ComparisonFilterDialog.ru-RU.resx">
+      <DependentUpon>ComparisonFilterDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditColumnsDialog.resx">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
@@ -119,17 +148,13 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.RU.resx" />
     <EmbeddedResource Include="TableForm.resx">
       <DependentUpon>TableForm.cs</DependentUpon>
@@ -150,13 +175,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="splashscreen.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\yinyang.png" />
     <None Include="Resources\arrow_right_blue.png" />
     <None Include="Resources\arrow_left_blue.png" />
     <None Include="Resources\column-chart.png" />
+    <None Include="Resources\document_new.png" />
+    <None Include="Resources\folder.png" />
+    <None Include="Resources\disk_blue.png" />
+    <None Include="Resources\save_as.png" />
+    <None Include="Resources\gear_preferences.png" />
+    <None Include="Resources\line-chart.png" />
+    <Resource Include="splashscreen.png" />
+    <None Include="Resources\about.png" />
+    <Content Include="Resources\about_logo.png" />
     <Content Include="yinyang.ico" />
   </ItemGroup>
   <ItemGroup>

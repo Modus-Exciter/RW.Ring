@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Notung;
 using Schicksal.Anova;
+using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
@@ -12,6 +17,9 @@ namespace Schicksal.Helm
   {
     private readonly VariantsComparator m_comparator;
     private readonly float m_probability;
+    private DifferenceInfo[] m_all_data;
+    private bool m_only_significant;
+    private string m_selection = string.Empty;
 
     public CompareVariantsForm(DataTable table, string factor, string result, string filter, float p)
     {
@@ -27,37 +35,37 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
-      DataTable res = m_comparator.CreateDescriptiveTable(m_probability);
-      m_grid.DataSource = res;
-
-      m_grid.Columns["Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
-      m_grid.Columns["Count"].HeaderText = Resources.COUNT;
-      m_grid.Columns["Factor"].Visible = false;
-      m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
-      m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
-      m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
-
-      m_summary_page.Text = Resources.STATISTICS;
-      m_details_page.Text = Resources.COMPARISON;
-
-      m_grid.AutoResizeColumns();
-
-      var series = m_chart.Series["Means"];
-
-      series.Points.Clear();
-
-      foreach (DataRow row in res.Rows)
-      {
-        var mean = (double)row["Mean"];
-        var interval = (double)row["Interval"];
-        series.Points.AddXY(row["Factor"], mean - interval, mean + interval, mean, mean);
-      }
-
-      var mult = new MultiVariantsComparator(m_comparator,  m_probability, m_grid.DataSource as DataTable);
+      var mult = new MultiVariantsComparator(m_comparator, m_probability);
 
       if (AppManager.OperationLauncher.Run(mult) == System.Threading.Tasks.TaskStatus.RanToCompletion)
       {
-        m_nsr_grid.DataSource = mult.Results;
+        DataTable res = mult.Source;
+        m_grid.DataSource = res;
+
+        m_grid.Columns["Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
+        m_grid.Columns["Count"].HeaderText = Resources.COUNT;
+        m_grid.Columns["Factor"].Visible = false;
+        m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
+        m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
+        m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
+
+        m_summary_page.Text = Resources.STATISTICS;
+        m_details_page.Text = Resources.COMPARISON;
+
+        m_grid.AutoResizeColumns();
+
+        var series = m_chart.Series["Means"];
+
+        series.Points.Clear();
+
+        foreach (DataRow row in res.Rows)
+        {
+          var mean = (double)row["Mean"];
+          var interval = (double)row["Interval"];
+          series.Points.AddXY(row["Factor"], mean - interval, mean + interval, mean, mean);
+        }
+
+        m_nsr_grid.DataSource = m_all_data = mult.Results;
 
         using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
         {
@@ -81,7 +89,7 @@ namespace Schicksal.Helm
       var row = m_nsr_grid.Rows[e.RowIndex].DataBoundItem as DifferenceInfo;
 
       if (row != null && row.Probability < m_probability)
-        e.CellStyle.ForeColor = Color.Red;
+        e.CellStyle.ForeColor = m_only_significant ? Color.Blue : Color.Red;
     }
 
     private void m_nsr_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -94,6 +102,75 @@ namespace Schicksal.Helm
       using (var form = new NSRForm(row))
       {
         form.ShowDialog(this);
+      }
+    }
+
+    private void m_cmd_save_chart_Click(object sender, EventArgs e)
+    {
+      using (var dlg = new SaveFileDialog())
+      {
+        dlg.Filter = "Png files|*.png|Jpeg files|*.jpg;*.jpeg|GIF files|*.gif|Bitmaps|*.bmp";
+        dlg.AddExtension = true;
+
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+          m_chart.SaveImage(dlg.FileName, FormatFromFileName(dlg.FileName));
+      }
+    }
+
+    private ImageFormat FormatFromFileName(string fileName)
+    {
+      switch (Path.GetExtension(fileName).ToLower())
+      {
+        case ".png":
+          return ImageFormat.Png;
+        case ".jpg":
+        case ".jpeg":
+          return ImageFormat.Jpeg;
+        case ".gif":
+          return ImageFormat.Gif;
+        default:
+          return ImageFormat.Bmp;
+      }
+    }
+
+    private void m_cmd_filter_Click(object sender, EventArgs e)
+    {
+      if (m_all_data == null)
+        return;
+      
+      using (var dlg = new ComparisonFilterDialog())
+      {
+        var set = new HashSet<string>();
+        set.Add(string.Empty);
+
+        foreach (var item in m_all_data)
+        {
+          set.Add(item.Factor1);
+          set.Add(item.Factor2);
+
+          if (set.Count == m_grid.Rows.Count)
+            break;
+        }
+
+        dlg.SetSelectionList(set);
+        dlg.Selection = m_selection;
+        dlg.OnlySignificat = m_only_significant;
+
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          m_selection = dlg.Selection;
+          m_only_significant = dlg.OnlySignificat;
+
+          IEnumerable<DifferenceInfo> res = m_all_data;
+
+          if (m_only_significant)
+            res = res.Where(d => d.Probability <= m_probability);
+
+          if (!string.IsNullOrEmpty(m_selection))
+            res = res.Where(d => d.Factor1 == m_selection || d.Factor2 == m_selection);
+
+          m_nsr_grid.DataSource = res.ToArray();
+        }
       }
     }
   }

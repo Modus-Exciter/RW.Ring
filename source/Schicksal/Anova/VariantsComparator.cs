@@ -146,17 +146,15 @@ namespace Schicksal.Anova
   public sealed class MultiVariantsComparator : RunBase, IServiceProvider
   {
     private readonly VariantsComparator m_comparator;
-    private readonly DataTable m_source;
     private readonly double m_probability;
 
-    public MultiVariantsComparator(VariantsComparator comparator, double p, DataTable table = null)
+    public MultiVariantsComparator(VariantsComparator comparator, double p)
     {
       if (comparator == null)
         throw new ArgumentNullException("comparator");
 
       m_comparator = comparator;
       m_probability = p;
-      m_source = table ?? m_comparator.CreateDescriptiveTable(p);
       this.Factor1MaxLength = string.Empty;
       this.Factor2MaxLength = string.Empty;
     }
@@ -167,17 +165,22 @@ namespace Schicksal.Anova
 
     public string Factor2MaxLength { get; private set; }
 
+    public DataTable Source { get; private set; }
+
     public override void Run()
     {
-      Tuple<int, int>[] pairs = new Tuple<int, int>[m_source.Rows.Count * (m_source.Rows.Count - 1) / 2];
-      int k = 0;
-
       this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField, 
         string.Join(", ", m_comparator.Factors), m_comparator.Filter));
 
-      for (int i = 0; i < m_source.Rows.Count - 1; i++)
+      if (this.Source == null)
+        this.Source = m_comparator.CreateDescriptiveTable(m_probability);
+
+      Tuple<int, int>[] pairs = new Tuple<int, int>[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
+      int k = 0;
+
+      for (int i = 0; i < this.Source.Rows.Count - 1; i++)
       {
-        for (int j = i + 1; j < m_source.Rows.Count; j++)
+        for (int j = i + 1; j < this.Source.Rows.Count; j++)
           pairs[k++] = new Tuple<int, int>(i, j);
       }
 
@@ -188,7 +191,7 @@ namespace Schicksal.Anova
         this.ReportProgress(k * 100 / result.Length);
 
         result[k] = m_comparator.GetDifferenceInfo(
-          m_source.DefaultView[pairs[k].Item1], m_source.DefaultView[pairs[k].Item2], m_probability);
+          this.Source.DefaultView[pairs[k].Item1], this.Source.DefaultView[pairs[k].Item2], m_probability);
 
         if (result[k].Factor1.Length > this.Factor1MaxLength.Length)
           this.Factor1MaxLength = result[k].Factor1;

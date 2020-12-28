@@ -61,6 +61,29 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About....
+        /// </summary>
+        internal static string ABOUT {
+            get {
+                return ResourceManager.GetString("ABOUT", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap about_logo {
+            get {
+                object obj = ResourceManager.GetObject("about_logo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap About_Picture {
+            get {
+                object obj = ResourceManager.GetObject("About_Picture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Analyze.
         /// </summary>
         internal static string ANALYZE {
@@ -135,12 +158,26 @@ namespace Schicksal.Helm.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap disk_blue {
+            get {
+                object obj = ResourceManager.GetObject("disk_blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to distribution.
         /// </summary>
         internal static string DISTRIBUTION {
             get {
                 return ResourceManager.GetString("DISTRIBUTION", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap document_new {
+            get {
+                object obj = ResourceManager.GetObject("document_new", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -180,6 +217,29 @@ namespace Schicksal.Helm.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap folder {
+            get {
+                object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap gear_preferences {
+            get {
+                object obj = ResourceManager.GetObject("gear_preferences", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        internal static string HELP {
+            get {
+                return ResourceManager.GetString("HELP", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
@@ -204,6 +264,13 @@ namespace Schicksal.Helm.Properties {
         internal static string LAST_FILES {
             get {
                 return ResourceManager.GetString("LAST_FILES", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap line_chart {
+            get {
+                object obj = ResourceManager.GetObject("line_chart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -274,6 +341,13 @@ namespace Schicksal.Helm.Properties {
         internal static string SAVE_AS {
             get {
                 return ResourceManager.GetString("SAVE_AS", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap save_as_icon {
+            get {
+                object obj = ResourceManager.GetObject("save_as_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

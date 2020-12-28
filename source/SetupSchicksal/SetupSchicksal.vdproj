@@ -377,6 +377,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_17DEE3D45BA44712B672393B3B8969F2"
+                    {
+                    "Name" = "8:Plugins"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_8BEED44D21504ABBAA726684C377D847"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_9EE1D071A4A045E99C24791C2F98ECFE"
@@ -407,7 +418,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Schicksal"
         "ProductCode" = "8:{17C17387-0EF1-4598-8584-FF91111DE8E4}"
-        "PackageCode" = "8:{C2B559DE-33B9-4463-9C01-915A4FF067E1}"
+        "PackageCode" = "8:{5A7AA4E2-C35F-406C-84B6-7A13418F9FCA}"
         "UpgradeCode" = "8:{CB8DEE96-41E6-43D7-AD37-B0A25CA37D1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -973,7 +984,7 @@
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1029,7 +1040,7 @@
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1225,7 +1236,7 @@
             "SourcePath" = "8:..\\ImportWofostResults\\obj\\Release\\ImportWofostResults.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1309,7 +1320,7 @@
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1421,7 +1432,7 @@
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"

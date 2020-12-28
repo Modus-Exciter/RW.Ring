@@ -16,18 +16,13 @@ namespace Schicksal.Helm
     [STAThread]
     static int Main()
     {
-      ApplicationStarter.ShowSplashScreen("splashscreen.jpg");
+      ApplicationStarter.ShowSplashScreen("splashscreen.png");
 
-      return RunApplication();
-    }
-
-    static int RunApplication()
-    {
-      return new ApplicationStarter(Factory.Default<Form, MainForm>(), 
+      return new ApplicationStarter(Factory.Default<Form, MainForm>(),
         Factory.Default<ILoadingQueue, SchicksalLoadingQueue>())
-        {
-          AllowOnlyOneInstance = true
-        }.RunApplication();
+      {
+        AllowOnlyOneInstance = true
+      }.RunApplication();
     }
 
     [DataContract]

@@ -117,72 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="STANDARD_TABLES" xml:space="preserve">
-    <value>Standard tables</value>
-  </data>
-  <data name="NEW" xml:space="preserve">
-    <value>New</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="save_as_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\save_as.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="STUDENT" xml:space="preserve">
     <value>Student distribution</value>
   </data>
-  <data name="NEW_TABLE" xml:space="preserve">
-    <value>New table</value>
-  </data>
-  <data name="ANALYZE" xml:space="preserve">
-    <value>Analyze</value>
+  <data name="COUNT" xml:space="preserve">
+    <value>Count</value>
   </data>
   <data name="BASIC_STATISTICS" xml:space="preserve">
     <value>Basic statistics</value>
   </data>
-  <data name="IMPORT" xml:space="preserve">
-    <value>Import</value>
-  </data>
-  <data name="DISTRIBUTION" xml:space="preserve">
-    <value>distribution</value>
-  </data>
-  <data name="SAVE" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="FILE" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="OPEN" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="LAST_FILES" xml:space="preserve">
-    <value>Recent files</value>
-  </data>
-  <data name="SAVE_AS" xml:space="preserve">
-    <value>Save A</value>
-  </data>
-  <data name="ANOVA" xml:space="preserve">
-    <value>Analysis of variance</value>
-  </data>
-  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
-    <value>Do you want to save changes in table {0}?</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Logo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\yinyang.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SETTINGS" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="CREATE_NEW_TABLE" xml:space="preserve">
-    <value>Create new table</value>
-  </data>
-  <data name="FISHER" xml:space="preserve">
-    <value>Fisher distribution</value>
-  </data>
-  <data name="WINDOWS" xml:space="preserve">
-    <value>Windows</value>
+  <data name="disk_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\disk_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_right_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_right_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_left_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow_left_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="column_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\column-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -190,17 +142,35 @@
   <data name="COMPARISON" xml:space="preserve">
     <value>Comparison in pairs</value>
   </data>
-  <data name="COUNT" xml:space="preserve">
-    <value>Count</value>
+  <data name="SETTINGS" xml:space="preserve">
+    <value>Settings</value>
   </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Confidence interval</value>
+  <data name="document_new" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\document_new.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="MEAN" xml:space="preserve">
-    <value>Mean</value>
+  <data name="ANALYZE" xml:space="preserve">
+    <value>Analyze</value>
+  </data>
+  <data name="NEW_TABLE" xml:space="preserve">
+    <value>New table</value>
+  </data>
+  <data name="CREATE_NEW_TABLE" xml:space="preserve">
+    <value>Create new table</value>
+  </data>
+  <data name="ANOVA" xml:space="preserve">
+    <value>Analysis of variance</value>
+  </data>
+  <data name="LAST_FILES" xml:space="preserve">
+    <value>Recent files</value>
   </data>
   <data name="SCHICKSAL_DATA_FILES" xml:space="preserve">
     <value />
+  </data>
+  <data name="Logo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\yinyang.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="STANDARD_TABLES" xml:space="preserve">
+    <value>Standard tables</value>
   </data>
   <data name="STATISTICS" xml:space="preserve">
     <value>Statistics</value>
@@ -208,16 +178,76 @@
   <data name="STD_ERROR" xml:space="preserve">
     <value>Standard error</value>
   </data>
-  <data name="DUPLICATE_COLUMN" xml:space="preserve">
-    <value>Column name {0} is not unique</value>
+  <data name="arrow_left_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\arrow_left_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="EMPTY_COLUMNS" xml:space="preserve">
-    <value>Empty column name</value>
+  <data name="DISTRIBUTION" xml:space="preserve">
+    <value>distribution</value>
+  </data>
+  <data name="MEAN" xml:space="preserve">
+    <value>Mean</value>
+  </data>
+  <data name="line_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\line-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="INTERVAL" xml:space="preserve">
+    <value>Confidence interval</value>
+  </data>
+  <data name="FILE" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="HELP" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="WINDOWS" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="gear_preferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gear_preferences.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NEW" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="IMPORT" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ABOUT" xml:space="preserve">
+    <value>About...</value>
+  </data>
+  <data name="SAVE_AS" xml:space="preserve">
+    <value>Save A</value>
   </data>
   <data name="NO_COLUMNS" xml:space="preserve">
     <value>No columns specified</value>
   </data>
+  <data name="about_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\about_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SAVE" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="DUPLICATE_COLUMN" xml:space="preserve">
+    <value>Column name {0} is not unique</value>
+  </data>
   <data name="WRONG_COLUMN_NAME" xml:space="preserve">
     <value>Symbols [,+] are not allowed in column names</value>
+  </data>
+  <data name="FISHER" xml:space="preserve">
+    <value>Fisher distribution</value>
+  </data>
+  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
+    <value>Do you want to save changes in table {0}?</value>
+  </data>
+  <data name="EMPTY_COLUMNS" xml:space="preserve">
+    <value>Empty column name</value>
+  </data>
+  <data name="OPEN" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="About_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

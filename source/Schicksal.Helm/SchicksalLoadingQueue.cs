@@ -19,6 +19,7 @@ namespace Schicksal.Helm
     {
       public bool Load(LoadingContext context)
       {
+        AppManager.AssemblyClassifier.PluginsDirectory = "Plugins";
         AppManager.AssemblyClassifier.LoadPlugins("*.import");
 
         var list = new List<ITableImport>();

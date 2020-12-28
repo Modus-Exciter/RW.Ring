@@ -56,8 +56,8 @@ namespace Schicksal
           writer.Write(code_with_flags);
         }
 
-        string pk_name = string.Empty;
-        var ucs = new List<UniqueConstraint>(table.Constraints.Count);
+        var pk_name = string.Empty;
+        var uc_list = new List<UniqueConstraint>(table.Constraints.Count);
 
         foreach (Constraint c in table.Constraints)
         {
@@ -69,22 +69,22 @@ namespace Schicksal
           if (uc.IsPrimaryKey)
             pk_name = uc.ConstraintName;
           else
-            ucs.Add(uc);
+            uc_list.Add(uc);
         }
 
         if (key_columns.Length > 0)
           writer.Write(pk_name);
 
-        writer.Write(ucs.Count);
+        writer.Write(uc_list.Count);
 
-        foreach (var c in ucs)
+        foreach (var uc in uc_list)
         {
-          writer.Write(c.Columns.Length);
+          writer.Write(uc.Columns.Length);
 
-          foreach (DataColumn col in c.Columns)
+          foreach (DataColumn col in uc.Columns)
             writer.Write(col.Ordinal);
 
-          writer.Write(c.ConstraintName);
+          writer.Write(uc.ConstraintName);
         }
 
         foreach (DataRow row in table.Rows)
@@ -230,7 +230,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Boolean)value);
+        writer.Write((bool)value);
       }
 
       public object Read(BinaryReader reader)
@@ -243,7 +243,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Char)value);
+        writer.Write((char)value);
       }
 
       public object Read(BinaryReader reader)
@@ -256,7 +256,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((SByte)value);
+        writer.Write((sbyte)value);
       }
 
       public object Read(BinaryReader reader)
@@ -269,7 +269,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Byte)value);
+        writer.Write((byte)value);
       }
 
       public object Read(BinaryReader reader)
@@ -282,7 +282,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Int16)value);
+        writer.Write((short)value);
       }
 
       public object Read(BinaryReader reader)
@@ -295,7 +295,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((UInt16)value);
+        writer.Write((ushort)value);
       }
 
       public object Read(BinaryReader reader)
@@ -308,7 +308,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Int32)value);
+        writer.Write((int)value);
       }
 
       public object Read(BinaryReader reader)
@@ -321,7 +321,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((UInt32)value);
+        writer.Write((uint)value);
       }
 
       public object Read(BinaryReader reader)
@@ -334,7 +334,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Int64)value);
+        writer.Write((long)value);
       }
 
       public object Read(BinaryReader reader)
@@ -347,7 +347,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((UInt64)value);
+        writer.Write((ulong)value);
       }
 
       public object Read(BinaryReader reader)
@@ -360,7 +360,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Single)value);
+        writer.Write((float)value);
       }
 
       public object Read(BinaryReader reader)
@@ -373,7 +373,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Double)value);
+        writer.Write((double)value);
       }
 
       public object Read(BinaryReader reader)
@@ -386,7 +386,7 @@ namespace Schicksal
     {
       public void Write(BinaryWriter writer, object value)
       {
-        writer.Write((Decimal)value);
+        writer.Write((decimal)value);
       }
 
       public object Read(BinaryReader reader)

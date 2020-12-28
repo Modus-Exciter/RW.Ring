@@ -83,6 +83,7 @@ namespace Schicksal.Helm
       m_menu_file.Text = Resources.FILE;
       m_menu_last_files.Text = Resources.LAST_FILES;
       m_menu_windows.Text = Resources.WINDOWS;
+      m_menu_help.Text = Resources.HELP;
       m_cmd_new.Text = Resources.NEW;
       m_cmd_open.Text = Resources.OPEN;
       m_cmd_save.Text = Resources.SAVE;
@@ -96,6 +97,7 @@ namespace Schicksal.Helm
       m_menu_analyze.Text = Resources.ANALYZE;
       m_cmd_basic.Text = Resources.BASIC_STATISTICS;
       m_cmd_anova.Text = Resources.ANOVA;
+      m_cmd_about.Text = Resources.ABOUT;
     }
 
     private void m_menu_last_files_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -350,6 +352,12 @@ namespace Schicksal.Helm
           AppManager.Notificator.Show(new Info(ex));
         }
       }
+    }
+
+    private void m_cmd_about_Click(object sender, EventArgs e)
+    {
+      using (var box = new AboutBox())
+        box.ShowDialog(this);
     }
   }
 }
