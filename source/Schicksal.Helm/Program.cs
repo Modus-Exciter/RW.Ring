@@ -18,6 +18,11 @@ namespace Schicksal.Helm
     {
       ApplicationStarter.ShowSplashScreen("splashscreen.png");
 
+      return NewMethod();
+    }
+
+    private static int NewMethod()
+    {
       return new ApplicationStarter(Factory.Default<Form, MainForm>(),
         Factory.Default<ILoadingQueue, SchicksalLoadingQueue>())
       {

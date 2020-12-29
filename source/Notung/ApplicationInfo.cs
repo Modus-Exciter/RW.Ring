@@ -16,6 +16,7 @@ namespace Notung
     private string m_company;
     private string m_product;
     private string m_description;
+    private string m_copyright;
     private Version m_version;
     private Version m_file_version;
 
@@ -23,7 +24,7 @@ namespace Notung
     private Process m_current_process;
 
     private static ApplicationInfo _instance;
-    private static object _lock = new object();
+    private static readonly object _lock = new object();
 
     public ApplicationInfo(Assembly productAssembly)
     {
@@ -82,6 +83,28 @@ namespace Notung
         }
 
         return m_company;
+      }
+    }
+
+    public string Copyright
+    {
+      get
+      {
+        if (m_copyright == null)
+        {
+          string copyright = null;
+          var attr = m_product_assembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
+
+          if (attr != null && !string.IsNullOrWhiteSpace(attr.Copyright))
+            copyright = attr.Copyright;
+
+          if (copyright == null)
+            copyright = string.Format("Copyright @ {0} {1}", this.Company, DateTime.Today.Year);
+
+          m_copyright = copyright;
+        }
+
+        return m_copyright;
       }
     }
 
