@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Schicksal.Exchange;
@@ -39,17 +41,7 @@ namespace ImportWofostResults
         cmd.CommandText = "Main_DATA";
         cmd.CommandType = CommandType.TableDirect;
 
-        var dt = new DataTable();
-        dt.Columns.Add("Variant", typeof(int)).AllowDBNull = true;
-        dt.Columns.Add("Soil", typeof(string));
-        dt.Columns.Add("Place", typeof(string));
-        dt.Columns.Add("Season", typeof(string));
-        dt.Columns.Add("Year", typeof(string));
-        dt.Columns.Add("Sort", typeof(string)).AllowDBNull = true;
-        dt.Columns.Add("Level", typeof(int)).AllowDBNull = true;
-        dt.Columns.Add("TWSO", typeof(double));
-
-        dt.PrimaryKey = new[] { dt.Columns["Variant"], dt.Columns["Sort"], dt.Columns["Level"] };
+        var dt = CreateTableStructure();
 
         using (var dr = cmd.ExecuteReader())
         {
@@ -95,7 +87,7 @@ namespace ImportWofostResults
                   : current_weather.Substring(current_weather.IndexOf("Харифа") + 6).Trim());
                 row["Sort"] = sort.Replace('#', '.');
                 row["Level"] = second ? 2 : 3;
-                row["TWSO"] = dr[sort];
+                row["TWSO"] = ReadTWSO(dr[sort]);
                 dt.Rows.Add(row);
               }
             }
@@ -109,6 +101,37 @@ namespace ImportWofostResults
 
         return dt;
       }
+    }
+
+    private static DataTable CreateTableStructure()
+    {
+      var dt = new DataTable();
+      dt.Columns.Add("Variant", typeof(int)).AllowDBNull = true;
+      dt.Columns.Add("Soil", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Place", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Season", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Year", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Sort", typeof(string)).AllowDBNull = true;
+      dt.Columns.Add("Level", typeof(int)).AllowDBNull = true;
+      dt.Columns.Add("TWSO", typeof(double));
+
+      foreach (DataColumn col in dt.Columns)
+      {
+        if (col.DataType == typeof(string))
+          col.DefaultValue = string.Empty;
+      }
+
+      dt.PrimaryKey = new[] { dt.Columns["Variant"], dt.Columns["Sort"], dt.Columns["Level"] };
+
+      return dt;
+    }
+
+    private object ReadTWSO(object value)
+    {
+      if (value is DBNull)
+        return value;
+
+      return value.ToString().Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
     }
 
     public override string ToString()
