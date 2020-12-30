@@ -84,9 +84,14 @@ namespace Schicksal
       {
         for (int i = 0; i < table.Columns.Count; i++)
         {
+          bool not_null = true;
+
           if (table.Columns[i].AllowDBNull)
-            writer.Write(!row.IsNull(i));
-          if (!row.IsNull(i))
+          {
+            not_null = !row.IsNull(i);
+            writer.Write(not_null);
+          }
+          if (not_null)
             runners[i].Write(writer, row[i]);
         }
       }
@@ -360,9 +365,8 @@ namespace Schicksal
         case TypeCode.Decimal: return new DecimalDataRunner();
         case TypeCode.DateTime: return new DateTimeDataRunner();
         case TypeCode.String: return new StringDataRunner();
-
-        default:
-          throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
+        
+        default: throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
       }
     }
 
@@ -674,8 +678,6 @@ namespace Schicksal
       {
         base.Write7BitEncodedInt((int)value);
       }
-
-      protected override void Dispose(bool disposing) { }
     }
 
     sealed class CompactBinaryReader : BinaryReader
@@ -691,8 +693,6 @@ namespace Schicksal
       {
         return (uint)base.Read7BitEncodedInt();
       }
-
-      protected override void Dispose(bool disposing) { }
     }
 
     #endregion
