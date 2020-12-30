@@ -188,8 +188,6 @@ namespace Schicksal.Anova
 
       for (k = 0; k < result.Length; k++)
       {
-        this.ReportProgress(k * 100 / result.Length);
-
         result[k] = m_comparator.GetDifferenceInfo(
           this.Source.DefaultView[pairs[k].Item1], this.Source.DefaultView[pairs[k].Item2], m_probability);
 

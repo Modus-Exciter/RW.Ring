@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using Schicksal.Properties;
@@ -24,87 +23,75 @@ namespace Schicksal
       if (table == null)
         throw new ArgumentNullException("table");
 
-      if (stream == null)
-        throw new ArgumentNullException("stream");
+      var writer = new CompactBinaryWriter(stream, Encoding.UTF8);
 
-      using (var writer = new BinaryWriter(stream, Encoding.UTF8))
+      writer.Write(table.Columns.Count);
+      writer.Write(table.Rows.Count);
+
+      var runners = new IDataRunner[table.Columns.Count];
+      var key_columns = table.PrimaryKey;
+
+      foreach (DataColumn col in table.Columns)
       {
-        writer.Write(table.Columns.Count);
-        writer.Write(table.Rows.Count);
+        var type_code = GetTypeCode(col.DataType);
+        var code_with_flags = type_code;
 
-        var runners = new IDataRunner[table.Columns.Count];
-        var mandatories = new BitArray(table.Columns.Count, false);
-        var key_columns = table.PrimaryKey;
+        if (!col.AllowDBNull)
+          code_with_flags |= _mandatory_flag;
 
-        foreach (DataColumn col in table.Columns)
+        if (Array.Find(key_columns, (c) => c.Ordinal == col.Ordinal) != null)
+          code_with_flags |= _primary_key_flag;
+
+        if (col.AutoIncrement)
+          code_with_flags |= _identity_flag;
+
+        if (!(col.DefaultValue is DBNull))
+          code_with_flags |= _default_flag;
+
+        if (col.ReadOnly)
+          code_with_flags |= _readonly_flag;
+
+        if (!Equals(col.ColumnName, col.Caption) && !string.IsNullOrEmpty(col.Caption))
+          code_with_flags |= _caption_flag;
+
+        if (col.MaxLength > 0)
+          code_with_flags |= _max_length_flag;
+
+        runners[col.Ordinal] = Construct(type_code);
+
+        writer.Write(col.ColumnName);
+        writer.Write(code_with_flags);
+
+        if (col.AutoIncrement)
         {
-          var type_code = Type.GetTypeCode(col.DataType);
-          var code_with_flags = (int)type_code;
-
-          if (!col.AllowDBNull)
-          {
-            mandatories[col.Ordinal] = true;
-            code_with_flags |= _mandatory_flag;
-          }
-
-          if (Array.Find(key_columns, (c) => c.Ordinal == col.Ordinal) != null)
-            code_with_flags |= _primary_key_flag;
-
-          runners[col.Ordinal] = Construct(type_code);
-
-          writer.Write(col.ColumnName);
-          writer.Write(code_with_flags);
+          writer.Write(col.AutoIncrementSeed);
+          writer.Write(col.AutoIncrementStep);
         }
 
-        var pk_name = string.Empty;
-        var uc_list = new List<UniqueConstraint>(table.Constraints.Count);
+        if (col.MaxLength > 0)
+          writer.Write(col.MaxLength);
 
-        foreach (Constraint c in table.Constraints)
-        {
-          var uc = c as UniqueConstraint;
+        if (!(col.DefaultValue is DBNull))
+          runners[col.Ordinal].Write(writer, col.DefaultValue);
 
-          if (uc == null)
-            continue;
-
-          if (uc.IsPrimaryKey)
-            pk_name = uc.ConstraintName;
-          else
-            uc_list.Add(uc);
-        }
-
-        if (key_columns.Length > 0)
-          writer.Write(pk_name);
-
-        writer.Write(uc_list.Count);
-
-        foreach (var uc in uc_list)
-        {
-          writer.Write(uc.Columns.Length);
-
-          foreach (DataColumn col in uc.Columns)
-            writer.Write(col.Ordinal);
-
-          writer.Write(uc.ConstraintName);
-        }
-
-        foreach (DataRow row in table.Rows)
-        {
-          for (int i = 0; i < table.Columns.Count; i++)
-          {
-            if (mandatories[i])
-              runners[i].Write(writer, row[i]);
-            else if (row.IsNull(i))
-              writer.Write(false);
-            else
-            {
-              writer.Write(true);
-              runners[i].Write(writer, row[i]);
-            }
-          }
-        }
-
-        writer.Flush();
+        if (!Equals(col.ColumnName, col.Caption) && !string.IsNullOrEmpty(col.Caption))
+          writer.Write(col.Caption);
       }
+
+      WriteConstraints(table, writer, key_columns);
+
+      foreach (DataRow row in table.Rows)
+      {
+        for (int i = 0; i < table.Columns.Count; i++)
+        {
+          if (table.Columns[i].AllowDBNull)
+            writer.Write(!row.IsNull(i));
+          if (!row.IsNull(i))
+            runners[i].Write(writer, row[i]);
+        }
+      }
+
+      writer.Flush();
     }
 
     /// <summary>
@@ -114,80 +101,107 @@ namespace Schicksal
     /// <returns>Таблица, прочитанная из потока байт</returns>
     public static DataTable ReadDataTable(Stream stream)
     {
-      if (stream == null)
-        throw new ArgumentNullException("stream");
-
       DataTable ret = new DataTable();
-
       ret.BeginLoadData();
 
-      using (var reader = new BinaryReader(stream, Encoding.UTF8))
+      var reader = new CompactBinaryReader(stream, Encoding.UTF8);
+
+      int columns_count = reader.ReadInt32();
+      int rows_count = reader.ReadInt32();
+
+      var runners = new IDataRunner[columns_count];
+      var mandatories = new BitArray(columns_count, false);
+      var primary_key = new List<int>();
+
+      for (int i = 0; i < columns_count; i++)
       {
-        int columns_count = reader.ReadInt32();
-        int rows_count = reader.ReadInt32();
+        var col_name = reader.ReadString();
+        var col_type = reader.ReadInt32();
 
-        var runners = new IDataRunner[columns_count];
-        var mandatories = new BitArray(columns_count, false);
-        var primary_key = new List<int>();
-        
-        for (int i = 0; i < columns_count; i++)
+        bool identity = false;
+        bool has_default = false;
+        bool read_only = false;
+        bool has_caption = false;
+        bool max_length = false;
+
+        if ((col_type & _mandatory_flag) != 0)
         {
-          var col_name = reader.ReadString();
-          var col_type = reader.ReadInt32();
-
-          if ((col_type & _mandatory_flag) != 0)
-          {
-            col_type &= ~_mandatory_flag;
-            mandatories[i] = true;
-          }
-
-          if ((col_type & _primary_key_flag) != 0)
-          {
-            col_type &= ~_primary_key_flag;
-            primary_key.Add(i);
-          }
-
-          ret.Columns.Add(col_name, 
-            Type.GetType("System." + (TypeCode)col_type)).AllowDBNull = !mandatories[i];
-
-          runners[i] = Construct((TypeCode)col_type);
+          col_type &= ~_mandatory_flag;
+          mandatories[i] = true;
         }
 
-        if (primary_key.Count != 0)
+        if ((col_type & _primary_key_flag) != 0)
         {
-          var key_columns = new DataColumn[primary_key.Count];
-
-          for (int i = 0; i < primary_key.Count; i++)
-            key_columns[i] = ret.Columns[primary_key[i]];
-
-          ret.Constraints.Add(new UniqueConstraint(reader.ReadString(), key_columns, true));
+          col_type &= ~_primary_key_flag;
+          primary_key.Add(i);
         }
 
-        var other_unique_count = reader.ReadInt32();
-
-        for (int i = 0; i < other_unique_count; i++)
+        if ((col_type & _identity_flag) != 0)
         {
-          var constraint_columns = new DataColumn[reader.ReadInt32()];
-
-          for (int k = 0; k < constraint_columns.Length; k++)
-            constraint_columns[k] = ret.Columns[reader.ReadInt32()];
-
-          ret.Constraints.Add(new UniqueConstraint(
-            reader.ReadString(), constraint_columns, false));
+          col_type &= ~_identity_flag;
+          identity = true;
         }
 
-        for (int i = 0; i < rows_count; i++)
+        if ((col_type & _default_flag) != 0)
         {
-          var row = ret.NewRow();
-
-          for (int j = 0; j < columns_count; j++)
-          {
-            if (mandatories[j] || reader.ReadBoolean())
-              row[j] = runners[j].Read(reader);
-          }
-
-          ret.Rows.Add(row);
+          col_type &= ~_default_flag;
+          has_default = true;
         }
+
+        if ((col_type & _readonly_flag) != 0)
+        {
+          col_type &= ~_readonly_flag;
+          read_only = true;
+        }
+
+        if ((col_type & _caption_flag) != 0)
+        {
+          col_type &= ~_caption_flag;
+          has_caption = true;
+        }
+
+        if ((col_type & _max_length_flag) != 0)
+        {
+          col_type &= ~_max_length_flag;
+          max_length = true;
+        }
+
+        runners[i] = Construct(col_type);
+
+        var column = ret.Columns.Add(col_name, ToType(col_type));
+        column.AllowDBNull = !mandatories[i];
+        column.ReadOnly = read_only;
+
+        if (identity)
+        {
+          column.AutoIncrement = true;
+          column.AutoIncrementSeed = reader.ReadInt64();
+          column.AutoIncrementStep = reader.ReadInt64();
+        }
+
+        if (max_length)
+          column.MaxLength = reader.ReadInt32();
+
+        if (has_default)
+          column.DefaultValue = runners[i].Read(reader);
+
+        if (has_caption)
+          column.Caption = reader.ReadString();
+      }
+
+      ReadConstraints(ret, reader, primary_key);
+
+      for (int i = 0; i < rows_count; i++)
+      {
+        var row = ret.NewRow();
+
+        for (int j = 0; j < columns_count; j++)
+        {
+          if (mandatories[j] || reader.ReadBoolean())
+            row[j] = runners[j].Read(reader);
+        }
+
+        ret.Rows.Add(row);
       }
 
       ret.EndLoadData();
@@ -196,10 +210,19 @@ namespace Schicksal
       return ret;
     }
 
-    #region Implementation
+    #region Implementation methods ----------------------------------------------------------------
 
     private static readonly int _mandatory_flag;
     private static readonly int _primary_key_flag;
+    private static readonly int _identity_flag;
+    private static readonly int _default_flag;
+    private static readonly int _readonly_flag;
+    private static readonly int _caption_flag;
+    private static readonly int _max_length_flag;
+
+    private static readonly int _time_span_code;
+    private static readonly int _guid_code;
+    private static readonly int _binary_code;
 
     static DataTableSaver()
     {
@@ -211,13 +234,141 @@ namespace Schicksal
           max = code;
       }
 
+      _time_span_code = (int)max + 1;
+      _guid_code = _time_span_code + 1;
+      _binary_code = _guid_code + 1;
+
       _mandatory_flag = 1;
 
-      while (_mandatory_flag < (int)max)
+      while (_mandatory_flag < _binary_code)
         _mandatory_flag <<= 1;
 
       _primary_key_flag = _mandatory_flag << 1;
+      _identity_flag = _primary_key_flag << 1;
+      _default_flag = _identity_flag << 1;
+      _readonly_flag = _default_flag << 1;
+      _caption_flag = _readonly_flag << 1;
+      _max_length_flag = _caption_flag << 1;
     }
+
+    private static void WriteConstraints(DataTable table, BinaryWriter writer, DataColumn[] keyColumns)
+    {
+      var pk_name = string.Empty;
+      var uc_list = new List<UniqueConstraint>(table.Constraints.Count);
+
+      foreach (Constraint c in table.Constraints)
+      {
+        var uc = c as UniqueConstraint;
+
+        if (uc == null)
+          continue;
+
+        if (uc.IsPrimaryKey)
+          pk_name = uc.ConstraintName;
+        else
+          uc_list.Add(uc);
+      }
+
+      if (keyColumns.Length > 0)
+        writer.Write(pk_name);
+
+      writer.Write(uc_list.Count);
+
+      foreach (var uc in uc_list)
+      {
+        writer.Write(uc.Columns.Length);
+
+        foreach (DataColumn col in uc.Columns)
+          writer.Write(col.Ordinal);
+
+        writer.Write(uc.ConstraintName);
+      }
+    }
+
+    private static void ReadConstraints(DataTable table, BinaryReader reader, List<int> keyColumns)
+    {
+      if (keyColumns.Count != 0)
+      {
+        var key_columns = new DataColumn[keyColumns.Count];
+
+        for (int i = 0; i < keyColumns.Count; i++)
+          key_columns[i] = table.Columns[keyColumns[i]];
+
+        table.Constraints.Add(new UniqueConstraint(reader.ReadString(), key_columns, true));
+      }
+
+      var other_unique_count = reader.ReadInt32();
+
+      for (int i = 0; i < other_unique_count; i++)
+      {
+        var constraint_columns = new DataColumn[reader.ReadInt32()];
+
+        for (int k = 0; k < constraint_columns.Length; k++)
+          constraint_columns[k] = table.Columns[reader.ReadInt32()];
+
+        table.Constraints.Add(new UniqueConstraint(reader.ReadString(), constraint_columns, false));
+      }
+    }
+
+    private static int GetTypeCode(Type type)
+    {
+      if (type == typeof(TimeSpan))
+        return _time_span_code;
+      if (type == typeof(Guid))
+        return _guid_code;
+      if (type == typeof(byte[]))
+        return _binary_code;
+
+      return (int)Type.GetTypeCode(type);
+    }
+
+    private static Type ToType(int typeNumber)
+    {
+      if (typeNumber == _time_span_code)
+        return typeof(TimeSpan);
+      if (typeNumber == _guid_code)
+        return typeof(Guid);
+      if (typeNumber == _binary_code)
+        return typeof(byte[]);
+
+      return Type.GetType("System." + (TypeCode)typeNumber);
+    }
+
+    private static IDataRunner Construct(int typeNumber)
+    {
+      if (typeNumber == _time_span_code)
+        return new TimeSpanDataRunner();
+      else if (typeNumber == _guid_code)
+        return new GuidDataRunner();
+      else if (typeNumber == _binary_code)
+        return new BinaryDataRunner();
+
+      switch ((TypeCode)typeNumber)
+      {
+        case TypeCode.Boolean: return new BooleanDataRunner();
+        case TypeCode.Char: return new CharDataRunner();
+        case TypeCode.SByte: return new SByteDataRunner();
+        case TypeCode.Byte: return new ByteDataRunner();
+        case TypeCode.Int16: return new Int16DataRunner();
+        case TypeCode.UInt16: return new UInt16DataRunner();
+        case TypeCode.Int32: return new Int32DataRunner();
+        case TypeCode.UInt32: return new UInt32DataRunner();
+        case TypeCode.Int64: return new Int64DataRunner();
+        case TypeCode.UInt64: return new UInt64DataRunner();
+        case TypeCode.Single: return new SingleDataRunner();
+        case TypeCode.Double: return new DoubleDataRunner();
+        case TypeCode.Decimal: return new DecimalDataRunner();
+        case TypeCode.DateTime: return new DateTimeDataRunner();
+        case TypeCode.String: return new StringDataRunner();
+
+        default:
+          throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
+      }
+    }
+
+    #endregion
+
+    #region Implementation types ------------------------------------------------------------------
 
     private interface IDataRunner
     {
@@ -408,6 +559,46 @@ namespace Schicksal
       }
     }
 
+    private class TimeSpanDataRunner : IDataRunner
+    {
+      public void Write(BinaryWriter writer, object value)
+      {
+        writer.Write(((TimeSpan)value).Ticks);
+      }
+
+      public object Read(BinaryReader reader)
+      {
+        return TimeSpan.FromTicks(reader.ReadInt64());
+      }
+    }
+
+    private class GuidDataRunner : IDataRunner
+    {
+      public void Write(BinaryWriter writer, object value)
+      {
+        writer.Write(((Guid)value).ToByteArray());
+      }
+
+      public object Read(BinaryReader reader)
+      {
+        return new Guid(reader.ReadBytes(16));
+      }
+    }
+
+    private class BinaryDataRunner : IDataRunner
+    {
+      public void Write(BinaryWriter writer, object value)
+      {
+        writer.Write(((byte[])value).Length);
+        writer.Write((byte[])value);
+      }
+
+      public object Read(BinaryReader reader)
+      {
+        return reader.ReadBytes(reader.ReadInt32());
+      }
+    }
+
     private class StringDataRunner : IDataRunner
     {
       private Dictionary<object, int> m_values;
@@ -465,34 +656,43 @@ namespace Schicksal
           last = ret;
           return ret;
         }
-        else if (status == REPEAT)
-          return last;
         else
-          throw new DataException();
+          return last;
       }
     }
 
-    private static IDataRunner Construct(TypeCode columnType)
+    sealed class CompactBinaryWriter : BinaryWriter
     {
-      switch (columnType)
+      public CompactBinaryWriter(Stream stream, Encoding encoding) : base(stream, encoding) { }
+
+      public override void Write(int value)
       {
-        case TypeCode.Boolean: return new BooleanDataRunner();
-        case TypeCode.Char: return new CharDataRunner();
-        case TypeCode.SByte: return new SByteDataRunner();
-        case TypeCode.Byte: return new ByteDataRunner();
-        case TypeCode.Int16: return new Int16DataRunner();
-        case TypeCode.UInt16: return new UInt16DataRunner();
-        case TypeCode.Int32: return new Int32DataRunner();
-        case TypeCode.UInt32: return new UInt32DataRunner();
-        case TypeCode.Int64: return new Int64DataRunner();
-        case TypeCode.UInt64: return new UInt64DataRunner();
-        case TypeCode.Single: return new SingleDataRunner();
-        case TypeCode.Double: return new DoubleDataRunner();
-        case TypeCode.Decimal: return new DecimalDataRunner();
-        case TypeCode.DateTime: return new DateTimeDataRunner();
-        case TypeCode.String: return new StringDataRunner();
-        default: throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
+        base.Write7BitEncodedInt(value);
       }
+
+      public override void Write(uint value)
+      {
+        base.Write7BitEncodedInt((int)value);
+      }
+
+      protected override void Dispose(bool disposing) { }
+    }
+
+    sealed class CompactBinaryReader : BinaryReader
+    {
+      public CompactBinaryReader(Stream stream, Encoding encoding) : base(stream, encoding) { }
+
+      public override int ReadInt32()
+      {
+        return base.Read7BitEncodedInt();
+      }
+
+      public override uint ReadUInt32()
+      {
+        return (uint)base.Read7BitEncodedInt();
+      }
+
+      protected override void Dispose(bool disposing) { }
     }
 
     #endregion
