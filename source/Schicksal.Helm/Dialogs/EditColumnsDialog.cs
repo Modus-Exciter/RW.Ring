@@ -85,8 +85,15 @@ namespace Schicksal.Helm.Dialogs
       DataTable table = new DataTable();
 
       foreach (var col in columns)
-        table.Columns.Add(col.ColumnName, Type.GetType("System." + col.ColumnType));
+      {
+        var column = table.Columns.Add(col.ColumnName, Type.GetType("System." + col.ColumnType));
 
+        if (column.DataType == typeof(string))
+        {
+          column.AllowDBNull = false;
+          column.DefaultValue = string.Empty;
+        }
+      }
       return table;
     }
   }

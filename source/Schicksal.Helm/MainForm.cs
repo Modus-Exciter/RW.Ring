@@ -18,11 +18,15 @@ using Schicksal.Anova;
 using Schicksal.Exchange;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
+using Notung.Helm.Dialogs;
+using Schicksal.Basic;
 
 namespace Schicksal.Helm
 {
   public partial class MainForm : Form, ILoadingQueue, IApplicationLoader
   {
+    private static readonly ILog _log = LogManager.GetLogger(typeof(MainForm));
+
     public MainForm()
     {
       InitializeComponent();
@@ -30,6 +34,7 @@ namespace Schicksal.Helm
       var size = Screen.PrimaryScreen.WorkingArea.Size;
 
       this.Size = new System.Drawing.Size(size.Width * 3 / 4, size.Height * 3 / 4);
+      LanguageSwitcher.Switch(AppManager.Configurator.GetSection<Program.Preferences>().Language ?? "RU");
     }
 
     protected override void OnShown(EventArgs e)
@@ -49,32 +54,36 @@ namespace Schicksal.Helm
     {
       var preferences = AppManager.Configurator.GetSection<Program.Preferences>();
 
+      if (m_menu_last_files.DropDownItems.Count > 0)
+        m_menu_last_files.DropDownItems.Clear();
+
       foreach (var file in preferences.LastFiles.OrderByDescending(kv => kv.Value))
       {
         if (File.Exists(file.Key))
           m_menu_last_files.DropDownItems.Add(file.Key);
+        else
+          preferences.LastFiles.Remove(file.Key);
       }
 
-      if (m_menu_last_files.DropDownItems.Count == 0)
-      {
-        m_menu_last_files.Visible = false;
-        m_last_files_separator.Visible = false;
-      }
+      m_menu_last_files.Visible = m_menu_last_files.DropDownItems.Count > 0;
+      m_last_files_separator.Visible = m_menu_last_files.DropDownItems.Count > 0;
     }
 
     protected override void WndProc(ref Message msg)
     {
       base.WndProc(ref msg);
 
-      if (msg.Msg == WinAPIHelper.WM_COPYDATA)
+      string[] args;
+
+      if (MainFormView.GetStringArgs(ref msg, out args))
       {
-        foreach (var arg in MainFormView.GetStringArgs(msg))
+        foreach (var arg in args)
         {
           if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
             this.OpenFile(arg);
         }
 
-        msg.Result = new System.IntPtr(1);
+        msg.Result = new System.IntPtr(MainFormView.StringArgsMessageCode.Code);
       }
     }
 
@@ -128,7 +137,7 @@ namespace Schicksal.Helm
       using (var dlg = new OpenFileDialog())
       {
         dlg.Filter = "Schicksal data files|*.sks";
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        if (dlg.ShowDialog(this) == DialogResult.OK)
           this.OpenFile(dlg.FileName);
       }
     }
@@ -136,6 +145,7 @@ namespace Schicksal.Helm
     private void OpenFile(string fileName)
     {
       AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
+      this.FillLastFilesMenu();
       var table_form = this.MdiChildren.OfType<TableForm>().FirstOrDefault(f => f.FileName == fileName);
 
       if (table_form == null)
@@ -151,11 +161,10 @@ namespace Schicksal.Helm
         }
         catch (Exception ex)
         {
-          LogManager.GetLogger(this.GetType()).Error("Serialization exception", ex);
-          using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-          {
-            table_form.DataSource = new BinaryFormatter().Deserialize(fs);
-          }
+          _log.Error("Serialization exception", ex);
+          AppManager.Notificator.Show(ex.Message, InfoLevel.Error);
+          table_form.Dispose();
+          return;
         }
 
         table_form.Text = Path.GetFileName(fileName);
@@ -176,6 +185,7 @@ namespace Schicksal.Helm
         return;
 
       table_form.Save();
+      this.FillLastFilesMenu();
     }
 
     private void m_cmd_save_as_Click(object sender, EventArgs e)
@@ -186,11 +196,13 @@ namespace Schicksal.Helm
         return;
 
       table_form.SaveAs();
+      this.FillLastFilesMenu();
     }
 
     private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      Process.Start(ApplicationInfo.Instance.GetWorkingPath());
+      using (var settings = new SettingsDialog())
+        settings.ShowDialog(this);
     }
 
     private void MainForm_MdiChildActivate(object sender, EventArgs e)
@@ -227,12 +239,12 @@ namespace Schicksal.Helm
 
     private void fisher5ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<Fisher5>", string.Format("{0} (5%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.05));
+      OpenReadOnlyTable("<Fisher005>", string.Format("{0} (5%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.05));
     }
 
     private void fisher1ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<Fisher1>", string.Format("{0} (1%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.01));
+      OpenReadOnlyTable("<Fisher001>", string.Format("{0} (1%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.01));
     }
 
     private void x2ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -252,11 +264,11 @@ namespace Schicksal.Helm
       if (table == null)
         return;
 
-      using (var dlg = new AnovaDialog())
+      using (var dlg = new StatisticsParametersDialog())
       {
         dlg.Text = Resources.ANOVA;
-        dlg.DataSource = new AnovaDialogData(table);
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
+        if (dlg.ShowDialog(this) == DialogResult.OK)
         {
           var processor = new FisherTableProcessor(table, dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result);
 
@@ -272,7 +284,7 @@ namespace Schicksal.Helm
               Bitmap = Resources.column_chart
             }) == TaskStatus.RanToCompletion)
           {
-            dlg.DataSource.Save();
+            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
             var results_form = new AnovaResultsForm();
             results_form.Text = string.Format("{0}: {1}, p={2}", 
               Resources.ANOVA, table_form.Text, dlg.DataSource.Probability);
@@ -324,7 +336,7 @@ namespace Schicksal.Helm
 
     ICollection<Type> IDependencyItem<Type>.Dependencies
     {
-      get { return new [] {typeof(IList<ITableImport>)}; }
+      get { return new[] { typeof(IList<ITableImport>) }; }
     }
 
     private void m_menu_import_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -333,6 +345,8 @@ namespace Schicksal.Helm
 
       if (import != null)
       {
+        m_menu_import.HideDropDown();
+
         try
         {
           var result = import.Import(this);
@@ -358,6 +372,46 @@ namespace Schicksal.Helm
     {
       using (var box = new AboutBox())
         box.ShowDialog(this);
+    }
+
+    private void m_cmd_basic_Click(object sender, EventArgs e)
+    {
+      var table_form = this.ActiveMdiChild as TableForm;
+
+      if (table_form == null)
+        return;
+
+      var table = table_form.DataSource as DataTable;
+
+      if (table == null)
+        return;
+
+      using (var dlg = new StatisticsParametersDialog())
+      {
+        dlg.Text = Resources.BASIC_STATISTICS;
+        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
+        
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+          var processor = new DescriptionStatisticsCalculator(table, dlg.DataSource.Predictors.ToArray(), 
+            dlg.DataSource.Result, dlg.DataSource.Filter, dlg.DataSource.Probability);
+
+          if (AppManager.OperationLauncher.Run(processor,
+            new LaunchParameters
+            {
+              Caption = Resources.BASIC_STATISTICS,
+              Bitmap = Resources.column_chart
+            }) == TaskStatus.RanToCompletion)
+          {
+            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
+            var results_form = new BasicStatisticsForm();
+            results_form.Text = string.Format("{0}: {1}, p={2}",
+              Resources.BASIC_STATISTICS, table_form.Text, dlg.DataSource.Probability);
+            results_form.DataSorce = processor.Result;
+            results_form.Show(this);
+          }
+        }
+      }
     }
   }
 }

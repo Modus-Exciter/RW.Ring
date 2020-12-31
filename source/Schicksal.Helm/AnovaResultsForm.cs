@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using Notung;
 using Schicksal.Anova;
 
 namespace Schicksal.Helm
 {
   public partial class AnovaResultsForm : Form
   {
+    private Color m_significat_color;
+
     public AnovaResultsForm()
     {
       InitializeComponent();
+      m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
     }
 
     public FisherTestResult[] DataSource
@@ -64,7 +64,7 @@ namespace Schicksal.Helm
         return;
 
       if (row.P <= this.Probability)
-        e.CellStyle.ForeColor = Color.Red;
+        e.CellStyle.ForeColor = m_significat_color;
     }
   }
 }

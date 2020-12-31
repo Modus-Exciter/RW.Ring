@@ -165,8 +165,8 @@
       // m_menu_analyze
       // 
       this.m_menu_analyze.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_cmd_anova,
-            this.m_cmd_basic});
+            this.m_cmd_basic,
+            this.m_cmd_anova});
       this.m_menu_analyze.Enabled = false;
       this.m_menu_analyze.Name = "m_menu_analyze";
       this.m_menu_analyze.Size = new System.Drawing.Size(57, 20);
@@ -185,7 +185,7 @@
       this.m_cmd_basic.Name = "m_cmd_basic";
       this.m_cmd_basic.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_basic.Text = "Basic statistics";
-      this.m_cmd_basic.Visible = false;
+      this.m_cmd_basic.Click += new System.EventHandler(this.m_cmd_basic_Click);
       // 
       // m_menu_standard_tables
       // 
@@ -246,7 +246,7 @@
       // 
       this.m_cmd_about.Image = global::Schicksal.Helm.Properties.Resources.About_Picture;
       this.m_cmd_about.Name = "m_cmd_about";
-      this.m_cmd_about.Size = new System.Drawing.Size(152, 22);
+      this.m_cmd_about.Size = new System.Drawing.Size(114, 22);
       this.m_cmd_about.Text = "About";
       this.m_cmd_about.Click += new System.EventHandler(this.m_cmd_about_Click);
       // 

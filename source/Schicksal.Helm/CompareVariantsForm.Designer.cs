@@ -37,7 +37,7 @@
       this.m_splitter = new System.Windows.Forms.SplitContainer();
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_graph_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.m_cmd_save_chart = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_cmd_copy_chart = new System.Windows.Forms.ToolStripMenuItem();
       this.m_tab_control = new System.Windows.Forms.TabControl();
       this.m_summary_page = new System.Windows.Forms.TabPage();
       this.m_grid = new System.Windows.Forms.DataGridView();
@@ -110,14 +110,14 @@
       // 
       resources.ApplyResources(this.m_graph_context_menu, "m_graph_context_menu");
       this.m_graph_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_cmd_save_chart});
+            this.m_cmd_copy_chart});
       this.m_graph_context_menu.Name = "m_graph_context_menu";
       // 
-      // m_cmd_save_chart
+      // m_cmd_copy_chart
       // 
-      resources.ApplyResources(this.m_cmd_save_chart, "m_cmd_save_chart");
-      this.m_cmd_save_chart.Name = "m_cmd_save_chart";
-      this.m_cmd_save_chart.Click += new System.EventHandler(this.m_cmd_save_chart_Click);
+      resources.ApplyResources(this.m_cmd_copy_chart, "m_cmd_copy_chart");
+      this.m_cmd_copy_chart.Name = "m_cmd_copy_chart";
+      this.m_cmd_copy_chart.Click += new System.EventHandler(this.m_cmd_copy_chart_Click);
       // 
       // m_tab_control
       // 
@@ -306,7 +306,7 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn minimalDifferenceDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn probabilityDataGridViewTextBoxColumn;
     private System.Windows.Forms.ContextMenuStrip m_graph_context_menu;
-    private System.Windows.Forms.ToolStripMenuItem m_cmd_save_chart;
+    private System.Windows.Forms.ToolStripMenuItem m_cmd_copy_chart;
     private System.Windows.Forms.ContextMenuStrip m_nsr_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_filter;
   }

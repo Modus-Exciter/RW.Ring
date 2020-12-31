@@ -118,6 +118,51 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_cmd_copy_chart.Size" type="System.Drawing.Size, System.Drawing">
+    <value>152, 22</value>
+  </data>
+  <data name="m_cmd_copy_chart.Text" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="m_graph_context_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>153, 48</value>
+  </data>
+  <data name="m_summary_page.Text" xml:space="preserve">
+    <value>Статистика</value>
+  </data>
+  <data name="factor1DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Фактор 1</value>
+  </data>
+  <data name="mean1DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Среднее 1</value>
+  </data>
+  <data name="factor2DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Фактор 2</value>
+  </data>
+  <data name="mean2DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Среднее 2</value>
+  </data>
+  <data name="actualDifferenceDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Разница</value>
+  </data>
+  <data name="minimalDifferenceDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>НСР</value>
+  </data>
+  <data name="probabilityDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>p</value>
+  </data>
+  <data name="m_cmd_filter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 22</value>
+  </data>
+  <data name="m_cmd_filter.Text" xml:space="preserve">
+    <value>Фильтр</value>
+  </data>
+  <data name="m_nsr_context_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 26</value>
+  </data>
+  <data name="m_details_page.Text" xml:space="preserve">
+    <value>Попарное сравнение</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAgAEBAAAAEACABoBQAAhgAAABAQAAABACAAaAQAAO4FAAAYGAAAAQAIAMgGAABWCgAAGBgAAAEA

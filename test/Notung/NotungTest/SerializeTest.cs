@@ -357,6 +357,43 @@ namespace NotungTest
       Assert.AreEqual("description of element", table.Columns[1].Caption);
     }
 
+    [TestMethod]
+    public void IsBetterThanStandard()
+    {
+      var table = new DataTable();
+
+      table.RemotingFormat = SerializationFormat.Binary;
+
+      table.Columns.Add("Name", typeof(string)).AllowDBNull = false;
+      table.Columns.Add("Description", typeof(string)).AllowDBNull = true;
+
+      var rnd =new Random();
+
+      for (int i = 0; i < 2000; i++)
+      {
+        table.Rows.Add(new[] { Guid.NewGuid().ToString(), "descrpiption no." + rnd.Next(10) });
+      }
+
+      table.AcceptChanges();
+
+      int size;
+
+      using (var ms = new MemoryStream())
+      {
+        DataTableSaver.WriteDataTable(table, ms);
+        size = ms.ToArray().Length;
+      }
+
+      using (var ms = new MemoryStream())
+      {
+        var bf = new BinaryFormatter();
+        bf.Serialize(ms, table);
+
+        var size_std = ms.ToArray().Length;
+        Assert.IsTrue(size < size_std);
+      }
+    }
+
     private static DataTable ReplaceTable(DataTable table)
     {
       byte[] bytes;

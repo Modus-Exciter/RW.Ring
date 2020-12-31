@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Notung;
 using Schicksal.Helm.Properties;
-using System;
 
 namespace Schicksal.Helm
 {
@@ -15,20 +16,19 @@ namespace Schicksal.Helm
       InitializeComponent();
     }
 
-    public object DataSource
+    public DataTable DataSource
     {
-      get { return m_grid.DataSource; }
+      get { return m_grid.DataSource as DataTable; }
       set
       {
         m_grid.DataSource = value;
 
-        this.Changed = false;
+        if (value != null && value.GetChanges() != null)
+          value.AcceptChanges();
       }
     }
 
     public string FileName { get; set; }
-
-    public bool Changed { get; set; }
 
     public void MarkAsReadOnly()
     {
@@ -47,7 +47,7 @@ namespace Schicksal.Helm
     {
       base.OnLoad(e);
 
-      this.Icon = this.Icon.Clone() as System.Drawing.Icon;
+      this.Icon = this.Icon.Clone() as Icon;
     }
 
     protected override void OnShown(System.EventArgs e)
@@ -58,24 +58,17 @@ namespace Schicksal.Helm
         m_grid.AutoResizeColumns();
     }
 
-    private void SetChanged()
-    {
-      if (!this.Changed)
-        this.Text += "*";
-
-      this.Changed = true;
-    }
-
     private void m_grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
     {
-      SetChanged();
+      if (this.DataSource != null && this.DataSource.GetChanges() != null && !this.Text.EndsWith("*"))
+        this.Text += "*";
     }
 
     protected override void OnClosing(CancelEventArgs e)
     {
       base.OnClosing(e);
 
-      if (this.Changed)
+      if (this.DataSource != null && this.DataSource.GetChanges() != null)
       {
         var res = AppManager.Notificator.ConfirmOrCancel(string.Format(
           Resources.SAVE_FILE_CONFIRM, this.Text.Substring(0, this.Text.Length - 1)), InfoLevel.Info);
@@ -87,17 +80,18 @@ namespace Schicksal.Helm
       }
     }
 
-    private void SaveFile(string fileName, object graph)
+    private void SaveFile(string fileName, DataTable table)
     {
       if (File.Exists(fileName))
         File.Delete(fileName);
 
       using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
       {
-        DataTableSaver.WriteDataTable(graph as DataTable, fs);
+        DataTableSaver.WriteDataTable(table, fs);
       }
+
       AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
-      this.Changed = false;
+      table.AcceptChanges();
       this.FileName = Path.GetFileName(this.FileName);
       this.Text = Path.GetFileName(this.FileName);
     }

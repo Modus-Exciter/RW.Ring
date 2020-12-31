@@ -1,6 +1,6 @@
 ﻿namespace Schicksal.Helm.Dialogs
 {
-  partial class AnovaDialog
+  partial class StatisticsParametersDialog
   {
     /// <summary>
     /// Required designer variable.
@@ -29,7 +29,7 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnovaDialog));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatisticsParametersDialog));
       this.m_bottom_panel = new System.Windows.Forms.FlowLayoutPanel();
       this.m_button_cancel = new System.Windows.Forms.Button();
       this.m_button_ok = new System.Windows.Forms.Button();

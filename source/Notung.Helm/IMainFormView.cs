@@ -211,18 +211,23 @@ namespace Notung.Helm
       return false;
     }
 
-    public static string[] GetStringArgs(Message message)
+    public static bool GetStringArgs(ref Message message, out string[] args)
     {
       if (message.Msg == WinAPIHelper.WM_COPYDATA)
       {
         var cd = new CopyData(message.LParam, StringArgsMessageCode);
 
         _log.DebugFormat("GetStringArgs(): copy data structure ({0}) recieved", cd);
+
         if (cd.Data != null)
-          return Encoding.Unicode.GetString(cd.Data).Split('\n');
+        {
+          args = Encoding.Unicode.GetString(cd.Data).Split('\n');
+          return true;
+        }
       }
 
-      return ArrayExtensions.Empty<string>();
+      args = ArrayExtensions.Empty<string>();
+      return false;
     }
 
     #endregion

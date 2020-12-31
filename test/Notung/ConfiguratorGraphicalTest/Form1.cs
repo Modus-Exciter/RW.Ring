@@ -118,9 +118,9 @@ namespace ConfiguratorGraphicalTest
     {
       base.WndProc(ref msg);
 
-      if (msg.Msg == WinAPIHelper.WM_COPYDATA)
+      string[] fileNames;
+      if (MainFormView.GetStringArgs(ref msg, out fileNames))
       {
-        string[] fileNames = MainFormView.GetStringArgs(msg);
         this.Text = string.Join(" ", fileNames);
         msg.Result = new System.IntPtr(1);
       }

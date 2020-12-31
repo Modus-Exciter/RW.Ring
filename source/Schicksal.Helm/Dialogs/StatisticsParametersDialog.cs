@@ -9,9 +9,9 @@ using Notung;
 
 namespace Schicksal.Helm.Dialogs
 {
-  public partial class AnovaDialog : Form
+  public partial class StatisticsParametersDialog : Form
   {
-    public AnovaDialog()
+    public StatisticsParametersDialog()
     {
       InitializeComponent();
       m_probability_edit.Items.AddRange(new object[] { 0.05, 0.01, 0.001 });
@@ -42,7 +42,7 @@ namespace Schicksal.Helm.Dialogs
     private readonly HashSet<string> m_total_calculatable = new HashSet<string>();
     private readonly string m_hash;
 
-    public AnovaDialogData(DataTable table)
+    public AnovaDialogData(DataTable table, Dictionary<string, string[]> settings)
     {
       if (table == null)
         throw new ArgumentNullException("table");
@@ -63,7 +63,6 @@ namespace Schicksal.Helm.Dialogs
 
       m_hash = string.Join(".", table.Columns.Cast<DataColumn>().Select(c => c.ColumnName).OrderBy(c => c));
 
-      var settings = AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings;
       string[] array;
 
       if (settings.TryGetValue(m_hash, out array) && array.Length > 2)
@@ -112,10 +111,8 @@ namespace Schicksal.Helm.Dialogs
         m_calculatable.Add(value);
     }
 
-    public void Save()
+    public void Save(Dictionary<string, string[]> settings)
     {
-      var settings = AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings;
-
       var array = new string[m_predictors.Count + 3];
       array[0] = this.Result;
       array[1] = this.Filter;

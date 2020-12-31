@@ -218,7 +218,7 @@
     <value>About...</value>
   </data>
   <data name="SAVE_AS" xml:space="preserve">
-    <value>Save A</value>
+    <value>Save As</value>
   </data>
   <data name="NO_COLUMNS" xml:space="preserve">
     <value>No columns specified</value>
@@ -249,5 +249,17 @@
   </data>
   <data name="About_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EXCLUSIVE_COLOR" xml:space="preserve">
+    <value>Exclusive color</value>
+  </data>
+  <data name="LANGUAGE" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
+    <value>Open system folder</value>
+  </data>
+  <data name="SIGNIFICAT_COLOR" xml:space="preserve">
+    <value>Significat color</value>
   </data>
 </root>

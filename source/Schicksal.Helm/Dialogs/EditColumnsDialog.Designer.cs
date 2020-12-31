@@ -73,6 +73,7 @@
             this.columnTypeDataGridViewTextBoxColumn});
       this.m_grid.DataSource = this.m_binding_source;
       resources.ApplyResources(this.m_grid, "m_grid");
+      this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
       this.m_grid.Name = "m_grid";
       // 
       // columnNameDataGridViewTextBoxColumn

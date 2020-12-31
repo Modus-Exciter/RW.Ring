@@ -20,6 +20,8 @@ namespace Schicksal.Helm
     private DifferenceInfo[] m_all_data;
     private bool m_only_significant;
     private string m_selection = string.Empty;
+    private Color m_significat_color;
+    private Color m_exclusive_color;
 
     public CompareVariantsForm(DataTable table, string factor, string result, string filter, float p)
     {
@@ -29,6 +31,8 @@ namespace Schicksal.Helm
 
       m_comparator = new VariantsComparator(table, factor, result, filter);
       m_probability = p;
+      m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
+      m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;
     }
 
     protected override void OnShown(EventArgs e)
@@ -65,7 +69,8 @@ namespace Schicksal.Helm
           series.Points.AddXY(row["Factor"], mean - interval, mean + interval, mean, mean);
         }
 
-        m_nsr_grid.DataSource = m_all_data = mult.Results;
+        m_all_data = mult.Results;
+        m_nsr_grid.DataSource = new DifferenceInfoList(m_all_data);
 
         using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
         {
@@ -89,7 +94,7 @@ namespace Schicksal.Helm
       var row = m_nsr_grid.Rows[e.RowIndex].DataBoundItem as DifferenceInfo;
 
       if (row != null && row.Probability < m_probability)
-        e.CellStyle.ForeColor = m_only_significant ? Color.Blue : Color.Red;
+        e.CellStyle.ForeColor = m_only_significant ? m_exclusive_color : m_significat_color;
     }
 
     private void m_nsr_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -105,32 +110,13 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_cmd_save_chart_Click(object sender, EventArgs e)
+    private void m_cmd_copy_chart_Click(object sender, EventArgs e)
     {
-      using (var dlg = new SaveFileDialog())
-      {
-        dlg.Filter = "Png files|*.png|Jpeg files|*.jpg;*.jpeg|GIF files|*.gif|Bitmaps|*.bmp";
-        dlg.AddExtension = true;
+      var image = new Bitmap(m_chart.Width, m_chart.Height);
 
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-          m_chart.SaveImage(dlg.FileName, FormatFromFileName(dlg.FileName));
-      }
-    }
+      m_chart.DrawToBitmap(image, m_chart.DisplayRectangle);
 
-    private ImageFormat FormatFromFileName(string fileName)
-    {
-      switch (Path.GetExtension(fileName).ToLower())
-      {
-        case ".png":
-          return ImageFormat.Png;
-        case ".jpg":
-        case ".jpeg":
-          return ImageFormat.Jpeg;
-        case ".gif":
-          return ImageFormat.Gif;
-        default:
-          return ImageFormat.Bmp;
-      }
+      Clipboard.SetImage(image);
     }
 
     private void m_cmd_filter_Click(object sender, EventArgs e)
@@ -169,7 +155,7 @@ namespace Schicksal.Helm
           if (!string.IsNullOrEmpty(m_selection))
             res = res.Where(d => d.Factor1 == m_selection || d.Factor2 == m_selection);
 
-          m_nsr_grid.DataSource = res.ToArray();
+          m_nsr_grid.DataSource = new DifferenceInfoList(res.ToArray());
         }
       }
     }

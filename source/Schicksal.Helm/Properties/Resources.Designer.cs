@@ -200,6 +200,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclusive color.
+        /// </summary>
+        internal static string EXCLUSIVE_COLOR {
+            get {
+                return ResourceManager.GetString("EXCLUSIVE_COLOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
         internal static string FILE {
@@ -255,6 +264,15 @@ namespace Schicksal.Helm.Properties {
         internal static string INTERVAL {
             get {
                 return ResourceManager.GetString("INTERVAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        internal static string LANGUAGE {
+            get {
+                return ResourceManager.GetString("LANGUAGE", resourceCulture);
             }
         }
         
@@ -327,6 +345,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open system folder.
+        /// </summary>
+        internal static string OPEN_SYSTEM_FOLDER {
+            get {
+                return ResourceManager.GetString("OPEN_SYSTEM_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string SAVE {
@@ -336,7 +363,7 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save A.
+        ///   Looks up a localized string similar to Save As.
         /// </summary>
         internal static string SAVE_AS {
             get {
@@ -375,6 +402,15 @@ namespace Schicksal.Helm.Properties {
         internal static string SETTINGS {
             get {
                 return ResourceManager.GetString("SETTINGS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Significat color.
+        /// </summary>
+        internal static string SIGNIFICAT_COLOR {
+            get {
+                return ResourceManager.GetString("SIGNIFICAT_COLOR", resourceCulture);
             }
         }
         

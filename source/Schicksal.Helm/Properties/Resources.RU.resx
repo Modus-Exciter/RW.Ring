@@ -147,6 +147,9 @@
   <data name="EMPTY_COLUMNS" xml:space="preserve">
     <value>Пустое имя колонки</value>
   </data>
+  <data name="EXCLUSIVE_COLOR" xml:space="preserve">
+    <value>Цвет эксклюзивных отличий</value>
+  </data>
   <data name="FILE" xml:space="preserve">
     <value>Файл</value>
   </data>
@@ -161,6 +164,9 @@
   </data>
   <data name="INTERVAL" xml:space="preserve">
     <value>Доверительный интервал</value>
+  </data>
+  <data name="LANGUAGE" xml:space="preserve">
+    <value>Язык</value>
   </data>
   <data name="LAST_FILES" xml:space="preserve">
     <value>Недавние файлы</value>
@@ -180,17 +186,23 @@
   <data name="OPEN" xml:space="preserve">
     <value>Открыть</value>
   </data>
+  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
+    <value>Открыть системную папку</value>
+  </data>
   <data name="SAVE" xml:space="preserve">
     <value>Сохранить</value>
   </data>
   <data name="SAVE_AS" xml:space="preserve">
-    <value>Сохранитькак</value>
+    <value>Сохранить как</value>
   </data>
   <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
     <value>Сохранить изменения в таблице '{0}'?</value>
   </data>
   <data name="SETTINGS" xml:space="preserve">
     <value>Настройки</value>
+  </data>
+  <data name="SIGNIFICAT_COLOR" xml:space="preserve">
+    <value>Цвет значимых отличий</value>
   </data>
   <data name="STANDARD_TABLES" xml:space="preserve">
     <value>Справочные таблицы</value>

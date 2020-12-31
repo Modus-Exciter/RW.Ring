@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicStatisticsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BasicStatisticsForm.Designer.cs">
+      <DependentUpon>BasicStatisticsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CompareVariantsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -69,11 +75,11 @@
     <Compile Include="Dialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AnovaDialog.cs">
+    <Compile Include="Dialogs\StatisticsParametersDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\AnovaDialog.Designer.cs">
-      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    <Compile Include="Dialogs\StatisticsParametersDialog.Designer.cs">
+      <DependentUpon>StatisticsParametersDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\ComparisonFilterDialog.cs">
       <SubType>Form</SubType>
@@ -92,6 +98,12 @@
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainPropertyPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainPropertyPage.Designer.cs">
+      <DependentUpon>MainPropertyPage.cs</DependentUpon>
     </Compile>
     <Compile Include="NSRForm.cs">
       <SubType>Form</SubType>
@@ -113,8 +125,11 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AnovaResultsForm.ru-RU.resx">
+    <EmbeddedResource Include="AnovaResultsForm.RU.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BasicStatisticsForm.resx">
+      <DependentUpon>BasicStatisticsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CompareVariantsForm.resx">
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
@@ -122,36 +137,36 @@
     <EmbeddedResource Include="AnovaResultsForm.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CompareVariantsForm.ru-RU.resx">
-      <DependentUpon>CompareVariantsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CompareVariantsForm.ru.resx">
+    <EmbeddedResource Include="CompareVariantsForm.RU.resx">
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\AnovaDialog.resx">
-      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\StatisticsParametersDialog.resx">
+      <DependentUpon>StatisticsParametersDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\AnovaDialog.ru-RU.resx">
-      <DependentUpon>AnovaDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\StatisticsParametersDialog.RU.resx">
+      <DependentUpon>StatisticsParametersDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\ComparisonFilterDialog.resx">
       <DependentUpon>ComparisonFilterDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ComparisonFilterDialog.ru-RU.resx">
+    <EmbeddedResource Include="Dialogs\ComparisonFilterDialog.RU.resx">
       <DependentUpon>ComparisonFilterDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditColumnsDialog.resx">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\EditColumnsDialog.ru-RU.resx">
+    <EmbeddedResource Include="Dialogs\EditColumnsDialog.RU.resx">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainPropertyPage.resx">
+      <DependentUpon>MainPropertyPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

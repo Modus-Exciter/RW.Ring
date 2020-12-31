@@ -138,7 +138,7 @@ namespace Notung.ComponentModel
 
       var corrupted_threads = new List<Thread>();
 
-      foreach (var thread in Threads)
+      foreach (var thread in _threads)
       {
         try
         {
