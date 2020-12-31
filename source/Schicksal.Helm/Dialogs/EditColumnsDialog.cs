@@ -16,22 +16,35 @@ namespace Schicksal.Helm.Dialogs
     {
       InitializeComponent();
 
+      var dic = new Dictionary<Type, string>();
+
+      dic[typeof(byte)] = string.Format(SchicksalResources.UINT, byte.MaxValue);
+      dic[typeof(sbyte)] = string.Format(SchicksalResources.INT, sbyte.MinValue, sbyte.MaxValue);
+      dic[typeof(ushort)] = string.Format(SchicksalResources.UINT, ushort.MaxValue);
+      dic[typeof(short)] = string.Format(SchicksalResources.INT, short.MinValue, short.MaxValue);
+      dic[typeof(uint)] = string.Format(SchicksalResources.UINT, uint.MaxValue);
+      dic[typeof(int)] = string.Format(SchicksalResources.INT, int.MinValue, int.MaxValue);
+      dic[typeof(ulong)] = string.Format(SchicksalResources.UINT, "1*10^13");
+      dic[typeof(long)] = string.Format(SchicksalResources.INT, "1*10^-13", "1*10^13");
+      dic[typeof(float)] = SchicksalResources.FLOAT;
+      dic[typeof(double)] = SchicksalResources.DOUBLE;
+      dic[typeof(decimal)] = SchicksalResources.DECIMAL;
+      dic[typeof(char)] = SchicksalResources.SYMBOL;
+      dic[typeof(string)] = SchicksalResources.TEXT;
+      dic[typeof(bool)] = SchicksalResources.BOOL;
+      dic[typeof(DateTime)] = SchicksalResources.DATE;
+      dic[typeof(TimeSpan)] = SchicksalResources.TIME;
+
+      columnTypeDataGridViewTextBoxColumn.DataSource = dic.ToArray();
+      columnTypeDataGridViewTextBoxColumn.ValueMember = "Key";
+      columnTypeDataGridViewTextBoxColumn.DisplayMember = "Value";
+
       m_binding_source.DataSource = new BindingList<TableColumnInfo>();
-      columnTypeDataGridViewTextBoxColumn.DataSource = Enum.GetValues(typeof(TypeCode))
-        .Cast<TypeCode>().Where(c => c > TypeCode.DBNull ).ToArray();
     }
 
     public BindingList<TableColumnInfo> Columns
     {
       get { return m_binding_source.DataSource as BindingList<TableColumnInfo>; }
-    }
-
-    private class TableColumnInfoList : KeyedCollection<string, TableColumnInfo>
-    {
-      protected override string GetKeyForItem(TableColumnInfo item)
-      {
-        return item.ColumnName;
-      }
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
@@ -70,12 +83,12 @@ namespace Schicksal.Helm.Dialogs
   {
     public TableColumnInfo()
     {
-      this.ColumnType = TypeCode.Double;
+      this.ColumnType = typeof(double);
     }
 
     public string ColumnName { get; set; }
 
-    public TypeCode ColumnType { get; set; }
+    public Type ColumnType { get; set; }
 
     public static DataTable CreateTable(IList<TableColumnInfo> columns)
     {
@@ -86,7 +99,7 @@ namespace Schicksal.Helm.Dialogs
 
       foreach (var col in columns)
       {
-        var column = table.Columns.Add(col.ColumnName, Type.GetType("System." + col.ColumnType));
+        var column = table.Columns.Add(col.ColumnName, col.ColumnType);
 
         if (column.DataType == typeof(string))
         {

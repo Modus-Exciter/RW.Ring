@@ -52,7 +52,7 @@
       this.probabilityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_nsr_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_filter = new System.Windows.Forms.ToolStripMenuItem();
-      this.differenceInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_splitter)).BeginInit();
       this.m_splitter.Panel1.SuspendLayout();
       this.m_splitter.Panel2.SuspendLayout();
@@ -65,7 +65,7 @@
       this.m_details_page.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_nsr_grid)).BeginInit();
       this.m_nsr_context_menu.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.differenceInfoBindingSource)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
       this.SuspendLayout();
       // 
       // m_splitter
@@ -177,7 +177,7 @@
             this.minimalDifferenceDataGridViewTextBoxColumn,
             this.probabilityDataGridViewTextBoxColumn});
       this.m_nsr_grid.ContextMenuStrip = this.m_nsr_context_menu;
-      this.m_nsr_grid.DataSource = this.differenceInfoBindingSource;
+      this.m_nsr_grid.DataSource = this.m_binding_source;
       dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
       dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -260,9 +260,9 @@
       this.m_cmd_filter.Name = "m_cmd_filter";
       this.m_cmd_filter.Click += new System.EventHandler(this.m_cmd_filter_Click);
       // 
-      // differenceInfoBindingSource
+      // m_binding_source
       // 
-      this.differenceInfoBindingSource.DataSource = typeof(Schicksal.Anova.DifferenceInfo);
+      this.m_binding_source.DataSource = typeof(Schicksal.Anova.DifferenceInfo);
       // 
       // CompareVariantsForm
       // 
@@ -283,7 +283,7 @@
       this.m_details_page.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_nsr_grid)).EndInit();
       this.m_nsr_context_menu.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.differenceInfoBindingSource)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -297,7 +297,7 @@
     private System.Windows.Forms.DataGridView m_grid;
     private System.Windows.Forms.TabPage m_details_page;
     private System.Windows.Forms.DataGridView m_nsr_grid;
-    private System.Windows.Forms.BindingSource differenceInfoBindingSource;
+    private System.Windows.Forms.BindingSource m_binding_source;
     private System.Windows.Forms.DataGridViewTextBoxColumn factor1DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn mean1DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn factor2DataGridViewTextBoxColumn;

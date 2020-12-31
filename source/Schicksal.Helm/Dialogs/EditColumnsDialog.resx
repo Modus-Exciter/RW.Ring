@@ -133,7 +133,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_button_cancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>251, 7</value>
+    <value>408, 7</value>
   </data>
   <data name="m_button_cancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 25</value>
@@ -163,7 +163,7 @@
     <value>NoControl</value>
   </data>
   <data name="m_button_ok.Location" type="System.Drawing.Point, System.Drawing">
-    <value>170, 7</value>
+    <value>327, 7</value>
   </data>
   <data name="m_button_ok.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 25</value>
@@ -199,7 +199,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 41</value>
+    <value>496, 41</value>
   </data>
   <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -216,11 +216,17 @@
   <data name="&gt;&gt;m_bottom_panel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="columnNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Column name</value>
-  </data>
   <data name="columnTypeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Column type</value>
+  </data>
+  <data name="columnTypeDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>150</value>
+  </data>
+  <data name="columnTypeDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>150</value>
+  </data>
+  <data name="columnNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Column name</value>
   </data>
   <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -232,7 +238,7 @@
     <value>0, 0</value>
   </data>
   <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>339, 358</value>
+    <value>496, 358</value>
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -256,7 +262,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>339, 399</value>
+    <value>496, 399</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -707,20 +713,23 @@
         AAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA////////AAD///////8AAP///////wAA
 </value>
   </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
-  </data>
-  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>columnNameDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;columnTypeDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>columnTypeDataGridViewTextBoxColumn</value>
   </data>
   <data name="&gt;&gt;columnTypeDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewComboBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>columnNameDataGridViewTextBoxColumn</value>
+  </data>
+  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
     <value>m_binding_source</value>

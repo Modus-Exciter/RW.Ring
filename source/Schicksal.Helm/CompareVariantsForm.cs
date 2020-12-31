@@ -69,21 +69,18 @@ namespace Schicksal.Helm
           series.Points.AddXY(row["Factor"], mean - interval, mean + interval, mean, mean);
         }
 
-        m_all_data = mult.Results;
-        m_nsr_grid.DataSource = new DifferenceInfoList(m_all_data);
+        AutoResizeColumnsByExample(mult.CreateExample());
 
-        using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
-        {
-          var width1 = (int)graphics.MeasureString(mult.Factor1MaxLength,
-            factor1DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
-
-          var width2 = (int)graphics.MeasureString(mult.Factor2MaxLength,
-            factor2DataGridViewTextBoxColumn.DefaultCellStyle.Font ?? Control.DefaultFont).Width;
-
-          factor1DataGridViewTextBoxColumn.Width = Math.Max(factor1DataGridViewTextBoxColumn.Width, width1);
-          factor2DataGridViewTextBoxColumn.Width = Math.Max(factor2DataGridViewTextBoxColumn.Width, width2);
-        }
+        m_binding_source.DataSource = new DifferenceInfoList(m_all_data = mult.Results);
       }
+    }
+
+    private void AutoResizeColumnsByExample(DifferenceInfo example)
+    {
+      m_binding_source.DataSource = new DifferenceInfo[] { example };
+
+      foreach (DataGridViewColumn col in m_nsr_grid.Columns)
+        col.Width = col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
     }
 
     private void m_nsr_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -155,7 +152,7 @@ namespace Schicksal.Helm
           if (!string.IsNullOrEmpty(m_selection))
             res = res.Where(d => d.Factor1 == m_selection || d.Factor2 == m_selection);
 
-          m_nsr_grid.DataSource = new DifferenceInfoList(res.ToArray());
+          m_binding_source.DataSource = new DifferenceInfoList(res.ToArray());
         }
       }
     }

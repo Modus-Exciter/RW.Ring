@@ -34,8 +34,8 @@
       this.m_button_cancel = new System.Windows.Forms.Button();
       this.m_button_ok = new System.Windows.Forms.Button();
       this.m_grid = new System.Windows.Forms.DataGridView();
-      this.columnNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.columnTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+      this.columnNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.m_bottom_panel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
@@ -69,12 +69,20 @@
       this.m_grid.AutoGenerateColumns = false;
       this.m_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.m_grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.columnNameDataGridViewTextBoxColumn,
-            this.columnTypeDataGridViewTextBoxColumn});
+            this.columnTypeDataGridViewTextBoxColumn,
+            this.columnNameDataGridViewTextBoxColumn});
       this.m_grid.DataSource = this.m_binding_source;
       resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
       this.m_grid.Name = "m_grid";
+      // 
+      // columnTypeDataGridViewTextBoxColumn
+      // 
+      this.columnTypeDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+      this.columnTypeDataGridViewTextBoxColumn.DataPropertyName = "ColumnType";
+      resources.ApplyResources(this.columnTypeDataGridViewTextBoxColumn, "columnTypeDataGridViewTextBoxColumn");
+      this.columnTypeDataGridViewTextBoxColumn.MaxDropDownItems = 12;
+      this.columnTypeDataGridViewTextBoxColumn.Name = "columnTypeDataGridViewTextBoxColumn";
       // 
       // columnNameDataGridViewTextBoxColumn
       // 
@@ -82,14 +90,6 @@
       this.columnNameDataGridViewTextBoxColumn.DataPropertyName = "ColumnName";
       resources.ApplyResources(this.columnNameDataGridViewTextBoxColumn, "columnNameDataGridViewTextBoxColumn");
       this.columnNameDataGridViewTextBoxColumn.Name = "columnNameDataGridViewTextBoxColumn";
-      // 
-      // columnTypeDataGridViewTextBoxColumn
-      // 
-      this.columnTypeDataGridViewTextBoxColumn.DataPropertyName = "ColumnType";
-      resources.ApplyResources(this.columnTypeDataGridViewTextBoxColumn, "columnTypeDataGridViewTextBoxColumn");
-      this.columnTypeDataGridViewTextBoxColumn.Name = "columnTypeDataGridViewTextBoxColumn";
-      this.columnTypeDataGridViewTextBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-      this.columnTypeDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
       // 
       // m_binding_source
       // 
@@ -122,7 +122,7 @@
     private System.Windows.Forms.Button m_button_ok;
     private System.Windows.Forms.DataGridView m_grid;
     private System.Windows.Forms.BindingSource m_binding_source;
-    private System.Windows.Forms.DataGridViewTextBoxColumn columnNameDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewComboBoxColumn columnTypeDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn columnNameDataGridViewTextBoxColumn;
   }
 }

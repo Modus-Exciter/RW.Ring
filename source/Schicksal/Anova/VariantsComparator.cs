@@ -149,6 +149,8 @@ namespace Schicksal.Anova
   {
     private readonly VariantsComparator m_comparator;
     private readonly double m_probability;
+    private string m_factor1_max;
+    private string m_factor2_max;
 
     public MultiVariantsComparator(VariantsComparator comparator, double p)
     {
@@ -157,15 +159,11 @@ namespace Schicksal.Anova
 
       m_comparator = comparator;
       m_probability = p;
-      this.Factor1MaxLength = string.Empty;
-      this.Factor2MaxLength = string.Empty;
+      m_factor1_max = string.Empty;
+      m_factor2_max = string.Empty;
     }
 
     public DifferenceInfo[] Results { get; private set; }
-
-    public string Factor1MaxLength { get; private set; }
-
-    public string Factor2MaxLength { get; private set; }
 
     public DataTable Source { get; private set; }
 
@@ -193,14 +191,31 @@ namespace Schicksal.Anova
         result[k] = m_comparator.GetDifferenceInfo(
           this.Source.DefaultView[pairs[k].Item1], this.Source.DefaultView[pairs[k].Item2], m_probability);
 
-        if (result[k].Factor1.Length > this.Factor1MaxLength.Length)
-          this.Factor1MaxLength = result[k].Factor1;
+        if (result[k].Factor1.Length > m_factor1_max.Length)
+          m_factor1_max = result[k].Factor1;
 
-        if (result[k].Factor2.Length > this.Factor2MaxLength.Length)
-          this.Factor2MaxLength = result[k].Factor2;
+        if (result[k].Factor2.Length > m_factor2_max.Length)
+          m_factor2_max = result[k].Factor2;
       }
 
       this.Results = result;
+    }
+
+    public DifferenceInfo CreateExample()
+    {
+      if (this.Results == null)
+        return null;
+
+      return new DifferenceInfo
+      {
+        Factor1 = m_factor1_max,
+        Factor2 = m_factor2_max,
+        Mean1 = Results.Select(m => m.Mean1).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        Mean2 = Results.Select(m => m.Mean2).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        MinimalDifference = Results.Select(m => m.MinimalDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        ActualDifference = Results.Select(m => m.ActualDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        Probability = Results.Select(m => m.Probability).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m))
+      };
     }
 
     public override string ToString()

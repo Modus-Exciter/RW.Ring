@@ -61,6 +61,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Boolean.
+        /// </summary>
+        public static string BOOL {
+            get {
+                return ResourceManager.GetString("BOOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Count.
         /// </summary>
         public static string COUNT {
@@ -70,11 +79,56 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string DATE {
+            get {
+                return ResourceManager.GetString("DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Money.
+        /// </summary>
+        public static string DECIMAL {
+            get {
+                return ResourceManager.GetString("DECIMAL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string DESCRIPTION {
             get {
                 return ResourceManager.GetString("DESCRIPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Real (double precision).
+        /// </summary>
+        public static string DOUBLE {
+            get {
+                return ResourceManager.GetString("DOUBLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Real (single precision).
+        /// </summary>
+        public static string FLOAT {
+            get {
+                return ResourceManager.GetString("FLOAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Integer ({0} - {1}).
+        /// </summary>
+        public static string INT {
+            get {
+                return ResourceManager.GetString("INT", resourceCulture);
             }
         }
         
@@ -129,6 +183,42 @@ namespace Schicksal {
         public static string STD_ERROR {
             get {
                 return ResourceManager.GetString("STD_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbol.
+        /// </summary>
+        public static string SYMBOL {
+            get {
+                return ResourceManager.GetString("SYMBOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string TEXT {
+            get {
+                return ResourceManager.GetString("TEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        public static string TIME {
+            get {
+                return ResourceManager.GetString("TIME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsigned integer (0 - {0}).
+        /// </summary>
+        public static string UINT {
+            get {
+                return ResourceManager.GetString("UINT", resourceCulture);
             }
         }
     }

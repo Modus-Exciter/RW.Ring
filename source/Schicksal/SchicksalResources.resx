@@ -117,11 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BOOL" xml:space="preserve">
+    <value>Boolean</value>
+  </data>
   <data name="COUNT" xml:space="preserve">
     <value>Count</value>
   </data>
+  <data name="DATE" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="DECIMAL" xml:space="preserve">
+    <value>Money</value>
+  </data>
   <data name="DESCRIPTION" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="DOUBLE" xml:space="preserve">
+    <value>Real (double precision)</value>
+  </data>
+  <data name="FLOAT" xml:space="preserve">
+    <value>Real (single precision)</value>
+  </data>
+  <data name="INT" xml:space="preserve">
+    <value>Integer ({0} - {1})</value>
   </data>
   <data name="INTERVAL" xml:space="preserve">
     <value>Confidence interval</value>
@@ -140,5 +158,17 @@
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Standard error</value>
+  </data>
+  <data name="SYMBOL" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
+  <data name="TEXT" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="TIME" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="UINT" xml:space="preserve">
+    <value>Unsigned integer (0 - {0})</value>
   </data>
 </root>

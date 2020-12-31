@@ -68,6 +68,9 @@ namespace Schicksal.Helm
 
       var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
+      if (row == null)
+        return;
+
       if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
         this.Text += "*";
     }

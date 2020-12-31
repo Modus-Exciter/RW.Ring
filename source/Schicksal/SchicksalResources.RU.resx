@@ -117,11 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BOOL" xml:space="preserve">
+    <value>Логический</value>
+  </data>
   <data name="COUNT" xml:space="preserve">
     <value>Количество</value>
   </data>
+  <data name="DATE" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="DECIMAL" xml:space="preserve">
+    <value>Финансы</value>
+  </data>
   <data name="DESCRIPTION" xml:space="preserve">
     <value>Описание</value>
+  </data>
+  <data name="DOUBLE" xml:space="preserve">
+    <value>Вещественное число (двойная точность)</value>
+  </data>
+  <data name="FLOAT" xml:space="preserve">
+    <value>Вещественное число (обычная точность)</value>
+  </data>
+  <data name="INT" xml:space="preserve">
+    <value>Целое число ({0} - {1})</value>
   </data>
   <data name="INTERVAL" xml:space="preserve">
     <value>Доверительный интервал</value>
@@ -140,5 +158,17 @@
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Стандартное отклонение</value>
+  </data>
+  <data name="SYMBOL" xml:space="preserve">
+    <value>Символ</value>
+  </data>
+  <data name="TEXT" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="TIME" xml:space="preserve">
+    <value>Время</value>
+  </data>
+  <data name="UINT" xml:space="preserve">
+    <value>Натуральное число (0 - {0})</value>
   </data>
 </root>
