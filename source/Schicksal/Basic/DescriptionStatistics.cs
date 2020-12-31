@@ -18,6 +18,11 @@ namespace Schicksal.Basic
       return group.Sum() / group.Count;
     }
 
+    public static double Median(IDataGroup group)
+    {
+      return group.OrderBy(d => d).Skip(group.Count / 2).First();
+    }
+
     /// <summary>
     /// Сумма квадратов отклонений
     /// </summary>
@@ -85,6 +90,7 @@ namespace Schicksal.Basic
         {
           Description = name,
           Mean = DescriptionStatistics.Mean(group[i]),
+          Median = DescriptionStatistics.Median(group[i]),
           Min = group[i].Min(),
           Max = group[i].Max(),
           Count = group[i].Count
@@ -113,6 +119,8 @@ namespace Schicksal.Basic
     public string Description { get; internal set; }
 
     public double Mean { get; internal set; }
+
+    public double Median { get; internal set; }
 
     public double Min { get; internal set; }
 

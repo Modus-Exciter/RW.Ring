@@ -30,7 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsDialog));
-      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       this.m_section_panel = new System.Windows.Forms.Panel();
       this.m_button_panel = new System.Windows.Forms.FlowLayoutPanel();
       this.m_button_cancel = new System.Windows.Forms.Button();
@@ -41,8 +41,10 @@
       this.m_errors_view = new System.Windows.Forms.DataGridView();
       this.messageDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_settings_controller = new Notung.Helm.Configuration.SettingsController(this.components);
+      this.m_language_switch = new Notung.ComponentModel.LanguageSwitcher(this.components);
       this.m_button_panel.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_errors_view)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_language_switch)).BeginInit();
       this.SuspendLayout();
       // 
       // m_section_panel
@@ -130,14 +132,14 @@
       this.m_errors_view.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.messageDataGridViewTextBoxColumn});
       this.m_errors_view.DataSource = this.m_settings_controller;
-      dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-      dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Window;
-      dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-      dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-      this.m_errors_view.DefaultCellStyle = dataGridViewCellStyle1;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.m_errors_view.DefaultCellStyle = dataGridViewCellStyle2;
       this.m_errors_view.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.m_errors_view.Location = new System.Drawing.Point(5, 487);
       this.m_errors_view.Name = "m_errors_view";
@@ -160,6 +162,10 @@
       this.m_settings_controller.PagePlace = this.m_section_panel;
       this.m_settings_controller.ValidationResults = this.m_errors_view;
       this.m_settings_controller.PageChanged += new System.EventHandler<Notung.Helm.Configuration.PageEventArgs>(this.m_settings_controller_PageChanged);
+      // 
+      // m_language_switch
+      // 
+      this.m_language_switch.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_language_switch_LanguageChanged);
       // 
       // SettingsDialog
       // 
@@ -185,6 +191,7 @@
       this.Load += new System.EventHandler(this.SettingsDialog_Load);
       this.m_button_panel.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_errors_view)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_language_switch)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -201,5 +208,6 @@
     private System.Windows.Forms.DataGridView m_errors_view;
     private System.Windows.Forms.DataGridViewTextBoxColumn messageDataGridViewTextBoxColumn;
     private System.Windows.Forms.ImageList m_image_list;
+    private ComponentModel.LanguageSwitcher m_language_switch;
   }
 }

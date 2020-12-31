@@ -18,10 +18,10 @@ namespace Schicksal.Helm
 
     public object DataSorce
     {
-      get { return m_grid.DataSource; }
+      get { return m_binding_source.DataSource; }
       set
       {
-        m_grid.DataSource = value;
+        m_binding_source.DataSource = value;
       }
     }
 
@@ -39,6 +39,18 @@ namespace Schicksal.Helm
       }
 
       m_grid.AutoResizeColumns();
+    }
+
+    private void m_lang_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    {
+      m_col_description.HeaderText = SchicksalResources.DESCRIPTION;
+      m_col_mean.HeaderText = SchicksalResources.MEAN;
+      m_col_median.HeaderText = SchicksalResources.MEDIAN;
+      m_col_min.HeaderText = SchicksalResources.MIN;
+      m_col_max.HeaderText = SchicksalResources.MAX;
+      m_col_count.HeaderText = SchicksalResources.COUNT;
+      m_col_error.HeaderText = SchicksalResources.STD_ERROR;
+      m_col_interval.HeaderText = SchicksalResources.INTERVAL;
     }
   }
 }

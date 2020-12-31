@@ -117,23 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="m_button_cancel.Text" xml:space="preserve">
-    <value>Отмена</value>
+  <data name="COUNT" xml:space="preserve">
+    <value>Count</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_check_only_significat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 17</value>
+  <data name="DESCRIPTION" xml:space="preserve">
+    <value>Description</value>
   </data>
-  <data name="m_check_only_significat.Text" xml:space="preserve">
-    <value>Только значимые различия</value>
+  <data name="INTERVAL" xml:space="preserve">
+    <value>Confidence interval</value>
   </data>
-  <data name="m_label_box.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 13</value>
+  <data name="MAX" xml:space="preserve">
+    <value>Maximum</value>
   </data>
-  <data name="m_label_box.Text" xml:space="preserve">
-    <value>Выбрать</value>
+  <data name="MEAN" xml:space="preserve">
+    <value>Mean</value>
   </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>Фильтр</value>
+  <data name="MEDIAN" xml:space="preserve">
+    <value>Median</value>
+  </data>
+  <data name="MIN" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="STD_ERROR" xml:space="preserve">
+    <value>Standard error</value>
   </data>
 </root>

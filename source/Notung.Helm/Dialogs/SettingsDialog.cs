@@ -62,5 +62,11 @@ namespace Notung.Helm.Dialogs
       if (!m_nodes[e.Page.GetType()].Text.EndsWith("*"))
         m_nodes[e.Page.GetType()].Text += "*";
     }
+
+    private void m_language_switch_LanguageChanged(object sender, ComponentModel.LanguageEventArgs e)
+    {
+      m_button_apply.Text = WinResources.APPLY;
+      m_button_cancel.Text = WinResources.CANCEL;
+    }
   }
 }

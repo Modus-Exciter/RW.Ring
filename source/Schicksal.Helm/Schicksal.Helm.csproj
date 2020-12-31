@@ -181,6 +181,7 @@
     <None Include="Properties\DataSources\Program.Preferences.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.DifferenceInfo.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <None Include="Properties\Settings.settings">

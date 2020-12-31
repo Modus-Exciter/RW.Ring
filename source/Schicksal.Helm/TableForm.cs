@@ -21,9 +21,12 @@ namespace Schicksal.Helm
       get { return m_grid.DataSource as DataTable; }
       set
       {
+        if (ReferenceEquals(value, m_grid.DataSource))
+          return;
+        
         m_grid.DataSource = value;
 
-        if (value != null && value.GetChanges() != null)
+        if (value != null)
           value.AcceptChanges();
       }
     }
@@ -60,7 +63,12 @@ namespace Schicksal.Helm
 
     private void m_grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
     {
-      if (this.DataSource != null && this.DataSource.GetChanges() != null && !this.Text.EndsWith("*"))
+      if (e.RowIndex < 0)
+        return;
+
+      var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
+
+      if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
         this.Text += "*";
     }
 

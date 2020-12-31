@@ -53,6 +53,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SchicksalResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SchicksalResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SpecialFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatisticsTables.cs" />
@@ -69,6 +74,11 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU.resx" />
+    <EmbeddedResource Include="SchicksalResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SchicksalResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SchicksalResources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\right_left.png" />

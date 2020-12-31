@@ -207,7 +207,7 @@
       this.m_probability_edit.FormattingEnabled = true;
       this.m_probability_edit.Name = "m_probability_edit";
       // 
-      // AnovaDialog
+      // StatisticsParametersDialog
       // 
       this.AcceptButton = this.m_button_ok;
       resources.ApplyResources(this, "$this");
@@ -215,7 +215,7 @@
       this.CancelButton = this.m_button_cancel;
       this.Controls.Add(this.m_table_panel);
       this.Controls.Add(this.m_bottom_panel);
-      this.Name = "AnovaDialog";
+      this.Name = "StatisticsParametersDialog";
       this.ShowInTaskbar = false;
       this.m_bottom_panel.ResumeLayout(false);
       this.m_bottom_panel.PerformLayout();
