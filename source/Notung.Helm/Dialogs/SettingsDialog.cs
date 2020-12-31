@@ -67,6 +67,7 @@ namespace Notung.Helm.Dialogs
     {
       m_button_apply.Text = WinResources.APPLY;
       m_button_cancel.Text = WinResources.CANCEL;
+      this.Text = WinResources.SETTINGS;
     }
   }
 }
