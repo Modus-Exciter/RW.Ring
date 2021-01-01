@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -16,30 +15,29 @@ namespace Schicksal.Helm.Dialogs
     {
       InitializeComponent();
 
-      var dic = new Dictionary<Type, string>();
+      var table_descriptions = TableColumnInfo.GetTypeDescriptions();
 
-      dic[typeof(byte)] = string.Format(SchicksalResources.UINT, byte.MaxValue);
-      dic[typeof(sbyte)] = string.Format(SchicksalResources.INT, sbyte.MinValue, sbyte.MaxValue);
-      dic[typeof(ushort)] = string.Format(SchicksalResources.UINT, ushort.MaxValue);
-      dic[typeof(short)] = string.Format(SchicksalResources.INT, short.MinValue, short.MaxValue);
-      dic[typeof(uint)] = string.Format(SchicksalResources.UINT, uint.MaxValue);
-      dic[typeof(int)] = string.Format(SchicksalResources.INT, int.MinValue, int.MaxValue);
-      dic[typeof(ulong)] = string.Format(SchicksalResources.UINT, "1*10^13");
-      dic[typeof(long)] = string.Format(SchicksalResources.INT, "1*10^-13", "1*10^13");
-      dic[typeof(float)] = SchicksalResources.FLOAT;
-      dic[typeof(double)] = SchicksalResources.DOUBLE;
-      dic[typeof(decimal)] = SchicksalResources.DECIMAL;
-      dic[typeof(char)] = SchicksalResources.SYMBOL;
-      dic[typeof(string)] = SchicksalResources.TEXT;
-      dic[typeof(bool)] = SchicksalResources.BOOL;
-      dic[typeof(DateTime)] = SchicksalResources.DATE;
-      dic[typeof(TimeSpan)] = SchicksalResources.TIME;
+      m_type_column.DataSource = TableColumnInfo.GetTypeDescriptions().ToArray();
+      m_type_column.ValueMember = "Key";
+      m_type_column.DisplayMember = "Value";
+      m_type_column.Width = CalculateDropDownWidth(table_descriptions);
 
-      columnTypeDataGridViewTextBoxColumn.DataSource = dic.ToArray();
-      columnTypeDataGridViewTextBoxColumn.ValueMember = "Key";
-      columnTypeDataGridViewTextBoxColumn.DisplayMember = "Value";
+      this.MinimumSize = new System.Drawing.Size(m_type_column.Width * 2, m_type_column.Width);
 
       m_binding_source.DataSource = new BindingList<TableColumnInfo>();
+    }
+
+    private int CalculateDropDownWidth(Dictionary<Type, string> rows)
+    {
+      int max = 0;
+
+      foreach (string item in rows.Values)
+      {
+        var size = TextRenderer.MeasureText(item, m_type_column.DefaultCellStyle.Font);
+        max = Math.Max(max, size.Width);
+      }
+
+      return max + SystemInformation.VerticalScrollBarWidth;
     }
 
     public BindingList<TableColumnInfo> Columns
@@ -55,23 +53,8 @@ namespace Schicksal.Helm.Dialogs
         return;
 
       InfoBuffer buffer = new InfoBuffer();
-      HashSet<string> unique = new HashSet<string>();
 
-      if (this.Columns.Count == 0)
-        buffer.Add(Resources.NO_COLUMNS, InfoLevel.Warning);
-
-      foreach (var col in this.Columns)
-      {
-        if (string.IsNullOrEmpty(col.ColumnName))
-          buffer.Add(Resources.EMPTY_COLUMNS, InfoLevel.Warning);
-        else if (col.ColumnName.Contains('[') || col.ColumnName.Contains(']')
-          || col.ColumnName.Contains('+') || col.ColumnName.Contains(','))
-          buffer.Add(Resources.WRONG_COLUMN_NAME, InfoLevel.Warning);
-        else if (!unique.Add(col.ColumnName))
-          buffer.Add(string.Format(Resources.DUPLICATE_COLUMN, col.ColumnName), InfoLevel.Warning);
-      }
-
-      if (buffer.Count > 0)
+      if (!TableColumnInfo.Validate(this.Columns, buffer))
       {
         AppManager.Notificator.Show(buffer);
         e.Cancel = true;
@@ -89,6 +72,56 @@ namespace Schicksal.Helm.Dialogs
     public string ColumnName { get; set; }
 
     public Type ColumnType { get; set; }
+
+    public static Dictionary<Type, string> GetTypeDescriptions()
+    {
+      var dic = new Dictionary<Type, string>();
+
+      dic[typeof(byte)] = string.Format(SchicksalResources.UINT, byte.MaxValue);
+      dic[typeof(ushort)] = string.Format(SchicksalResources.UINT, ushort.MaxValue);
+      dic[typeof(uint)] = string.Format(SchicksalResources.UINT, uint.MaxValue);
+      dic[typeof(ulong)] = string.Format(SchicksalResources.UINT, "2*10^13");
+      dic[typeof(sbyte)] = string.Format(SchicksalResources.INT, sbyte.MinValue, sbyte.MaxValue);
+      dic[typeof(short)] = string.Format(SchicksalResources.INT, short.MinValue, short.MaxValue);
+      dic[typeof(int)] = string.Format(SchicksalResources.INT, int.MinValue, int.MaxValue);
+      dic[typeof(long)] = string.Format(SchicksalResources.INT, "1*10^-13", "1*10^13");
+      dic[typeof(float)] = SchicksalResources.FLOAT;
+      dic[typeof(double)] = SchicksalResources.DOUBLE;
+      dic[typeof(decimal)] = SchicksalResources.DECIMAL;
+      dic[typeof(char)] = SchicksalResources.SYMBOL;
+      dic[typeof(string)] = SchicksalResources.TEXT;
+      dic[typeof(bool)] = SchicksalResources.BOOL;
+      dic[typeof(DateTime)] = SchicksalResources.DATE;
+      dic[typeof(TimeSpan)] = SchicksalResources.TIME;
+
+      return dic;
+    }
+
+    public static bool Validate(ICollection<TableColumnInfo> columns, InfoBuffer buffer)
+    {
+      if (buffer == null)
+        throw new ArgumentNullException("buffer");
+
+      if (columns == null || columns.Count == 0)
+        buffer.Add(Resources.NO_COLUMNS, InfoLevel.Warning);
+      else
+      {
+        HashSet<string> unique = new HashSet<string>();
+
+        foreach (var col in columns)
+        {
+          if (string.IsNullOrEmpty(col.ColumnName))
+            buffer.Add(Resources.EMPTY_COLUMNS, InfoLevel.Warning);
+          else if (col.ColumnName.Contains('[') || col.ColumnName.Contains(']')
+            || col.ColumnName.Contains('+') || col.ColumnName.Contains(','))
+            buffer.Add(Resources.WRONG_COLUMN_NAME, InfoLevel.Warning);
+          else if (!unique.Add(col.ColumnName))
+            buffer.Add(string.Format(Resources.DUPLICATE_COLUMN, col.ColumnName), InfoLevel.Warning);
+        }
+      }
+
+      return buffer.Count == 0;
+    }
 
     public static DataTable CreateTable(IList<TableColumnInfo> columns)
     {

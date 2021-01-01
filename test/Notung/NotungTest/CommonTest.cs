@@ -51,6 +51,57 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void WeakSetDoubleTime()
+    {
+      var set = new WeakSet<Item>();
+      AddStrings(set);
+
+      GC.Collect();
+
+      set.Add("");
+
+      Assert.IsFalse(set.Contains("A1"));
+      Assert.IsFalse(set.Contains("A2"));
+      Assert.IsFalse(set.Contains("A3"));
+      Assert.IsTrue(set.Contains(""));
+    }
+
+    public class Item
+    {
+      public string Value { get; set; }
+
+      public override bool Equals(object obj)
+      {
+        return Equals(this.Value, ((Item)obj).Value);
+      }
+
+      public override int GetHashCode()
+      {
+        return (this.Value ?? "").GetHashCode();
+      }
+
+      public static implicit operator Item(string value)
+      {
+        return new Item { Value = value ?? "" };
+      }
+    }
+
+    private static void AddStrings(WeakSet<Item> set)
+    {
+      string a1 = "A1";
+      string a2 = "A2";
+
+      set.Add(a1);
+      set.Add(a2);
+      set.Add("B1");
+
+      Assert.IsTrue(set.Contains(a1));
+      Assert.IsTrue(set.Contains(a1));
+      Assert.IsTrue(set.Contains("A1"));
+      Assert.IsTrue(set.Contains("A2"));
+    }
+
+    [TestMethod]
     public void PrefixTreeTest()
     {
       PrefixTree tree = new PrefixTree();

@@ -68,9 +68,9 @@ namespace Notung.Logging
       private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
       private readonly Queue<LoggingEvent> m_data = new Queue<LoggingEvent>();
       private readonly IMainThreadInfo m_info;
+      private readonly Thread m_work_thread;
       private readonly object m_close_lock = new object();
       private volatile int m_size = 0;
-      private readonly Thread m_work_thread;
       private volatile bool m_shutdown;
       private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 

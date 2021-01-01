@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
+using Notung.ComponentModel;
 using Notung.Configuration;
 using Notung.Helm;
 using Notung.Loader;
-using System.ComponentModel;
-using System.Drawing;
-using Notung.ComponentModel;
 
 namespace Schicksal.Helm
 {
@@ -21,10 +21,10 @@ namespace Schicksal.Helm
     {
       ApplicationStarter.ShowSplashScreen("splashscreen.png");
 
-      return NewMethod();
+      return RunApplication();
     }
 
-    private static int NewMethod()
+    private static int RunApplication()
     {
       return new ApplicationStarter(Factory.Default<Form, MainForm>(),
         Factory.Default<ILoadingQueue, SchicksalLoadingQueue>())

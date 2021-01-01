@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using Notung.Threading;
 
 namespace Notung.Data
 {
   public class WeakSet <T> : IEnumerable<T> where T : class
   {
-    private readonly HashSet<InnerReference> m_set = new HashSet<InnerReference>();
     private readonly SharedLock m_lock = new SharedLock(false);
+    private readonly HashSet<GCHandle> m_set = new HashSet<GCHandle>(new GCHandleEqualityComparer());
+    private readonly List<GCHandle> m_removee = new List<GCHandle>();
 
     private void Fix()
     {
@@ -17,7 +18,15 @@ namespace Notung.Data
       if (m_lock.LockState != LockState.Write)
         throw new InvalidOperationException();
 #endif
-      m_set.RemoveWhere(reference => !reference.IsAlive);
+      m_removee.AddRange(m_set.Where(reference => reference.Target == null));
+
+      foreach (var removee in m_removee)
+      {
+        removee.Free();
+        m_set.Remove(removee);
+      }
+
+      m_removee.Clear();
     }
 
     public void Add(T item)
@@ -27,8 +36,9 @@ namespace Notung.Data
 
       using (m_lock.WriteLock())
       {
-        Fix();
-        m_set.Add(new InnerReference(item));
+        this.Fix();
+
+        m_set.Add(GCHandle.Alloc(item, GCHandleType.Weak));
       }
     }
 
@@ -36,6 +46,9 @@ namespace Notung.Data
     {
       using (m_lock.WriteLock())
       {
+        foreach (var removee in m_set)
+          removee.Free();
+
         m_set.Clear();
       }
     }
@@ -47,7 +60,12 @@ namespace Notung.Data
 
       using (m_lock.ReadLock())
       {
-        return m_set.Contains(new InnerReference(item));
+        var ptr = GCHandle.Alloc(item, GCHandleType.Weak);
+        var ret = m_set.Contains(ptr);
+
+        ptr.Free();
+
+        return ret;
       }
     }
 
@@ -58,8 +76,14 @@ namespace Notung.Data
 
       using (m_lock.WriteLock())
       {
-        Fix();
-        return m_set.Remove(new InnerReference(item));
+        this.Fix();
+
+        var ptr = GCHandle.Alloc(item, GCHandleType.Weak);
+        var ret = m_set.Remove(ptr);
+
+        ptr.Free();
+
+        return ret;
       }
     }
 
@@ -69,7 +93,7 @@ namespace Notung.Data
       {
         foreach (var reference in m_set)
         {
-          var tg = reference.Target;
+          var tg = reference.Target as T;
 
           if (tg != null)
             yield return tg;
@@ -82,37 +106,21 @@ namespace Notung.Data
       return this.GetEnumerator();
     }
 
-    private class InnerReference : WeakReference
+    private class GCHandleEqualityComparer : IEqualityComparer<GCHandle>
     {
-      private int m_hash_code;
-
-      public InnerReference(T target)
-        : base(target, false)
+      public bool Equals(GCHandle x, GCHandle y)
       {
-        m_hash_code = target.GetHashCode();
+        var x_target = x.IsAllocated ? x.Target : null;
+        var y_target = y.IsAllocated ? y.Target : null;
+
+        return object.Equals(x_target, y_target);
       }
 
-      public override bool Equals(object obj)
+      public int GetHashCode(GCHandle obj)
       {
-        InnerReference other = obj as InnerReference;
+        var target = obj.IsAllocated ? obj.Target : null;
 
-        if (other == null)
-          return false;
-
-        if (this.IsAlive)
-          return other.IsAlive && this.Target.Equals(other.Target);
-        else
-          return !other.IsAlive && m_hash_code == other.m_hash_code;
-      }
-
-      public override int GetHashCode()
-      {
-        return m_hash_code;
-      }
-
-      public new T Target
-      {
-        get { return base.Target as T; }
+        return (target ?? obj).GetHashCode();
       }
     }
   }

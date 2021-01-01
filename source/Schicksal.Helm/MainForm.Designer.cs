@@ -43,8 +43,8 @@
       this.m_cmd_settings = new System.Windows.Forms.ToolStripMenuItem();
       this.m_menu_import = new System.Windows.Forms.ToolStripMenuItem();
       this.m_menu_analyze = new System.Windows.Forms.ToolStripMenuItem();
-      this.m_cmd_anova = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_basic = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_cmd_anova = new System.Windows.Forms.ToolStripMenuItem();
       this.m_menu_standard_tables = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_student = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_fisher_5 = new System.Windows.Forms.ToolStripMenuItem();
@@ -172,6 +172,14 @@
       this.m_menu_analyze.Size = new System.Drawing.Size(57, 20);
       this.m_menu_analyze.Text = "Analyze";
       // 
+      // m_cmd_basic
+      // 
+      this.m_cmd_basic.Image = global::Schicksal.Helm.Properties.Resources.table_sql;
+      this.m_cmd_basic.Name = "m_cmd_basic";
+      this.m_cmd_basic.Size = new System.Drawing.Size(154, 22);
+      this.m_cmd_basic.Text = "Basic statistics";
+      this.m_cmd_basic.Click += new System.EventHandler(this.m_cmd_basic_Click);
+      // 
       // m_cmd_anova
       // 
       this.m_cmd_anova.Image = ((System.Drawing.Image)(resources.GetObject("m_cmd_anova.Image")));
@@ -179,13 +187,6 @@
       this.m_cmd_anova.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_anova.Text = "ANOVA";
       this.m_cmd_anova.Click += new System.EventHandler(this.m_cmd_anova_Click);
-      // 
-      // m_cmd_basic
-      // 
-      this.m_cmd_basic.Name = "m_cmd_basic";
-      this.m_cmd_basic.Size = new System.Drawing.Size(154, 22);
-      this.m_cmd_basic.Text = "Basic statistics";
-      this.m_cmd_basic.Click += new System.EventHandler(this.m_cmd_basic_Click);
       // 
       // m_menu_standard_tables
       // 

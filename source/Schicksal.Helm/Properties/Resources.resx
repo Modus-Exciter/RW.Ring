@@ -133,8 +133,14 @@
   <data name="disk_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\disk_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="LANGUAGE" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="arrow_right_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_right_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EXCLUSIVE_COLOR" xml:space="preserve">
+    <value>Exclusive color</value>
   </data>
   <data name="column_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\column-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -156,6 +162,9 @@
   </data>
   <data name="CREATE_NEW_TABLE" xml:space="preserve">
     <value>Create new table</value>
+  </data>
+  <data name="gear_preferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gear_preferences.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ANOVA" xml:space="preserve">
     <value>Analysis of variance</value>
@@ -184,11 +193,8 @@
   <data name="DISTRIBUTION" xml:space="preserve">
     <value>distribution</value>
   </data>
-  <data name="MEAN" xml:space="preserve">
-    <value>Mean</value>
-  </data>
-  <data name="line_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\line-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
+    <value>Do you want to save changes in table {0}?</value>
   </data>
   <data name="INTERVAL" xml:space="preserve">
     <value>Confidence interval</value>
@@ -196,17 +202,14 @@
   <data name="FILE" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="HELP" xml:space="preserve">
-    <value>Help</value>
-  </data>
-  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SAVE" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="WINDOWS" xml:space="preserve">
     <value>Windows</value>
   </data>
-  <data name="gear_preferences" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gear_preferences.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="MEAN" xml:space="preserve">
+    <value>Mean</value>
   </data>
   <data name="NEW" xml:space="preserve">
     <value>New</value>
@@ -226,8 +229,11 @@
   <data name="about_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\about_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SAVE" xml:space="preserve">
-    <value>Save</value>
+  <data name="EMPTY_COLUMNS" xml:space="preserve">
+    <value>Empty column name</value>
+  </data>
+  <data name="line_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\line-chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="DUPLICATE_COLUMN" xml:space="preserve">
     <value>Column name {0} is not unique</value>
@@ -238,11 +244,14 @@
   <data name="FISHER" xml:space="preserve">
     <value>Fisher distribution</value>
   </data>
-  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
-    <value>Do you want to save changes in table {0}?</value>
+  <data name="folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="EMPTY_COLUMNS" xml:space="preserve">
-    <value>Empty column name</value>
+  <data name="HELP" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
+    <value>Open system folder</value>
   </data>
   <data name="OPEN" xml:space="preserve">
     <value>Open</value>
@@ -250,16 +259,10 @@
   <data name="About_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="EXCLUSIVE_COLOR" xml:space="preserve">
-    <value>Exclusive color</value>
-  </data>
-  <data name="LANGUAGE" xml:space="preserve">
-    <value>Language</value>
-  </data>
-  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
-    <value>Open system folder</value>
-  </data>
   <data name="SIGNIFICAT_COLOR" xml:space="preserve">
     <value>Significat color</value>
+  </data>
+  <data name="table_sql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\table_sql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -93,7 +93,7 @@ namespace Notung.Helm
 
       m_view = this.CreateView(m_form_factory.Create());
 
-      MainFormHandlers.Set(m_view, this);
+      MainFormHandlers.Set(this);
       try
       {
         Application.Run(m_view.MainForm);
@@ -141,7 +141,7 @@ namespace Notung.Helm
       if (!string.IsNullOrEmpty(_splash_resource))
       {
         var asm = Assembly.GetEntryAssembly();
-        var name = new AssemblyName(asm.FullName);
+        var name = asm.GetName();
         var rm = new ResourceManager(name.Name + ".g", asm);
 
         using (var ms = rm.GetStream(_splash_resource.ToLowerInvariant()))
@@ -206,32 +206,30 @@ namespace Notung.Helm
 
     private class MainFormHandlers
     {
-      private readonly IMainFormView m_view;
       private readonly ApplicationStarter m_starter;
 
-      private MainFormHandlers(IMainFormView view, ApplicationStarter starter)
+      private MainFormHandlers(ApplicationStarter starter)
       {
-        if (view == null)
-          throw new ArgumentNullException("view");
+        if (starter == null)
+          throw new ArgumentNullException("starter");
 
-        m_view = view;
         m_starter = starter;
 
-        if (view.MainForm.WindowState == FormWindowState.Normal)
-          view.MainForm.Shown += this.HandleMainFormLoad;
+        if (m_starter.m_view.MainForm.WindowState == FormWindowState.Normal)
+          m_starter.m_view.MainForm.Shown += this.HandleMainFormLoad;
         else
-          view.MainForm.Load += this.HandleMainFormLoad;
+          m_starter.m_view.MainForm.Load += this.HandleMainFormLoad;
 
-        view.MainForm.FormClosed += this.HandleClosed;
+        m_starter.m_view.MainForm.FormClosed += this.HandleClosed;
       }
 
-      public static void Set(IMainFormView view, ApplicationStarter starter)
+      public static void Set(ApplicationStarter starter)
       {
-        var handlers = new MainFormHandlers(view, starter);
+        var handlers = new MainFormHandlers(starter);
 
-        AppManager.Instance = new AppInstance(handlers.m_view);
-        AppManager.Notificator = new Notificator(handlers.m_view);
-        AppManager.OperationLauncher = new OperationLauncher(handlers.m_view);
+        AppManager.Instance = new AppInstance(starter.m_view);
+        AppManager.Notificator = new Notificator(starter.m_view);
+        AppManager.OperationLauncher = new OperationLauncher(starter.m_view);
 
         if (starter.AllowOnlyOneInstance)
           AppManager.Instance.AllowOnlyOneInstance();
@@ -239,11 +237,13 @@ namespace Notung.Helm
 
       private ApplicationLoadingResult RunLoadingWork(ApplicationLoadingWork work, Image splashScreen)
       {
-        using (var dlg = m_view.GetSplashScreenView())
+        using (var dlg = m_starter.m_view.GetSplashScreenView())
         {
           var presenter = new SplashScreenPresenter(work, dlg);
           presenter.Picture = splashScreen;
-          dlg.ShowDialog(m_view.MainForm);
+
+          dlg.ShowDialog(m_starter.m_view.MainForm);
+
           return presenter.Result;
         }
       }
@@ -277,7 +277,7 @@ namespace Notung.Helm
             return;
           }
 
-          if (!m_view.ShowSettingsForm(res.Buffer))
+          if (!m_starter.m_view.ShowSettingsForm(res.Buffer))
           {
             m_starter.ExitCode = 2;
             Application.Exit();

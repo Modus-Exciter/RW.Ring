@@ -120,11 +120,11 @@
   <data name="m_button_cancel.Text" xml:space="preserve">
     <value>Отмена</value>
   </data>
-  <data name="columnNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+  <data name="m_name_column.HeaderText" xml:space="preserve">
     <value>Название колонки</value>
   </data>
-  <data name="columnTypeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Тип колонки</value>
+  <data name="m_type_column.HeaderText" xml:space="preserve">
+    <value>Тип данных</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -575,5 +575,9 @@
         AADgAAAAAAcAAOAAAAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA4AAAAAAHAADgAAAAAAcAAOAA
         AAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA////////AAD///////8AAP///////wAA
 </value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>Inherit</value>
   </data>
 </root>

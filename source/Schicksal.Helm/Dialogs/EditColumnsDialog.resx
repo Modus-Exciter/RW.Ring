@@ -216,17 +216,17 @@
   <data name="&gt;&gt;m_bottom_panel.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="columnTypeDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+  <data name="m_name_column.HeaderText" xml:space="preserve">
+    <value>Column name</value>
+  </data>
+  <data name="m_type_column.HeaderText" xml:space="preserve">
     <value>Column type</value>
   </data>
-  <data name="columnTypeDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
-    <value>150</value>
+  <data name="m_type_column.MinimumWidth" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="columnTypeDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>150</value>
-  </data>
-  <data name="columnNameDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Column name</value>
+  <data name="m_type_column.Width" type="System.Int32, mscorlib">
+    <value>200</value>
   </data>
   <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -713,23 +713,20 @@
         AAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA////////AAD///////8AAP///////wAA
 </value>
   </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
   </data>
-  <data name="&gt;&gt;columnTypeDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>columnTypeDataGridViewTextBoxColumn</value>
+  <data name="&gt;&gt;m_name_column.Name" xml:space="preserve">
+    <value>m_name_column</value>
   </data>
-  <data name="&gt;&gt;columnTypeDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewComboBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>columnNameDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;columnNameDataGridViewTextBoxColumn.Type" xml:space="preserve">
+  <data name="&gt;&gt;m_name_column.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_type_column.Name" xml:space="preserve">
+    <value>m_type_column</value>
+  </data>
+  <data name="&gt;&gt;m_type_column.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewComboBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
     <value>m_binding_source</value>

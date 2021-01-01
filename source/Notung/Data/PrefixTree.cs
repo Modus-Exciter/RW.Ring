@@ -131,8 +131,6 @@ namespace Notung.Data
       {
         PrefixTreeItem child;
 
-        addedNew = false;
-
         if (!m_next_symbols.TryGetValue(symbol, out child))
         {
           child = new PrefixTreeItem(symbol);
@@ -140,6 +138,8 @@ namespace Notung.Data
           m_next_symbols.Add(symbol, child);
           addedNew = true;
         }
+        else
+          addedNew = false;
 
         return child;
       }
@@ -176,7 +176,6 @@ namespace Notung.Data
         }
 
         var ret = new char[list.Count];
-
         int i = 0;
 
         foreach (var symbol in list)

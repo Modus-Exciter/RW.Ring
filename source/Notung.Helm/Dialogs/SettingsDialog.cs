@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Notung.Helm.Configuration;
 
@@ -13,6 +14,8 @@ namespace Notung.Helm.Dialogs
     {
       InitializeComponent();
     }
+
+    public Type DefaultPage { get; set; }
 
     private void SettingsDialog_FormClosing(object sender, FormClosingEventArgs e)
     {
@@ -50,6 +53,10 @@ namespace Notung.Helm.Dialogs
 
         m_nodes[section.GetType()] = node;
       }
+
+      if (this.DefaultPage != null && 
+        m_settings_controller.Pages.Any(p => p.GetType() == this.DefaultPage))
+        m_settings_controller.SelectPage(this.DefaultPage);
     }
 
     private void m_button_apply_Click(object sender, EventArgs e)

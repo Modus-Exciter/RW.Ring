@@ -450,6 +450,13 @@ namespace Schicksal.Helm.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap table_sql {
+            get {
+                object obj = ResourceManager.GetObject("table_sql", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Windows.
         /// </summary>

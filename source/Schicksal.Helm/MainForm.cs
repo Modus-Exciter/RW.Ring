@@ -201,7 +201,7 @@ namespace Schicksal.Helm
 
     private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      using (var settings = new SettingsDialog())
+      using (var settings = new SettingsDialog { DefaultPage = typeof(MainPropertyPage)})
         settings.ShowDialog(this);
     }
 
