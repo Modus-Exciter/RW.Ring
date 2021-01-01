@@ -84,7 +84,7 @@ namespace Schicksal.Helm.Dialogs
       dic[typeof(sbyte)] = string.Format(SchicksalResources.INT, sbyte.MinValue, sbyte.MaxValue);
       dic[typeof(short)] = string.Format(SchicksalResources.INT, short.MinValue, short.MaxValue);
       dic[typeof(int)] = string.Format(SchicksalResources.INT, int.MinValue, int.MaxValue);
-      dic[typeof(long)] = string.Format(SchicksalResources.INT, "9*10^-18", "9*10^19");
+      dic[typeof(long)] = string.Format(SchicksalResources.INT, "-9*10^18", "9*10^18");
       dic[typeof(float)] = SchicksalResources.FLOAT;
       dic[typeof(double)] = SchicksalResources.DOUBLE;
       dic[typeof(decimal)] = SchicksalResources.DECIMAL;
