@@ -121,6 +121,7 @@ namespace Schicksal
         {
           var p = double.Parse(table.Columns[j].ColumnName,
             CultureInfo.InvariantCulture);
+
           var chi = SpecialFunctions.invchisquaredistribution(i, p);
 
           row[j] = chi;
