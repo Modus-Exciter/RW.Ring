@@ -12,18 +12,28 @@ namespace Notung.Data
     private readonly HashSet<GCHandle> m_set = new HashSet<GCHandle>(new GCHandleEqualityComparer());
     private readonly List<GCHandle> m_removee = new List<GCHandle>();
 
-    private void Fix()
+    private void Fix(T item = null)
     {
 #if DEBUG
       if (m_lock.LockState != LockState.Write)
         throw new InvalidOperationException();
 #endif
-      m_removee.AddRange(m_set.Where(reference => reference.Target == null));
-
-      foreach (var removee in m_removee)
+      foreach (var handle in m_set)
       {
-        removee.Free();
-        m_set.Remove(removee);
+        var target = handle.IsAllocated ? handle.Target : null;
+
+        if (target != null)
+          m_removee.Add(handle);
+        else
+          handle.Free();
+      }
+
+      if (m_removee.Count < m_set.Count)
+      {
+        m_set.Clear();
+
+        foreach (var handle in m_removee)
+          m_set.Add(handle);
       }
 
       m_removee.Clear();
@@ -76,7 +86,7 @@ namespace Notung.Data
 
       using (m_lock.WriteLock())
       {
-        this.Fix();
+        this.Fix(item);
 
         var ptr = GCHandle.Alloc(item, GCHandleType.Weak);
         var ret = m_set.Remove(ptr);
