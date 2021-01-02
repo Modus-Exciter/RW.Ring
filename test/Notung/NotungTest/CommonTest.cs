@@ -94,11 +94,13 @@ namespace NotungTest
       set.Add(a1);
       set.Add(a2);
       set.Add("B1");
+      Assert.IsTrue(set.Remove("B1"));
 
       Assert.IsTrue(set.Contains(a1));
       Assert.IsTrue(set.Contains(a1));
       Assert.IsTrue(set.Contains("A1"));
       Assert.IsTrue(set.Contains("A2"));
+      Assert.IsFalse(set.Contains("B1"));
     }
 
     [TestMethod]
