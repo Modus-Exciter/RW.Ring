@@ -8,7 +8,7 @@ namespace Notung.Threading
   /// <example>SharedLock locker = new SharedLock();
   /// using (locker.ReadLock()) { DoSomething(); }</example>
   /// </summary>
-  public sealed class SharedLock
+  public sealed class SharedLock : ISharedLock
   {
     private readonly ReaderWriterLockSlim m_lock;
     private readonly ReadLockHandle m_reader;
@@ -24,7 +24,6 @@ namespace Notung.Threading
     public SharedLock(bool reenterable = true)
     {
       m_lock = new ReaderWriterLockSlim(reenterable ? LockRecursionPolicy.SupportsRecursion : LockRecursionPolicy.NoRecursion);
-
       m_reader = new ReadLockHandle(m_lock);
       m_writer = new WriteLockHandle(m_lock);
       m_upgrader = new UpgradeableLockHandle(m_lock);
@@ -187,13 +186,5 @@ namespace Notung.Threading
         m_lock.ExitUpgradeableReadLock();
       }
     }
-  }
-
-  public enum LockState
-  {
-    None,
-    Read,
-    Upgradeable,
-    Write
   }
 }

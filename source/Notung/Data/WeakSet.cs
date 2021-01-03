@@ -15,7 +15,19 @@ namespace Notung.Data
     private int m_free_index = -1;
     private int m_last_index = 0;
     private Slot[] m_slots;
-    private readonly SharedLock m_lock = new SharedLock(false);
+    private readonly ISharedLock m_lock;
+
+    /// <summary>
+    /// Инициализация нового экземпляра множества удаляемых элементов
+    /// </summary>
+    /// <param name="synchronize">Следует ли синхронизировать доступ к элементам множества</param>
+    public WeakSet(bool synchronize = true)
+    {
+      if (synchronize)
+        m_lock = new SharedLock(false);
+      else
+        m_lock = new SharedLockStub();
+    }
 
     /// <summary>
     /// Добавление нового элемента в множество
@@ -252,18 +264,16 @@ namespace Notung.Data
   {
     public static bool IsPrime(int value)
     {
-      if (value < 2)
-        return false;
-      else if (value == 2)
-        return true;
-      else if (value % 2 == 0)
+      if (value < 4)
+        return value == 2 || value == 3;
+      else if (value % 2 == 0 || value % 3 == 0)
         return false;
 
       var sqrt = (int)Math.Sqrt(value);
 
-      for (int i = 3; i <= sqrt; i += 2)
+      for (int i = 5; i <= sqrt; i += 6)
       {
-        if (value % i == 0)
+        if (value % i == 0 || value % (i + 2) == 0)
           return false;
       }
 
@@ -289,6 +299,9 @@ namespace Notung.Data
 
         while (!IsPrime(value))
         {
+          if (value > int.MaxValue - 6)
+            return int.MaxValue;
+          
           value += even ? 4 : 2;
           even = !even;
         }

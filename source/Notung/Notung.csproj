@@ -126,6 +126,7 @@
     <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
     <Compile Include="Threading\IProgressIndicator.cs" />
+    <Compile Include="Threading\ISharedLock.cs" />
     <Compile Include="Threading\LengthyOperation.cs" />
     <Compile Include="Services\OperationLauncherProxy.cs" />
     <Compile Include="IRunBase.cs" />

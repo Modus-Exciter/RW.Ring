@@ -7,7 +7,7 @@ namespace Notung.Loader
   /// <summary>
   /// Контейнер компонентов
   /// </summary>
-  public class DependencyContainer : IServiceProvider
+  public class DependencyContainer : IServiceProvider, IDisposable
   {
     private readonly Dictionary<Type, Func<object>> m_creators = new Dictionary<Type, Func<object>>();
     private readonly SharedLock m_lock = new SharedLock(false);
@@ -138,6 +138,15 @@ namespace Notung.Loader
 
         return creator;
       }
+    }
+
+    /// <summary>
+    /// Очистка ресурсов, используемых текущим объектом DependencyContainer
+    /// </summary>
+    public void Dispose()
+    {
+      m_creators.Clear();
+      m_lock.Close();
     }
   }
 }
