@@ -8,22 +8,17 @@ namespace Notung.ComponentModel
   /// </summary>
   public class EnumLabelConverter : EnumConverter
   {
-    private readonly Type m_type;
-
     /// <summary>
     /// Инициализирует новый экземпляр конвертера
     /// </summary>
     /// <param name="type">Тип перечисления</param>
-    public EnumLabelConverter(Type type)
-      : base(type)
+    public EnumLabelConverter(Type type) : base(type)
     {
       if (type == null)
         throw new ArgumentNullException("type");
 
       if (!type.IsEnum)
         throw new ArgumentException("type");
-
-      m_type = type;
     }
 
     /// <summary>
@@ -55,9 +50,9 @@ namespace Notung.ComponentModel
     {
       if (value is string)
       {
-        object ret = ComponentExtensions.ParseEnumLabel(m_type, value as string);
+        object ret = ComponentExtensions.ParseEnumLabel(base.EnumType, value as string);
 
-        if (ret != null && ret.GetType() == m_type)
+        if (ret != null && ret.GetType() == base.EnumType)
           return ret;
       }
 
