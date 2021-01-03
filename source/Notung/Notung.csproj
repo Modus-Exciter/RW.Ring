@@ -64,7 +64,7 @@
     <Compile Include="Data\UnweightedMatrixGraph.cs" />
     <Compile Include="Data\UnweightedListGraph.cs" />
     <Compile Include="Data\WeakSet.cs" />
-    <Compile Include="Data\DependencyContainer.cs" />
+    <Compile Include="Loader\DependencyContainer.cs" />
     <Compile Include="Data\WeightedListGraph.cs" />
     <Compile Include="Net\GenericProxy.cs" />
     <Compile Include="Net\Host.cs" />

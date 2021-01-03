@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Notung.Threading;
 
-namespace Notung.Data
+namespace Notung.Loader
 {
   /// <summary>
   /// Контейнер компонентов
