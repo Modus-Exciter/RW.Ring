@@ -50,7 +50,7 @@ namespace Schicksal.Helm
       FillLastFilesMenu();
     }
 
-    private void FillLastFilesMenu()
+    internal void FillLastFilesMenu()
     {
       var preferences = AppManager.Configurator.GetSection<Program.Preferences>();
 

@@ -87,7 +87,14 @@ namespace Schicksal.Helm
         if (res == null)
           e.Cancel = true;
         else if (res == true)
+        {
           this.Save();
+
+          var parent = this.MdiParent as MainForm;
+
+          if (parent != null)
+            parent.FillLastFilesMenu();
+        }
       }
     }
 
