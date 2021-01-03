@@ -265,7 +265,7 @@ namespace Notung.Data
     public static bool IsPrime(int value)
     {
       if (value < 4)
-        return value == 2 || value == 3;
+        return value > 1;
       else if (value % 2 == 0 || value % 3 == 0)
         return false;
 
