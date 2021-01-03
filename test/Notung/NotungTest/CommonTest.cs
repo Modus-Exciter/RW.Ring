@@ -104,6 +104,42 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void SharedLockStubWork()
+    {
+      var stub = new SharedLockStub();
+
+      Assert.AreEqual(LockState.None, stub.LockState);
+
+      using (stub.ReadLock())
+        Assert.AreEqual(LockState.Read, stub.LockState);
+
+      Assert.AreEqual(LockState.None, stub.LockState);
+
+      using (stub.WriteLock())
+        Assert.AreEqual(LockState.Write, stub.LockState);
+
+      Assert.AreEqual(LockState.None, stub.LockState);
+
+      using (stub.UpgradeableLock())
+        Assert.AreEqual(LockState.Upgradeable, stub.LockState);
+
+      Assert.AreEqual(LockState.None, stub.LockState);
+
+      using (stub.ReadLock())
+      {
+        Assert.AreEqual(LockState.Read, stub.LockState);
+        using (stub.UpgradeableLock())
+        {
+          Assert.AreEqual(LockState.Upgradeable, stub.LockState);
+          using (stub.WriteLock())
+            Assert.AreEqual(LockState.Write, stub.LockState);
+          Assert.AreEqual(LockState.Upgradeable, stub.LockState);
+        }
+        Assert.AreEqual(LockState.Read, stub.LockState);
+      }
+    }
+
+    [TestMethod]
     public void PrefixTreeTest()
     {
       PrefixTree tree = new PrefixTree();

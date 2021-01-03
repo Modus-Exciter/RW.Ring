@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Notung.Threading
 {
@@ -90,21 +91,21 @@ namespace Notung.Threading
 
     public IDisposable ReadLock()
     {
-      m_closer.OldState = m_closer.CurrentState;
+      m_closer.Push(m_closer.CurrentState);
       m_closer.CurrentState = LockState.Read;
       return m_closer;
     }
 
     public IDisposable UpgradeableLock()
     {
-      m_closer.OldState = m_closer.CurrentState;
+      m_closer.Push(m_closer.CurrentState);
       m_closer.CurrentState = LockState.Upgradeable;
       return m_closer;
     }
 
     public IDisposable WriteLock()
     {
-      m_closer.OldState = m_closer.CurrentState;
+      m_closer.Push(m_closer.CurrentState);
       m_closer.CurrentState = LockState.Write;
       return m_closer;
     }
@@ -129,14 +130,13 @@ namespace Notung.Threading
 
     public void Close() { }
 
-    private class LockStubCloser : IDisposable
+    private class LockStubCloser : Stack<LockState>, IDisposable
     {
-      public LockState OldState = LockState.None;
       public LockState CurrentState = LockState.None;
 
       public void Dispose()
       {
-        this.CurrentState = this.OldState;
+        this.CurrentState = this.Pop();
       }
     }
   }
