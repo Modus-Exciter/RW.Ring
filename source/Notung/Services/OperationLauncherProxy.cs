@@ -31,6 +31,11 @@ namespace Notung.Services
       set { m_real_launcher.SyncWaitingTime = value; }
     }
 
+    public ISynchronizeInvoke Invoker
+    {
+      get { return SynchronizeProviderStub.Default; }
+    }
+
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
     {
       if (runBase is ICancelableRunBase)
@@ -56,8 +61,6 @@ namespace Notung.Services
   internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke
   {
     protected readonly IRunBase m_run_base;
-
-    private static readonly ISynchronizeInvoke _invoker = new SynchronizeProviderStub().Invoker;
 
     public RunBaseCallerWrapper(IRunBase runBase)
     {
@@ -130,12 +133,12 @@ namespace Notung.Services
 
     IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
     {
-      return _invoker.BeginInvoke(method, args);
+      return SynchronizeProviderStub.Default.BeginInvoke(method, args);
     }
 
     object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
     {
-      return _invoker.EndInvoke(result);
+      return SynchronizeProviderStub.Default.EndInvoke(result);
     }
 
     object ISynchronizeInvoke.Invoke(Delegate method, object[] args)

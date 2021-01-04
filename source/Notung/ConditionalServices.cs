@@ -1,20 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
-using Notung.ComponentModel;
-using Notung.Services;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Notung
 {
   /* Этот класс предназначен для поддержки разных сборок Notung
    * с возможностью отключения некоторых функций для уменьшения
-   * связности межу компонентами. Отключение может потребоваться,
-   * если нужно использовать отдельные классы библиотеки, а не всю.
+   * связности межу компонентами. Это может потребоваться, если
+   * нужно использовать отдельные классы библиотеки, а не всю.
    */
   internal static class ConditionalServices
   {
@@ -24,11 +22,17 @@ namespace Notung
     public static void RegisterCurrentThread()
     {
 #if MULTI_LANG
-      LanguageSwitcher.RegisterThread(Thread.CurrentThread);
+      Notung.ComponentModel.LanguageSwitcher.RegisterThread(Thread.CurrentThread);
 #endif
     }
 
 #if APP_MANAGER
+    public static ISynchronizeInvoke SynchronizingObject
+    {
+      get { return AppManager.OperationLauncher.Invoker; }
+      set { Debug.Assert(false, "Attempt to change synchronizing object when APP_MANAGER is enabled"); }
+    }
+
     public static void RecieveMessages(IEnumerable<object> messages, Action<object> caller = null)
     {
       var buffer = messages as InfoBuffer;
@@ -42,6 +46,12 @@ namespace Notung
       AppManager.Notificator.Show(new Info(error));
     }
 #else
+    public static ISynchronizeInvoke SynchronizingObject
+    {
+      get { return CurrentProcess.SynchronizingObject; }
+      set { CurrentProcess.SynchronizingObject = value; }
+    }
+
     public static void RecieveMessages(IEnumerable<object> messages, Action<object> caller = null)
     {
       if (messages != null && messages.Any() && caller != null)

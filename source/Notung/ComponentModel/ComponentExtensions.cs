@@ -122,7 +122,7 @@ namespace Notung.ComponentModel
 
       foreach (var dlgt in eventHandler.GetInvocationList())
       {
-        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? ConditionalServices.CurrentProcess.SynchronizingObject;
+        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? ConditionalServices.SynchronizingObject;
 
         if (invoker != null && invoker.InvokeRequired)
         {

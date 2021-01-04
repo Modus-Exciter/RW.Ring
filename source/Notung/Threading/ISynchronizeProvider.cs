@@ -48,7 +48,7 @@ namespace Notung.Threading
       #endregion
     }
 
-    private readonly Synchronizer m_synchronizer = new Synchronizer();
+    public static readonly ISynchronizeInvoke Default = new Synchronizer();
 
     #region ISynchronizeProvider Members
 
@@ -57,7 +57,7 @@ namespace Notung.Threading
     /// </summary>
     public ISynchronizeInvoke Invoker
     {
-      get { return m_synchronizer; }
+      get { return Default; }
     }
 
     #endregion

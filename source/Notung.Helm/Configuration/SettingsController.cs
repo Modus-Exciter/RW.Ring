@@ -131,7 +131,7 @@ namespace Notung.Helm.Configuration
       m_sections.Clear();
 
       AppManager.AssemblyClassifier.LoadDependencies(
-        AppManager.Instance.Invoker.GetType().Assembly);
+        AppManager.OperationLauncher.Invoker.GetType().Assembly);
 
       for (int i = 0; i < AppManager.AssemblyClassifier.TrackingAssemblies.Count; i++)
       {

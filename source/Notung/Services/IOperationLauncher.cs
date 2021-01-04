@@ -9,7 +9,7 @@ namespace Notung.Services
   /// <summary>
   /// Управляет задачами, которые можно запустить в диалоге с индикатором прогресса
   /// </summary>
-  public interface IOperationLauncher 
+  public interface IOperationLauncher : ISynchronizeProvider
   {
     /// <summary>
     /// Время ожидания до показа индикатора прогресса
@@ -35,14 +35,22 @@ namespace Notung.Services
         throw new ArgumentNullException("view");
 
       m_view = view;
-
-      if (ConditionalServices.CurrentProcess.SynchronizingObject == null)
-        ConditionalServices.CurrentProcess.SynchronizingObject = m_view.Invoker;
     }
 
     internal OperationLauncher() : this(new TaskManagerViewStub()) { }
 
     public TimeSpan SyncWaitingTime { get; set; }
+
+    public ISynchronizeInvoke Invoker
+    {
+      get { return m_view.Invoker; }
+    }
+
+    public void InitSynchronizingObject()
+    {
+      if (ConditionalServices.SynchronizingObject == null)
+        ConditionalServices.SynchronizingObject = m_view.Invoker;
+    }
 
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
     {
@@ -50,7 +58,6 @@ namespace Notung.Services
         throw new ArgumentNullException("runBase");
 
       var operation = CreateOperation(ref runBase, ref parameters);
-
       operation.Start();
 
       var ret = Complete(operation, parameters);
@@ -58,7 +65,10 @@ namespace Notung.Services
       if (operation.Error != null)
         ConditionalServices.RecieveError(operation.Error);
       else if (runBase is IServiceProvider)
-        ConditionalServices.RecieveMessages(((IServiceProvider)runBase).GetService<InfoBuffer>(), OnMessageRecieved);
+      {
+        ConditionalServices.RecieveMessages(((IServiceProvider)runBase)
+          .GetService<InfoBuffer>(), OnMessageRecieved);
+      }
 
       return ret;
     }
