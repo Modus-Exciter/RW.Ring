@@ -242,7 +242,7 @@
         "Title" = "8:SetupSchicksal"
         "Subject" = "8:"
         "ARPCONTACT" = "8:"
-        "Keywords" = "8:"
+        "Keywords" = "8:Schicksal statistics argophisical статистика агрофизика"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:www.agrophys.ru"
         "ARPPRODUCTICON" = "8:_6888718638E24DAC8A13D743F0CED36F"
@@ -1015,7 +1015,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6888718638E24DAC8A13D743F0CED36F"
             {
-            "SourcePath" = "8:..\\Schicksal.Helm\\obj\\x86\\Debug\\Schicksal.Helm.exe"
+            "SourcePath" = "8:..\\Schicksal.Helm\\obj\\x86\\Release\\Schicksal.Helm.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
@@ -1043,7 +1043,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_78731EA01964440C9070D0C142F0AC07"
             {
-            "SourcePath" = "8:..\\ImportWofostResults\\obj\\Debug\\ImportWofostResults.dll"
+            "SourcePath" = "8:..\\ImportWofostResults\\obj\\Release\\ImportWofostResults.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_17DEE3D45BA44712B672393B3B8969F2"

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Threading;
 using Notung.ComponentModel;
 
@@ -151,10 +150,7 @@ namespace Notung
 
     public virtual object GetService(Type serviceType)
     {
-      if (serviceType == typeof(InfoBuffer))
-        return m_infolog;
-      else
-        return null;
+      return serviceType == typeof(InfoBuffer) ? m_infolog : null;
     }
   }
 

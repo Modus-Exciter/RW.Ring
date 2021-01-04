@@ -18,8 +18,18 @@ namespace Notung.Services
     /// <param name="info">Сообщение</param>
     void Show(Info info);
 
+    /// <summary>
+    /// Отображение сообщения, не требующего от пользователя принятия решения
+    /// </summary>
+    /// <param name="message">Текст сообщения</param>
+    /// <param name="level">Уровень сообщения</param>
     void Show(string message, InfoLevel level);
 
+    /// <summary>
+    /// Отображение сообщения, не требующего от пользователя принятия решения
+    /// </summary>
+    /// <param name="buffer">Буфер сообщений</param>
+    /// <param name="summary">Обобщение сообщений</param>
     void Show(InfoBuffer buffer, string summary = null);
 
     /// <summary>
@@ -29,8 +39,20 @@ namespace Notung.Services
     /// <returns>True, если пользователь подтвердил. Иначе, false</returns>
     bool Confirm(Info info);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя подтверждения или отмены
+    /// </summary>
+    /// <param name="message">Текст сообщения</param>
+    /// <param name="level">Уровень сообщения</param>
+    /// <returns>True, если пользователь подтвердил. Иначе, false</returns>
     bool Confirm(string message, InfoLevel level);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя подтверждения или отмены
+    /// </summary>
+    /// <param name="buffer">Буфер сообщений</param>
+    /// <param name="summary">Обобщение сообщений</param>
+    /// <returns>True, если пользователь подтвердил. Иначе, false</returns>
     bool Confirm(InfoBuffer buffer, string summary = null);
 
     /// <summary>
@@ -41,8 +63,22 @@ namespace Notung.Services
     /// null, если пользователь отменил принятие решения</returns>
     bool? ConfirmOrCancel(Info info);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя согласия, отказа или отмены
+    /// </summary>
+    /// <param name="message">Текст сообщения</param>
+    /// <param name="level">Уровень сообщения</param>
+    /// <returns>True, если пользователь согласился, false, если пользователь отказался,
+    /// null, если пользователь отменил принятие решения</returns>
     bool? ConfirmOrCancel(string message, InfoLevel level);
 
+    /// <summary>
+    /// Отображение сообщения, требующее от пользователя согласия, отказа или отмены
+    /// </summary>
+    /// <param name="buffer">Буфер сообщений</param>
+    /// <param name="summary">Обобщение сообщений</param>
+    /// <returns>True, если пользователь согласился, false, если пользователь отказался,
+    /// null, если пользователь отменил принятие решения</returns>
     bool? ConfirmOrCancel(InfoBuffer buffer, string summary = null);
   }
 

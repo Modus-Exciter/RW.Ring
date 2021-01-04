@@ -40,6 +40,12 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Schicksal.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -184,6 +190,7 @@
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
+    <None Include="Schicksal.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\yinyang.png" />
