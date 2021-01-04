@@ -38,10 +38,6 @@ namespace Notung.Services
       else
         return m_real_launcher.Run(new RunBaseCallerWrapper(runBase), parameters);
     }
-
-#if !APP_MANAGER
-    event EventHandler<InfoBufferEventArgs> IOperationLauncher.MessagesRecieved { add { } remove { } }
-#endif
   }
 
   /// <summary>
@@ -166,7 +162,10 @@ namespace Notung.Services
 
     public bool CanCancel
     {
-      get { return ((ICancelableRunBase)m_run_base).CanCancel; }
+      get 
+      { 
+        return ((ICancelableRunBase)m_run_base).CanCancel; 
+      }
     }
 
     public override void Run()
@@ -221,6 +220,7 @@ namespace Notung.Services
     public virtual void Run()
     {
       m_caller.ProgressIndicator = this;
+
       try
       {
         m_caller.Run();

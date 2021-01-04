@@ -143,14 +143,14 @@ namespace Notung.Services
     public Image GetWorkImage()
     {
       IServiceProvider provider = m_run_base as IServiceProvider;
+
       return provider != null ? provider.GetService<Image>() : null;
     }
 
     private void Run()
     {
-#if MULTI_LANG
-      LanguageSwitcher.RegisterThread(Thread.CurrentThread);
-#endif
+      ConditionalServices.RegisterCurrentThread();
+
       m_run_base.ProgressChanged += HandleProgressChanged;
 
       try
@@ -166,6 +166,7 @@ namespace Notung.Services
       catch (Exception ex)
       {
         _log.Error("Run(): exception", ex);
+
         this.Error = ex;
         this.Status = TaskStatus.Faulted;
       }

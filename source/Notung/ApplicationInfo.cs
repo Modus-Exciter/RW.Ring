@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Process = System.Diagnostics.Process;
 
 namespace Notung
 {
@@ -34,7 +33,8 @@ namespace Notung
       m_product_assembly = productAssembly;
     }
 
-    public ApplicationInfo() : this(Assembly.GetEntryAssembly() ?? typeof(ApplicationInfo).Assembly) { }
+    public ApplicationInfo() 
+      : this(Assembly.GetEntryAssembly() ?? typeof(ApplicationInfo).Assembly) { }
 
     public static ApplicationInfo Instance
     {

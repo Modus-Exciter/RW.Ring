@@ -70,7 +70,7 @@ namespace Notung
           if (ReferenceEquals(_app_instance, value))
             return;
 
-          Utils.Invoker = value.Invoker;
+          ConditionalServices.CurrentProcess.SynchronizingObject = value.Invoker;
           _app_instance = value;
         }
       }

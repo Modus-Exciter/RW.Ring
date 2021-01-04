@@ -23,13 +23,6 @@ namespace Notung.Services
     /// <param name="parameters">Параметры отображения задачи в пользовательском интерфейсе</param>
     /// <returns>Результат выполнения задачи</returns>
     TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
-
-#if !APP_MANAGER
-    /// <summary>
-    /// Происходит тогда, когда необходимо отобразить буфер сообщений
-    /// </summary>
-    event EventHandler<InfoBufferEventArgs> MessagesRecieved;
-#endif
   }
 
   public class OperationLauncher : MarshalByRefObject, IOperationLauncher
@@ -43,10 +36,8 @@ namespace Notung.Services
 
       m_view = view;
 
-      #if !APP_MANAGER
-      if (Utils.Invoker == null)
-        Utils.Invoker = m_view.Invoker;
-      #endif
+      if (ConditionalServices.CurrentProcess.SynchronizingObject == null)
+        ConditionalServices.CurrentProcess.SynchronizingObject = m_view.Invoker;
     }
 
     internal OperationLauncher() : this(new TaskManagerViewStub()) { }
@@ -61,17 +52,13 @@ namespace Notung.Services
       var operation = CreateOperation(ref runBase, ref parameters);
 
       operation.Start();
+
       var ret = Complete(operation, parameters);
 
       if (operation.Error != null)
-        this.OnError(operation.Error);
+        ConditionalServices.RecieveError(operation.Error);
       else if (runBase is IServiceProvider)
-      {
-        var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
-
-        if (messages != null && messages.Count != 0)
-          this.OnMessagesRecieved(messages);
-      }
+        ConditionalServices.RecieveMessages(((IServiceProvider)runBase).GetService<InfoBuffer>(), OnMessageRecieved);
 
       return ret;
     }
@@ -107,33 +94,12 @@ namespace Notung.Services
       return operation.Status;
     }
 
-#if APP_MANAGER
-
-    private void OnMessagesRecieved(InfoBuffer buffer)
+    private void OnMessageRecieved(object e)
     {
-      AppManager.Notificator.Show(buffer);
-    }
-
-    private void OnError(Exception ex)
-    {
-      AppManager.Notificator.Show(new Info(ex));
-    }
-
-#else
-
-    private void OnMessagesRecieved(InfoBuffer buffer)
-    {
-      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs(buffer));
-    }
-
-    private void OnError(Exception ex)
-    {
-      throw ex;
+      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs((InfoBuffer)e));
     }
 
     public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
-
-#endif
   }
 
   public interface IOperationLauncherView : ISynchronizeProvider

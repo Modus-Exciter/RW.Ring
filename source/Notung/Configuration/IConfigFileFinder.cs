@@ -44,7 +44,7 @@ namespace Notung.Configuration
 
   public sealed class ProductVersionConfigFileFinder : IConfigFileFinder
   {
-    private readonly ProductPath m_product_path;
+    private readonly ConditionalServices.ProductPath m_product_path;
     private readonly string m_working_path;
 
     private readonly string m_file_name;
@@ -60,7 +60,7 @@ namespace Notung.Configuration
         throw new ArgumentException(Resources.WRONG_FILE_SYMBOLS);
 
       m_file_name = fileName;
-      m_product_path = new ProductPath(productAssembly);
+      m_product_path = new ConditionalServices.ProductPath(productAssembly);
       m_working_path = m_product_path.GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
     }
 

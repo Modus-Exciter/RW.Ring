@@ -98,6 +98,8 @@ namespace Notung
       return (T)(object)Delegate.CreateDelegate(typeof(T), method, true);
     }
 
+    #region Implementation ------------------------------------------------------------------------
+
     private static MethodInfo GetSuitableMethod<T>(Type objectType, string methodName, bool instance) where T : class
     {
       var parametes = typeof(T).GetMethod("Invoke").GetParameters();
@@ -135,6 +137,8 @@ namespace Notung
         }
       }
     }
+
+    #endregion
   }
 
   /// <summary>

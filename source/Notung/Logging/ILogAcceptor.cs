@@ -21,7 +21,7 @@ namespace Notung.Logging
     public FileLogAcceptor(string template)
     {
       m_builder = new LogStringBuilder(template);
-      m_working_path = Path.Combine(Utils.GetWorkingPath(), "Logs");
+      m_working_path = Path.Combine(ConditionalServices.GetWorkingPath(), "Logs");
     }
 
     public FileLogAcceptor() : this(LogSettings.Default.MessageTemplate) { }
