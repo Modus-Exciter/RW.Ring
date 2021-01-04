@@ -66,13 +66,7 @@ namespace Notung
           throw new ArgumentNullException();
 
         lock (_lock)
-        {
-          if (ReferenceEquals(_app_instance, value))
-            return;
-
-          ConditionalServices.CurrentProcess.SynchronizingObject = value.Invoker;
           _app_instance = value;
-        }
       }
     }
 
