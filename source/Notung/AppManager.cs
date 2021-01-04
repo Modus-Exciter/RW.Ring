@@ -133,7 +133,8 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        _operation_launcher = value;
+        lock (_lock)
+          _operation_launcher = value;
       }
     }
 
