@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER1 MULTI_LANG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;APPLICATION_INFO APP_MANAGER MULTI_LANG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -109,7 +109,7 @@
     <Compile Include="Info.cs" />
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\LogManager.cs" />
-    <Compile Include="Logging\ILogAcceptor.cs" />
+    <Compile Include="Logging\ILogAppender.cs" />
     <Compile Include="Logging\IMainThreadInfo.cs" />
     <Compile Include="Logging\LogStreamWriter.cs" />
     <Compile Include="Logging\LogSettings.Designer.cs">

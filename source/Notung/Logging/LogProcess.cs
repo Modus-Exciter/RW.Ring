@@ -9,16 +9,16 @@ namespace Notung.Logging
   {
     private abstract class LogProcess
     {
-      protected readonly HashSet<ILogAcceptor> m_acceptors;
+      protected readonly HashSet<ILogAppender> m_appedners;
       protected volatile bool m_stop;
 
-      public LogProcess(HashSet<ILogAcceptor> acceptors)
+      public LogProcess(HashSet<ILogAppender> appedners)
       {
 #if DEBUG
-        if (acceptors == null)
-          throw new ArgumentNullException("acceptors");
+        if (appedners == null)
+          throw new ArgumentNullException("appedners");
 #endif
-        m_acceptors = acceptors;
+        m_appedners = appedners;
       }
 
       public bool Stopped
@@ -37,7 +37,7 @@ namespace Notung.Logging
     {
       private readonly LoggingEvent[] m_data = new LoggingEvent[1];
 
-      public SyncLogProcess(HashSet<ILogAcceptor> acceptors) : base(acceptors) { }
+      public SyncLogProcess(HashSet<ILogAppender> acceptors) : base(acceptors) { }
 
       public override void WaitUntilStop()
       {
@@ -49,10 +49,10 @@ namespace Notung.Logging
         if (m_stop)
           return;
 
-        lock (m_acceptors)
+        lock (m_appedners)
         {
           m_data[0] = data;
-          foreach (var acceptor in m_acceptors)
+          foreach (var acceptor in m_appedners)
             acceptor.WriteLog(new LoggingData(m_data, 1));
         }
       }
@@ -74,7 +74,7 @@ namespace Notung.Logging
       private volatile bool m_shutdown;
       private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 
-      public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAcceptor> acceptors)
+      public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAppender> acceptors)
         : base(acceptors)
       {
 #if DEBUG
@@ -147,14 +147,14 @@ namespace Notung.Logging
             m_current_data = null;
         }
 
-        lock (m_acceptors)
+        lock (m_appedners)
         {
           if (m_current_data != null)
-            Parallel.ForEach(m_acceptors, this.Accept);
+            Parallel.ForEach(m_appedners, this.Accept);
         }
       }
 
-      private void Accept(ILogAcceptor acceptor)
+      private void Accept(ILogAppender acceptor)
       {
         acceptor.WriteLog(new LoggingData(m_current_data, m_size));
       }

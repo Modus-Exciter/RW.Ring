@@ -4,27 +4,38 @@ using System.Reflection;
 
 namespace Notung.Logging
 {
-  public interface ILogAcceptor
+  /// <summary>
+  /// Осуществляет запись данных в приёмник лога
+  /// </summary>
+  public interface ILogAppender
   {
+    /// <summary>
+    /// Запись события логгирования в приёмник
+    /// </summary>
     void WriteLog(LoggingData data);
   }
 
-  internal sealed class FileLogAcceptor : ILogAcceptor
+  internal sealed class FileLogAppender : ILogAppender
   {
     private readonly string m_working_path;
     private uint m_file_count;
     private uint m_file_number;
     private FileInfo m_file_info;
-    private const string COUNTER = "counter.dat";
     private readonly LogStringBuilder m_builder;
+    private const string COUNTER = ".counter";
 
-    public FileLogAcceptor(string template)
+    public FileLogAppender(string template)
     {
       m_builder = new LogStringBuilder(template);
       m_working_path = Path.Combine(ConditionalServices.GetWorkingPath(), "Logs");
+
+      if (!Directory.Exists(m_working_path))
+        Directory.CreateDirectory(m_working_path);
+
+      InitializeCounter();
     }
 
-    public FileLogAcceptor() : this(LogSettings.Default.MessageTemplate) { }
+    public FileLogAppender() : this(LogSettings.Default.MessageTemplate) { }
 
     private void InitializeCounter()
     {

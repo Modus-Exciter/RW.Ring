@@ -13,11 +13,11 @@ namespace Notung.Logging
     private static readonly object _lock = new object();
     private static readonly Dictionary<string, ILog> _source_loggers = new Dictionary<string, ILog>();
     private static readonly Dictionary<Type, ILog> _type_loggers = new Dictionary<Type, ILog>();
-    private static readonly HashSet<ILogAcceptor> _acceptors = new HashSet<ILogAcceptor>
+    private static readonly HashSet<ILogAppender> _appenders = new HashSet<ILogAppender>
     {
-      new FileLogAcceptor()
+      new FileLogAppender()
     };
-    private static LogProcess _process = new SyncLogProcess(_acceptors);
+    private static LogProcess _process = new SyncLogProcess(_appenders);
   
     public static ILog GetLogger(string source)
     {
@@ -57,13 +57,13 @@ namespace Notung.Logging
       }
     }
 
-    public static void AddAcceptor(ILogAcceptor acceptor)
+    public static void AddAcceptor(ILogAppender acceptor)
     {
       if (acceptor == null)
         throw new ArgumentNullException("acceptor");
 
-      lock (_acceptors)
-        _acceptors.Add(acceptor);
+      lock (_appenders)
+        _appenders.Add(acceptor);
     }
 
     public static void SetMainThreadInfo(IMainThreadInfo info)
@@ -76,7 +76,7 @@ namespace Notung.Logging
         if (_process != null && !_process.Stopped)
           _process.Stop();
 
-        _process = new AsyncLogProcess(info, _acceptors);
+        _process = new AsyncLogProcess(info, _appenders);
       }
     }
 

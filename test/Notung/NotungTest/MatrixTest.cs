@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace NotungTest
 {
+#if WEIGHTED_GRAPH
   [TestClass]
   public class MatrixTest
   {
@@ -138,7 +139,6 @@ namespace NotungTest
       var row = GetRowData(matrix, 3).ToArray();
 
       Assert.AreEqual(5, row.Length);
-
       Assert.AreEqual(4, row[0]);
       Assert.AreEqual(8, row[1]);
       Assert.AreEqual(11, row[2]);
@@ -146,4 +146,5 @@ namespace NotungTest
       Assert.AreEqual(14, row[4]);
     }
   }
+#endif
 }

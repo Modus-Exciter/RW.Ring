@@ -30,6 +30,113 @@ namespace Notung.Data
   }
 
   /// <summary>
+  /// Прямоугольная матрица логических значений с компактным размещением в памяти
+  /// </summary>
+  [Serializable]
+  public sealed class RectangleBitMatrix : IMatrix<bool>
+  {
+    private BitArrayHelper m_data;
+    private readonly int m_rows;
+    private readonly int m_columns;
+
+    public RectangleBitMatrix(int rowCount, int columnCount)
+    {
+      m_rows = rowCount;
+      m_columns = columnCount;
+      m_data = new BitArrayHelper(rowCount * columnCount);
+    }
+
+    public RectangleBitMatrix(int size)
+    {
+      m_rows = size;
+      m_columns = size;
+      m_data = new BitArrayHelper(size * size);
+    }
+
+    private int GetIndex(int row, int column)
+    {
+      if ((uint)row >= (uint)m_rows)
+        throw new IndexOutOfRangeException("row");
+
+      if ((uint)column >= (uint)m_columns)
+        throw new IndexOutOfRangeException("column");
+
+      return row * m_columns + column;
+    }
+
+    public int RowCount
+    {
+      get { return m_rows; }
+    }
+
+    public int ColumnCount
+    {
+      get { return m_columns; }
+    }
+
+    public bool this[int row, int column]
+    {
+      get { return m_data[GetIndex(row, column)]; }
+      set { m_data[GetIndex(row, column)] = value; }
+    }
+  }
+
+  /// <summary>
+  /// Треугольная матрица логических значений с компактным размещением в памяти
+  /// </summary>
+  [Serializable]
+  public sealed class TriangleBitMatrix : IMatrix<bool>
+  {
+    private BitArrayHelper m_data;
+    private readonly int m_size;
+
+    public TriangleBitMatrix(int size)
+    {
+      m_size = size;
+      m_data = new BitArrayHelper(size * (size - 1) / 2 + 1);
+    }
+
+    public int RowCount
+    {
+      get { return m_size; }
+    }
+
+    public int ColumnCount
+    {
+      get { return m_size; }
+    }
+
+    private int GetIndex(int row, int column)
+    {
+      if ((uint)row >= (uint)m_size)
+        throw new IndexOutOfRangeException("row");
+
+      if ((uint)column >= (uint)m_size)
+        throw new IndexOutOfRangeException("column");
+
+      if (row < column)
+        return row * (2 * m_size - row - 3) / 2 + column;
+      else if (row > column)
+        return column * (2 * m_size - column - 3) / 2 + row;
+      else
+        return 0;
+    }
+
+    public bool this[int row, int column]
+    {
+      get { return m_data[GetIndex(row, column)]; }
+      set
+      {
+        var index = GetIndex(row, column);
+
+        if (index > 0)
+          m_data[index] = value;
+      }
+    }
+  }
+
+#if WEIGHTED_GRAPH
+  /// <summary>
   /// Обыкновенная квадратная матрица
   /// </summary>
   /// <typeparam name="T">Тип элемента матрицы</typeparam>
@@ -139,110 +246,5 @@ namespace Notung.Data
       set { m_data[GetIndex(row, column)] = value; }
     }
   }
-
-  /// <summary>
-  /// Прямоугольная матрица логических значений с компактным размещением в памяти
-  /// </summary>
-  [Serializable]
-  public sealed class RectangleBitMatrix : IMatrix<bool>
-  {
-    private BitArrayHelper m_data;
-    private readonly int m_rows;
-    private readonly int m_columns;
-
-    public RectangleBitMatrix(int rowCount, int columnCount)
-    {
-      m_rows = rowCount;
-      m_columns = columnCount;
-      m_data = new BitArrayHelper(rowCount * columnCount);
-    }
-
-    public RectangleBitMatrix(int size)
-    {
-      m_rows = size;
-      m_columns = size;
-      m_data = new BitArrayHelper(size * size);
-    }
-
-    private int GetIndex(int row, int column)
-    {
-      if ((uint)row >= (uint)m_rows)
-        throw new IndexOutOfRangeException("row");
-
-      if ((uint)column >= (uint)m_columns)
-        throw new IndexOutOfRangeException("column");
-
-      return row * m_columns + column;
-    }
-
-    public int RowCount
-    {
-      get { return m_rows; }
-    }
-
-    public int ColumnCount
-    {
-      get { return m_columns; }
-    }
-
-    public bool this[int row, int column]
-    {
-      get { return m_data[GetIndex(row, column)]; }
-      set { m_data[GetIndex(row, column)] = value; }
-    }
-  }
-
-  /// <summary>
-  /// Треугольная матрица логических значений с компактным размещением в памяти
-  /// </summary>
-  [Serializable]
-  public sealed class TriangleBitMatrix : IMatrix<bool>
-  {
-    private BitArrayHelper m_data;
-    private readonly int m_size;
-
-    public TriangleBitMatrix(int size)
-    {
-      m_size = size;
-      m_data = new BitArrayHelper(size * (size - 1) / 2 + 1);
-    }
-
-    public int RowCount
-    {
-      get { return m_size; }
-    }
-
-    public int ColumnCount
-    {
-      get { return m_size; }
-    }
-
-    private int GetIndex(int row, int column)
-    {
-      if ((uint)row >= (uint)m_size)
-        throw new IndexOutOfRangeException("row");
-
-      if ((uint)column >= (uint)m_size)
-        throw new IndexOutOfRangeException("column");
-
-      if (row < column)
-        return row * (2 * m_size - row - 3) / 2 + column;
-      else if (row > column)
-        return column * (2 * m_size - column - 3) / 2 + row;
-      else
-        return 0;
-    }
-
-    public bool this[int row, int column]
-    {
-      get { return m_data[GetIndex(row, column)]; }
-      set
-      {
-        var index = GetIndex(row, column);
-
-        if (index > 0)
-          m_data[index] = value;
-      }
-    }
-  }
+#endif
 }
