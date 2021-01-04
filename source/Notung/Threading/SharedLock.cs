@@ -23,7 +23,9 @@ namespace Notung.Threading
     /// <param name="reenterable">Будет ли блокировка реентерабельной</param>
     public SharedLock(bool reenterable = true)
     {
-      m_lock = new ReaderWriterLockSlim(reenterable ? LockRecursionPolicy.SupportsRecursion : LockRecursionPolicy.NoRecursion);
+      m_lock = new ReaderWriterLockSlim(reenterable ? 
+        LockRecursionPolicy.SupportsRecursion : LockRecursionPolicy.NoRecursion);
+
       m_reader = new ReadLockHandle(m_lock);
       m_writer = new WriteLockHandle(m_lock);
       m_upgrader = new UpgradeableLockHandle(m_lock);
@@ -72,9 +74,7 @@ namespace Notung.Threading
       if (m_closed)
         return;
 
-      if (!m_lock.TryEnterReadLock(millisecondsTimeout))
-        return;
-      else
+      if (m_lock.TryEnterReadLock(millisecondsTimeout))
       {
         try
         {
@@ -100,9 +100,7 @@ namespace Notung.Threading
       if (m_closed)
         return;
 
-      if (!m_lock.TryEnterWriteLock(millisecondsTimeout))
-        return;
-      else
+      if (m_lock.TryEnterWriteLock(millisecondsTimeout))
       {
         try
         {
@@ -132,13 +130,13 @@ namespace Notung.Threading
       get
       {
         if (m_lock.IsWriteLockHeld)
-          return Threading.LockState.Write;
+          return LockState.Write;
         else if (m_lock.IsUpgradeableReadLockHeld)
-          return Threading.LockState.Upgradeable;
+          return LockState.Upgradeable;
         else if (m_lock.IsReadLockHeld)
-          return Threading.LockState.Read;
+          return LockState.Read;
         else
-          return Threading.LockState.None;
+          return LockState.None;
       }
     }
 
