@@ -75,7 +75,7 @@ namespace Notung.Helm.Windows
       if (!m_can_send)
         throw new InvalidOperationException(Resources.COPY_DATA_SEND_RECIEVE);
 
-      IntPtr source = ApplicationInfo.Instance.CurrentProcess.MainWindowHandle;
+      IntPtr source = AppManager.Instance.CurrentProcess.MainWindowHandle;
 
       fixed (byte* array = m_data)
       {

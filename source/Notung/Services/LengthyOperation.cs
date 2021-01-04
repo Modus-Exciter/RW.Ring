@@ -216,8 +216,6 @@ namespace Notung.Services
         this.OnProgressChanged(e);
     }
 
-#if APP_MANAGER
-
     private void OnTaskCompleted()
     {
       this.Completed.InvokeSynchronized(this, EventArgs.Empty);
@@ -227,22 +225,5 @@ namespace Notung.Services
     {
       this.ProgressChanged.InvokeSynchronized(this, e);
     }
-
-#else
-
-    private void OnTaskCompleted()
-    {
-      this.Completed.InvokeSynchronized(this, EventArgs.Empty, this.Invoker);
-    }
-
-    private void OnProgressChanged(ProgressChangedEventArgs e)
-    {
-      this.ProgressChanged.InvokeSynchronized(this, e, this.Invoker);
-    }
-
-    internal ISynchronizeInvoke Invoker { get; set; }
-
-#endif
-
   }
 }

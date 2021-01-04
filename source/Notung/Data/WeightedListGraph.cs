@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if WEIGHTED_GRAPH
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -94,3 +96,5 @@ namespace Notung.Data
     }
   }
 }
+
+#endif

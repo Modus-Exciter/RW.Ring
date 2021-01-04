@@ -78,6 +78,8 @@ namespace Notung.Data
     IEnumerable<int> OutgoingArcs(int peak);
   }
 
+#if WEIGHTED_GRAPH
+
   /// <summary>
   /// Базовый интерфейс для работы с взвешенными графами
   /// </summary>
@@ -177,4 +179,6 @@ namespace Notung.Data
       return m_graph.OutgoingCount(peak);
     }
   }
+
+#endif
 }

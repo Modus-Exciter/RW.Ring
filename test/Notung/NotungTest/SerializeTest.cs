@@ -12,28 +12,6 @@ namespace NotungTest
   [TestClass]
   public class SerializeTest
   {
-    [TestMethod]
-    public void SerializeSerializable()
-    {
-      byte[] serialized;
-      using (var ms = new MemoryStream())
-      {
-        SerializeCondition<string> sc = new SerializeCondition<string>("Hello, World!");
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(ms, sc);
-
-        serialized = ms.ToArray();
-      }
-
-      using (var ms = new MemoryStream(serialized))
-      {
-        ms.Position = 0;
-        BinaryFormatter bf = new BinaryFormatter();
-        SerializeCondition<string> sc = (SerializeCondition<string>)bf.Deserialize(ms);
-        Assert.AreEqual("Hello, World!", sc.Value);
-      }
-    }
-
     private class Unserializable
     {
       public string Text { get; set; }
@@ -215,7 +193,7 @@ namespace NotungTest
 
       table.Columns.Add("Name", typeof(string));
 
-      table.PrimaryKey = new [] { table.Columns[0]};
+      table.PrimaryKey = new[] { table.Columns[0] };
 
       table.Rows.Add(new object[] { null, "Nastya" });
       table.Rows.Add(new object[] { null, "Masha" });
@@ -297,8 +275,8 @@ namespace NotungTest
       table.Columns[1].DefaultValue = "Laska";
 
       table.Rows.Add(new[] { "First", "First row" });
-      table.Rows.Add(new[] { "Second", null });      
-      
+      table.Rows.Add(new[] { "Second", null });
+
       table = ReplaceTable(table);
 
       Assert.AreEqual("First", table.Rows[0][0]);
@@ -367,7 +345,7 @@ namespace NotungTest
       table.Columns.Add("Name", typeof(string)).AllowDBNull = false;
       table.Columns.Add("Description", typeof(string)).AllowDBNull = true;
 
-      var rnd =new Random();
+      var rnd = new Random();
 
       for (int i = 0; i < 2000; i++)
       {
@@ -430,6 +408,29 @@ namespace NotungTest
     public void EmptyStreamDeserizlize()
     {
       DataTableSaver.ReadDataTable(null);
+    }
+
+#if SERIALIZE_CONDITION
+    [TestMethod]
+    public void SerializeSerializable()
+    {
+      byte[] serialized;
+      using (var ms = new MemoryStream())
+      {
+        SerializeCondition<string> sc = new SerializeCondition<string>("Hello, World!");
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(ms, sc);
+
+        serialized = ms.ToArray();
+      }
+
+      using (var ms = new MemoryStream(serialized))
+      {
+        ms.Position = 0;
+        BinaryFormatter bf = new BinaryFormatter();
+        SerializeCondition<string> sc = (SerializeCondition<string>)bf.Deserialize(ms);
+        Assert.AreEqual("Hello, World!", sc.Value);
+      }
     }
 
     [TestMethod]
@@ -517,55 +518,6 @@ namespace NotungTest
     }
 
     [TestMethod]
-    public void SerializeInfo()
-    {
-      Info info = new Info("Valhalla", InfoLevel.Info) { Details = new Unserializable { Text = "will burn" } };
-      byte[] data;
-      using (var ms = new MemoryStream())
-      {
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(ms, info);
-        data = ms.ToArray();
-      }
-
-      Assert.IsTrue(info.Details is Unserializable);
-      Assert.AreEqual("will burn", info.Details.ToString());
-
-      using (var ms = new MemoryStream(data))
-      {
-        BinaryFormatter bf = new BinaryFormatter();
-        info = (Info)bf.Deserialize(ms);
-      }
-      Assert.IsFalse(info.Details is Unserializable);
-      Assert.AreEqual("will burn", info.Details.ToString());
-    }
-
-    [TestMethod]
-    public void SerializeInfoWithString()
-    {
-      Info info = new Info("Valhalla", InfoLevel.Info) { Details = "will burn"};
-      byte[] data;
-      using (var ms = new MemoryStream())
-      {
-        BinaryFormatter bf = new BinaryFormatter();
-        bf.Serialize(ms, info);
-        data = ms.ToArray();
-      }
-
-      Assert.IsTrue(info.Details is string);
-      Assert.AreEqual("will burn", info.Details);
-
-      using (var ms = new MemoryStream(data))
-      {
-        BinaryFormatter bf = new BinaryFormatter();
-        info = (Info)bf.Deserialize(ms);
-      }
-
-      Assert.IsTrue(info.Details is string);
-      Assert.AreEqual("will burn", info.Details);
-    }
-
-    [TestMethod]
     public void DomainsTest()
     {
       AppDomain newDomain = AppDomain.CreateDomain("SOME DOMAIN",
@@ -618,5 +570,54 @@ namespace NotungTest
       return new DomainExchange(AppDomain.CurrentDomain.FriendlyName);
     }
   }
+#endif
+    [TestMethod]
+    public void SerializeInfo()
+    {
+      Info info = new Info("Valhalla", InfoLevel.Info) { Details = new Unserializable { Text = "will burn" } };
+      byte[] data;
+      using (var ms = new MemoryStream())
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(ms, info);
+        data = ms.ToArray();
+      }
 
+      Assert.IsTrue(info.Details is Unserializable);
+      Assert.AreEqual("will burn", info.Details.ToString());
+
+      using (var ms = new MemoryStream(data))
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        info = (Info)bf.Deserialize(ms);
+      }
+      Assert.IsFalse(info.Details is Unserializable);
+      Assert.AreEqual("will burn", info.Details.ToString());
+    }
+
+    [TestMethod]
+    public void SerializeInfoWithString()
+    {
+      Info info = new Info("Valhalla", InfoLevel.Info) { Details = "will burn" };
+      byte[] data;
+      using (var ms = new MemoryStream())
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        bf.Serialize(ms, info);
+        data = ms.ToArray();
+      }
+
+      Assert.IsTrue(info.Details is string);
+      Assert.AreEqual("will burn", info.Details);
+
+      using (var ms = new MemoryStream(data))
+      {
+        BinaryFormatter bf = new BinaryFormatter();
+        info = (Info)bf.Deserialize(ms);
+      }
+
+      Assert.IsTrue(info.Details is string);
+      Assert.AreEqual("will burn", info.Details);
+    }
+  }
 }

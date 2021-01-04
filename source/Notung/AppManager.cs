@@ -65,8 +65,14 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        lock (_lock) 
+        lock (_lock)
+        {
+          if (ReferenceEquals(_app_instance, value))
+            return;
+
+          Utils.Invoker = value.Invoker;
           _app_instance = value;
+        }
       }
     }
 

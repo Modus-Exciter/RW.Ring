@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using Notung.Data;
@@ -12,6 +13,9 @@ using Notung.Threading;
 
 namespace Notung.Services
 {
+  /// <summary>
+  /// Текущий экземпляр приложения
+  /// </summary>
   public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
   {
     /// <summary>
@@ -23,6 +27,11 @@ namespace Notung.Services
     /// Декоратор операций, позволяющий их выполнять в однопоточном апартаменте
     /// </summary>
     IOperationWrapper ApartmentWrapper { get; }
+
+    /// <summary>
+    /// Ссылка на текущий процесс
+    /// </summary>
+    Process CurrentProcess { get; }
 
     /// <summary>
     /// Находится ли приложение в состоянии перезагрузки
@@ -65,12 +74,6 @@ namespace Notung.Services
     private readonly ReadOnlyCollection<string> m_args;
     private readonly ApartmentStateOperationWrapper m_apartment_wrapper = new ApartmentStateOperationWrapper();
 
-#if APPLICATION_INFO
-    private readonly string m_main_module_file_name = ApplicationInfo.Instance.CurrentProcess.MainModule.FileName;
-#else
-    private readonly string m_main_module_file_name = GetCurrentProcessModuleName();
-#endif
-
     private static readonly ILog _log = LogManager.GetLogger(typeof(AppInstance));
 
     public AppInstance(IAppInstanceView view)
@@ -80,7 +83,7 @@ namespace Notung.Services
 
       var args = Environment.GetCommandLineArgs();
 
-      if (args.Length > 0 && Path.GetFullPath(args[0]) == m_main_module_file_name)
+      if (args.Length > 0 && Path.GetFullPath(args[0]) == Utils.StartupPath)
       {
         var tmp = new string[args.Length - 1];
 
@@ -104,6 +107,11 @@ namespace Notung.Services
     public System.ComponentModel.ISynchronizeInvoke Invoker
     {
       get { return m_view.Invoker; }
+    }
+
+    public Process CurrentProcess
+    {
+      get { return Utils.CurrentProcess; }
     }
 
     public bool IsAlive
@@ -138,7 +146,7 @@ namespace Notung.Services
 
     public string StartupPath
     {
-      get { return m_main_module_file_name; }
+      get { return Utils.StartupPath; }
     }
 
     public event EventHandler Exit
@@ -172,16 +180,8 @@ namespace Notung.Services
       if (m_mutex_thread != null)
         m_mutex_thread.Join();
 
-      m_view.Restart(m_main_module_file_name, m_args);
+      m_view.Restart(Utils.StartupPath, m_args);
     }
-
-#if !APPLICATION_INFO
-    private static string GetCurrentProcessModuleName()
-    {
-      using (var process = Process.GetCurrentProcess())
-        return process.MainModule.FileName;
-    }
-#endif
 
     private Thread MainThread
     {
@@ -204,6 +204,7 @@ namespace Notung.Services
         return;
 
       bool new_instance;
+
       using (var mutex = new Mutex(true, GetMutexName(), out new_instance))
       {
         if (!new_instance)
@@ -220,7 +221,6 @@ namespace Notung.Services
           }
 
           m_terminating = true;
-
           LogManager.Stop();
           Environment.Exit(2);
         }
@@ -236,13 +236,9 @@ namespace Notung.Services
 
     private bool SendArgsToPreviousProcess()
     {
-#if APPLICATION_INFO
-      var currentProc = ApplicationInfo.Instance.CurrentProcess;
-#else
-      using (var currentProc = Process.GetCurrentProcess())
-      {
-#endif
+      var currentProc = this.CurrentProcess;
       var procList = Process.GetProcessesByName(currentProc.ProcessName);
+
       foreach (var proc in procList)
       {
         if (proc.Id == currentProc.Id)
@@ -253,16 +249,13 @@ namespace Notung.Services
 
         return m_view.SendArgsToProcess(proc, m_args);
       }
-#if !APPLICATION_INFO
-      }
-#endif
 
       return false;
     }
 
     private string GetMutexName()
     {
-      var path = m_main_module_file_name.ToCharArray();
+      var path = Utils.StartupPath.ToCharArray();
 
       for (int i = 0; i < path.Length; i++)
       {
@@ -290,7 +283,6 @@ namespace Notung.Services
     private static string CreatePathArgs(IList<string> args)
     {
       StringBuilder sb = new StringBuilder();
-
       bool first = true;
 
       foreach (var arg in args)

@@ -7,6 +7,9 @@ using Process = System.Diagnostics.Process;
 
 namespace Notung
 {
+  /// <summary>
+  /// Сведения о текущем продукте
+  /// </summary>
   [Serializable]
   [AppDomainShare]
   public sealed class ApplicationInfo
@@ -19,9 +22,6 @@ namespace Notung
     private string m_copyright;
     private Version m_version;
     private Version m_file_version;
-
-    [NonSerialized]
-    private Process m_current_process;
 
     private static ApplicationInfo _instance;
     private static readonly object _lock = new object();
@@ -176,17 +176,6 @@ namespace Notung
         }
 
         return m_file_version;
-      }
-    }
-
-    public Process CurrentProcess
-    {
-      get
-      {
-        if (m_current_process == null)
-          m_current_process = Process.GetCurrentProcess();
-
-        return m_current_process;
       }
     }
 

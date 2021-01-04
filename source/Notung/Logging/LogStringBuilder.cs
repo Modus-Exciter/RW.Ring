@@ -11,17 +11,8 @@ namespace Notung.Logging
     private readonly IBuildBlock[] m_blocks;
     private readonly ThreadField<char[]> m_date_converter = new ThreadField<char[]>();
     private volatile bool m_data_included;
-#if APPLICATION_INFO
-    private static readonly int _pid = ApplicationInfo.Instance.CurrentProcess.Id;   
-#else
-    private static readonly int _pid = GetProcessId();
 
-    private static int GetProcessId()
-    {
-      using (var process = System.Diagnostics.Process.GetCurrentProcess())
-        return process.Id;
-    }
-#endif
+    private static readonly int _pid = Utils.CurrentProcess.Id;
 
     public LogStringBuilder(string template)
     {

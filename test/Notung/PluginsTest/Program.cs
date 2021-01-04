@@ -64,7 +64,7 @@ namespace PluginsTest
 
       newDomain.DoCallBack(() =>
         {
-          Console.WriteLine(AppManager.Instance.StartupPath);
+          Console.WriteLine(AppManager.Instance.CurrentProcess.MainModule.FileName);
 #if APPLICATION_INFO
           Console.WriteLine(ApplicationInfo.Instance);
 #endif

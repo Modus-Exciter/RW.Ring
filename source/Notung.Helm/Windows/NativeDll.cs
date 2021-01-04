@@ -74,7 +74,7 @@ namespace Notung.Helm.Windows
     /// <returns>Массив имён функций</returns>
     public static string[] GetExportList(string path)
     {
-      IntPtr procId = new IntPtr(ApplicationInfo.Instance.CurrentProcess.Id);
+      IntPtr procId = new IntPtr(AppManager.Instance.CurrentProcess.Id);
 
       SymSetOptions(SymSetOptionsType.SYMOPT_UNDNAME | SymSetOptionsType.SYMOPT_DEFERRED_LOADS);
 

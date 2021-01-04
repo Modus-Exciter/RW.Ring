@@ -114,23 +114,16 @@ namespace Notung.ComponentModel
     /// <param name="eventHandler">Обработчик события</param>
     /// <param name="sender">Источник события</param>
     /// <param name="args">Событие</param>
-#if APP_MANAGER
     public static void InvokeSynchronized<TArgs>(this Delegate eventHandler, object sender, TArgs args)
-#else
-    public static void InvokeSynchronized<TArgs>(this Delegate eventHandler, object sender, TArgs args, ISynchronizeInvoke sync = null)      
-#endif
-    where TArgs : EventArgs
+      where TArgs : EventArgs
     {
       if (eventHandler == null)
         return;
 
       foreach (var dlgt in eventHandler.GetInvocationList())
       {
-#if APP_MANAGER
-        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? AppManager.Instance.Invoker;
-#else
-        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? sync;
-#endif
+        var invoker = (dlgt.Target as ISynchronizeInvoke) ?? Utils.Invoker;
+
         if (invoker != null && invoker.InvokeRequired)
         {
           invoker.BeginInvoke(dlgt, new object[] { sender, args });

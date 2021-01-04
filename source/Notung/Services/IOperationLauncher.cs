@@ -25,6 +25,9 @@ namespace Notung.Services
     TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
 
 #if !APP_MANAGER
+    /// <summary>
+    /// Происходит тогда, когда необходимо отобразить буфер сообщений
+    /// </summary>
     event EventHandler<InfoBufferEventArgs> MessagesRecieved;
 #endif
   }
@@ -39,6 +42,11 @@ namespace Notung.Services
         throw new ArgumentNullException("view");
 
       m_view = view;
+
+      #if !APP_MANAGER
+      if (Utils.Invoker == null)
+        Utils.Invoker = m_view.Invoker;
+      #endif
     }
 
     internal OperationLauncher() : this(new TaskManagerViewStub()) { }
@@ -80,11 +88,7 @@ namespace Notung.Services
 
       parameters.Setup(runBase);
 
-#if APP_MANAGER
       return new LengthyOperation(runBase);
-#else
-      return new LengthyOperation(runBase) { Invoker = m_view.Invoker };
-#endif
     }
 
     private TaskStatus Complete(LengthyOperation operation, LaunchParameters parameters)
@@ -119,7 +123,7 @@ namespace Notung.Services
 
     private void OnMessagesRecieved(InfoBuffer buffer)
     {
-      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs(buffer), m_view.Invoker);
+      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs(buffer));
     }
 
     private void OnError(Exception ex)
