@@ -1,6 +1,4 @@
-﻿#if APPLICATION_INFO
-
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 
@@ -25,6 +23,10 @@ namespace Notung
     private static ApplicationInfo _instance;
     private static readonly object _lock = new object();
 
+    /// <summary>
+    /// Инициализация сведений о текущем продукте
+    /// </summary>
+    /// <param name="productAssembly">Главная сборка продукта</param>
     public ApplicationInfo(Assembly productAssembly)
     {
       if (productAssembly == null)
@@ -226,5 +228,3 @@ namespace Notung
     }
   }
 }
-
-#endif

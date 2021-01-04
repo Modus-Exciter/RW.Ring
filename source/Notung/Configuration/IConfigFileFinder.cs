@@ -10,7 +10,9 @@ namespace Notung.Configuration
   public interface IConfigFileFinder
   {
     string InputFilePath { get; }
+
     string OutputFilePath { get; }
+
     string WorkingPath { get; }
   }
 
@@ -44,9 +46,8 @@ namespace Notung.Configuration
 
   public sealed class ProductVersionConfigFileFinder : IConfigFileFinder
   {
-    private readonly ConditionalServices.ProductPath m_product_path;
+    private readonly ApplicationInfo m_product_info;
     private readonly string m_working_path;
-
     private readonly string m_file_name;
 
     public const string DEFAULT_FILE = "settings.config";
@@ -60,36 +61,43 @@ namespace Notung.Configuration
         throw new ArgumentException(Resources.WRONG_FILE_SYMBOLS);
 
       m_file_name = fileName;
-      m_product_path = new ConditionalServices.ProductPath(productAssembly);
-      m_working_path = m_product_path.GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+      m_product_info = new ApplicationInfo(productAssembly);
+      m_working_path = Path.Combine(m_product_info.GetWorkingPath(), m_product_info.Version.ToString());
     }
 
     public ProductVersionConfigFileFinder(string fileName = DEFAULT_FILE) 
       : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly, fileName) { }
 
+    private string GetPath(string basePath)
+    {
+      if (!string.IsNullOrWhiteSpace(m_product_info.Company))
+        basePath = Path.Combine(basePath, m_product_info.Company);
+
+      basePath = Path.Combine(basePath, m_product_info.Product);
+
+      return basePath;
+    }
+
     private string FindLastConfigFile(string path)
     {
-      List<Version> versions = null;
+      Version last = null;
+
       foreach (var directory in Directory.GetDirectories(path))
       {
         Version v;
 
         if (Version.TryParse(Path.GetFileName(directory), out v)
-          && v <= m_product_path.Version
-          && File.Exists(Path.Combine(directory, m_file_name)))
+          && v <= m_product_info.Version && File.Exists(Path.Combine(directory, m_file_name)))
         {
-          if (versions == null)
-            versions = new List<Version>();
-          versions.Add(v);
+          if (last == null || last < v)
+            last = v;
         }
       }
-      if (versions != null)
-      {
-        versions.Sort();
-        return Path.Combine(path, versions[versions.Count - 1].ToString(), m_file_name);
-      }
 
-      return null;
+      if (last != null)
+        return Path.Combine(path, last.ToString(), m_file_name);
+      else
+        return null;
     }
 
     public string InputFilePath
@@ -99,14 +107,12 @@ namespace Notung.Configuration
         if (File.Exists(this.OutputFilePath))
           return this.OutputFilePath;
 
-        var path = m_product_path.GetPath(Environment.GetFolderPath(
-          Environment.SpecialFolder.LocalApplicationData), false);
+        var path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
 
         if (Directory.Exists(path))
           return FindLastConfigFile(path);
 
-        path = m_product_path.GetPath(Environment.GetFolderPath(
-          Environment.SpecialFolder.CommonApplicationData), false);
+        path = GetPath(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
 
         if (Directory.Exists(path))
           return FindLastConfigFile(path);

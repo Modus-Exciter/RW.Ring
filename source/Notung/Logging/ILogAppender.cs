@@ -27,7 +27,7 @@ namespace Notung.Logging
     public FileLogAppender(string template)
     {
       m_builder = new LogStringBuilder(template);
-      m_working_path = Path.Combine(ConditionalServices.GetWorkingPath(), "Logs");
+      m_working_path = Path.Combine(ApplicationInfo.Instance.GetWorkingPath(), "Logs");
 
       if (!Directory.Exists(m_working_path))
         Directory.CreateDirectory(m_working_path);

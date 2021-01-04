@@ -24,7 +24,7 @@ namespace Notung.ComponentModel
     static LanguageSwitcher() 
     {
       // Скорее всего, первый объект будет создан в потоке пользовательского интерфейса
-      _threads.Add(Thread.CurrentThread); 
+      _threads.Add(Thread.CurrentThread);
     }
 
     /// <summary>
