@@ -38,6 +38,51 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void PrimeNumbers()
+    {
+      var type = typeof(AppManager).Assembly.GetType("Notung.Data.PrimeHelper");
+
+      var is_prime = type.CreateDelegate<Func<int, bool>>("IsPrime");
+
+      Assert.IsFalse(is_prime(1));
+      Assert.IsTrue(is_prime(2));
+      Assert.IsTrue(is_prime(3));
+      Assert.IsFalse(is_prime(4));
+      Assert.IsTrue(is_prime(5));
+      Assert.IsFalse(is_prime(6));
+      Assert.IsTrue(is_prime(7));
+      Assert.IsFalse(is_prime(8));
+      Assert.IsFalse(is_prime(9));
+      Assert.IsFalse(is_prime(10));
+      Assert.IsTrue(is_prime(11));
+      Assert.IsFalse(is_prime(12));
+      Assert.IsTrue(is_prime(13));
+      Assert.IsFalse(is_prime(14));
+      Assert.IsFalse(is_prime(15));
+      Assert.IsFalse(is_prime(16));
+      Assert.IsTrue(is_prime(17));
+      Assert.IsTrue(is_prime(331));
+      Assert.IsTrue(is_prime(int.MaxValue));
+
+      var get_prime = type.CreateDelegate<Func<int, int>>("GetPrime");
+
+      Assert.AreEqual(3, get_prime(1));
+      Assert.AreEqual(3, get_prime(2));
+      Assert.AreEqual(3, get_prime(3));
+      Assert.AreEqual(5, get_prime(4));
+      Assert.AreEqual(7, get_prime(6));
+      Assert.AreEqual(17, get_prime(14));
+      Assert.AreEqual(17, get_prime(15));
+      Assert.AreEqual(37, get_prime(34));
+      Assert.AreEqual(37, get_prime(35));
+      Assert.AreEqual(79, get_prime(74));
+      Assert.AreEqual(163, get_prime(158));
+      Assert.AreEqual(331, get_prime(326));
+      Assert.AreEqual(int.MaxValue - 18, get_prime(int.MaxValue - 20));
+      Assert.AreEqual(int.MaxValue, get_prime(int.MaxValue - 17));
+    }
+
+    [TestMethod]
     public void FillBoolArray()
     {
       bool[] vals = new bool[2341];

@@ -5,9 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Logging;
-using Notung.Services;
 
-namespace Notung.Threading
+namespace Notung.Services
 {
   /// <summary>
   /// Обёртка над объектом RunBase, позволяющая отслеживать его состояние выполнения
@@ -144,7 +143,6 @@ namespace Notung.Threading
     public Image GetWorkImage()
     {
       IServiceProvider provider = m_run_base as IServiceProvider;
-
       return provider != null ? provider.GetService<Image>() : null;
     }
 

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Helm.Properties;
 using Notung.Services;
-using Notung.Threading;
 
 namespace Notung.Helm.Dialogs
 {

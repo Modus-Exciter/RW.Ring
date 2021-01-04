@@ -15,6 +15,7 @@ namespace Notung.Data
     private int m_free_index = -1;
     private int m_last_index = 0;
     private Slot[] m_slots;
+
     private readonly ISharedLock m_lock;
 
     /// <summary>
@@ -144,7 +145,7 @@ namespace Notung.Data
 
     private void IncreaseCapacity()
     {
-      int min = this.m_count * 2;
+      int min = this.m_count * 2 + 1;
       int prime = PrimeHelper.GetPrime(min < 0 ? m_count : min);
       Slot[] tmp_slots = new Slot[prime];
 
@@ -282,7 +283,7 @@ namespace Notung.Data
 
     public static int GetPrime(int value)
     {
-      if (value < 3)
+      if (value <= 3)
         return 3;
 
       if (value % 2 == 0)
@@ -293,9 +294,15 @@ namespace Notung.Data
 
       if (!IsPrime(value))
       {
-        value = value + 5 - (value % 6);
-
         bool even = false;
+
+        if (value % 6 == 5)
+        {
+          value += 2;
+          even = true;
+        }
+        else
+          value = value + 5 - (value % 6);
 
         while (!IsPrime(value))
         {
