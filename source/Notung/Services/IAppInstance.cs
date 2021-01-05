@@ -16,7 +16,7 @@ namespace Notung.Services
   /// <summary>
   /// Текущий экземпляр приложения
   /// </summary>
-  public interface IAppInstance : ISynchronizeProvider, IMainThreadInfo
+  public interface IAppInstance : IMainThreadInfo
   {
     /// <summary>
     /// Аргументы командной строки
@@ -103,11 +103,6 @@ namespace Notung.Services
     }
 
     internal AppInstance() : this(new ProcessAppInstanceView()) { }
-
-    public System.ComponentModel.ISynchronizeInvoke Invoker
-    {
-      get { return m_view.Invoker; }
-    }
 
     public Process CurrentProcess
     {
