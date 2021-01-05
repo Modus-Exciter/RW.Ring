@@ -135,7 +135,6 @@ namespace Notung.Data
     }
   }
 
-#if WEIGHTED_GRAPH
   /// <summary>
   /// Обыкновенная квадратная матрица
   /// </summary>
@@ -246,5 +245,4 @@ namespace Notung.Data
       set { m_data[GetIndex(row, column)] = value; }
     }
   }
-#endif
 }

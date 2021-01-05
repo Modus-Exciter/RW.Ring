@@ -151,6 +151,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Plugins directory path must be relative.
+        /// </summary>
+        internal static string INVALID_PLUGIN_DIRECTORY {
+            get {
+                return ResourceManager.GetString("INVALID_PLUGIN_DIRECTORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File {0} is not a correct plugin file.
         /// </summary>
         internal static string INVALID_PLUGIN_FILE {

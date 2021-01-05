@@ -10,7 +10,7 @@ namespace Schicksal.Basic
   /// <summary>
   /// Обёртка над таблицей данных для статистического анализа
   /// </summary>
-  public sealed class TableMultyDataGroup : IMultyDataGroup<string>
+  public sealed class TableMultyDataGroup : IMultyDataGroup<string>, IDisposable
   {
     private readonly DataTable m_table;
     private readonly DataViewGroup[] m_views;
@@ -38,26 +38,31 @@ namespace Schicksal.Basic
       var tuples = new List<DataViewGroup>();
       m_indexes = new Dictionary<string, int>();
 
-      foreach (DataRowView row in new DataView(m_table, filter, null, DataViewRowState.CurrentRows))
+      using (var filtered_table = new DataView(m_table, filter, null, DataViewRowState.CurrentRows))
       {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendFormat("[{0}] is not null", resultColumn);
-
-        for (int i = 0; i < factorColumns.Length; i++)
-          sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
-
-        if (!string.IsNullOrEmpty(filter))
-          sb.AppendFormat(" AND {0}", filter);
-
-        if (!sets.Add(sb.ToString()))
-          continue;
-
-        var view = new DataView(m_table, sb.ToString(), null, DataViewRowState.CurrentRows);
-
-        if (view.Count > 0)
+        foreach (DataRowView row in filtered_table)
         {
-          tuples.Add(new DataViewGroup(view, resultColumn));
-          m_indexes[view.RowFilter] = m_indexes.Count;
+          StringBuilder sb = new StringBuilder();
+          sb.AppendFormat("[{0}] is not null", resultColumn);
+
+          for (int i = 0; i < factorColumns.Length; i++)
+            sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
+
+          if (!string.IsNullOrEmpty(filter))
+            sb.AppendFormat(" AND {0}", filter);
+
+          if (!sets.Add(sb.ToString()))
+            continue;
+
+          var view = new DataView(m_table, sb.ToString(), null, DataViewRowState.CurrentRows);
+
+          if (view.Count > 0)
+          {
+            tuples.Add(new DataViewGroup(view, resultColumn));
+            m_indexes[view.RowFilter] = m_indexes.Count;
+          }
+          else
+            view.Dispose();
         }
       }
 
@@ -195,6 +200,12 @@ namespace Schicksal.Basic
 
         return m_string;
       }
+    }
+
+    public void Dispose()
+    {
+      foreach (DataViewGroup group in m_views)
+        group.View.Dispose();
     }
   }
 }

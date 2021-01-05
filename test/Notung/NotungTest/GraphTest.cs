@@ -393,7 +393,7 @@ namespace NotungTest
         new CharItem('G', new char[] { 'C' }),
       };
 
-      var graph = items.ToUnweightedGraph(true);
+      var graph = items.ToUnweightedGraph();
       var res = TopologicalSort.Kahn(graph);
 
       Assert.AreEqual(graph.PeakCount, res.Length);
@@ -422,7 +422,7 @@ namespace NotungTest
         new CharItem('G', new char[] { 'C' }),
       };
 
-      var graph = items.ToUnweightedGraph(true);
+      var graph = items.ToUnweightedGraph();
       var res = TopologicalSort.Tarjan(graph);
 
       Assert.AreEqual(graph.PeakCount, res.Length);

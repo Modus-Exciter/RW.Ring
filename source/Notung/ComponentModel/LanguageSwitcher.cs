@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using Notung.Data;
-using Notung.Threading;
 using Notung.Logging;
+using Notung.Threading;
 
 namespace Notung.ComponentModel
 {
@@ -14,7 +13,7 @@ namespace Notung.ComponentModel
   /// Компонент для переключения между языками
   /// </summary>
   [DefaultEvent("LanguageChanged")]
-  public class LanguageSwitcher : Component, ISupportInitialize
+  public sealed class LanguageSwitcher : Component, ISupportInitialize
   {
     private static readonly WeakSet<LanguageSwitcher> _instances = new WeakSet<LanguageSwitcher>();
     private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
@@ -23,7 +22,6 @@ namespace Notung.ComponentModel
 
     static LanguageSwitcher() 
     {
-      // Скорее всего, первый объект будет создан в потоке пользовательского интерфейса
       ThreadTracker.AddThreadHandlers(OnThreadRegistered, null, OnThreadError);
     }
 
@@ -33,8 +31,7 @@ namespace Notung.ComponentModel
     public LanguageSwitcher()
     {
       _instances.Add(this);
-
-      RegisterThread(Thread.CurrentThread);
+      ThreadTracker.RegisterThread(Thread.CurrentThread);
     }
 
     /// <summary>
@@ -63,15 +60,6 @@ namespace Notung.ComponentModel
       }
     }
 
-    /// <summary>
-    /// Добавляет поток в список зарегистрированных потоков
-    /// </summary>
-    /// <param name="thread">Добавляемый поток</param>
-    public static void RegisterThread(Thread thread)
-    {
-      ThreadTracker.RegisterThread(thread);
-    }
-
     private static void OnThreadRegistered(Thread thread)
     {
       thread.CurrentCulture = _current_culture;
@@ -88,7 +76,7 @@ namespace Notung.ComponentModel
     /// Генерирует событие переключения языка
     /// </summary>
     /// <param name="args">Аргумент события</param>
-    protected virtual void OnLanguageChanged(LanguageEventArgs args)
+    private void OnLanguageChanged(LanguageEventArgs args)
     {
       lock (this.Events)
       {
@@ -169,7 +157,7 @@ namespace Notung.ComponentModel
       Switch(new CultureInfo(cultureCode));
     }
 
-    #region ISupportInitialize Members
+    #region ISupportInitialize Members ------------------------------------------------------------
 
     void ISupportInitialize.BeginInit() { }
 

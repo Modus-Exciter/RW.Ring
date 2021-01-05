@@ -33,7 +33,7 @@ namespace Notung.Loader
     /// <param name="dependencyItems">Список объектов, зависящих друг от друга</param>
     /// <param name="useMatrix">Хранить граф в виде матрицы смежности</param>
     /// <returns>Взвешенный граф, описывающий структуру зависимостей</returns>
-    public static IUnweightedGraph ToUnweightedGraph<T>(this IList<IDependencyItem<T>> dependencyItems, bool useMatrix = false)
+    public static IUnweightedGraph ToUnweightedGraph<T>(this IList<IDependencyItem<T>> dependencyItems)
     {
       Dictionary<T, int> converter = new Dictionary<T, int>(dependencyItems.Count);
 
@@ -42,10 +42,7 @@ namespace Notung.Loader
 
       IUnweightedGraph graph;
 
-      if (useMatrix)
-        graph = new UnweightedMatrixGraph(converter.Count, true);
-      else
-        graph = new UnweightedListGraph(converter.Count, true);
+      graph = new UnweightedListGraph(converter.Count, true);
 
       for (int i = 0; i < dependencyItems.Count; i++)
       {

@@ -410,7 +410,6 @@ namespace NotungTest
       DataTableSaver.ReadDataTable(null);
     }
 
-#if SERIALIZE_CONDITION
     [TestMethod]
     public void SerializeSerializable()
     {
@@ -536,41 +535,7 @@ namespace NotungTest
         AppDomain.Unload(newDomain);
       }
     }
-  }
 
-  [Serializable]
-  public struct DomainExchange
-  {
-    private readonly SerializeCondition<object> m_field;
-    public readonly int Number;
-
-    public DomainExchange(object value) : this()
-    {
-      m_field.Value = value;
-
-      if (value != null)
-        Number = value.ToString().Length;
-    }
-
-    public object Value
-    {
-      get { return m_field.Value; }
-    }
-  }
-
-  public interface IExchange
-  {
-    DomainExchange Get();
-  }
-
-  public class Exchangeer : MarshalByRefObject, IExchange
-  {
-    public DomainExchange Get()
-    {
-      return new DomainExchange(AppDomain.CurrentDomain.FriendlyName);
-    }
-  }
-#endif
     [TestMethod]
     public void SerializeInfo()
     {
@@ -618,6 +583,40 @@ namespace NotungTest
 
       Assert.IsTrue(info.Details is string);
       Assert.AreEqual("will burn", info.Details);
+    }
+  }
+
+  [Serializable]
+  public struct DomainExchange
+  {
+    private readonly SerializeCondition<object> m_field;
+    public readonly int Number;
+
+    public DomainExchange(object value)
+      : this()
+    {
+      m_field.Value = value;
+
+      if (value != null)
+        Number = value.ToString().Length;
+    }
+
+    public object Value
+    {
+      get { return m_field.Value; }
+    }
+  }
+
+  public interface IExchange
+  {
+    DomainExchange Get();
+  }
+
+  public class Exchangeer : MarshalByRefObject, IExchange
+  {
+    public DomainExchange Get()
+    {
+      return new DomainExchange(AppDomain.CurrentDomain.FriendlyName);
     }
   }
 }

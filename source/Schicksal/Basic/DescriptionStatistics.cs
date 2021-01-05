@@ -75,41 +75,42 @@ namespace Schicksal.Basic
     
     public override void Run()
     {
-      var group = new TableMultyDataGroup(m_table, m_factors, m_result, m_filter);
-
-      var res = new DescriptionStatisticsEntry[group.Count];
-
-      for (int i = 0; i < res.Length; i++)
+      using (var group = new TableMultyDataGroup(m_table, m_factors, m_result, m_filter))
       {
-        var name = group.GetKey(i);
-        
-        if (name.Contains(" AND "))
-          name = name.Substring(name.IndexOf(" AND ") + 5);
+        var res = new DescriptionStatisticsEntry[group.Count];
 
-        res[i] = new DescriptionStatisticsEntry
+        for (int i = 0; i < res.Length; i++)
         {
-          Description = name,
-          Mean = DescriptionStatistics.Mean(group[i]),
-          Median = DescriptionStatistics.Median(group[i]),
-          Min = group[i].Min(),
-          Max = group[i].Max(),
-          Count = group[i].Count
-        };
+          var name = group.GetKey(i);
 
-        if (res[i].Count > 1)
-        {
-          res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-          res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(group[i].Count) *
-            SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - m_probability / 2);
+          if (name.Contains(" AND "))
+            name = name.Substring(name.IndexOf(" AND ") + 5);
+
+          res[i] = new DescriptionStatisticsEntry
+          {
+            Description = name,
+            Mean = DescriptionStatistics.Mean(group[i]),
+            Median = DescriptionStatistics.Median(group[i]),
+            Min = group[i].Min(),
+            Max = group[i].Max(),
+            Count = group[i].Count
+          };
+
+          if (res[i].Count > 1)
+          {
+            res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
+            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(group[i].Count) *
+              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - m_probability / 2);
+          }
+          else
+          {
+            res[i].StdError = double.NaN;
+            res[i].ConfidenceInterval = double.NaN;
+          }
         }
-        else
-        {
-          res[i].StdError = double.NaN;
-          res[i].ConfidenceInterval = double.NaN;
-        }
+
+        this.Result = res;
       }
-
-      this.Result = res;
     }
   }
 

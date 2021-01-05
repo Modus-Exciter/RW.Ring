@@ -176,8 +176,7 @@ namespace Notung.Helm
       if (m_view != null && e.Exception != null)
       {
         m_view.ShowErrorBox(e.Exception.Message.Replace(Environment.NewLine, " "),
-          string.Format(
-              "{0}: {1}{2}{3}: {4}{2}{5}: {6}{2}{2}{7}:{2}{8}",
+          string.Format("{0}: {1}{2}{3}: {4}{2}{5}: {6}{2}{2}{7}:{2}{8}",
               Properties.Resources.EXCEPTION_TYPE, e.Exception.GetType(),
               Environment.NewLine,
               Properties.Resources.EXCEPTION_MESSAGE, e.Exception.Message,
@@ -241,7 +240,6 @@ namespace Notung.Helm
         {
           var presenter = new SplashScreenPresenter(work, dlg);
           presenter.Picture = splashScreen;
-
           dlg.ShowDialog(m_starter.m_view.MainForm);
 
           return presenter.Result;
@@ -256,36 +254,38 @@ namespace Notung.Helm
           return;
 
         var image = m_starter.GetSplashScreenImage();
-        var container = new DependencyContainer();
-        var work = new ApplicationLoadingWork(queue, container);
-        var res = this.RunLoadingWork(work, image);
-
-        if (res == null)
+        using (var container = new DependencyContainer())
         {
-          _log.Fatal("InitApplication(): Can't get result loading task");
-          m_starter.ExitCode = -1;
-          Application.Exit();
-          return;
-        }
+          var work = new ApplicationLoadingWork(queue, container);
+          var res = this.RunLoadingWork(work, image);
 
-        while (!res.Success)
-        {
-          if (!AppManager.Notificator.Confirm(res.Buffer, Resources.INIT_FAIL_DESCRIPTION))
+          if (res == null)
           {
-            m_starter.ExitCode = 1;
+            _log.Fatal("InitApplication(): Can't get result loading task");
+            m_starter.ExitCode = -1;
             Application.Exit();
             return;
           }
 
-          if (!m_starter.m_view.ShowSettingsForm(res.Buffer))
+          while (!res.Success)
           {
-            m_starter.ExitCode = 2;
-            Application.Exit();
-            return;
-          }
+            if (!AppManager.Notificator.Confirm(res.Buffer, Resources.INIT_FAIL_DESCRIPTION))
+            {
+              m_starter.ExitCode = 1;
+              Application.Exit();
+              return;
+            }
 
-          work = new ApplicationLoadingWork(res, container);
-          res = this.RunLoadingWork(work, image);
+            if (!m_starter.m_view.ShowSettingsForm(res.Buffer))
+            {
+              m_starter.ExitCode = 2;
+              Application.Exit();
+              return;
+            }
+
+            work = new ApplicationLoadingWork(res, container);
+            res = this.RunLoadingWork(work, image);
+          }
         }
       }
 

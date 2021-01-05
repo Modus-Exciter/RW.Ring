@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using Notung.ComponentModel;
 using Notung.Logging;
 using Notung.Properties;
 using Notung.Threading;
@@ -160,24 +159,29 @@ namespace Notung.Configuration
       _log.DebugFormat("WriteSection(): {0}", section.GetType().FullName);
 
       section_name = this.GetSectionName(section.GetType(), out data_contract);
-
       var sb = new StringBuilder();
 
       using (var sw = new StringWriter(sb))
       {
-        using (var writer = new XmlTextWriter(sw) { Formatting = Formatting.Indented, IndentChar = '\t', Indentation = 1, })
+        var writer = new XmlTextWriter(sw) 
+        { 
+          Formatting = Formatting.Indented, 
+          IndentChar = '\t', 
+          Indentation = 1, 
+        };
+
+        if (data_contract)
         {
-          if (data_contract)
-          {
-            var sr = new DataContractSerializer(section.GetType());
-            sr.WriteObject(writer, section);
-          }
-          else
-          {
-            var sr = new XmlSerializer(section.GetType());
-            sr.Serialize(writer, section);
-          }
+          var sr = new DataContractSerializer(section.GetType());
+          sr.WriteObject(writer, section);
         }
+        else
+        {
+          var sr = new XmlSerializer(section.GetType());
+          sr.Serialize(writer, section);
+        }
+
+        writer.Flush();
       }
 
       sb.AppendLine();
@@ -211,49 +215,46 @@ namespace Notung.Configuration
     private ConfigurationSection ReadSection(Type sectionType)
     {
       ConfigurationSection ret = null;
-
       string section_name;
       bool data_contract;
 
       _log.DebugFormat("ReadSection(): {0}", sectionType.FullName);
 
       section_name = this.GetSectionName(sectionType, out data_contract);
-
       string section_xml = null;
 
       if (m_file.TryGetSection(section_name, out section_xml))
       {
         using (var reader = new StringReader(section_xml))
         {
-          using (var xml_reader = new XmlTextReader(reader))
+          var xml_reader = new XmlTextReader(reader);
+
+          if (data_contract)
           {
-            if (data_contract)
+            var sr = new DataContractSerializer(sectionType);
+            try
             {
-              var sr = new DataContractSerializer(sectionType);
-              try
-              {
-                ret = (ConfigurationSection)sr.ReadObject(xml_reader);
-              }
-              catch (Exception ex)
-              {
-                _log.Error("ReadSection(): exception", ex);
-                ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-                WriteSection(ret);
-              }
+              ret = (ConfigurationSection)sr.ReadObject(xml_reader);
             }
-            else
+            catch (Exception ex)
             {
-              var sr = new XmlSerializer(sectionType);
-              try
-              {
-                ret = (ConfigurationSection)sr.Deserialize(xml_reader);
-              }
-              catch (Exception ex)
-              {
-                _log.Error("ReadSection(): exception", ex);
-                ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-                WriteSection(ret);
-              }
+              _log.Error("ReadSection(): exception", ex);
+              ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
+              WriteSection(ret);
+            }
+          }
+          else
+          {
+            var sr = new XmlSerializer(sectionType);
+            try
+            {
+              ret = (ConfigurationSection)sr.Deserialize(xml_reader);
+            }
+            catch (Exception ex)
+            {
+              _log.Error("ReadSection(): exception", ex);
+              ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
+              WriteSection(ret);
             }
           }
         }
@@ -271,11 +272,8 @@ namespace Notung.Configuration
     {
       string section_name;
       data_contract = sectionType.IsDefined(typeof(DataContractAttribute), false);
-      if (data_contract)
-      {
-        section_name = new XsdDataContractExporter().GetRootElementName(sectionType).Name;
-      }
-      else
+
+      if (!data_contract)
       {
         var root = sectionType.GetCustomAttribute<XmlRootAttribute>();
 
@@ -284,6 +282,8 @@ namespace Notung.Configuration
         else
           section_name = root.ElementName;
       }
+      else
+        section_name = new XsdDataContractExporter().GetRootElementName(sectionType).Name;
 
       if (m_section_names.ContainsKey(section_name))
       {

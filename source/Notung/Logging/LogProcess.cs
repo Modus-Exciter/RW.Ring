@@ -14,10 +14,7 @@ namespace Notung.Logging
 
       public LogProcess(HashSet<ILogAppender> appedners)
       {
-#if DEBUG
-        if (appedners == null)
-          throw new ArgumentNullException("appedners");
-#endif
+        System.Diagnostics.Debug.Assert(appedners != null, "Appenders cannot be null");
         m_appedners = appedners;
       }
 
@@ -74,13 +71,9 @@ namespace Notung.Logging
       private volatile bool m_shutdown;
       private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 
-      public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAppender> acceptors)
-        : base(acceptors)
+      public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAppender> acceptors) : base(acceptors)
       {
-#if DEBUG
-        if (info == null)
-          throw new ArgumentNullException("info");
-#endif
+        System.Diagnostics.Debug.Assert(info != null, "Main thread info cannot be null");
         m_info = info;
 
         (m_work_thread = new Thread(this.Process)).Start();
@@ -154,9 +147,9 @@ namespace Notung.Logging
         }
       }
 
-      private void Accept(ILogAppender acceptor)
+      private void Accept(ILogAppender appender)
       {
-        acceptor.WriteLog(new LoggingData(m_current_data, m_size));
+        appender.WriteLog(new LoggingData(m_current_data, m_size));
       }
 
       public override void WriteMessage(ref LoggingEvent data)

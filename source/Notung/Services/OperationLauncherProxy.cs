@@ -165,10 +165,7 @@ namespace Notung.Services
 
     public bool CanCancel
     {
-      get 
-      { 
-        return ((ICancelableRunBase)m_run_base).CanCancel; 
-      }
+      get { return ((ICancelableRunBase)m_run_base).CanCancel; }
     }
 
     public override void Run()

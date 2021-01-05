@@ -58,23 +58,25 @@ namespace Schicksal.Anova
       lock (result)
         this.ReportProgress(result.Count * 100 / groupCount, string.Join("+", factors));
 
-      FisherMetrics degrees = FisherCriteria.CalculateCriteria(
-        new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter));
-
-      if (degrees.Ndf != 0)
+      using (var group = new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter))
       {
-        var row = new FisherTestResult();
+        FisherMetrics degrees = FisherCriteria.CalculateCriteria(group);
 
-        row.F = degrees.F;
-        row.Kdf = degrees.Kdf;
-        row.Ndf = degrees.Ndf;
-        row.Factor = string.Join("+", factors);
-        row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
-        row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
-        row.P = FisherCriteria.GetProbability(degrees);
+        if (degrees.Ndf != 0)
+        {
+          var row = new FisherTestResult();
 
-        lock (result)
-          result.Add(row);
+          row.F = degrees.F;
+          row.Kdf = degrees.Kdf;
+          row.Ndf = degrees.Ndf;
+          row.Factor = string.Join("+", factors);
+          row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
+          row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
+          row.P = FisherCriteria.GetProbability(degrees);
+
+          lock (result)
+            result.Add(row);
+        }
       }
     }
   }

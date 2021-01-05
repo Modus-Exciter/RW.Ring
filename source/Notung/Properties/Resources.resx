@@ -147,6 +147,9 @@
   <data name="INVALID_EVENT_HANDLER" xml:space="preserve">
     <value>Delegate type {0} is not recognized as EventHandler&lt;{1}&gt;</value>
   </data>
+  <data name="INVALID_PLUGIN_DIRECTORY" xml:space="preserve">
+    <value>Plugins directory path must be relative</value>
+  </data>
   <data name="INVALID_PLUGIN_FILE" xml:space="preserve">
     <value>File {0} is not a correct plugin file</value>
   </data>

@@ -42,7 +42,8 @@ namespace Notung.Threading
     /// <param name="registered">Действие, выполняемое при регистрации потока</param>
     /// <param name="removed">Действие, выполняемое при удалении потока</param>
     /// <param name="onError">Действие, выполняемое при ошибке</param>
-    public static void AddThreadHandlers(Action<Thread> registered, Action<Thread> removed, Action<Thread, Exception> onError)
+    public static void AddThreadHandlers(Action<Thread> registered,
+      Action<Thread> removed, Action<Thread, Exception> onError)
     {
       if (registered != null)
         _thread_registered += registered;
@@ -59,22 +60,8 @@ namespace Notung.Threading
         {
           foreach (var thread in _threads)
           {
-            if (!thread.IsAlive)
-              continue;
-
-            if (onError != null)
-            {
-              try
-              {
-                registered(thread);
-              }
-              catch (Exception ex)
-              {
-                onError(thread, ex);
-              }
-            }
-            else
-              registered(thread);
+            if (thread.IsAlive)
+              ProcessThread(thread, _thread_registered);
           }
         }
       }
@@ -92,28 +79,7 @@ namespace Notung.Threading
       lock (_threads)
       {
         if (_threads.Add(thread))
-        {
-          var registrator = _thread_registered;
-
-          if (registrator != null)
-          {
-            var on_error = _thread_error;
-
-            if (on_error != null)
-            {
-              try
-              {
-                registrator(thread);
-              }
-              catch (Exception ex)
-              {
-                on_error(thread, ex);
-              }
-            }
-            else
-              registrator(thread);
-          }
-        }
+          ProcessThread(thread, _thread_registered);
       }
     }
 
@@ -129,16 +95,42 @@ namespace Notung.Threading
       lock (_threads)
       {
         if (_threads.Remove(thread))
-        {
-          var remover = _thread_removed;
-
-          if (remover != null)
-            remover(thread);
-        }
+          ProcessThread(thread, _thread_removed);
       }
     }
 
+    /// <summary>
+    /// Очистка завершившихся потоков
+    /// </summary>
+    public static void ClearExpiredThreads()
+    {
+      lock (_threads)
+        _threads.RemoveWhere(thread => !thread.IsAlive);
+    }
+
     #region Implementation ------------------------------------------------------------------------
+
+    private static void ProcessThread(Thread thread, Action<Thread> action)
+    {
+      if (action == null)
+        return;
+
+      var on_error = _thread_error;
+
+      if (on_error != null)
+      {
+        try
+        {
+          action(thread);
+        }
+        catch (Exception ex)
+        {
+          on_error(thread, ex);
+        }
+      }
+      else
+        action(thread);
+    }
 
     private sealed class ThreadCollection : IThreadCollection
     {

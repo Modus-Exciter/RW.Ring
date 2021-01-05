@@ -63,10 +63,12 @@ namespace Notung.Services
     /// В текущий домен
     /// </summary>
     CurrentDomain,
+
     /// <summary>
     /// Все плагины в отдельный домен
     /// </summary>
     SeparateDomain,
+
     /// <summary>
     /// Каждый плагин в свой домен
     /// </summary>
@@ -235,7 +237,7 @@ namespace Notung.Services
       }
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
       m_domain.AssemblyLoad -= HandleAssemblyLoad;
       m_plugin_loader.Dispose();
@@ -248,10 +250,8 @@ namespace Notung.Services
     /// <returns>Сведения о плагине для загрузки</returns>
     protected virtual PluginInfo GetPluginInfo(string path)
     {
-#if DEBUG
-      if (path == null)
-        throw new ArgumentNullException("path");
-#endif
+      System.Diagnostics.Debug.Assert(path != null, "Path cannot be null");
+      
       using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
       {
         using (var reader = new XmlTextReader(file))

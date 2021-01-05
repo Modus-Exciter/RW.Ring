@@ -79,7 +79,7 @@ namespace Notung.Helm.Windows
     /// <param name="lParam">lParam</param>
     /// <returns></returns>
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern IntPtr PostMessage(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam);
+    public static extern int PostMessage(IntPtr hwnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
     /// <summary>
     /// Вызов функции Win API для синхронного посылания собщения окну

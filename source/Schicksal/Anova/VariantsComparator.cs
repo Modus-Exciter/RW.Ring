@@ -44,7 +44,6 @@ namespace Schicksal.Anova
 
     public DataTable CreateDescriptiveTable(double p)
     {
-      var group = new TableMultyDataGroup(m_source, m_factors, m_result, m_filter);
       var res = new DataTable();
 
       res.Columns.Add("Factor", typeof(string));
@@ -57,48 +56,52 @@ namespace Schicksal.Anova
       res.Columns.Add("Std error", typeof(double));
       res.Columns.Add("Interval", typeof(double));
 
-      for (int i = 0; i < group.Count; i++)
+      using (var group = new TableMultyDataGroup(m_source, m_factors, m_result, m_filter))
       {
-        var row = res.NewRow();
-
-        var filter = group.GetKey(i);
-
-        foreach (string factor in m_factors)
+        for (int i = 0; i < group.Count; i++)
         {
-          var search = string.Format("[{0}] = ", factor);
-          var index = filter.IndexOf(search);
-          if (index >= 0)
+          var row = res.NewRow();
+
+          var filter = group.GetKey(i);
+
+          foreach (string factor in m_factors)
           {
-            var next = filter.IndexOf(" AND ", index + search.Length);
+            var search = string.Format("[{0}] = ", factor);
+            var index = filter.IndexOf(search);
+            if (index >= 0)
+            {
+              var next = filter.IndexOf(" AND ", index + search.Length);
 
-            if (next >= 0)
-              search = filter.Substring(index + search.Length, next - (index + search.Length));
-            else
-              search = filter.Substring(index + search.Length);
+              if (next >= 0)
+                search = filter.Substring(index + search.Length, next - (index + search.Length));
+              else
+                search = filter.Substring(index + search.Length);
+            }
+            if (m_source.Columns[factor].DataType == typeof(string)
+              && search.StartsWith("'") && search.EndsWith("'"))
+              search = search.Substring(1, search.Length - 2);
+
+            row[factor] = TypeDescriptor.GetConverter(
+              m_source.Columns[factor].DataType).ConvertFromInvariantString(search);
           }
-          if (m_source.Columns[factor].DataType == typeof(string)
-            && search.StartsWith("'") && search.EndsWith("'"))
-            search = search.Substring(1, search.Length - 2);
 
-          row[factor] = TypeDescriptor.GetConverter(m_source.Columns[factor].DataType).ConvertFromInvariantString(search);
-        }
+          row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
+          row["Mean"] = DescriptionStatistics.Mean(group[i]);
+          row["Count"] = group[i].Count;
 
-        row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
-        row["Mean"] = DescriptionStatistics.Mean(group[i]);
-        row["Count"] = group[i].Count;
-
-        if (group[i].Count > 1)
-        {
-          row["Std error"] = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-          row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(group[i].Count) *
-            SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - p / 2);
+          if (group[i].Count > 1)
+          {
+            row["Std error"] = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
+            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(group[i].Count) *
+              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - p / 2);
+          }
+          else
+          {
+            row["Interval"] = double.NaN;
+            row["Std error"] = double.NaN;
+          }
+          res.Rows.Add(row);
         }
-        else
-        {
-          row["Interval"] = double.NaN;
-          row["Std error"] = double.NaN;
-        }
-        res.Rows.Add(row);
       }
 
       return res;
@@ -279,7 +282,7 @@ namespace Schicksal.Anova
     }
   }
 
-  public class DifferenceInfoList : IBindingList, IList<DifferenceInfo>
+  public sealed class DifferenceInfoList : IBindingList, IList<DifferenceInfo>
   {
     private DifferenceInfo[] m_list;
     private readonly DifferenceInfo[] m_source_list;

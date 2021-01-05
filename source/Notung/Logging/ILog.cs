@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -18,10 +19,8 @@ namespace Notung.Logging
 
     public LoggingData(LoggingEvent[] data, int length) : this()
     {
-#if DEBUG
-      if (data != null && length < 0 || length > data.Length)
-        throw new ArgumentOutOfRangeException("length");
-#endif
+      Debug.Assert(data == null || (length > 0 && length <= data.Length), "Length is ou of range");
+
       m_data = data;
 
       if (m_data != null)
@@ -37,10 +36,7 @@ namespace Notung.Logging
     {
       get
       {
-#if DEBUG
-        if (m_data == null)
-          throw new IndexOutOfRangeException();
-#endif
+        Debug.Assert(m_data != null);
         return m_data[index];
       }
     }

@@ -152,7 +152,8 @@ namespace Notung.Services
       if (buffer == null)
         throw new ArgumentNullException("buffer");
 
-      if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0)
+      if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0 
+        && (string.IsNullOrEmpty(summary) || buffer[0].Message.Equals(summary)))
         return this.AlertSync(buffer[0], ConfirmationRegime.Confirm).GetValueOrDefault();
       else
       {

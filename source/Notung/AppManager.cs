@@ -44,7 +44,7 @@ namespace Notung
         if (value == null)
           throw new ArgumentNullException();
 
-        lock (_lock) 
+        lock (_lock)
           _configurator = value;
       }
     }
@@ -54,7 +54,10 @@ namespace Notung
     /// </summary>
     public static IAssemblyClassifier AssemblyClassifier
     {
-      get { return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier()); }
+      get
+      {
+        return _asm_classifier ?? InitService(ref _asm_classifier, () => new AssemblyClassifier());
+      }
       set
       {
         if (value == null)
@@ -124,8 +127,10 @@ namespace Notung
     /// </summary>
     public static IOperationLauncher OperationLauncher
     {
-      get { return _operation_launcher ?? InitService(ref _operation_launcher, () => new OperationLauncher()); }
-
+      get
+      {
+        return _operation_launcher ?? InitService(ref _operation_launcher, () => new OperationLauncher());
+      }
       set
       {
         if (value == null)
@@ -154,8 +159,8 @@ namespace Notung
 
     private sealed class DomainAcceptor : MarshalByRefObject
     {
-      public void AcceptServices(IAppInstance instance, 
-                                 IConfigurator configurator, 
+      public void AcceptServices(IAppInstance instance,
+                                 IConfigurator configurator,
                                  INotificator notificator,
                                  IOperationLauncher operationLauncher)
       {

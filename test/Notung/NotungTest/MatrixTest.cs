@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace NotungTest
 {
-#if WEIGHTED_GRAPH
   [TestClass]
   public class MatrixTest
   {
@@ -146,5 +145,4 @@ namespace NotungTest
       Assert.AreEqual(14, row[4]);
     }
   }
-#endif
 }

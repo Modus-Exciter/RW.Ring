@@ -17,6 +17,16 @@ namespace Notung
     }
 
     /// <summary>
+    /// Проверяет тип на возможность работы с ним как со скаляром
+    /// </summary>
+    /// <param name="type">Проверяемый тип</param>
+    /// <returns>True, если тип допускает работу с ним как со скаляром</returns>
+    public static bool IsScalar(this Type type)
+    {
+      return type.IsValueType || type == typeof(string);
+    }
+
+    /// <summary>
     /// Возвращает экземпляр атрибута у элемента
     /// </summary>
     /// <typeparam name="A">Тип атрибута</typeparam>
