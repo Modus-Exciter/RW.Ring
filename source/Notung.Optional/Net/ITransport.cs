@@ -129,7 +129,7 @@ namespace Notung.Net
   /// <summary>
   /// Фабрика для транспорта на основе сокетов с потоковой передачей для серверной стороны
   /// </summary>
-  public class ServerStreamSocketTransportFactory : IServerTransportFactory
+  public sealed class ServerStreamSocketTransportFactory : IServerTransportFactory
   {
     private readonly Socket m_socket;
 

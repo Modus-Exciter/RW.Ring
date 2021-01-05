@@ -1,5 +1,4 @@
-﻿#if SERIALIZE_CONDITION
-using System;
+﻿using System;
 using System.Runtime.Serialization;
 
 namespace Notung.Data
@@ -77,4 +76,3 @@ namespace Notung.Data
     public T Value { get; set; }
   }
 }
-#endif
