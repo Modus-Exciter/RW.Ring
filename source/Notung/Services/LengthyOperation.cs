@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Logging;
+using Notung.Threading;
 
 namespace Notung.Services
 {
@@ -149,10 +150,9 @@ namespace Notung.Services
 
     private void Run()
     {
-      ProcessUtil.RegisterCurrentThread();
+      ThreadTracker.RegisterThread(Thread.CurrentThread);
 
       m_run_base.ProgressChanged += HandleProgressChanged;
-
       try
       {
         this.Status = TaskStatus.Running;

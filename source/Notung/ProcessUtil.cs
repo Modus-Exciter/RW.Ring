@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -19,14 +20,5 @@ namespace Notung
     public static readonly Process CurrentProcess = Process.GetCurrentProcess();
     public static readonly string StartupPath = CurrentProcess.MainModule.FileName;
     public static ISynchronizeInvoke SynchronizingObject;
-    public static Action<Thread> ThreadRegistrator;
-
-    public static void RegisterCurrentThread()
-    {
-      var registrator = ThreadRegistrator;
-
-      if (registrator != null)
-        registrator(Thread.CurrentThread);
-    }
   }
 }

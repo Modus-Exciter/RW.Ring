@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using Notung.Data;
+using Notung.Threading;
+using Notung.Logging;
 
 namespace Notung.ComponentModel
 {
@@ -15,15 +17,14 @@ namespace Notung.ComponentModel
   public class LanguageSwitcher : Component, ISupportInitialize
   {
     private static readonly WeakSet<LanguageSwitcher> _instances = new WeakSet<LanguageSwitcher>();
-    private static readonly HashSet<Thread> _threads = new HashSet<Thread>();
-
     private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
+
+    private static ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
 
     static LanguageSwitcher() 
     {
       // Скорее всего, первый объект будет создан в потоке пользовательского интерфейса
-      _threads.Add(Thread.CurrentThread);
-      ProcessUtil.ThreadRegistrator = RegisterThread;
+      ThreadTracker.AddThreadHandlers(OnThreadRegistered, null, OnThreadError);
     }
 
     /// <summary>
@@ -63,38 +64,24 @@ namespace Notung.ComponentModel
     }
 
     /// <summary>
-    /// Список зарегистрированных потоков (испольуется для задач, выполняемых в фоновом режиме)
-    /// </summary>
-    public static Thread[] Threads
-    {
-      get { return _threads.ToArray(); }
-    }
-
-    /// <summary>
     /// Добавляет поток в список зарегистрированных потоков
     /// </summary>
     /// <param name="thread">Добавляемый поток</param>
     public static void RegisterThread(Thread thread)
     {
-      if (thread == null)
-        return;
-
-      lock (_threads)
-      {
-        if (_threads.Add(thread))
-        {
-          thread.CurrentCulture = _current_culture;
-          thread.CurrentUICulture = _current_culture;
-        }
-      }
+      ThreadTracker.RegisterThread(thread);
     }
 
-    private static void RemoveThread(Thread thread)
+    private static void OnThreadRegistered(Thread thread)
     {
-      if (thread == null)
-        return;
+      thread.CurrentCulture = _current_culture;
+      thread.CurrentUICulture = _current_culture;
+    }
 
-      _threads.Remove(thread);
+    private static void OnThreadError(Thread thread, Exception error)
+    {
+      _log.Error(string.Format("Error in thread {0}",
+        string.IsNullOrEmpty(thread.Name) ? (object)thread.ManagedThreadId : thread.Name), error);
     }
 
     /// <summary>
@@ -138,25 +125,25 @@ namespace Notung.ComponentModel
       if (culture == null)
         return;
 
-      var corrupted_threads = new List<Thread>();
+      var expired_threads = new List<Thread>();
 
-      foreach (var thread in _threads)
+      foreach (var thread in ThreadTracker.Threads)
       {
         try
         {
           if (thread.IsAlive)
             thread.CurrentUICulture = culture;
           else
-            corrupted_threads.Add(thread);
+            expired_threads.Add(thread);
         }
-        catch
+        catch(Exception error)
         {
-          corrupted_threads.Add(thread);
+          OnThreadError(thread, error);
         }
       }
 
-      foreach (var corr in corrupted_threads)
-        RemoveThread(corr);
+      foreach (var corr in expired_threads)
+        ThreadTracker.RemoveThread(corr);
 
       try
       {
@@ -165,7 +152,10 @@ namespace Notung.ComponentModel
         foreach (var instance in _instances)
           instance.OnLanguageChanged(new LanguageEventArgs(culture));
       }
-      catch { }
+      catch (Exception ex)
+      {
+        _log.Error(string.Format("Switch(\"{0}\"): exception", culture), ex);
+      }
 
       _current_culture = culture;
     }
