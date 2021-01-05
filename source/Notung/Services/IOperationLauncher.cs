@@ -68,7 +68,7 @@ namespace Notung.Services
       {
         var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
 
-        if (messages != null)
+        if (messages != null && messages.Count != 0)
           m_view.ShowMessages(messages);
       }
 
