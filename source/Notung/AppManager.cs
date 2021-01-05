@@ -1,6 +1,4 @@
-﻿#if APP_MANAGER
-
-using System;
+﻿using System;
 using System.Reflection;
 using Notung.Configuration;
 using Notung.Services;
@@ -52,25 +50,6 @@ namespace Notung
     }
 
     /// <summary>
-    /// Сервис для управления текущим экземпляром приложения
-    /// </summary>
-    public static IAppInstance Instance
-    {
-      get
-      {
-        return _app_instance ?? InitService(ref _app_instance, () => new AppInstance());
-      }
-      set
-      {
-        if (value == null)
-          throw new ArgumentNullException();
-
-        lock (_lock)
-          _app_instance = value;
-      }
-    }
-
-    /// <summary>
     /// Сведения о загруженных постоянных сборках и плагинах
     /// </summary>
     public static IAssemblyClassifier AssemblyClassifier
@@ -91,6 +70,25 @@ namespace Notung
 
           _asm_classifier = value;
         }
+      }
+    }
+
+    /// <summary>
+    /// Сервис для управления текущим экземпляром приложения
+    /// </summary>
+    public static IAppInstance Instance
+    {
+      get
+      {
+        return _app_instance ?? InitService(ref _app_instance, () => new AppInstance());
+      }
+      set
+      {
+        if (value == null)
+          throw new ArgumentNullException();
+
+        lock (_lock)
+          _app_instance = value;
       }
     }
 
@@ -134,7 +132,15 @@ namespace Notung
           throw new ArgumentNullException();
 
         lock (_lock)
+        {
+          if (ReferenceEquals(_notificator, value))
+            return;
+
+          if (value != null)
+            ProcessUtil.SynchronizingObject = value.Invoker;
+
           _operation_launcher = value;
+        }
       }
     }
 
@@ -161,5 +167,3 @@ namespace Notung
     }
   }
 }
-
-#endif

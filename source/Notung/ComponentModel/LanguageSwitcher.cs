@@ -1,6 +1,4 @@
-﻿#if MULTI_LANG
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -25,6 +23,7 @@ namespace Notung.ComponentModel
     {
       // Скорее всего, первый объект будет создан в потоке пользовательского интерфейса
       _threads.Add(Thread.CurrentThread);
+      ProcessUtil.ThreadRegistrator = RegisterThread;
     }
 
     /// <summary>
@@ -33,6 +32,8 @@ namespace Notung.ComponentModel
     public LanguageSwitcher()
     {
       _instances.Add(this);
+
+      RegisterThread(Thread.CurrentThread);
     }
 
     /// <summary>
@@ -114,7 +115,8 @@ namespace Notung.ComponentModel
     /// <param name="disposing">Явное или неявное уничтожение объекта</param>
     protected override void Dispose(bool disposing)
     {
-      _instances.Remove(this);
+      if (disposing)
+        _instances.Remove(this);
 
       base.Dispose(disposing);
     }
@@ -218,5 +220,3 @@ namespace Notung.ComponentModel
     }
   }
 }
-
-#endif

@@ -56,7 +56,7 @@ namespace Notung.Helm.Dialogs
 
     private void HandleLoad(object sender, EventArgs e)
     {
-      if (m_operation.Status == TaskStatus.RanToCompletion)
+      if (m_operation.Status == TaskStatus.RanToCompletion || m_operation.Status == TaskStatus.Faulted)
       {
         this.Unsubscribe();
         m_view.Close();

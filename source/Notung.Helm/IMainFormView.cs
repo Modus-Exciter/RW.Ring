@@ -32,6 +32,7 @@ namespace Notung.Helm
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormView));
     private readonly Form m_main_form;
+    private INotificator m_notificator;
 
     static MainFormView()
     {
@@ -122,6 +123,25 @@ namespace Notung.Helm
     #endregion
 
     #region Alerts --------------------------------------------------------------------------------
+
+    INotificator INotificatorView.Source
+    {
+      get { return m_notificator; }
+      set { m_notificator = value; }
+    }
+
+    public void ShowError(Exception error)
+    {
+      this.Alert(new Info(error), ConfirmationRegime.None);
+    }
+
+    public void ShowMessages(InfoBuffer messages) 
+    {
+      var notificator = m_notificator;
+
+      if (notificator != null)
+        notificator.Show(messages);
+    }
 
     public virtual bool? Alert(Info info, ConfirmationRegime confirm)
     {

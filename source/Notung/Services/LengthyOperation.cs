@@ -149,7 +149,7 @@ namespace Notung.Services
 
     private void Run()
     {
-      ConditionalServices.RegisterCurrentThread();
+      ProcessUtil.RegisterCurrentThread();
 
       m_run_base.ProgressChanged += HandleProgressChanged;
 

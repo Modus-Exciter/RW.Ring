@@ -96,6 +96,7 @@ namespace Notung.Services
         throw new ArgumentNullException("view");
 
       m_view = view;
+      m_view.Source = this;
     }
 
     internal Notificator() : this(new ConsoleNotificatorView()) { }
@@ -278,6 +279,8 @@ namespace Notung.Services
 
   public interface INotificatorView : ISynchronizeProvider
   {
+    INotificator Source { get; set; }
+
     bool? Alert(Info info, ConfirmationRegime confirm);
 
     bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm);
@@ -292,6 +295,8 @@ namespace Notung.Services
 
   public class ConsoleNotificatorView : SynchronizeProviderStub, INotificatorView
   {
+    public INotificator Source { get; set; }
+
     public bool? Alert(Info info, ConfirmationRegime confirm)
     {
       using (new ConsoleColorSetter(info.Level))

@@ -48,8 +48,8 @@ namespace Notung.Services
 
     public void InitSynchronizingObject()
     {
-      if (ConditionalServices.SynchronizingObject == null)
-        ConditionalServices.SynchronizingObject = m_view.Invoker;
+      if (ProcessUtil.SynchronizingObject == null)
+        ProcessUtil.SynchronizingObject = m_view.Invoker;
     }
 
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
@@ -63,11 +63,13 @@ namespace Notung.Services
       var ret = Complete(operation, parameters);
 
       if (operation.Error != null)
-        ConditionalServices.RecieveError(operation.Error);
+        m_view.ShowError(operation.Error);
       else if (runBase is IServiceProvider)
       {
-        ConditionalServices.RecieveMessages(((IServiceProvider)runBase)
-          .GetService<InfoBuffer>(), OnMessageRecieved);
+        var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
+
+        if (messages != null)
+          m_view.ShowMessages(messages);
       }
 
       return ret;
@@ -103,18 +105,15 @@ namespace Notung.Services
 
       return operation.Status;
     }
-
-    private void OnMessageRecieved(object e)
-    {
-      this.MessagesRecieved.InvokeSynchronized(this, new InfoBufferEventArgs((InfoBuffer)e));
-    }
-
-    public event EventHandler<InfoBufferEventArgs> MessagesRecieved;
   }
 
   public interface IOperationLauncherView : ISynchronizeProvider
   {
     void ShowProgressDialog(LengthyOperation task, LaunchParameters parameters);
+
+    void ShowError(Exception error);
+
+    void ShowMessages(InfoBuffer messages);
   }
 
   public class TaskManagerViewStub : SynchronizeProviderStub, IOperationLauncherView
@@ -155,6 +154,17 @@ namespace Notung.Services
       operation.ProgressChanged += progress.HandleProgressChanged;
       operation.Completed += progress.HandleTaskCompleted;
       operation.Wait();
+    }
+
+    public void ShowError(Exception error)
+    {
+      Console.WriteLine(error);
+    }
+
+    public void ShowMessages(InfoBuffer messages)
+    {
+      foreach (var message in messages)
+        Console.WriteLine("{0}: {1}", message.Level, message.Message);
     }
   }
 }

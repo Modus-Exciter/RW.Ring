@@ -83,7 +83,7 @@ namespace Notung.Services
 
       var args = Environment.GetCommandLineArgs();
 
-      if (args.Length > 0 && Path.GetFullPath(args[0]) == ConditionalServices.StartupPath)
+      if (args.Length > 0 && Path.GetFullPath(args[0]) == ProcessUtil.StartupPath)
       {
         var tmp = new string[args.Length - 1];
 
@@ -106,7 +106,12 @@ namespace Notung.Services
 
     public Process CurrentProcess
     {
-      get { return ConditionalServices.CurrentProcess; }
+      get { return ProcessUtil.CurrentProcess; }
+    }
+
+    public string StartupPath
+    {
+      get { return ProcessUtil.StartupPath; }
     }
 
     public bool IsAlive
@@ -137,11 +142,6 @@ namespace Notung.Services
     public bool Terminating
     {
       get { return m_terminating; }
-    }
-
-    public string StartupPath
-    {
-      get { return ConditionalServices.StartupPath; }
     }
 
     public event EventHandler Exit
@@ -175,7 +175,7 @@ namespace Notung.Services
       if (m_mutex_thread != null)
         m_mutex_thread.Join();
 
-      m_view.Restart(ConditionalServices.StartupPath, m_args);
+      m_view.Restart(ProcessUtil.StartupPath, m_args);
     }
 
     private Thread MainThread
@@ -250,7 +250,7 @@ namespace Notung.Services
 
     private string GetMutexName()
     {
-      var path = ConditionalServices.StartupPath.ToCharArray();
+      var path = ProcessUtil.StartupPath.ToCharArray();
 
       for (int i = 0; i < path.Length; i++)
       {

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;APP_MANAGER MULTI_LANG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -27,7 +27,7 @@
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;APP_MANAGER MULTI_LANG</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -135,7 +135,7 @@
     <Compile Include="Services\LaunchParameters.cs" />
     <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
-    <Compile Include="ConditionalServices.cs" />
+    <Compile Include="ProcessUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CoreResources.resx">
