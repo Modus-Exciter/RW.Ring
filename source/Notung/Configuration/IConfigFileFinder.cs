@@ -68,18 +68,6 @@ namespace Notung.Configuration
     public ProductVersionConfigFileFinder(string fileName = DEFAULT_FILE) 
       : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly, fileName) { }
 
-    private string GetCommonDataPath()
-    {
-      string base_path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-      
-      if (!string.IsNullOrWhiteSpace(m_product_info.Company))
-        base_path = Path.Combine(base_path, m_product_info.Company);
-
-      base_path = Path.Combine(base_path, m_product_info.Product);
-
-      return base_path;
-    }
-
     private string FindLastConfigFile(string path)
     {
       Version last = null;
@@ -114,7 +102,7 @@ namespace Notung.Configuration
         if (Directory.Exists(path))
           return FindLastConfigFile(path);
 
-        path = this.GetCommonDataPath();
+        path = m_product_info.GetCommonDataPath();
 
         if (Directory.Exists(path))
           return FindLastConfigFile(path);

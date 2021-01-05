@@ -191,6 +191,16 @@ namespace Notung
       return Path.Combine(basePath, this.Product);
     }
 
+    public string GetCommonDataPath()
+    {
+      var basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonAdminTools);
+
+      if (!string.IsNullOrWhiteSpace(this.Company))
+        basePath = Path.Combine(basePath, this.Company);
+
+      return Path.Combine(basePath, this.Product);
+    }
+
     public override string ToString()
     {
       return m_product_assembly.ToString();
