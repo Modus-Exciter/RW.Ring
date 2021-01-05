@@ -193,7 +193,7 @@ namespace Notung
 
     public string GetCommonDataPath()
     {
-      var basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonAdminTools);
+      var basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 
       if (!string.IsNullOrWhiteSpace(this.Company))
         basePath = Path.Combine(basePath, this.Company);
