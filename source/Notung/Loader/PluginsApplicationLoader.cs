@@ -72,8 +72,18 @@ namespace Notung.Loader
       if (Path.IsPathRooted(m_plugins_directory))
         throw new ArgumentException(Resources.INVALID_PLUGIN_DIRECTORY);
 
-      if (!Directory.Exists(m_plugins_directory))
-        Directory.CreateDirectory(m_plugins_directory);
+      var old_dir = Environment.CurrentDirectory;
+      Environment.CurrentDirectory = Path.GetDirectoryName(AppManager.Instance.StartupPath);
+
+      try
+      {
+        if (!Directory.Exists(m_plugins_directory))
+          Directory.CreateDirectory(m_plugins_directory);
+      }
+      finally
+      {
+        Environment.CurrentDirectory = old_dir;
+      }
 
       AppManager.AssemblyClassifier.PluginsDirectory = m_plugins_directory;
       context.Container.SetService(this);
