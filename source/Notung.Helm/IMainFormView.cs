@@ -11,7 +11,6 @@ using Notung.Helm.Dialogs;
 using Notung.Helm.Windows;
 using Notung.Logging;
 using Notung.Services;
-using Notung.Threading;
 
 namespace Notung.Helm
 {
@@ -32,7 +31,6 @@ namespace Notung.Helm
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(MainFormView));
     private readonly Form m_main_form;
-    private INotificator m_notificator;
 
     static MainFormView()
     {
@@ -124,11 +122,7 @@ namespace Notung.Helm
 
     #region Alerts --------------------------------------------------------------------------------
 
-    INotificator INotificatorView.Source
-    {
-      get { return m_notificator; }
-      set { m_notificator = value; }
-    }
+    public INotificator Source { get; set; }
 
     public void ShowError(Exception error)
     {
@@ -137,7 +131,7 @@ namespace Notung.Helm
 
     public void ShowMessages(InfoBuffer messages) 
     {
-      var notificator = m_notificator;
+      var notificator = this.Source;
 
       if (notificator != null)
         notificator.Show(messages);

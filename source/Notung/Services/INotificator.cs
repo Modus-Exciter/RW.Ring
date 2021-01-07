@@ -294,7 +294,7 @@ namespace Notung.Services
     CancelableConfirm
   }
 
-  public class ConsoleNotificatorView : SynchronizeProviderStub, INotificatorView
+  public class ConsoleNotificatorView : EmptySynchronizeProvider, INotificatorView
   {
     public INotificator Source { get; set; }
 

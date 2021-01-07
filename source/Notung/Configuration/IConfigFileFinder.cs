@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -65,8 +64,7 @@ namespace Notung.Configuration
       m_working_path = Path.Combine(m_product_info.GetWorkingPath(), m_product_info.Version.ToString());
     }
 
-    public ProductVersionConfigFileFinder(string fileName = DEFAULT_FILE) 
-      : this(Assembly.GetEntryAssembly() ?? typeof(IConfigFileFinder).Assembly, fileName) { }
+    public ProductVersionConfigFileFinder(string fileName = DEFAULT_FILE) : this(Global.MainAssembly, fileName) { }
 
     private string FindLastConfigFile(string path)
     {

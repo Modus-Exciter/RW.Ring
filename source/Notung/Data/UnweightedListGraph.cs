@@ -5,13 +5,16 @@ using System.Linq;
 namespace Notung.Data
 {
   /// <summary>
-  /// Невзвешенный граф, хранимый в виде списка смежных вершин
+  /// Невзвешенный граф, хранимый в виде списка смежных вершин.
+  /// Вершины пронумерованы начиная с нуля, дуги связывают верщины по номерам
   /// </summary>
   [Serializable] 
   public sealed class UnweightedListGraph : IUnweightedGraph
   {
     private readonly HashSet<int>[] m_forward;
     private readonly HashSet<int>[] m_reverse;
+
+    private static readonly Func<int, int> _peak_selector = EmptySelector;
 
     /// <summary>
     /// Создание нового графа, хранимого в виде списка смежных вершин
@@ -81,12 +84,17 @@ namespace Notung.Data
 
     public IEnumerable<int> IncomingArcs(int peak)
     {
-      return (m_reverse ?? m_forward)[peak].Select(p => p);
+      return (m_reverse ?? m_forward)[peak].Select(_peak_selector);
     }
 
     public IEnumerable<int> OutgoingArcs(int peak)
     {
-      return m_forward[peak].Select(p => p);
+      return m_forward[peak].Select(_peak_selector);
+    }
+
+    private static int EmptySelector(int peak)
+    {
+      return peak;
     }
   }
 }

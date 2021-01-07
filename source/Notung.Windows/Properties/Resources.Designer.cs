@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Schicksal.Properties {
+namespace Notung.Helm.Windows.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Schicksal.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Schicksal.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Notung.Helm.Windows.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,63 +61,29 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Actual difference.
+        ///   Looks up a localized string similar to This method cannot be called in recieving process.
         /// </summary>
-        internal static string ACTUAL_DIFFERENCE {
+        internal static string COPY_DATA_SEND_RECIEVE {
             get {
-                return ResourceManager.GetString("ACTUAL_DIFFERENCE", resourceCulture);
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Comparison {
-            get {
-                object obj = ResourceManager.GetObject("Comparison", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("COPY_DATA_SEND_RECIEVE", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Critical difference.
+        ///   Looks up a localized string similar to Library failed to load. Unable to enumerate functions.
         /// </summary>
-        internal static string CRITICAL_DIFFERENCE {
+        internal static string DLL_FUNCTIONS_ENUM_FAIL {
             get {
-                return ResourceManager.GetString("CRITICAL_DIFFERENCE", resourceCulture);
+                return ResourceManager.GetString("DLL_FUNCTIONS_ENUM_FAIL", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Factor.
+        ///   Looks up a localized string similar to No function in dll selected.
         /// </summary>
-        internal static string FACTOR {
+        internal static string DLL_NO_FUNCTION {
             get {
-                return ResourceManager.GetString("FACTOR", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid column type for saving.
-        /// </summary>
-        internal static string INVALID_COLUMN_TYPE {
-            get {
-                return ResourceManager.GetString("INVALID_COLUMN_TYPE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Report.
-        /// </summary>
-        internal static string REPORT {
-            get {
-                return ResourceManager.GetString("REPORT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Wariants comparison.
-        /// </summary>
-        internal static string VARIANTS_COMPARISON {
-            get {
-                return ResourceManager.GetString("VARIANTS_COMPARISON", resourceCulture);
+                return ResourceManager.GetString("DLL_NO_FUNCTION", resourceCulture);
             }
         }
     }

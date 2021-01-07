@@ -16,14 +16,17 @@ namespace Notung.Helm.Configuration
   /// <summary>
   /// Компонент, в котором реализована основная логика формы настроек
   /// </summary>
-  public class SettingsController : Component, IListSource
+  public sealed class SettingsController : Component, IListSource
   {
     private readonly BindingList<SettingsError> m_errors = new BindingList<SettingsError>();
     private readonly Dictionary<Type, IConfigurationPage> m_pages = new Dictionary<Type, IConfigurationPage>();
     private readonly Dictionary<Type, bool?> m_page_statuses = new Dictionary<Type, bool?>();
     private readonly SettingsBindingSourceCollection m_sections = new SettingsBindingSourceCollection();
 
-    private readonly ILog _log = LogManager.GetLogger(typeof(SettingsController));
+    private static readonly object _skip_page_event_key = new object();
+    private static readonly object _page_changed_event_key = new object();
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(SettingsController));
 
     /// <summary>
     /// Инициализация нового экземпляра компонента для конфигурирования
@@ -75,13 +78,11 @@ namespace Notung.Helm.Configuration
     {
       add
       {
-        lock (this.Events)
-          this.Events.AddHandler("SkipPage", value);
+        this.Events.AddHandler(_skip_page_event_key, value);
       }
       remove
       {
-        lock (this.Events)
-          this.Events.RemoveHandler("SkipPage", value);
+        this.Events.RemoveHandler(_skip_page_event_key, value);
       }
     }
 
@@ -92,13 +93,11 @@ namespace Notung.Helm.Configuration
     {
       add
       {
-        lock (this.Events)
-          this.Events.AddHandler("PageChanged", value);
+        this.Events.AddHandler(_page_changed_event_key, value);
       }
       remove
       {
-        lock (this.Events)
-          this.Events.RemoveHandler("PageChanged", value);
+        this.Events.RemoveHandler(_page_changed_event_key, value);
       }
     }
 
@@ -208,7 +207,7 @@ namespace Notung.Helm.Configuration
     {
       var args = new SkipPageEventArgs(page);
 
-      this.Events["SkipPage"].InvokeSynchronized(this, args);
+      (this.Events[_skip_page_event_key] as EventHandler<SkipPageEventArgs>).InvokeIfSubscribed(this, args);
 
       return args.Cancel;
     }
@@ -242,7 +241,7 @@ namespace Notung.Helm.Configuration
       else
         m_page_statuses[page.GetType()] = null;
 
-      this.Events["PageChanged"].InvokeSynchronized(this, new PageEventArgs(page));
+      (this.Events[_page_changed_event_key] as EventHandler<PageEventArgs>).InvokeIfSubscribed(this, new PageEventArgs(page));
     }
 
     #endregion
@@ -375,6 +374,7 @@ namespace Notung.Helm.Configuration
           var res = section.Key.Validate(buffer);
 
           m_page_results[section.Value] = m_page_results[section.Value] && res;
+
           this.Success = this.Success && res;
         }
       }

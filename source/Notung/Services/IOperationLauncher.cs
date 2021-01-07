@@ -46,33 +46,29 @@ namespace Notung.Services
       get { return m_view.Invoker; }
     }
 
-    public void InitSynchronizingObject()
-    {
-      if (ProcessUtil.SynchronizingObject == null)
-        ProcessUtil.SynchronizingObject = m_view.Invoker;
-    }
-
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
     {
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      var operation = CreateOperation(ref runBase, ref parameters);
-      operation.Start();
-
-      var ret = Complete(operation, parameters);
-
-      if (operation.Error != null)
-        m_view.ShowError(operation.Error);
-      else if (runBase is IServiceProvider)
+      using (var operation = CreateOperation(ref runBase, ref parameters))
       {
-        var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
+        operation.Start();
 
-        if (messages != null && messages.Count != 0)
-          m_view.ShowMessages(messages);
+        var ret = Complete(operation, parameters);
+
+        if (operation.Error != null)
+          m_view.ShowError(operation.Error);
+        else if (runBase is IServiceProvider)
+        {
+          var messages = ((IServiceProvider)runBase).GetService<InfoBuffer>();
+
+          if (messages != null && messages.Count != 0)
+            m_view.ShowMessages(messages);
+        }
+
+        return ret;
       }
-
-      return ret;
     }
 
     private LengthyOperation CreateOperation(ref IRunBase runBase, ref LaunchParameters parameters)
@@ -87,7 +83,7 @@ namespace Notung.Services
 
       parameters.Setup(runBase);
 
-      return new LengthyOperation(runBase);
+      return new LengthyOperation(runBase, m_view.Invoker);
     }
 
     private TaskStatus Complete(LengthyOperation operation, LaunchParameters parameters)
@@ -116,7 +112,7 @@ namespace Notung.Services
     void ShowMessages(InfoBuffer messages);
   }
 
-  public class TaskManagerViewStub : SynchronizeProviderStub, IOperationLauncherView
+  public class TaskManagerViewStub : EmptySynchronizeProvider, IOperationLauncherView
   {
     private class ProgressInConsole
     {

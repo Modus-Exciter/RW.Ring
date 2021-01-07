@@ -14,7 +14,7 @@ namespace Notung.Configuration
     
     protected ConfigurationSection()
     {
-      LoadDefaults();
+      LoadDefaults(this);
     }
 
     [OnDeserializing]
@@ -22,7 +22,7 @@ namespace Notung.Configuration
     {
       try
       {
-        LoadDefaults();
+        LoadDefaults(this);
       }
       catch (Exception ex)
       {
@@ -116,15 +116,8 @@ namespace Notung.Configuration
         var def = pd.Attributes[typeof(DefaultValueAttribute)] as DefaultValueAttribute;
 
         if (def != null)
-        {
           pd.SetValue(this, def.Value);
-        }
       }
-    }
-
-    protected virtual void LoadDefaults()
-    {
-      LoadDefaults(this);
     }
 
     protected virtual bool Repair(InfoBuffer buffer)

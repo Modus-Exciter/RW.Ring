@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -88,12 +88,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="LogSection.cs" />
-    <Compile Include="Windows\Atom.cs" />
-    <Compile Include="Windows\CopyData.cs" />
-    <Compile Include="Windows\DataTypeCode.cs" />
-    <Compile Include="Windows\ExternalCallWork.cs" />
     <Compile Include="IMainFormView.cs" />
-    <Compile Include="Windows\NativeDll.cs" />
     <Compile Include="Dialogs\ProgressIndicatorPresenter.cs" />
     <Compile Include="Dialogs\ProgressIndicatorDialog.cs">
       <SubType>Form</SubType>
@@ -120,9 +115,12 @@
       <DependentUpon>SplashScreenDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SplashScreenPresenter.cs" />
-    <Compile Include="Windows\WinAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Notung.Windows\Notung.Windows.csproj">
+      <Project>{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}</Project>
+      <Name>Notung.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Notung\Notung.csproj">
       <Project>{ACB28711-7615-48EF-8096-4BE678E22E19}</Project>
       <Name>Notung</Name>

@@ -76,17 +76,22 @@ namespace Notung.Configuration
 
         using (var fs = new FileStream(file_name, FileMode.Create, FileAccess.Write))
         {
-          using (var writer = new XmlTextWriter(fs, Encoding.UTF8) { Formatting = Formatting.Indented, IndentChar = '\t', Indentation = 1, })
+          var writer = new XmlTextWriter(fs, Encoding.UTF8)
           {
-            writer.WriteStartDocument();
-            writer.WriteStartElement("configuration");
-            writer.WriteWhitespace(Environment.NewLine);
+            Formatting = Formatting.Indented,
+            IndentChar = '\t',
+            Indentation = 1,
+          };
 
-            foreach (var section in this.Sections.Values)
-              writer.WriteRaw(section);
+          writer.WriteStartDocument();
+          writer.WriteStartElement("configuration");
+          writer.WriteWhitespace(Environment.NewLine);
 
-            writer.WriteEndElement();
-          }
+          foreach (var section in this.Sections.Values)
+            writer.WriteRaw(section);
+
+          writer.WriteEndElement();
+          writer.Flush();
         }
       }
     }
@@ -125,21 +130,20 @@ namespace Notung.Configuration
       {
         using (FileStream fs = new FileStream(file_name, FileMode.Open, FileAccess.Read))
         {
-          using (XmlTextReader reader = new XmlTextReader(fs))
-          {
-            while (reader.Read())
-            {
-              if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
-                break;
-            }
+          XmlTextReader reader = new XmlTextReader(fs);
 
-            while (!reader.EOF)
-            {
-              if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
-                m_file_cache.Add(reader.Name, reader.ReadOuterXml());
-              else
-                reader.Read();
-            }
+          while (reader.Read())
+          {
+            if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
+              break;
+          }
+
+          while (!reader.EOF)
+          {
+            if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
+              m_file_cache.Add(reader.Name, reader.ReadOuterXml());
+            else
+              reader.Read();
           }
 
           _log.DebugFormat("LoadFile(): {0}", file_name);

@@ -12,7 +12,7 @@ namespace Notung.Logging
     private readonly ThreadField<char[]> m_date_converter = new ThreadField<char[]>();
     private volatile bool m_data_included;
 
-    private static readonly int _pid = ProcessUtil.CurrentProcess.Id;
+    private static readonly int _pid = Global.CurrentProcess.Id;
 
     public LogStringBuilder(string template)
     {

@@ -117,12 +117,12 @@ namespace Notung.Loader
 
     #region IDependencyItem<Type> Members
 
-    Type IDependencyItem<Type>.Key
+    public Type Key
     {
       get { return typeof(TContract); }
     }
 
-    ICollection<Type> IDependencyItem<Type>.Dependencies
+    public ICollection<Type> Dependencies
     {
       get { return Ctor.Dependencies; }
     }

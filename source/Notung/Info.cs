@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Notung.ComponentModel;
-using Notung.Properties;
 
 namespace Notung
 {
+  /// <summary>
+  /// Сообщение со статусом и дополнительными данными
+  /// </summary>
   [Serializable]
   public sealed class Info
   {
@@ -36,16 +38,25 @@ namespace Notung
       this.Level = InfoLevel.Error;
       this.Details = ex;
 
-      Exception inner = ex.InnerException;
+      var aggregate = ex as AggregateException;
 
-      while (inner != null)
+      if (aggregate != null)
       {
-        var inf = new Info(inner.Message, InfoLevel.Error);
-        inf.Details = inner;
-        m_inner_messages.Add(inf);
-        inner = inner.InnerException;
+        foreach (Exception details in aggregate.InnerExceptions)
+          m_inner_messages.Add(details);
       }
-      // TODO: AggregateException, ValidationFailException
+      else
+      {
+        Exception inner = ex.InnerException;
+
+        while (inner != null)
+        {
+          var inf = new Info(inner.Message, InfoLevel.Error);
+          inf.Details = inner;
+          m_inner_messages.Add(inf);
+          inner = inner.InnerException;
+        }
+      }
     }
 
     /// <summary>
@@ -90,7 +101,7 @@ namespace Notung
   }
 
   [DisplayNameRes("INFO_LEVEL", typeof(CoreResources))]
-  [TypeConverter(typeof(EnumLabelConverter))]
+  [TypeConverter("Notung.ComponentModel.EnumLabelConverter, Notung")]
   [Serializable]
   public enum InfoLevel
   {

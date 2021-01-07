@@ -33,7 +33,7 @@ namespace Notung.Services
 
     public ISynchronizeInvoke Invoker
     {
-      get { return SynchronizeProviderStub.Default; }
+      get { return EmptySynchronizeProvider.Default; }
     }
 
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
@@ -51,7 +51,6 @@ namespace Notung.Services
   internal interface IProgressIndicatorWithCancel : IProgressIndicator
   {
     void RaiseCanCancelChanged(EventArgs e);
-
     void ReportProgress(int percentage, LaunchParametersChange state);
   }
 
@@ -133,12 +132,12 @@ namespace Notung.Services
 
     IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
     {
-      return SynchronizeProviderStub.Default.BeginInvoke(method, args);
+      return EmptySynchronizeProvider.Default.BeginInvoke(method, args);
     }
 
     object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
     {
-      return SynchronizeProviderStub.Default.EndInvoke(result);
+      return EmptySynchronizeProvider.Default.EndInvoke(result);
     }
 
     object ISynchronizeInvoke.Invoke(Delegate method, object[] args)
@@ -170,18 +169,19 @@ namespace Notung.Services
 
     public override void Run()
     {
-      m_token_source = new CancellationTokenSource();
-      ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
+      using (m_token_source = new CancellationTokenSource())
+      {
+        ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
 
-      try
-      {
-        ((ICancelableRunBase)m_run_base).CancellationToken = m_token_source.Token;
-        base.Run();
-      }
-      finally
-      {
-        ((ICancelableRunBase)m_run_base).CanCancelChanged -= this.HandleCanCancelChanged;
-        m_token_source.Dispose();
+        try
+        {
+          ((ICancelableRunBase)m_run_base).CancellationToken = m_token_source.Token;
+          base.Run();
+        }
+        finally
+        {
+          ((ICancelableRunBase)m_run_base).CanCancelChanged -= this.HandleCanCancelChanged;
+        }
       }
     }
 
@@ -250,7 +250,7 @@ namespace Notung.Services
 
     public void ReportProgress(int percentage, string state)
     {
-      this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
+      this.ProgressChanged.InvokeIfSubscribed(this, new ProgressChangedEventArgs(percentage, state));
     }
 
     public void ReportProgress(int percentage, LaunchParametersChange state)
@@ -258,7 +258,7 @@ namespace Notung.Services
       if ((state & LaunchParametersChange.Caption) != 0)
         this.Caption = m_caller.GetCaption();
 
-      this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(percentage, state));
+      this.ProgressChanged.InvokeIfSubscribed(this, new ProgressChangedEventArgs(percentage, state));
     }
 
     public virtual void RaiseCanCancelChanged(EventArgs e) { }
@@ -275,7 +275,7 @@ namespace Notung.Services
       
     public override void RaiseCanCancelChanged(EventArgs e)
     {
-      this.CanCancelChanged.InvokeSynchronized(this, e);
+      this.CanCancelChanged.InvokeIfSubscribed(this, e);
     }
 
     public CancellationToken CancellationToken

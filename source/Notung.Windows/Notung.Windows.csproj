@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}</ProjectGuid>
+    <ProjectGuid>{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Schicksal</RootNamespace>
-    <AssemblyName>Schicksal</AssemblyName>
+    <RootNamespace>Notung.Helm.Windows</RootNamespace>
+    <AssemblyName>Notung.Windows</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -22,53 +22,40 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Schicksal.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Notung.Win.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Anova\FisherCriteria.cs" />
-    <Compile Include="Anova\FisherMetrics.cs" />
-    <Compile Include="Anova\FisherTableProcessor.cs" />
-    <Compile Include="Anova\VariantsComparator.cs" />
-    <Compile Include="Basic\DescriptionStatistics.cs" />
-    <Compile Include="Basic\IDataGroup.cs" />
-    <Compile Include="Basic\JoinedDataGroup.cs" />
-    <Compile Include="Basic\MultiArrayDataGroup.cs" />
-    <Compile Include="Basic\TableMultyDataGroup.cs" />
-    <Compile Include="DataTableSaver.cs" />
-    <Compile Include="HtmlSaver.cs" />
+    <Compile Include="Atom.cs" />
+    <Compile Include="CopyData.cs" />
+    <Compile Include="DataTypeCode.cs" />
+    <Compile Include="ExternalCallWork.cs" />
+    <Compile Include="NativeDll.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SchicksalResources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SchicksalResources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SpecialFunctions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StatisticsTables.cs" />
+    <Compile Include="WinAPIHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Notung\Notung.csproj">
@@ -82,15 +69,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU.resx" />
-    <EmbeddedResource Include="SchicksalResources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SchicksalResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SchicksalResources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\right_left.png" />
-    <None Include="Schicksal.snk" />
+    <None Include="Notung.Win.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

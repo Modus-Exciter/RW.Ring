@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung;
 using Notung.ComponentModel;
 using Notung.Helm;
-using Notung.Helm.Windows;
+using Notung.Helm.Dialogs;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Services;
 using Schicksal.Anova;
+using Schicksal.Basic;
 using Schicksal.Exchange;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using Notung.Helm.Dialogs;
-using Schicksal.Basic;
 
 namespace Schicksal.Helm
 {

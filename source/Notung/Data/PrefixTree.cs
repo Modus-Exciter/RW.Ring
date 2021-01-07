@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Notung.Data
 {
@@ -136,6 +135,7 @@ namespace Notung.Data
           child = new PrefixTreeItem(symbol);
           child.m_parent = this;
           m_next_symbols.Add(symbol, child);
+
           addedNew = true;
         }
         else

@@ -237,10 +237,19 @@ namespace Notung.Services
       }
     }
 
-    public virtual void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
-      m_domain.AssemblyLoad -= HandleAssemblyLoad;
-      m_plugin_loader.Dispose();
+      if (disposing)
+      {
+        m_domain.AssemblyLoad -= HandleAssemblyLoad;
+        m_plugin_loader.Dispose();
+      }
+    }
+
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -251,27 +260,26 @@ namespace Notung.Services
     protected virtual PluginInfo GetPluginInfo(string path)
     {
       System.Diagnostics.Debug.Assert(path != null, "Path cannot be null");
-      
+
       using (var file = new FileStream(path, FileMode.Open, FileAccess.Read))
       {
-        using (var reader = new XmlTextReader(file))
+        var reader = new XmlTextReader(file);
+
+        while (reader.Read())
         {
-          while (reader.Read())
+          if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0 && reader.Name == "plugin")
           {
-            if (reader.NodeType == XmlNodeType.Element && reader.Depth == 0 && reader.Name == "plugin")
+            var asm_file = reader.GetAttribute("assembly");
+
+            if (!string.IsNullOrEmpty(asm_file))
             {
-              var asm_file = reader.GetAttribute("assembly");
+              if (!Path.IsPathRooted(asm_file))
+                asm_file = Path.Combine(Path.GetDirectoryName(path), asm_file);
 
-              if (!string.IsNullOrEmpty(asm_file))
-              {
-                if (!Path.IsPathRooted(asm_file))
-                  asm_file = Path.Combine(Path.GetDirectoryName(path), asm_file);
+              var name_node = reader.GetAttribute("name");
 
-                var name_node = reader.GetAttribute("name");
-
-                return new PluginInfo(name_node != null ? name_node :
-                  Path.GetFileNameWithoutExtension(asm_file), asm_file);
-              }
+              return new PluginInfo(name_node != null ? name_node :
+                Path.GetFileNameWithoutExtension(asm_file), asm_file);
             }
           }
         }
@@ -407,7 +415,7 @@ namespace Notung.Services
       AssemblyName asm_name;
 
       using (var plugin_loader = (IPluginLoader)domain.CreateInstanceAndUnwrap(
-        typeof(AssemblyClassifier).Assembly.FullName, typeof(PluginLoader).FullName))
+        Global.BaseAssembly.FullName, typeof(PluginLoader).FullName))
       {
         asm_name = plugin_loader.LoadAssemblyFromFile(pluginInfo.AssemblyFile);
 
@@ -442,7 +450,7 @@ namespace Notung.Services
         AppDomain.Unload(domain);
     }
 
-    #region Implementation types
+    #region Implementation types ------------------------------------------------------------------
 
     private interface IPluginLoader : IDisposable
     {

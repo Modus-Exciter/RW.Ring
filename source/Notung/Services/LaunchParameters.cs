@@ -83,16 +83,14 @@ namespace Notung.Services
 
     internal void Setup(IRunBase work)
     {
-      if (work is RunBaseProxyWrapper)
+      if (string.IsNullOrWhiteSpace(this.Caption))
       {
-        var proxy = (RunBaseProxyWrapper)work;
-
-        if (string.IsNullOrWhiteSpace(this.Caption))
+        if (work is RunBaseProxyWrapper)
+        {
+          var proxy = (RunBaseProxyWrapper)work;
           this.Caption = proxy.Caption;
-      }
-      else
-      {
-        if (string.IsNullOrWhiteSpace(this.Caption))
+        }
+        else
           this.Caption = GetDefaultCaption(work);
       }
 

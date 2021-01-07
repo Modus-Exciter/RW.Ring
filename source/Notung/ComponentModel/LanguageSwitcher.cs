@@ -17,6 +17,7 @@ namespace Notung.ComponentModel
   {
     private static readonly WeakSet<LanguageSwitcher> _instances = new WeakSet<LanguageSwitcher>();
     private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
+    private static object _changed_event_key = new object();
 
     private static ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
 
@@ -31,6 +32,7 @@ namespace Notung.ComponentModel
     public LanguageSwitcher()
     {
       _instances.Add(this);
+
       ThreadTracker.RegisterThread(Thread.CurrentThread);
     }
 
@@ -50,13 +52,11 @@ namespace Notung.ComponentModel
     {
       add
       {
-        lock (this.Events)
-          this.Events.AddHandler("LanguageChanged", value);
+          this.Events.AddHandler(_changed_event_key, value);
       }
       remove
       {
-        lock (this.Events)
-          this.Events.RemoveHandler("LanguageChanged", value);
+          this.Events.RemoveHandler(_changed_event_key, value);
       }
     }
 
@@ -78,10 +78,10 @@ namespace Notung.ComponentModel
     /// <param name="args">Аргумент события</param>
     private void OnLanguageChanged(LanguageEventArgs args)
     {
-      lock (this.Events)
-      {
-        this.Events["LanguageChanged"].InvokeSynchronized(this, args);
-      }
+      var handler = this.Events[_changed_event_key] as EventHandler<LanguageEventArgs>;
+
+      if (handler != null)
+        handler(this, args);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ namespace Notung.ComponentModel
 
       try
       {
-        ComponentExtensions.ClearEnumLabels();
+        EnumLabelConverter.ClearEnumLabels();
 
         foreach (var instance in _instances)
           instance.OnLanguageChanged(new LanguageEventArgs(culture));

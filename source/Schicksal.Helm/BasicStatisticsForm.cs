@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Schicksal.Helm.Properties;
+using System.Diagnostics;
 
 namespace Schicksal.Helm
 {
@@ -51,6 +53,32 @@ namespace Schicksal.Helm
       m_col_count.HeaderText = SchicksalResources.COUNT;
       m_col_error.HeaderText = SchicksalResources.STD_ERROR;
       m_col_interval.HeaderText = SchicksalResources.INTERVAL;
+      m_cmd_export.Text = Resources.EXPORT;
+    }
+
+    private Dictionary<string, string> GetColumnNames()
+    {
+      var ret = new Dictionary<string, string>();
+
+      foreach (DataGridViewColumn col in m_grid.Columns)
+        ret[col.DataPropertyName] = col.HeaderText;
+
+      return ret;
+    }
+
+    private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      using (var dlg = new SaveFileDialog())
+      {
+        dlg.Filter = "Html files|*.html";
+
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+          HtmlSaver.Save(dlg.FileName,
+            m_binding_source.DataSource as System.Collections.IList, GetColumnNames());
+          Process.Start(dlg.FileName);
+        }
+      }
     }
   }
 }

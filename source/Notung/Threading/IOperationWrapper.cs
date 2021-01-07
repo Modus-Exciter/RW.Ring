@@ -25,10 +25,11 @@ namespace Notung.Threading
     void Invoke(Action action);
   }
 
+  /// <summary>
+  /// Декоратор операций, который не делает ничего
+  /// </summary>
   public sealed class EmptyOperationWrapper : IOperationWrapper
   {
-    #region IOperationWrapper Members
-
     public TType Invoke<TType>(Func<TType> action)
     {
       return action != null ? action() : default(TType);
@@ -39,10 +40,11 @@ namespace Notung.Threading
       if (action != null)
         action();
     }
-
-    #endregion
   }
 
+  /// <summary>
+  /// Декоратор для выполнения операции в однопоточном апартаменте
+  /// </summary>
   [Serializable]
   public sealed class ApartmentStateOperationWrapper : IOperationWrapper
   {

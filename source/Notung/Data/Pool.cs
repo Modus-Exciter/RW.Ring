@@ -140,8 +140,17 @@ namespace Notung.Data
     /// </summary>
     public void Dispose()
     {
-      m_lock.Close();
-      m_signal.Dispose();
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+      if (disposing)
+      {
+        m_lock.Close();
+        m_signal.Dispose();
+      }
     }
 
     #region Implementation ------------------------------------------------------------------------

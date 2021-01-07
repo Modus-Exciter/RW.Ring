@@ -1,13 +1,24 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Notung.Data
 {
   public static class ArrayExtensions
   {
+    /// <summary>
+    /// Получение пустого массива
+    /// </summary>
+    /// <typeparam name="T">Тип элемента массива</typeparam>
+    /// <returns>Пустой массив указанного типа</returns>
     public static T[] Empty<T>()
     {
       return EmptyImpl<T>.Instance;
+    }
+
+    private static class EmptyImpl<T>
+    {
+      public static readonly T[] Instance = (Enumerable.Empty<T>() as T[]) ?? new T[0];
     }
 
     public static void Fill<T>(this T[] array, Func<T> filler)
@@ -86,11 +97,6 @@ namespace Notung.Data
       }
 
       return array;
-    }
-
-    private static class EmptyImpl<T>
-    {
-      public static readonly T[] Instance = new T[0];
     }
   }
 }

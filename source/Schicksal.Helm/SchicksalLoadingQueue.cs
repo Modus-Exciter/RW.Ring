@@ -1,5 +1,6 @@
 ﻿using System;
 using Notung.Loader;
+using Notung.Services;
 using Schicksal.Exchange;
 
 namespace Schicksal.Helm
@@ -9,7 +10,7 @@ namespace Schicksal.Helm
     protected override void FillLoaders(Action<IApplicationLoader> add, Func<Type, bool> contains)
     {
       add(new PluginsApplicationLoader("Plugins"));
-      add(new PluginsApplicationLoader<ITableImport>("*.import"));
+      add(new PluginsApplicationLoader<ITableImport>("*.import", LoadPluginsMode.CurrentDomain));
     }
   }
 }

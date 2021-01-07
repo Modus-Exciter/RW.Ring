@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
-using Notung.Logging;
 using System.Drawing;
+using System.Linq;
+using Notung.Logging;
 
 namespace Notung.Helm
 {
-  public class LogEntrySet : Component, IListSource
+  public sealed class LogEntrySet : Component, IListSource
   {
     private readonly BindingList<LogEntry> m_entries = new BindingList<LogEntry>();
     private InfoLevel m_level = InfoLevel.Debug;
@@ -39,7 +37,6 @@ namespace Notung.Helm
     public InfoLevel Accept(InfoBuffer buffer)
     {
       m_level = InfoLevel.Debug;
-
       int infoCounter = 0;
       try
       {

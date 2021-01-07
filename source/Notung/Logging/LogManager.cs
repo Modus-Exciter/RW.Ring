@@ -57,13 +57,13 @@ namespace Notung.Logging
       }
     }
 
-    public static void AddAcceptor(ILogAppender acceptor)
+    public static void AddAppender(ILogAppender appender)
     {
-      if (acceptor == null)
-        throw new ArgumentNullException("acceptor");
+      if (appender == null)
+        throw new ArgumentNullException("appender");
 
       lock (_appenders)
-        _appenders.Add(acceptor);
+        _appenders.Add(appender);
     }
 
     public static void SetMainThreadInfo(IMainThreadInfo info)

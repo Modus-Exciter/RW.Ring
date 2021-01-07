@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using Notung.Data;
@@ -83,7 +82,7 @@ namespace Notung.Services
 
       var args = Environment.GetCommandLineArgs();
 
-      if (args.Length > 0 && Path.GetFullPath(args[0]) == ProcessUtil.StartupPath)
+      if (args.Length > 0 && Path.GetFullPath(args[0]) == Global.StartupPath)
       {
         var tmp = new string[args.Length - 1];
 
@@ -106,12 +105,12 @@ namespace Notung.Services
 
     public Process CurrentProcess
     {
-      get { return ProcessUtil.CurrentProcess; }
+      get { return Global.CurrentProcess; }
     }
 
     public string StartupPath
     {
-      get { return ProcessUtil.StartupPath; }
+      get { return Global.StartupPath; }
     }
 
     public bool IsAlive
@@ -175,7 +174,7 @@ namespace Notung.Services
       if (m_mutex_thread != null)
         m_mutex_thread.Join();
 
-      m_view.Restart(ProcessUtil.StartupPath, m_args);
+      m_view.Restart(Global.StartupPath, m_args);
     }
 
     private Thread MainThread
@@ -202,24 +201,7 @@ namespace Notung.Services
 
       using (var mutex = new Mutex(true, GetMutexName(), out new_instance))
       {
-        if (!new_instance)
-        {
-          _log.Debug("CreateBlockingMutex(): exit");
-          mutex.Close();
-
-          if (m_args.Count > 0 && m_view.SupportSendingArgs)
-          {
-            if (this.SendArgsToPreviousProcess())
-              _log.Debug("CreateBlockingMutex(): message to previous application copy sent");
-            else
-              _log.Debug("CreateBlockingMutex(): previous application copy not responding");
-          }
-
-          m_terminating = true;
-          LogManager.Stop();
-          Environment.Exit(2);
-        }
-        else
+        if (new_instance)
         {
           while (!m_terminating && MainThread.IsAlive)
             Thread.Sleep(200);
@@ -227,19 +209,36 @@ namespace Notung.Services
           mutex.ReleaseMutex();
         }
       }
+
+      if (!new_instance)
+      {
+        _log.Debug("CreateBlockingMutex(): exit");
+
+        if (m_args.Count > 0 && m_view.SupportSendingArgs)
+        {
+          if (this.SendArgsToPreviousProcess())
+            _log.Debug("CreateBlockingMutex(): message to previous application copy sent");
+          else
+            _log.Debug("CreateBlockingMutex(): previous application copy not responding");
+        }
+
+        m_terminating = true;
+
+        LogManager.Stop();
+        Environment.Exit(2);
+      }
     }
 
     private bool SendArgsToPreviousProcess()
     {
-      var currentProc = this.CurrentProcess;
-      var procList = Process.GetProcessesByName(currentProc.ProcessName);
+      var procList = Process.GetProcessesByName(Global.CurrentProcess.ProcessName);
 
       foreach (var proc in procList)
       {
-        if (proc.Id == currentProc.Id)
+        if (proc.Id == Global.CurrentProcess.Id)
           continue;
 
-        if (proc.StartInfo.UserName != currentProc.StartInfo.UserName)
+        if (proc.StartInfo.UserName != Global.CurrentProcess.StartInfo.UserName)
           continue;
 
         return m_view.SendArgsToProcess(proc, m_args);
@@ -250,7 +249,7 @@ namespace Notung.Services
 
     private string GetMutexName()
     {
-      var path = ProcessUtil.StartupPath.ToCharArray();
+      var path = Global.StartupPath.ToCharArray();
 
       for (int i = 0; i < path.Length; i++)
       {
@@ -273,7 +272,7 @@ namespace Notung.Services
     bool SendArgsToProcess(Process previous, IList<string> args);
   }
 
-  public class ProcessAppInstanceView : SynchronizeProviderStub, IAppInstanceView
+  public class ProcessAppInstanceView : EmptySynchronizeProvider, IAppInstanceView
   {
     private static string CreatePathArgs(IList<string> args)
     {

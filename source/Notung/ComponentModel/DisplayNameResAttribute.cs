@@ -14,7 +14,7 @@ namespace Notung.ComponentModel
     /// Инициализирует новую метку
     /// </summary>
     /// <param name="resourceName">Имя ресурса</param>
-    /// <param name="targetType">Тип, к которому применён атрибут, находящийся в той же сборке, что и ресурс</param>
+    /// <param name="targetType">Тип, с которым ассоциирован указанный ресурс, или любой тип из его сборки</param>
     public DisplayNameResAttribute(string resourceName, Type targetType)
       : base(resourceName)
     {
@@ -83,9 +83,8 @@ namespace Notung.ComponentModel
         return true;
 
       if (res != null)
-      {
         return (res.DisplayNameValue == this.DisplayNameValue) && (res.TargetType == this.TargetType);
-      }
+
       return false;
     }
 

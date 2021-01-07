@@ -124,7 +124,7 @@
     <Compile Include="Services\LaunchParameters.cs" />
     <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
-    <Compile Include="ProcessUtil.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Threading\IThreadCollection.cs" />
   </ItemGroup>
   <ItemGroup>

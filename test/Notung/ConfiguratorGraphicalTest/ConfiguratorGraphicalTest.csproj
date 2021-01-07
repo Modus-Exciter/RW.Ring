@@ -126,6 +126,10 @@
       <Project>{23C8DC0F-B1CE-4F21-A5BE-AF05B27F7492}</Project>
       <Name>Notung.Helm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\source\Notung.Windows\Notung.Windows.csproj">
+      <Project>{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}</Project>
+      <Name>Notung.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\source\Notung\Notung.csproj">
       <Project>{ACB28711-7615-48EF-8096-4BE678E22E19}</Project>
       <Name>Notung</Name>

@@ -144,8 +144,10 @@ namespace Notung
 
     private void OnProgressChanged()
     {
-      if (this.ProgressChanged != null)
-        this.ProgressChanged.InvokeSynchronized(this, new ProgressChangedEventArgs(m_percent, m_state));
+      var handler = this.ProgressChanged;
+
+      if (handler != null)
+        handler(this, new ProgressChangedEventArgs(m_percent, m_state));
     }
 
     public virtual object GetService(Type serviceType)
@@ -175,7 +177,11 @@ namespace Notung
           return;
 
         m_can_cancel = value;
-        this.CanCancelChanged.InvokeSynchronized(this, EventArgs.Empty);
+
+        var handler = this.CanCancelChanged;
+
+       if (handler != null)
+         handler(this, EventArgs.Empty);
       }
     }
 

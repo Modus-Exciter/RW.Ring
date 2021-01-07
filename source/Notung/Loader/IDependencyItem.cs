@@ -104,10 +104,12 @@ namespace Notung.Loader
         }
       }
 
+      Func<TItem, bool> predicate = item => item.Dependencies.All(collection.ContainsKey);
+      Func<TItem, int> order_selector = item => item.Dependencies.Count;
+
       foreach (var kv in duplicates)
       {
-        var best = kv.Value.Where(item => item.Dependencies.All(collection.ContainsKey))
-          .OrderBy(item => item.Dependencies.Count).FirstOrDefault();
+        var best = kv.Value.Where(predicate).OrderBy(order_selector).FirstOrDefault();
 
         if (best != null)
           collection[kv.Key] = best;

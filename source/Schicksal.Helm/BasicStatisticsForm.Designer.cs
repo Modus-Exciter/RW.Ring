@@ -31,8 +31,6 @@
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BasicStatisticsForm));
       this.m_grid = new System.Windows.Forms.DataGridView();
-      this.m_lang = new Notung.ComponentModel.LanguageSwitcher(this.components);
-      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.m_col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_col_mean = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_col_median = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -41,9 +39,14 @@
       this.m_col_count = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_col_error = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.m_col_interval = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
+      this.m_lang = new Notung.ComponentModel.LanguageSwitcher(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.m_lang)).BeginInit();
+      this.m_context_menu.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_lang)).BeginInit();
       this.SuspendLayout();
       // 
       // m_grid
@@ -58,20 +61,13 @@
             this.m_col_count,
             this.m_col_error,
             this.m_col_interval});
+      this.m_grid.ContextMenuStrip = this.m_context_menu;
       this.m_grid.DataSource = this.m_binding_source;
       this.m_grid.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_grid.Location = new System.Drawing.Point(0, 0);
       this.m_grid.Name = "m_grid";
       this.m_grid.Size = new System.Drawing.Size(905, 451);
       this.m_grid.TabIndex = 0;
-      // 
-      // m_lang
-      // 
-      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_lang_LanguageChanged);
-      // 
-      // m_binding_source
-      // 
-      this.m_binding_source.DataSource = typeof(Schicksal.Basic.DescriptionStatisticsEntry);
       // 
       // m_col_description
       // 
@@ -129,6 +125,28 @@
       this.m_col_interval.Name = "m_col_interval";
       this.m_col_interval.ReadOnly = true;
       // 
+      // m_context_menu
+      // 
+      this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_cmd_export});
+      this.m_context_menu.Name = "m_context_menu";
+      this.m_context_menu.Size = new System.Drawing.Size(118, 26);
+      // 
+      // m_cmd_export
+      // 
+      this.m_cmd_export.Name = "m_cmd_export";
+      this.m_cmd_export.Size = new System.Drawing.Size(117, 22);
+      this.m_cmd_export.Text = "Export";
+      this.m_cmd_export.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+      // 
+      // m_binding_source
+      // 
+      this.m_binding_source.DataSource = typeof(Schicksal.Basic.DescriptionStatisticsEntry);
+      // 
+      // m_lang
+      // 
+      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_lang_LanguageChanged);
+      // 
       // BasicStatisticsForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -140,8 +158,9 @@
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "BasicStatisticsForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.m_lang)).EndInit();
+      this.m_context_menu.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.m_lang)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -159,5 +178,7 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn m_col_count;
     private System.Windows.Forms.DataGridViewTextBoxColumn m_col_error;
     private System.Windows.Forms.DataGridViewTextBoxColumn m_col_interval;
+    private System.Windows.Forms.ContextMenuStrip m_context_menu;
+    private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
   }
 }

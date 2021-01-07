@@ -35,8 +35,7 @@ namespace Notung
       m_product_assembly = productAssembly;
     }
 
-    public ApplicationInfo() 
-      : this(Assembly.GetEntryAssembly() ?? typeof(ApplicationInfo).Assembly) { }
+    public ApplicationInfo()  : this(Global.MainAssembly) { }
 
     public static ApplicationInfo Instance
     {
@@ -56,7 +55,7 @@ namespace Notung
             return _instance;
           }
           else
-            return new ApplicationInfo(typeof(ApplicationInfo).Assembly);
+            return new ApplicationInfo(Global.BaseAssembly);
         }
       }
     }

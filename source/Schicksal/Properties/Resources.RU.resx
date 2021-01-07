@@ -129,6 +129,9 @@
   <data name="INVALID_COLUMN_TYPE" xml:space="preserve">
     <value>Неподходящий тип колонки для сохранения</value>
   </data>
+  <data name="REPORT" xml:space="preserve">
+    <value>Отчёт</value>
+  </data>
   <data name="VARIANTS_COMPARISON" xml:space="preserve">
     <value>Сравнение вариантов</value>
   </data>

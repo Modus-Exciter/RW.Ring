@@ -132,8 +132,8 @@ namespace Notung
       static ShareableTypes()
       {
         var parameters = new Type[] { typeof(AppDomain) };
-        
-        foreach (var type in typeof(ShareableTypes).Assembly.GetTypes())
+
+        foreach (var type in Global.BaseAssembly.GetTypes())
         {
           if (type.IsDefined(typeof(AppDomainShareAttribute), false))
           {
@@ -153,7 +153,7 @@ namespace Notung
 
   /// <summary>
   /// Помечает класс для расшаривания находящихся в нём сервисов между доменами приложений,
-  /// за это отвечает метод static void Share(AppDomain newDomain)
+  /// за это отвечает метод static void Share(AppDomain newDomain) в этом классе
   /// </summary>
   [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
   public sealed class AppDomainShareAttribute : Attribute { }

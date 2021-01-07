@@ -136,4 +136,7 @@
   <data name="INVALID_COLUMN_TYPE" xml:space="preserve">
     <value>Invalid column type for saving</value>
   </data>
+  <data name="REPORT" xml:space="preserve">
+    <value>Report</value>
+  </data>
 </root>

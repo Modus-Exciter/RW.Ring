@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Notung.Properties;
+using Notung.Services;
 
 namespace Notung.Loader
 {
   public class PluginsApplicationLoader<T> : IApplicationLoader where T : class
   {
     private readonly string m_filter;
+    private readonly LoadPluginsMode m_mode;
     private readonly List<Type> m_dependencies = new List<Type>();
 
-    public PluginsApplicationLoader(string filter)
+    public PluginsApplicationLoader(string filter, LoadPluginsMode mode)
     {
       m_filter = filter;
+      m_mode = mode;
     }
 
     public string Filter
@@ -23,7 +25,7 @@ namespace Notung.Loader
 
     public bool Load(LoadingContext context)
     {
-      AppManager.AssemblyClassifier.LoadPlugins(m_filter);
+      AppManager.AssemblyClassifier.LoadPlugins(m_filter, m_mode);
 
       var list = new List<T>();
 

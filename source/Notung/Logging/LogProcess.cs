@@ -62,7 +62,7 @@ namespace Notung.Logging
 
     private sealed class AsyncLogProcess : LogProcess
     {
-      private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
+      private EventWaitHandle m_signal;
       private readonly Queue<LoggingEvent> m_data = new Queue<LoggingEvent>();
       private readonly IMainThreadInfo m_info;
       private readonly Thread m_work_thread;
@@ -89,7 +89,7 @@ namespace Notung.Logging
           m_shutdown = true;
 
           while (m_data.Count > 0)
-            m_signal.Set();
+            this.Set();
         }
 
         this.Stop();
@@ -99,7 +99,7 @@ namespace Notung.Logging
 
       private void Process()
       {
-        using (m_signal)
+        using (m_signal = new EventWaitHandle(false, EventResetMode.AutoReset))
         {
           using (var timer = new Timer(Watch, m_work_thread, 256, 128))
           {
@@ -127,7 +127,8 @@ namespace Notung.Logging
           m_size = m_data.Count;
           if (m_size > 0)
           {
-            if (m_current_data == null || m_current_data.Length < m_size 
+            if (m_current_data == null 
+              || m_current_data.Length < m_size 
               || m_current_data.Length / m_size > 0x100)
               m_current_data = new LoggingEvent[m_data.Count];
 
@@ -160,7 +161,15 @@ namespace Notung.Logging
         lock (m_data)
           m_data.Enqueue(data);
 
-        m_signal.Set();
+        this.Set();
+      }
+
+      private void Set()
+      {
+        var signal = m_signal;
+
+        if (signal != null)
+          signal.Set();
       }
 
       public override void Stop()
@@ -172,7 +181,8 @@ namespace Notung.Logging
 
           m_stop = true;
           m_shutdown = true;
-          m_signal.Set();
+
+          this.Set();
         }
       }
     }

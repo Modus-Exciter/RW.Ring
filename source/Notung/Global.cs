@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Reflection;
 
 namespace Notung
 {
@@ -8,10 +8,11 @@ namespace Notung
    * связности межу компонентами. Это может потребоваться, если
    * нужно использовать отдельные классы библиотеки, а не всю.
    */
-  internal static class ProcessUtil
+  internal static class Global
   {
     public static readonly Process CurrentProcess = Process.GetCurrentProcess();
     public static readonly string StartupPath = CurrentProcess.MainModule.FileName;
-    public static ISynchronizeInvoke SynchronizingObject;
+    public static readonly Assembly BaseAssembly = typeof(Global).Assembly;
+    public static readonly Assembly MainAssembly = Assembly.GetEntryAssembly() ?? BaseAssembly;
   }
 }

@@ -8,9 +8,17 @@ using System.Reflection;
 using System;
 using Notung.Threading;
 using System.Threading;
+using Notung.ComponentModel;
 
 namespace NotungTest
 {
+  [TypeConverter("Notung.ComponentModel.WrongLabelConverter, Notung")]
+  public enum TestEnum
+  {
+    One,
+    Two
+  }
+
   [TestClass]
   public class CommonTest
   {
@@ -18,6 +26,18 @@ namespace NotungTest
     public void ApartmentState()
     {
       Assert.AreEqual("hello, world!", AppManager.Instance.ApartmentWrapper.Invoke(() => "Hello, World!".ToLower()));
+    }
+
+    [TestMethod]
+    public void InfoLevelConverter()
+    {
+      Assert.AreEqual(typeof(EnumLabelConverter), TypeDescriptor.GetConverter(typeof(InfoLevel)).GetType());
+    }
+
+    [TestMethod]
+    public void WrongLevelConverter()
+    {
+      Assert.AreEqual(typeof(EnumConverter), TypeDescriptor.GetConverter(typeof(TestEnum)).GetType());
     }
 
     [TestMethod]

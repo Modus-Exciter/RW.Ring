@@ -9,6 +9,7 @@ using Notung.Configuration;
 using Notung.Data;
 using Notung.Helm;
 using Notung.Loader;
+using Notung.ComponentModel;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -117,9 +118,15 @@ namespace ConfiguratorGraphicalTest
     }
   }
 
+  [TypeConverter(typeof(EnumLabelConverter))]
   public enum OuterEnum
   {
-    One1, Two2, Three3
+    [DisplayNameRes("AKKA One 1", typeof(object))]
+    One1,
+    [DisplayNameRes("AKKA One 3", typeof(object))]
+    Two2,
+    [DisplayNameRes("AKKA One 4", typeof(object))]
+    Three3
   }
 
   public class OuterSectionDefault : ConfigurationSection

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.IO;
 
 namespace Notung.Logging
 {
@@ -12,6 +10,7 @@ namespace Notung.Logging
     /// <summary>
     /// Запись события логгирования в приёмник
     /// </summary>
+    /// <param name="data">Событие, которое требуется запротоколировать</param>
     void WriteLog(LoggingData data);
   }
 
@@ -84,16 +83,17 @@ namespace Notung.Logging
 
       using (var fs = fi.Open(FileMode.Append, FileAccess.Write, FileShare.Write))
       {
-        using (var writer = new StreamWriter(fs, System.Text.Encoding.UTF8))
+        var writer = new StreamWriter(fs, System.Text.Encoding.UTF8);
+
+        for (int i = 0; i < data.Length; i++)
         {
-          for (int i = 0; i < data.Length; i++)
-          {
-            m_builder.BuildString(writer, data[i]); 
-            writer.WriteLine();
-            writer.WriteLine(LogSettings.Default.Separator);
-            writer.WriteLine();
-          }
+          m_builder.BuildString(writer, data[i]);
+          writer.WriteLine();
+          writer.WriteLine(LogSettings.Default.Separator);
+          writer.WriteLine();
         }
+
+        writer.Flush();
       }
     }
   }

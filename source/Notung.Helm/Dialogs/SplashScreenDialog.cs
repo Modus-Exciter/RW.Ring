@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Notung.Helm.Dialogs
 {
-  public partial class SplashScreenDialog : Form, ISplashScreenView
+  public sealed partial class SplashScreenDialog : Form, ISplashScreenView
   {
     public SplashScreenDialog()
     {

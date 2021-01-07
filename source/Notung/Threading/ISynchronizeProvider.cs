@@ -17,7 +17,7 @@ namespace Notung.Threading
   /// <summary>
   /// Предоставляет доступ к пустому объекту синхронизации
   /// </summary>
-  public class SynchronizeProviderStub : ISynchronizeProvider
+  public class EmptySynchronizeProvider : ISynchronizeProvider
   {
     [Serializable]
     private class Synchronizer : ISynchronizeInvoke

@@ -137,15 +137,7 @@ namespace Notung
           throw new ArgumentNullException();
 
         lock (_lock)
-        {
-          if (ReferenceEquals(_notificator, value))
-            return;
-
-          if (value != null)
-            ProcessUtil.SynchronizingObject = value.Invoker;
-
           _operation_launcher = value;
-        }
       }
     }
 
