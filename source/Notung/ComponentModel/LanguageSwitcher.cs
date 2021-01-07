@@ -52,11 +52,11 @@ namespace Notung.ComponentModel
     {
       add
       {
-          this.Events.AddHandler(_changed_event_key, value);
+        this.Events.AddHandler(_changed_event_key, value);
       }
       remove
       {
-          this.Events.RemoveHandler(_changed_event_key, value);
+        this.Events.RemoveHandler(_changed_event_key, value);
       }
     }
 
