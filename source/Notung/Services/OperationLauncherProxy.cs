@@ -43,6 +43,11 @@ namespace Notung.Services
       else
         return m_real_launcher.Run(new RunBaseCallerWrapper(runBase), parameters);
     }
+
+    SynchronizationContext IOperationLauncher.SynchronizationContext
+    {
+      get { return SynchronizationContext.Current; }
+    }
   }
 
   /// <summary>
@@ -51,13 +56,14 @@ namespace Notung.Services
   internal interface IProgressIndicatorWithCancel : IProgressIndicator
   {
     void RaiseCanCancelChanged(EventArgs e);
+
     void ReportProgress(int percentage, LaunchParametersChange state);
   }
 
   /// <summary>
   /// Обёртка над задачей для домена, в котором создана задача
   /// </summary>
-  internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase, ISynchronizeInvoke
+  internal class RunBaseCallerWrapper : MarshalByRefObject, IRunBase
   {
     protected readonly IRunBase m_run_base;
 
@@ -87,7 +93,6 @@ namespace Notung.Services
     public virtual void Run()
     {
       m_run_base.ProgressChanged += this.HandleProgressChanged;
-
       try
       {
         m_run_base.Run();
@@ -127,30 +132,6 @@ namespace Notung.Services
     }
 
     event ProgressChangedEventHandler IRunBase.ProgressChanged { add { } remove { } }
-
-    #region ISynchronizeInvoke members
-
-    IAsyncResult ISynchronizeInvoke.BeginInvoke(Delegate method, object[] args)
-    {
-      return EmptySynchronizeProvider.Default.BeginInvoke(method, args);
-    }
-
-    object ISynchronizeInvoke.EndInvoke(IAsyncResult result)
-    {
-      return EmptySynchronizeProvider.Default.EndInvoke(result);
-    }
-
-    object ISynchronizeInvoke.Invoke(Delegate method, object[] args)
-    {
-      return method.DynamicInvoke(args);
-    }
-
-    bool ISynchronizeInvoke.InvokeRequired
-    {
-      get { return false; }
-    }
-
-    #endregion
   }
 
   /// <summary>
@@ -172,7 +153,6 @@ namespace Notung.Services
       using (m_token_source = new CancellationTokenSource())
       {
         ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
-
         try
         {
           ((ICancelableRunBase)m_run_base).CancellationToken = m_token_source.Token;

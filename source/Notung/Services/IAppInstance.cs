@@ -186,7 +186,7 @@ namespace Notung.Services
 
         if (m_view.Invoker.InvokeRequired)
           return m_main_thread = (Thread)m_view.Invoker.Invoke(
-            new Func<Thread>(() => Thread.CurrentThread), ArrayExtensions.Empty<object>());
+            new Func<Thread>(() => Thread.CurrentThread), Global.EmptyArgs);
         else
           return Thread.CurrentThread;
       }

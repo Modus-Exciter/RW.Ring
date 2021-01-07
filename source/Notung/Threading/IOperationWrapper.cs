@@ -114,7 +114,7 @@ namespace Notung.Threading
         return default(TType);
 
       if (m_invoker.InvokeRequired)
-        return (TType)m_invoker.Invoke(action, ArrayExtensions.Empty<object>());
+        return (TType)m_invoker.Invoke(action, Global.EmptyArgs);
       else
         return action();
     }
@@ -127,9 +127,9 @@ namespace Notung.Threading
       if (m_invoker.InvokeRequired)
       {
         if (this.CallProceduresAsync)
-          m_invoker.BeginInvoke(action, ArrayExtensions.Empty<object>());
+          m_invoker.BeginInvoke(action, Global.EmptyArgs);
         else
-          m_invoker.Invoke(action, ArrayExtensions.Empty<object>());
+          m_invoker.Invoke(action, Global.EmptyArgs);
       }
       else
         action();

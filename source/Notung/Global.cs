@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Linq;
 
 namespace Notung
 {
@@ -14,5 +15,6 @@ namespace Notung
     public static readonly string StartupPath = CurrentProcess.MainModule.FileName;
     public static readonly Assembly BaseAssembly = typeof(Global).Assembly;
     public static readonly Assembly MainAssembly = Assembly.GetEntryAssembly() ?? BaseAssembly;
+    public static readonly object[] EmptyArgs = Enumerable.Empty<object>() as object[] ?? new object[0];
   }
 }

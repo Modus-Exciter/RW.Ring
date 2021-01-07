@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Threading;
@@ -17,6 +18,11 @@ namespace Notung.Services
     TimeSpan SyncWaitingTime { get; set; }
 
     /// <summary>
+    /// Контекст синхронизации
+    /// </summary>
+    SynchronizationContext SynchronizationContext { get; }
+
+    /// <summary>
     /// Запуск задачи на выполнение
     /// </summary>
     /// <param name="runBase">Задача, которую требуется выполнить</param>
@@ -25,9 +31,14 @@ namespace Notung.Services
     TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
   }
 
+  /// <summary>
+  /// Базовая реализация IOperationLauncher
+  /// </summary>
   public class OperationLauncher : MarshalByRefObject, IOperationLauncher
   {
     private readonly IOperationLauncherView m_view;
+    private readonly Action m_set_context;
+    private SynchronizationContext m_context;
 
     public OperationLauncher(IOperationLauncherView view)
     {
@@ -35,6 +46,7 @@ namespace Notung.Services
         throw new ArgumentNullException("view");
 
       m_view = view;
+      m_set_context = this.SetContext;
     }
 
     internal OperationLauncher() : this(new TaskManagerViewStub()) { }
@@ -44,6 +56,22 @@ namespace Notung.Services
     public ISynchronizeInvoke Invoker
     {
       get { return m_view.Invoker; }
+    }
+
+    public SynchronizationContext SynchronizationContext
+    {
+      get
+      {
+        if (m_context != null)
+          return m_context;
+
+        if (m_view.Invoker.InvokeRequired)
+          m_view.Invoker.Invoke(m_set_context, Global.EmptyArgs);
+        else
+          this.SetContext();
+
+        return m_context;
+      }
     }
 
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
@@ -100,6 +128,12 @@ namespace Notung.Services
         m_view.ShowProgressDialog(operation, parameters);
 
       return operation.Status;
+    }
+
+    private void SetContext()
+    {
+      if (m_context == null)
+        m_context = System.Threading.SynchronizationContext.Current;
     }
   }
 
