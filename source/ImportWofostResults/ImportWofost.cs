@@ -6,28 +6,83 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Schicksal.Exchange;
+using System.Collections.Generic;
 
 namespace ImportWofostResults
 {
-  public class ImportWofost : ITableImport
+  public class ImportWofost : MarshalByRefObject, ITableImport
   {
     public ImportResult Import(object context)
     {
-      using (var dlg = new OpenFileDialog())
+      using (var dlg = new WofostResultsImportForm())
       {
-        dlg.Filter = "Excel files|*.xls";
-
-        if (dlg.ShowDialog(context as IWin32Window) == System.Windows.Forms.DialogResult.OK)
+        if (dlg.ShowDialog() == DialogResult.OK)
         {
+          var table = ReadFromExcel(dlg.ExcelFileName);
+          Dictionary<int, double> third, second;
+
+          third = ReadJson(dlg.ThirdLevelFileName);
+          second = ReadJson(dlg.SecondLevelFileName);
+
+          foreach (DataRow row in table.Rows)
+          {
+            if (row["Сорт"].ToString() != "RIC501.CAB")
+              continue;
+
+            int variant = (int)row["Вариант"];
+            int level = (int)row["Уровень продуктивности"];
+            var level_dic = (level == 2 ? second : third);
+
+            if (level_dic.ContainsKey(variant))
+              row["Урожай"] = level_dic[variant];
+          }
+
+          table.AcceptChanges();
+
           return new ImportResult
           {
-            Table = ReadFromExcel(dlg.FileName),
-            Description = string.Format("Import from {0}", Path.GetFileName(dlg.FileName))
+            Table = table,
+            Description = string.Format("Import from {0}", Path.GetFileName(dlg.ExcelFileName))
           };
         }
         else
           return null;
       }
+    }
+
+    private Dictionary<int, double> ReadJson(string fileName)
+    {
+      string text = File.ReadAllText(fileName);
+      Dictionary<int, double> result = new Dictionary<int, double>();
+
+      var splitted = text.Split(new string[]{"\": {"}, StringSplitOptions.RemoveEmptyEntries);
+      for (int i = 0; i < splitted.Length; i++)
+      {
+        splitted[i] = splitted[i].Trim();
+
+        if (i <= 1)
+          continue;
+
+        if (splitted[i].StartsWith("\"yield\": "))
+        {
+          var ret = splitted[i - 2].Substring(splitted[i - 2].LastIndexOf('"') + 1);
+
+          int value;
+
+          if (int.TryParse(ret, out value))
+          {
+            var end = splitted[i].IndexOf(',');
+
+            double yield;
+
+            if (double.TryParse(splitted[i].Substring("\"yield\": ".Length, end - "\"yield\": ".Length),
+              NumberStyles.Any, CultureInfo.InvariantCulture, out yield))
+              result[value] = yield;
+          }
+        }
+      }
+
+      return result;
     }
 
     private DataTable ReadFromExcel(string fileName)
@@ -78,16 +133,16 @@ namespace ImportWofostResults
               foreach (var sort in sorts)
               {
                 var row = dt.NewRow();
-                row["Variant"] = variant;
-                row["Soil"] = "[" + current_soil + "]";
-                row["Place"] = current_weather.Split(',')[0];
-                row["Season"] = current_weather.Contains("Раби") ? "Раби" : "Харифа";
-                row["Year"] = "20" + (current_weather.Contains("Раби") ?
+                row["Вариант"] = variant;
+                row["Почва"] = "[" + current_soil + "]";
+                row["Местность"] = current_weather.Split(',')[0];
+                row["Сезон"] = current_weather.Contains("Раби") ? "Раби" : "Харифа";
+                row["Год"] = "20" + (current_weather.Contains("Раби") ?
                   current_weather.Substring(current_weather.IndexOf("Раби") + 4).Trim()
                   : current_weather.Substring(current_weather.IndexOf("Харифа") + 6).Trim());
-                row["Sort"] = sort.Replace('#', '.');
-                row["Level"] = second ? 2 : 3;
-                row["TWSO"] = ReadTWSO(dr[sort]);
+                row["Сорт"] = sort.Replace('#', '.');
+                row["Уровень продуктивности"] = second ? 2 : 3;
+                row["Урожай"] = ReadTWSO(dr[sort]);
                 dt.Rows.Add(row);
               }
             }
@@ -106,14 +161,14 @@ namespace ImportWofostResults
     private static DataTable CreateTableStructure()
     {
       var dt = new DataTable();
-      dt.Columns.Add("Variant", typeof(int)).AllowDBNull = true;
-      dt.Columns.Add("Soil", typeof(string)).AllowDBNull = true; ;
-      dt.Columns.Add("Place", typeof(string)).AllowDBNull = true; ;
-      dt.Columns.Add("Season", typeof(string)).AllowDBNull = true; ;
-      dt.Columns.Add("Year", typeof(string)).AllowDBNull = true; ;
-      dt.Columns.Add("Sort", typeof(string)).AllowDBNull = true;
-      dt.Columns.Add("Level", typeof(int)).AllowDBNull = true;
-      dt.Columns.Add("TWSO", typeof(double));
+      dt.Columns.Add("Вариант", typeof(int)).AllowDBNull = true;
+      dt.Columns.Add("Почва", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Местность", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Сезон", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Год", typeof(string)).AllowDBNull = true; ;
+      dt.Columns.Add("Сорт", typeof(string)).AllowDBNull = true;
+      dt.Columns.Add("Уровень продуктивности", typeof(int)).AllowDBNull = true;
+      dt.Columns.Add("Урожай", typeof(double));
 
       foreach (DataColumn col in dt.Columns)
       {
@@ -121,7 +176,7 @@ namespace ImportWofostResults
           col.DefaultValue = string.Empty;
       }
 
-      dt.PrimaryKey = new[] { dt.Columns["Variant"], dt.Columns["Sort"], dt.Columns["Level"] };
+      dt.PrimaryKey = new[] { dt.Columns["Вариант"], dt.Columns["Сорт"], dt.Columns["Уровень продуктивности"] };
 
       return dt;
     }

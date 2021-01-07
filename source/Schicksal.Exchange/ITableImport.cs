@@ -19,6 +19,7 @@ namespace Schicksal.Exchange
   /// <summary>
   /// Результат импорта данных в программу Schicksal
   /// </summary>
+  [Serializable]
   public sealed class ImportResult
   {
     /// <summary>

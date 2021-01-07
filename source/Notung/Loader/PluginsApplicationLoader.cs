@@ -3,58 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using Notung.Properties;
 using Notung.Services;
+using System.Reflection;
+using System.Collections;
 
 namespace Notung.Loader
 {
-  public class PluginsApplicationLoader<T> : IApplicationLoader where T : class
-  {
-    private readonly string m_filter;
-    private readonly LoadPluginsMode m_mode;
-    private readonly List<Type> m_dependencies = new List<Type>();
-
-    public PluginsApplicationLoader(string filter, LoadPluginsMode mode)
-    {
-      m_filter = filter;
-      m_mode = mode;
-    }
-
-    public string Filter
-    {
-      get { return m_filter; }
-    }
-
-    public bool Load(LoadingContext context)
-    {
-      AppManager.AssemblyClassifier.LoadPlugins(m_filter, m_mode);
-
-      var list = new List<T>();
-
-      foreach (var plugin in AppManager.AssemblyClassifier.Plugins)
-      {
-        foreach (var type in plugin.Domain.Load(plugin.AssemblyName).GetAvailableTypes())
-        {
-          if (typeof(T).IsAssignableFrom(type))
-            list.Add((T)Activator.CreateInstance(type));
-        }
-      }
-
-      context.Container.SetService<IList<T>>(list);
-      return true;
-    }
-
-    public void Setup(LoadingContext context) { }
-
-    public Type Key
-    {
-      get { return typeof(IList<T>); }
-    }
-
-    public ICollection<Type> Dependencies
-    {
-      get { return m_dependencies; }
-    }
-  }
-
   public sealed class PluginsApplicationLoader : IApplicationLoader
   {
     private readonly string m_plugins_directory;
@@ -68,7 +21,7 @@ namespace Notung.Loader
     {
       get { return m_plugins_directory; }
     }
-    
+
     public bool Load(LoadingContext context)
     {
       if (Path.IsPathRooted(m_plugins_directory))
@@ -103,6 +56,85 @@ namespace Notung.Loader
     public ICollection<Type> Dependencies
     {
       get { return Type.EmptyTypes; }
+    }
+  }
+
+  public class PluginsApplicationLoader<T> : IApplicationLoader where T : class
+  {
+    private readonly string m_filter;
+    private readonly LoadPluginsMode m_mode;
+    private readonly List<Type> m_dependencies = new List<Type>();
+
+    public PluginsApplicationLoader(string filter, LoadPluginsMode mode)
+    {
+      m_filter = filter;
+      m_mode = mode;
+    }
+
+    public string Filter
+    {
+      get { return m_filter; }
+    }
+
+    public bool Load(LoadingContext context)
+    {
+      AppManager.AssemblyClassifier.LoadPlugins(m_filter, m_mode);
+
+      var list = new List<T>();
+
+      foreach (var plugin in AppManager.AssemblyClassifier.Plugins)
+      {
+        var searcher = m_mode == LoadPluginsMode.CurrentDomain ? new TypeSearcher() :
+          (TypeSearcher)plugin.Domain.CreateInstanceAndUnwrap("Notung", "Notung.Loader.TypeSearcher");
+
+        searcher.Set(plugin.AssemblyName, typeof(T));
+
+        foreach (T t in searcher.GetItems())
+          list.Add(t);
+      }
+
+      context.Container.SetService<IList<T>>(list);
+      return true;
+    }
+
+    public void Setup(LoadingContext context) { }
+
+    public Type Key
+    {
+      get { return typeof(IList<T>); }
+    }
+
+    public ICollection<Type> Dependencies
+    {
+      get { return m_dependencies; }
+    }
+  }
+
+  internal class TypeSearcher : MarshalByRefObject
+  {
+    private AssemblyName m_name;
+    private Type m_type;
+
+    public void Set(AssemblyName name, Type type)
+    {
+      m_name = name;
+      m_type = type;
+    }
+
+    public IList GetItems()
+    {
+      if (m_name == null || m_type == null)
+        throw new InvalidOperationException();
+
+      var list = new List<object>();
+
+      foreach (var type in Assembly.Load(m_name).GetAvailableTypes())
+      {
+        if (m_type.IsAssignableFrom(type))
+          list.Add(Activator.CreateInstance(type));
+      }
+
+      return list;
     }
   }
 }

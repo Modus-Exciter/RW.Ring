@@ -8,14 +8,13 @@ using Notung.ComponentModel;
 using Notung.Configuration;
 using Notung.Helm;
 using Notung.Loader;
+using Notung.Services;
+using Schicksal.Exchange;
 
 namespace Schicksal.Helm
 {
   static class Program
   {
-    /// <summary>
-    /// The main entry point for the application.
-    /// </summary>
     [STAThread]
     static int Main()
     {
@@ -31,6 +30,15 @@ namespace Schicksal.Helm
       {
         AllowOnlyOneInstance = true
       }.RunApplication();
+    }
+
+    public class SchicksalLoadingQueue : LoadingQueue
+    {
+      protected override void FillLoaders(Action<IApplicationLoader> add, Func<Type, bool> contains)
+      {
+        add(new PluginsApplicationLoader("Plugins"));
+        add(new PluginsApplicationLoader<ITableImport>("*.import", LoadPluginsMode.CurrentDomain));
+      }
     }
 
     [DataContract]

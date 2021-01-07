@@ -27,7 +27,6 @@ namespace Schicksal
       m_descriptions = descriptions;
     }
 
-
     public override void Run()
     {
       using (var writer = new HtmlWriter(m_file_name, Encoding.UTF8, Resources.REPORT))

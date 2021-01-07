@@ -9,13 +9,12 @@ namespace Notung.Helm.Windows
   public struct DataTypeCode
   {
     private readonly uint m_code;
+
     private static readonly List<string> _names = new List<string>();
     private static readonly SharedLock _lock = new SharedLock(false);
-
     public static readonly DataTypeCode Empty = default(DataTypeCode);
 
-    public DataTypeCode(uint code)
-      : this()
+    public DataTypeCode(uint code) : this()
     {
       m_code = code;
     }
