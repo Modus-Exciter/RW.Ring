@@ -18,11 +18,10 @@ namespace Notung.Services
     private readonly IOperationWrapper m_wrapper;
     private readonly Action m_progress_changed;
     private readonly Action m_can_cancel_changed;
+    private readonly object m_lock = new object();
     private ProgressChangedEventArgs m_current_progress;
     private IAsyncResult m_operation;
     private CancellationTokenSource m_cancel_source;
-
-    private readonly object m_lock = new object();
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(LengthyOperation));
 
@@ -52,15 +51,27 @@ namespace Notung.Services
       this.Status = TaskStatus.Created;
     }
 
+    /// <summary>
+    /// Статус выполняющейся задачи
+    /// </summary>
     public TaskStatus Status { get; private set; }
 
+    /// <summary>
+    /// Ошибка, возникшая в ходе выполнения задачи
+    /// </summary>
     public Exception Error { get; private set; }
 
+    /// <summary>
+    /// Можно ли отменить задачу
+    /// </summary>
     public bool CanCancel
     {
       get { return m_run_base is ICancelableRunBase && ((ICancelableRunBase)m_run_base).CanCancel; }
     }
 
+    /// <summary>
+    /// Была ли задача отменена
+    /// </summary>
     public bool IsCanceled
     {
       get
@@ -74,12 +85,24 @@ namespace Notung.Services
       }
     }
 
+    /// <summary>
+    /// Происходит, когда задача оповещает о своём прогрессе выполнения
+    /// </summary>
     public event ProgressChangedEventHandler ProgressChanged;
 
+    /// <summary>
+    /// Происходит, когда изменяется возможность выполнения задачи
+    /// </summary>
     public event EventHandler CanCancelChanged;
 
+    /// <summary>
+    /// Происходит, когда задача завершается
+    /// </summary>
     public event EventHandler Completed;
 
+    /// <summary>
+    /// Запуск задачи на выполнение
+    /// </summary>
     public void Start()
     {
       lock (m_lock)
@@ -91,6 +114,9 @@ namespace Notung.Services
       }
     }
 
+    /// <summary>
+    /// Ожидание завершения задачи
+    /// </summary>
     public void Wait()
     {
       var operation = m_operation;
@@ -101,6 +127,11 @@ namespace Notung.Services
       operation.AsyncWaitHandle.WaitOne();
     }
 
+    /// <summary>
+    /// Ожидание завершения задачи в течение указанного времени
+    /// </summary>
+    /// <param name="duration">Максимальное время ожидания</param>
+    /// <returns>True, если задача завершилась к моменту окончания ожидания. Иначе, false</returns>
     public bool Wait(TimeSpan duration)
     {
       var operation = m_operation;
@@ -111,11 +142,18 @@ namespace Notung.Services
       return operation.AsyncWaitHandle.WaitOne(duration);
     }
 
+    /// <summary>
+    /// Показывает текущий прогресс выполнения задачи
+    /// </summary>
     public void ShowCurrentProgress()
     {
       m_wrapper.Invoke(m_progress_changed);
     }
 
+    /// <summary>
+    /// Получает объект, через который можно отменить задачу
+    /// </summary>
+    /// <returns>Объект отмены задачи</returns>
     public CancellationTokenSource GetCancellationTokenSource()
     {
       if (!(m_run_base is ICancelableRunBase))
@@ -136,6 +174,10 @@ namespace Notung.Services
       }
     }
 
+    /// <summary>
+    /// Получает заголовок задачи
+    /// </summary>
+    /// <returns>Заголовок задачи</returns>
     public string GetWorkCaption()
     {
       if (m_run_base is RunBaseProxyWrapper)
@@ -144,13 +186,19 @@ namespace Notung.Services
         return LaunchParameters.GetDefaultCaption(m_run_base);
     }
 
+    /// <summary>
+    /// Получает изображение, связанное с задачей
+    /// </summary>
+    /// <returns>Изображение, связанное с задачей</returns>
     public Image GetWorkImage()
     {
       IServiceProvider provider = m_run_base as IServiceProvider;
-
       return provider != null ? provider.GetService<Image>() : null;
     }
 
+    /// <summary>
+    /// Очищает ресурсы после выполнения задачи
+    /// </summary>
     public void Dispose()
     {
       if (m_cancel_source != null)
@@ -182,7 +230,6 @@ namespace Notung.Services
       catch (Exception ex)
       {
         _log.Error("Run(): exception", ex);
-
         this.Error = ex;
         this.Status = TaskStatus.Faulted;
       }
@@ -206,7 +253,6 @@ namespace Notung.Services
       {
         result.AsyncWaitHandle.Dispose();
         m_operation = null;
-
         this.Dispose();
       }
     }
@@ -238,26 +284,17 @@ namespace Notung.Services
 
     private void OnCanCancelChanged()
     {
-      var handler = this.CanCancelChanged;
-
-      if (handler != null)
-        handler(this, EventArgs.Empty);
+      this.CanCancelChanged.InvokeIfSubscribed(this, EventArgs.Empty);
     }
 
     private void OnProgressChanged()
     {
-      var handler = this.ProgressChanged;
-
-      if (handler != null)
-        handler(this, m_current_progress);
+      this.ProgressChanged.InvokeIfSubscribed(this, m_current_progress);
     }
 
     private void OnTaskCompleted()
     {
-      var handler = this.Completed;
-
-      if (handler != null)
-        handler(this, EventArgs.Empty);
+      this.Completed.InvokeIfSubscribed(this, EventArgs.Empty);
     }
   }
 }
