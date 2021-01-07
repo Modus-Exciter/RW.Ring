@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Logging;
 using Notung.Threading;
+using System.Collections.Generic;
 
 namespace Notung.Services
 {
@@ -19,11 +20,14 @@ namespace Notung.Services
     private readonly Action m_progress_changed;
     private readonly Action m_can_cancel_changed;
     private readonly object m_lock = new object();
-    private ProgressChangedEventArgs m_current_progress;
+    private Queue<ProgressChangedEventArgs> m_current_progress;
     private IAsyncResult m_operation;
     private CancellationTokenSource m_cancel_source;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(LengthyOperation));
+
+    private static readonly ProgressChangedEventArgs _default_args 
+      = new ProgressChangedEventArgs(ProgressPercentage.Unknown, string.Empty);
 
     /// <summary>
     /// Создание новой длительной операции на основе задачи
@@ -42,7 +46,7 @@ namespace Notung.Services
       else
         m_wrapper = new EmptyOperationWrapper();
 
-      m_current_progress = new ProgressChangedEventArgs(ProgressPercentage.Unknown, string.Empty);
+      m_current_progress = new Queue<ProgressChangedEventArgs>(100); // 100 %
       m_progress_changed = new Action(this.OnProgressChanged);
 
       if (runBase is ICancelableRunBase)
@@ -257,20 +261,32 @@ namespace Notung.Services
       }
     }
 
+    private ProgressChangedEventArgs GetCurrentArgs()
+    {
+      if (m_current_progress.Count > 0)
+        return m_current_progress.Peek();
+      else
+        return _default_args;
+    }
+
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
     {
-      bool changed = false;
+      var changed = false;
+      var current = GetCurrentArgs();
 
-      if (m_current_progress.ProgressPercentage != e.ProgressPercentage)
+      lock (m_current_progress)
       {
-        m_current_progress = e;
-        changed = true;
-      }
+        if (current.ProgressPercentage != e.ProgressPercentage)
+        {
+          m_current_progress.Enqueue(e);
+          changed = true;
+        }
 
-      if (!object.Equals(m_current_progress.UserState, e.UserState))
-      {
-        m_current_progress = e;
-        changed = true;
+        if (!object.Equals(current.UserState, e.UserState))
+        {
+          m_current_progress.Enqueue(e);
+          changed = true;
+        }
       }
 
       if (changed)
@@ -289,7 +305,24 @@ namespace Notung.Services
 
     private void OnProgressChanged()
     {
-      this.ProgressChanged.InvokeIfSubscribed(this, m_current_progress);
+      var handler = this.ProgressChanged;
+
+      if (handler == null)
+        return;
+      
+      while (m_current_progress.Count > 0)
+      {
+        ProgressChangedEventArgs args = null;
+        
+        lock (m_current_progress)
+        {
+          if (m_current_progress.Count > 0)
+            args = m_current_progress.Dequeue();
+        }
+
+        if (args != null)
+          handler(this, args);
+      }
     }
 
     private void OnTaskCompleted()

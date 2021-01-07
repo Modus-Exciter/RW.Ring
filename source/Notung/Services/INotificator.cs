@@ -10,7 +10,7 @@ namespace Notung.Services
   /// <summary>
   /// Сервис для отображения пользователю информационных сообщений
   /// </summary>
-  public interface INotificator : IDisposable
+  public interface INotificator 
   {
     /// <summary>
     /// Отображение сообщения, не требующего от пользователя принятия решения
@@ -204,14 +204,6 @@ namespace Notung.Services
     public bool? ConfirmOrCancel(string message, InfoLevel level)
     {
       return this.AlertSync(new Info(message, level), ConfirmationRegime.CancelableConfirm);
-    }
-
-    public void Dispose()
-    {
-      IDisposable dp = m_view as IDisposable;
-
-      if (dp != null)
-        dp.Dispose();
     }
 
     #region Implementation

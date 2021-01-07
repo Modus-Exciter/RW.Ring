@@ -53,6 +53,7 @@
     <Compile Include="ComponentModel\LanguageSwitcher.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ComponentModel\ResourceHelper.cs" />
     <Compile Include="Data\ArrayExtensions.cs" />
     <Compile Include="Data\BitArrayHelper.cs" />
     <Compile Include="Data\IGraph.cs" />

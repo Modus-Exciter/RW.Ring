@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Resources;
 
 namespace Notung.ComponentModel
 {
@@ -15,8 +14,7 @@ namespace Notung.ComponentModel
     /// </summary>
     /// <param name="resourceName">Имя ресурса</param>
     /// <param name="targetType">Тип, с которым ассоциирован указанный ресурс, или любой тип из его сборки</param>
-    public DisplayNameResAttribute(string resourceName, Type targetType)
-      : base(resourceName)
+    public DisplayNameResAttribute(string resourceName, Type targetType) : base(resourceName)
     {
       if (targetType == null)
         throw new ArgumentNullException("targetType");
@@ -38,26 +36,13 @@ namespace Notung.ComponentModel
       {
         try
         {
-          string[] resourceNames = this.TargetType.Assembly.GetManifestResourceNames();
-          foreach (string resourceRoot in resourceNames)
-          {
-            string base_name = resourceRoot.Replace(".resources", "");
-            if (base_name.EndsWith("." + this.TargetType.Name) || base_name == this.TargetType.Name)
-            {
-              return new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DisplayNameValue);
-            }
-          }
-          foreach (string resourceRoot in resourceNames)
-          {
-            string base_name = resourceRoot.Replace(".resources", "");
-            string resource = new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DisplayNameValue);
-            if (resource != null)
-            {
-              return resource;
-            }
-          }
+          string resource = ResourceHelper.GetString(this.TargetType, base.DisplayNameValue);
+
+          if (!string.IsNullOrEmpty(resource))
+            return resource;
         }
         catch { }
+
         return base.DisplayNameValue;
       }
     }
@@ -79,6 +64,7 @@ namespace Notung.ComponentModel
     public override bool Equals(object obj)
     {
       DisplayNameResAttribute res = obj as DisplayNameResAttribute;
+
       if (res == this)
         return true;
 

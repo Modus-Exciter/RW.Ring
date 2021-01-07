@@ -12,7 +12,7 @@ namespace Notung.Services
     private readonly string m_name;
     private readonly string m_asm_file;
     
-    public PluginInfo(string name, string assemblyFile)
+    protected internal PluginInfo(string name, string assemblyFile)
     {
       if (string.IsNullOrEmpty(assemblyFile))
         throw new ArgumentNullException("assemblyFile");

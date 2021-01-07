@@ -106,6 +106,8 @@ namespace Notung.Services
       m_exclude_prefixes.Add("System");
       m_exclude_prefixes.Add("mscorlib");
       m_exclude_prefixes.Add("Windows");
+      m_exclude_prefixes.Add("Accessibility");
+
       m_prefix_tree.AddRange(m_exclude_prefixes);
 
       m_domain = domain;

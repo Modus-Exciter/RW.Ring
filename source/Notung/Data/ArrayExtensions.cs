@@ -7,10 +7,8 @@ namespace Notung.Data
   public static class ArrayExtensions
   {
     /// <summary>
-    /// Получение пустого массива
+    /// Получение пустого массива указанного типа
     /// </summary>
-    /// <typeparam name="T">Тип элемента массива</typeparam>
-    /// <returns>Пустой массив указанного типа</returns>
     public static T[] Empty<T>()
     {
       return EmptyImpl<T>.Instance;

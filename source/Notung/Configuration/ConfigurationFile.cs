@@ -141,7 +141,9 @@ namespace Notung.Configuration
           while (!reader.EOF)
           {
             if (reader.Depth == 1 && reader.NodeType == XmlNodeType.Element)
+            {
               m_file_cache.Add(reader.Name, reader.ReadOuterXml());
+            }
             else
               reader.Read();
           }

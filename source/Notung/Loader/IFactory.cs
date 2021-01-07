@@ -30,8 +30,9 @@ namespace Notung.Loader
     }
 
     /// <summary>
-    /// Фабрика, которая всегда возвращает null
+    /// Возвращает фабрику, которая всегда возвращает null в качестве созданного объекта
     /// </summary>
+    /// <returns>Фабрика, которая всегда возвращает null</returns>
     public static IFactory<T> Empty<T>() where T : class
     {
       return EmptyFactory<T>.Instance;

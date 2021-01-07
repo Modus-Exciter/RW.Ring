@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Resources;
 
 namespace Notung.ComponentModel
 {
@@ -14,8 +13,7 @@ namespace Notung.ComponentModel
     /// </summary>
     /// <param name="resourceName">Имя ресурса</param>
     /// <param name="targetType">Тип, к которому применён атрибут, находящийся в той же сборке, что и ресурс</param>
-    public DescriptionResAttribute(string resourceName, Type targetType)
-      : base(resourceName)
+    public DescriptionResAttribute(string resourceName, Type targetType) : base(resourceName)
     {
       if (targetType == null)
         throw new ArgumentNullException("targetType");
@@ -37,26 +35,13 @@ namespace Notung.ComponentModel
       {
         try
         {
-          string[] resourceNames = this.TargetType.Assembly.GetManifestResourceNames();
-          foreach (string resourceRoot in resourceNames)
-          {
-            string base_name = resourceRoot.Replace(".resources", "");
-            if (base_name.EndsWith("." + this.TargetType.Name) || base_name == this.TargetType.Name)
-            {
-              return new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DescriptionValue);
-            }
-          }
-          foreach (string resourceRoot in resourceNames)
-          {
-            string base_name = resourceRoot.Replace(".resources", "");
-            string resource = new ResourceManager(base_name, this.TargetType.Assembly).GetString(base.DescriptionValue);
-            if (resource != null)
-            {
-              return resource;
-            }
-          }
+          string resource = ResourceHelper.GetString(this.TargetType, base.DescriptionValue);
+
+          if (!string.IsNullOrEmpty(resource))
+            return resource;
         }
         catch { }
+
         return base.DescriptionValue;
       }
     }
@@ -78,13 +63,13 @@ namespace Notung.ComponentModel
     public override bool Equals(object obj)
     {
       DescriptionResAttribute res = obj as DescriptionResAttribute;
+
       if (res == this)
         return true;
 
       if (res != null)
-      {
         return (res.DescriptionValue == this.DescriptionValue) && (res.TargetType == this.TargetType);
-      }
+
       return false;
     }
 

@@ -189,7 +189,7 @@ namespace ConfiguratorGraphicalTest
       {
         AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters 
         { 
-          //Bitmap = Resources.DOS_TRACK,
+          Bitmap = Resources.DOS_TRACK,
           CloseOnFinish = false
         });
       }

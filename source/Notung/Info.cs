@@ -82,7 +82,10 @@ namespace Notung
     /// </summary>
     public object Details
     {
-      get { return m_details ?? m_details_string; }
+      get 
+      { 
+        return m_details ?? m_details_string;
+      }
       set
       {
         m_details = value;
@@ -201,10 +204,6 @@ namespace Notung
       return m_items.GetEnumerator();
     }
 
-    #endregion
-
-    #region IEnumerable Members
-
     IEnumerator IEnumerable.GetEnumerator()
     {
       return m_items.GetEnumerator();
@@ -219,32 +218,5 @@ namespace Notung
   public interface IValidator
   {
     bool Validate(InfoBuffer buffer);
-  }
-
-  [Serializable]
-  public class InfoBufferEventArgs : EventArgs
-  {
-    private readonly InfoBuffer m_buffer;
-
-    public InfoBufferEventArgs(InfoBuffer buffer)
-    {
-      if (buffer == null)
-        throw new ArgumentNullException("buffer");
-
-      m_buffer = buffer;
-    }
-
-    public InfoBufferEventArgs(Info info)
-    {
-      if (info == null)
-        throw new ArgumentNullException("info");
-
-      m_buffer = new InfoBuffer { info };
-    }
-
-    public InfoBuffer Messages
-    {
-      get { return m_buffer; }
-    }
   }
 }

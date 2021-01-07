@@ -113,7 +113,8 @@ namespace Notung.Configuration
         throw new ArgumentNullException("section");
 
       if (section.GetType() != typeof(TSection))
-        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE, typeof(TSection), section.GetType()));
+        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE, 
+          typeof(TSection), section.GetType()));
 
       using (m_lock.WriteLock())
       {
@@ -228,7 +229,6 @@ namespace Notung.Configuration
         using (var reader = new StringReader(section_xml))
         {
           var xml_reader = new XmlTextReader(reader);
-
           if (data_contract)
           {
             var sr = new DataContractSerializer(sectionType);

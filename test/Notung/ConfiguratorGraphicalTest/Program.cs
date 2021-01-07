@@ -10,6 +10,7 @@ using Notung.Data;
 using Notung.Helm;
 using Notung.Loader;
 using Notung.ComponentModel;
+using ConfiguratorGraphicalTest.Properties;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -121,11 +122,11 @@ namespace ConfiguratorGraphicalTest
   [TypeConverter(typeof(EnumLabelConverter))]
   public enum OuterEnum
   {
-    [DisplayNameRes("AKKA One 1", typeof(object))]
+    [DisplayNameRes("MESSAGE", typeof(Resources))]
     One1,
-    [DisplayNameRes("AKKA One 3", typeof(object))]
+    [DisplayNameRes("OPEN FOLDER", typeof(Resources))]
     Two2,
-    [DisplayNameRes("AKKA One 4", typeof(object))]
+    [DisplayNameRes("RESTART", typeof(Program))]
     Three3
   }
 

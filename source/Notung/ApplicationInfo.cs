@@ -35,14 +35,14 @@ namespace Notung
       m_product_assembly = productAssembly;
     }
 
-    public ApplicationInfo()  : this(Global.MainAssembly) { }
+    public ApplicationInfo() : this(Global.MainAssembly) { }
 
     public static ApplicationInfo Instance
     {
       get
       {
-          if (_instance != null)
-            return _instance;
+        if (_instance != null)
+          return _instance;
 
         lock (_lock)
         {
@@ -172,7 +172,8 @@ namespace Notung
         {
           var attr = m_product_assembly.GetCustomAttribute<AssemblyFileVersionAttribute>();
 
-          if (attr == null || string.IsNullOrWhiteSpace(attr.Version) || !Version.TryParse(attr.Version, out m_file_version))
+          if (attr == null || string.IsNullOrWhiteSpace(attr.Version)
+            || !Version.TryParse(attr.Version, out m_file_version))
             m_file_version = this.Version;
         }
 

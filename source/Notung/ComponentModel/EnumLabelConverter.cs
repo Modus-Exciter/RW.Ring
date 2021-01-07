@@ -35,11 +35,11 @@ namespace Notung.ComponentModel
     /// <param name="value">Значение</param>
     /// <param name="destinationType"></param>
     /// <returns>Текст метки</returns>
-    public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+    public override object ConvertTo(ITypeDescriptorContext context, 
+      CultureInfo culture, object value, Type destinationType)
     {
       if (value is Enum)
         return GetLabel(value);
-
 
       return base.ConvertTo(context, culture, value, destinationType);
     }
@@ -143,6 +143,7 @@ namespace Notung.ComponentModel
             item.Value = (Enum)fi.GetValue(null);
             list.Add(item);
           }
+
           _enum_labels.Add(enumType, list);
         }
 
@@ -153,7 +154,7 @@ namespace Notung.ComponentModel
     #endregion
   }
 
-  public static class EnumExtensions
+  public static class EnumLabelExtensions
   {
     /// <summary>
     /// Получает метку у перечисления
