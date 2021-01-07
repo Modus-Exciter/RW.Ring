@@ -8,6 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using Schicksal.Helm.Properties;
 using System.Diagnostics;
+using Schicksal.Basic;
+using Notung;
+using System.Threading.Tasks;
 
 namespace Schicksal.Helm
 {
@@ -74,9 +77,9 @@ namespace Schicksal.Helm
 
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          HtmlSaver.Save(dlg.FileName,
-            m_binding_source.DataSource as System.Collections.IList, GetColumnNames());
-          Process.Start(dlg.FileName);
+          if (AppManager.OperationLauncher.Run(new HtmlSaver(dlg.FileName,
+            m_binding_source.DataSource as DescriptionStatisticsEntry[])) == TaskStatus.RanToCompletion)
+            Process.Start(dlg.FileName);
         }
       }
     }

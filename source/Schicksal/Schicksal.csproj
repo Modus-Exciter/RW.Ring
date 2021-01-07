@@ -56,6 +56,7 @@
     <Compile Include="Basic\TableMultyDataGroup.cs" />
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="HtmlSaver.cs" />
+    <Compile Include="HtmlWriter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

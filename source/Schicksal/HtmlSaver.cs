@@ -5,44 +5,53 @@ using System.ComponentModel;
 using System.Text;
 using System.Collections.Generic;
 using Schicksal.Properties;
+using Notung;
+using Schicksal.Basic;
 
 namespace Schicksal
 {
-  public class HtmlSaver
+  public class HtmlSaver : RunBase
   {
-    public static void Save(string fileName, IList dataSource, Dictionary<string, string> columnNames)
+    private readonly string m_file_name;
+    private readonly DescriptionStatisticsEntry[] m_descriptions;
+
+    public HtmlSaver(string fileName, DescriptionStatisticsEntry[] descriptions)
     {
-      using (var writer = new StreamWriter(fileName, false, Encoding.UTF8))
+      if (string.IsNullOrEmpty(fileName))
+        throw new ArgumentNullException("fileName");
+
+      if (descriptions == null)
+        throw new ArgumentNullException("description");
+
+      m_file_name = fileName;
+      m_descriptions = descriptions;
+    }
+
+
+    public override void Run()
+    {
+      using (var writer = new HtmlWriter(m_file_name, Encoding.UTF8, Resources.REPORT))
       {
-        writer.WriteLine("<html>");
-        writer.WriteLine("<head>");
-        writer.WriteLine("<title>{0}</title>", Resources.REPORT);
-        writer.WriteLine("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">");
-        writer.WriteLine("</head>");
-        writer.WriteLine("<body>");
-        writer.WriteLine("<table>");
+        writer.WriteHeader(Resources.REPORT, 1);
 
-        var desciptors = (dataSource is ITypedList) ? ((ITypedList)dataSource).GetItemProperties(new PropertyDescriptor[0])
-          : TypeDescriptor.GetProperties(dataSource[0]);
+        //TODO: таблица со списком проварьированных параметров
 
-        writer.WriteLine("<tr>");
+        using (writer.CreateParagraph())
+          writer.WriteText("Таблица 1. Базовые статистические показатели");
 
-        foreach (PropertyDescriptor pd in desciptors)
-          writer.WriteLine("<td><b>{0}</b></td>", columnNames.ContainsKey(pd.Name) ? columnNames[pd.Name] : pd.DisplayName);
+        var columnNames = new Dictionary<string, string>();
 
-        writer.WriteLine("</tr>");
-
-        foreach (var line in dataSource)
+        foreach (var pi in typeof(DescriptionStatisticsEntry).GetProperties())
         {
-          writer.WriteLine("<tr>");
-          foreach (PropertyDescriptor pd in desciptors)
-            writer.WriteLine("<td>{0}</td>", pd.GetValue(line));
-          writer.WriteLine("</tr>");
+          if (pi.Name == "StdError")
+            columnNames[pi.Name] = SchicksalResources.STD_ERROR;
+          else if (pi.Name == "ConfidenceInterval")
+            columnNames[pi.Name] = SchicksalResources.INTERVAL;
+          else
+            columnNames[pi.Name] = SchicksalResources.ResourceManager.GetString(pi.Name.ToUpper());
         }
 
-        writer.WriteLine("</table>");
-        writer.WriteLine("</body>");
-        writer.WriteLine("</html>");
+        writer.WriteTable(m_descriptions, columnNames);
       }
     }
   }
