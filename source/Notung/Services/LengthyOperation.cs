@@ -272,10 +272,10 @@ namespace Notung.Services
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
     {
       var changed = false;
-      var current = GetCurrentArgs();
 
       lock (m_current_progress)
       {
+        var current = GetCurrentArgs();
         if (current.ProgressPercentage != e.ProgressPercentage)
         {
           m_current_progress.Enqueue(e);
