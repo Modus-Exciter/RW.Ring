@@ -73,7 +73,10 @@ namespace Schicksal
       m_writer.WriteLine("\t\t<tr>");
 
       foreach (PropertyDescriptor pd in desciptors)
-        m_writer.WriteLine("\t\t\t<td><strong>{0}</strong></td>", GetDisplayName(columnNames, pd));
+      {
+        if (pd.IsBrowsable)
+          m_writer.WriteLine("\t\t\t<td><strong>{0}</strong></td>", GetDisplayName(columnNames, pd));
+      }
 
       m_writer.WriteLine("\t\t</tr>");
      foreach (var line in dataSource)
@@ -81,7 +84,10 @@ namespace Schicksal
         m_writer.WriteLine("\t\t<tr>");
 
         foreach (PropertyDescriptor pd in desciptors)
-          m_writer.WriteLine("\t\t\t<td>{0}</td>", FormatValue(pd.GetValue(line)));
+        {
+          if (pd.IsBrowsable)
+            m_writer.WriteLine("\t\t\t<td>{0}</td>", FormatValue(pd.GetValue(line)));
+        }
 
         m_writer.WriteLine("\t\t</tr>");
       }

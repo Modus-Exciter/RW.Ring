@@ -139,4 +139,10 @@
   <data name="REPORT" xml:space="preserve">
     <value>Report</value>
   </data>
+  <data name="BASIC_METRICS" xml:space="preserve">
+    <value>Basic statistics metrics</value>
+  </data>
+  <data name="TABLE" xml:space="preserve">
+    <value>Table</value>
+  </data>
 </root>

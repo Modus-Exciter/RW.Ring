@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -86,9 +87,12 @@ namespace Schicksal.Basic
           if (name.Contains(" AND "))
             name = name.Substring(name.IndexOf(" AND ") + 5);
 
+          if (!string.IsNullOrEmpty(m_filter))
+            name = name.Replace(" AND " + m_filter, "");
+
           res[i] = new DescriptionStatisticsEntry
           {
-            Description = name,
+            Description = name.Replace(" AND ", ", ").Replace("[", "").Replace("]", ""),
             Mean = DescriptionStatistics.Mean(group[i]),
             Median = DescriptionStatistics.Median(group[i]),
             Min = group[i].Min(),
@@ -117,6 +121,11 @@ namespace Schicksal.Basic
 
   public class DescriptionStatisticsEntry
   {
+    internal DescriptionStatisticsEntry() { }
+
+    [Browsable(false)]
+    public string Factor { get; internal set; }
+    
     public string Description { get; internal set; }
 
     public double Mean { get; internal set; }

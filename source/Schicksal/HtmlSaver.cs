@@ -29,6 +29,8 @@ namespace Schicksal
 
     public override void Run()
     {
+      int table_number = 1;
+
       using (var writer = new HtmlWriter(m_file_name, Encoding.UTF8, Resources.REPORT))
       {
         writer.WriteHeader(Resources.REPORT, 1);
@@ -36,7 +38,7 @@ namespace Schicksal
         //TODO: таблица со списком проварьированных параметров
 
         using (writer.CreateParagraph())
-          writer.WriteText("Таблица 1. Базовые статистические показатели");
+          writer.WriteText(string.Format("{0} {1}. {2}", Resources.TABLE, table_number++, Resources.BASIC_METRICS));
 
         var columnNames = new Dictionary<string, string>();
 

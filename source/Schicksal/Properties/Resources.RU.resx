@@ -120,6 +120,9 @@
   <data name="ACTUAL_DIFFERENCE" xml:space="preserve">
     <value>Разность</value>
   </data>
+  <data name="BASIC_METRICS" xml:space="preserve">
+    <value>Базовые статистические показатели</value>
+  </data>
   <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
     <value>НСР</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
+  </data>
+  <data name="TABLE" xml:space="preserve">
+    <value>Таблица</value>
   </data>
   <data name="VARIANTS_COMPARISON" xml:space="preserve">
     <value>Сравнение вариантов</value>
