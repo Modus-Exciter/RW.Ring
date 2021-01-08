@@ -35,6 +35,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schicksal", "Schicksal\Schicksal.csproj", "{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schicksal.Helm", "Schicksal.Helm\Schicksal.Helm.csproj", "{D7B2C813-8FF0-4F64-937F-3FC222F01FBD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26} = {5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schicksal.Exchange", "Schicksal.Exchange\Schicksal.Exchange.csproj", "{4FA6AF3E-D5A1-4D37-8D35-6DE3A22CBD63}"
 EndProject

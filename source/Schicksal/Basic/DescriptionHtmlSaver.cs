@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Linq;
-using System.IO;
-using System.ComponentModel;
-using System.Text;
 using System.Collections.Generic;
-using Schicksal.Properties;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using Notung;
+using Schicksal.Properties;
 
 namespace Schicksal.Basic
 {
-  public class DescriptionHtmlSaver : RunBase
+  public class DescriptionHtmlSaver : RunBase, IServiceProvider
   {
     private readonly string m_file_name;
     private readonly DescriptionStatisticsEntry[] m_descriptions;
@@ -73,6 +71,14 @@ namespace Schicksal.Basic
     public override string ToString()
     {
       return Resources.EXPORT;
+    }
+
+    public override object GetService(Type serviceType)
+    {
+      if (serviceType == typeof(Image))
+        return Resources.Export_Picture;
+
+      return base.GetService(serviceType);
     }
 
     private Dictionary<string, string> CalculateSummary()

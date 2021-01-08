@@ -91,7 +91,7 @@ namespace Schicksal.Anova
     public override object GetService(Type serviceType)
     {
       if (serviceType == typeof(Image))
-        return Resources.Comparison;
+        return Resources.Export_Picture;
 
       return base.GetService(serviceType);
     }
