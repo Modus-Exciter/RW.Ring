@@ -26,9 +26,6 @@ namespace Notung.Services
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(LengthyOperation));
 
-    private static readonly ProgressChangedEventArgs _default_args 
-      = new ProgressChangedEventArgs(ProgressPercentage.Unknown, string.Empty);
-
     /// <summary>
     /// Создание новой длительной операции на основе задачи
     /// </summary>
@@ -215,7 +212,6 @@ namespace Notung.Services
     private void Run()
     {
       ThreadTracker.RegisterThread(Thread.CurrentThread);
-
       m_run_base.ProgressChanged += HandleProgressChanged;
 
       if (m_run_base is ICancelableRunBase)
@@ -261,36 +257,12 @@ namespace Notung.Services
       }
     }
 
-    private ProgressChangedEventArgs GetCurrentArgs()
-    {
-      if (m_current_progress.Count > 0)
-        return m_current_progress.Peek();
-      else
-        return _default_args;
-    }
-
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
     {
-      var changed = false;
-
       lock (m_current_progress)
-      {
-        var current = GetCurrentArgs();
-        if (current.ProgressPercentage != e.ProgressPercentage)
-        {
-          m_current_progress.Enqueue(e);
-          changed = true;
-        }
+        m_current_progress.Enqueue(e);
 
-        if (!object.Equals(current.UserState, e.UserState))
-        {
-          m_current_progress.Enqueue(e);
-          changed = true;
-        }
-      }
-
-      if (changed)
-        m_wrapper.Invoke(m_progress_changed);
+      m_wrapper.Invoke(m_progress_changed);
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
@@ -305,11 +277,6 @@ namespace Notung.Services
 
     private void OnProgressChanged()
     {
-      var handler = this.ProgressChanged;
-
-      if (handler == null)
-        return;
-      
       while (m_current_progress.Count > 0)
       {
         ProgressChangedEventArgs args = null;
@@ -321,7 +288,7 @@ namespace Notung.Services
         }
 
         if (args != null)
-          handler(this, args);
+          this.ProgressChanged.InvokeIfSubscribed(this, args);
       }
     }
 
