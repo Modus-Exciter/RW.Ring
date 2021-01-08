@@ -256,7 +256,7 @@ namespace Schicksal.Helm
       if (table_form == null)
         return;
 
-      var table = table_form.DataSource as DataTable;
+      var table = table_form.DataSource;
 
       if (table == null)
         return;
@@ -378,7 +378,7 @@ namespace Schicksal.Helm
       if (table_form == null)
         return;
 
-      var table = table_form.DataSource as DataTable;
+      var table = table_form.DataSource;
 
       if (table == null)
         return;

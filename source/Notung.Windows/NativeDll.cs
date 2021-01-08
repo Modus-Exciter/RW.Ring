@@ -179,6 +179,7 @@ namespace Notung.Helm.Windows
 
     #region API Helpers ---------------------------------------------------------------------------
 
+    [Flags]
     private enum SymSetOptionsType : uint
     {
       SYMOPT_CASE_INSENSITIVE = 0x00000001,
@@ -192,6 +193,7 @@ namespace Notung.Helm.Windows
       SYMOPT_DEBUG = 0x80000000
     }
 
+    [Flags]
     private enum LoadLibraryFlags : uint
     {
       DONT_RESOLVE_DLL_REFERENCES = 0x00000001,

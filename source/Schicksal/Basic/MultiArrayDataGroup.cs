@@ -27,7 +27,7 @@ namespace Schicksal.Basic
       if (data.Length != keys.Length)
         throw new ArgumentException("Data and keys count mismatch");
 
-      m_indexes = new Dictionary<T, int>(m_data.Length);
+      m_indexes = new Dictionary<T, int>(data.Length);
 
       for (int i = 0; i < data.Length; i++)
       {

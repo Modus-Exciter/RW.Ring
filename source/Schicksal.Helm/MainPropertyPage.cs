@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Notung;
+using Notung.ComponentModel;
 using Notung.Helm.Configuration;
 using Schicksal.Helm.Properties;
 
@@ -78,16 +79,14 @@ namespace Schicksal.Helm
         {
           panel.BackColor = dlg.Color;
 
-          if (this.Changed != null)
-            this.Changed(this, EventArgs.Empty);
+          this.Changed.InvokeIfSubscribed(this, EventArgs.Empty);
         }
       }
     }
 
     private void m_binging_source_CurrentItemChanged(object sender, EventArgs e)
     {
-      if (this.Changed != null)
-        this.Changed(this, e);
+      this.Changed.InvokeIfSubscribed(this, e);
     }
   }
 }

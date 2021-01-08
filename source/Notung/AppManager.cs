@@ -19,7 +19,7 @@ namespace Notung
 
     private static readonly object _lock = new object();
 
-    private static T InitService<T>(ref T field, Func<T> creator)
+    private static T InitService<T>(ref T field, Func<T> creator) where T : class
     {
       lock (_lock)
       {

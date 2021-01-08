@@ -98,7 +98,7 @@ namespace Notung.Configuration
         ret = Repair(buffer);
       }
 
-      return true;
+      return ret;
     }
 
     public void RestoreDefaults()

@@ -1464,8 +1464,6 @@ namespace Schicksal
       double ls2pi = 0;
       double tmp = 0;
 
-      sgngam = 0;
-
       sgngam = 1;
       logpi = 1.14472988584940017414;
       ls2pi = 0.91893853320467274178;
@@ -2118,18 +2116,6 @@ namespace Schicksal
       q = 4958.82756472114071495438422 + x * q;
       q = 1826.3348842295112595576438 + x * q;
       result = Math.Exp(-sqr(x)) * p / q;
-      return result;
-    }
-
-
-    /*************************************************************************
-    Same as normalcdf(), obsolete name.
-    *************************************************************************/
-    public static double normaldistribution(double x)
-    {
-      double result = 0;
-
-      result = 0.5 * (errorfunction(x / 1.41421356237309504880) + 1);
       return result;
     }
 
