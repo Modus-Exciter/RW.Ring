@@ -52,6 +52,12 @@ namespace Notung.Services
     /// </summary>
     /// <param name="source">Сборка, зависимости которой следует загрузить</param>
     void LoadDependencies(Assembly source);
+
+    /// <summary>
+    /// Настройка нового домена для работы с сервисами приложения. 
+    /// </summary>
+    /// <param name="newDomain">Новый домен</param>
+    void ShareServices(AppDomain newDomain);
   }
 
   /// <summary>
@@ -78,24 +84,22 @@ namespace Notung.Services
   public class AssemblyClassifier : IAssemblyClassifier
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(AssemblyClassifier));
-    
-    private readonly AppDomain m_domain;
-    private readonly AssemblyList m_assemblies = new AssemblyList();
 
     private readonly BindingList<string> m_exclude_prefixes = new BindingList<string>();
     private readonly Collection<string> m_exclude_wrapper;
+    private readonly PrefixTree m_prefix_tree = new PrefixTree();
 
+    private readonly AppDomain m_domain;
+    private readonly AssemblyList m_assemblies = new AssemblyList();
     private readonly AssemblyList m_tracking_assemblies = new AssemblyList();
     private readonly ReadOnlyCollection<Assembly> m_tracking_wrapper;
 
     private readonly PluginList m_plugins = new PluginList();
     private readonly ReadOnlyCollection<PluginInfo> m_plugins_wrapper;
+    private readonly PluginLoader m_plugin_loader;
 
     private readonly HashSet<string> m_unmanaged_asms = new HashSet<string>();
     private readonly ReadOnlySet<string> m_unmanaged_wrapper;
-    private readonly PluginLoader m_plugin_loader;
-
-    private readonly PrefixTree m_prefix_tree = new PrefixTree();
 
     public AssemblyClassifier(AppDomain domain)
     {
@@ -107,7 +111,6 @@ namespace Notung.Services
       m_exclude_prefixes.Add("mscorlib");
       m_exclude_prefixes.Add("Windows");
       m_exclude_prefixes.Add("Accessibility");
-
       m_prefix_tree.AddRange(m_exclude_prefixes);
 
       m_domain = domain;
@@ -239,6 +242,18 @@ namespace Notung.Services
       }
     }
 
+    public void ShareServices(AppDomain newDomain)
+    {
+      if (newDomain == null)
+        throw new ArgumentNullException("newDomain");
+
+      if (newDomain == AppDomain.CurrentDomain)
+        return;
+
+      foreach (var action in ShareableTypes.List)
+        action(newDomain);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
       if (disposing)
@@ -347,9 +362,7 @@ namespace Notung.Services
       setup.PrivateBinPath = this.PluginsDirectory ?? setup.PrivateBinPath;
 
       AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
-
-      ret.ShareServices();
-
+      this.ShareServices(ret);
       return ret;
     }
 
@@ -457,7 +470,6 @@ namespace Notung.Services
     private interface IPluginLoader : IDisposable
     {
       AssemblyName LoadAssemblyFromFile(string fileName);
-
       HashSet<string> GetUnmanagedAssemblies();
     }
 
@@ -557,6 +569,29 @@ namespace Notung.Services
           plugin.Container = null;
 
         base.ClearItems();
+      }
+    }
+
+    private static class ShareableTypes
+    {
+      public static readonly HashSet<Action<AppDomain>> List = new HashSet<Action<AppDomain>>();
+
+      static ShareableTypes()
+      {
+        var parameters = new Type[] { typeof(AppDomain) };
+
+        foreach (var type in Global.BaseAssembly.GetTypes())
+        {
+          if (type.IsDefined(typeof(AppDomainShareAttribute), false))
+          {
+            var method = type.GetMethod("Share",
+              BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static,
+              Type.DefaultBinder, parameters, null);
+
+            if (method != null)
+              List.Add((Action<AppDomain>)Delegate.CreateDelegate(typeof(Action<AppDomain>), method, true));
+          }
+        }
       }
     }
 

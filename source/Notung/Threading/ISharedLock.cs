@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
 
 namespace Notung.Threading
 {
@@ -44,7 +44,7 @@ namespace Notung.Threading
     /// <param name="action">Выполняемая операция</param>
     /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     void RunInWriteLock(Action action, int millisecondsTimeout);
-    
+
     /// <summary>
     /// Завершает работу объекта блокировки
     /// </summary>
@@ -78,65 +78,178 @@ namespace Notung.Threading
   }
 
   /// <summary>
-  /// Заглушка, имитирующая разделяемую блокировку
+  /// Обёртка над классом ReaderWriterLockSlim, делающая работу с ним более удобной. 
+  /// <example>SharedLock locker = new SharedLock();
+  /// using (locker.ReadLock()) { DoSomething(); }</example>
   /// </summary>
-  public sealed class SharedLockStub : ISharedLock
+  public sealed class SharedLock : ISharedLock
   {
-    private readonly LockStubCloser m_closer = new LockStubCloser();
-    
-    public LockState LockState
+    private readonly ReaderWriterLockSlim m_lock;
+    private readonly ReadLockHandle m_reader;
+    private readonly WriteLockHandle m_writer;
+    private readonly UpgradeableLockHandle m_upgrader;
+
+    private volatile bool m_closed;
+
+    /// <summary>
+    /// Создаёт объект разделяемой блокировки
+    /// </summary>
+    /// <param name="reenterable">Будет ли блокировка реентерабельной</param>
+    public SharedLock(bool reenterable = true)
     {
-      get { return m_closer.CurrentState; }
+      m_lock = new ReaderWriterLockSlim(reenterable ? 
+        LockRecursionPolicy.SupportsRecursion : LockRecursionPolicy.NoRecursion);
+
+      m_reader = new ReadLockHandle(m_lock);
+      m_writer = new WriteLockHandle(m_lock);
+      m_upgrader = new UpgradeableLockHandle(m_lock);
     }
 
+    /// <summary>
+    /// Устанавливает блокировку на чтение
+    /// </summary>
+    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>   
     public IDisposable ReadLock()
     {
-      m_closer.Push(m_closer.CurrentState);
-      m_closer.CurrentState = LockState.Read;
-      return m_closer;
+      m_lock.EnterReadLock();
+      return m_reader;
     }
 
-    public IDisposable UpgradeableLock()
-    {
-      m_closer.Push(m_closer.CurrentState);
-      m_closer.CurrentState = LockState.Upgradeable;
-      return m_closer;
-    }
-
+    /// <summary>
+    /// Устанавливает блокировку на запись
+    /// </summary>
+    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
     public IDisposable WriteLock()
     {
-      m_closer.Push(m_closer.CurrentState);
-      m_closer.CurrentState = LockState.Write;
-      return m_closer;
+      m_lock.EnterWriteLock();
+      return m_writer;
     }
 
+    /// <summary>
+    /// Устанавливает блокировку на чтение с возможностью перехода к блокировке на запись
+    /// </summary>
+    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
+    public IDisposable UpgradeableLock()
+    {
+      m_lock.EnterUpgradeableReadLock();
+      return m_upgrader;
+    }
+
+    /// <summary>
+    /// Выполнение операции в контексте блокировки на чтение
+    /// </summary>
+    /// <param name="action">Выполняемая операция</param>
+    /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     public void RunInReadLock(Action action, int millisecondsTimeout)
     {
-      if (action != null)
+      if (action == null) 
+        throw new ArgumentNullException("action");
+
+      if (!m_closed && m_lock.TryEnterReadLock(millisecondsTimeout))
       {
-        using (this.ReadLock())
+        try
+        {
           action();
+        }
+        finally
+        {
+          m_lock.ExitReadLock();
+        }
       }
     }
 
+    /// <summary>
+    /// Выполнение операции в контексте блокировки на запись
+    /// </summary>
+    /// <param name="action">Выполняемая операция</param>
+    /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     public void RunInWriteLock(Action action, int millisecondsTimeout)
     {
-      if (action != null)
+      if (action == null)
+        throw new ArgumentNullException("action");
+
+      if (!m_closed && m_lock.TryEnterWriteLock(millisecondsTimeout))
       {
-        using (this.WriteLock())
+        try
+        {
           action();
+        }
+        finally
+        {
+          m_lock.ExitWriteLock();
+        }
       }
     }
 
-    public void Close() { }
-
-    private class LockStubCloser : Stack<LockState>, IDisposable
+    /// <summary>
+    /// Завершает работу ReaderWriterLockSlim
+    /// </summary>
+    public void Close()
     {
-      public LockState CurrentState = LockState.None;
+      m_closed = true;
+      m_lock.Dispose();
+    }
+
+    /// <summary>
+    /// Статус блокировки - нет, чтение, обновляемый режим или запись
+    /// </summary>
+    public LockState LockState
+    {
+      get
+      {
+        if (m_lock.IsWriteLockHeld)
+          return LockState.Write;
+        else if (m_lock.IsUpgradeableReadLockHeld)
+          return LockState.Upgradeable;
+        else if (m_lock.IsReadLockHeld)
+          return LockState.Read;
+        else
+          return LockState.None;
+      }
+    }
+
+    private sealed class ReadLockHandle : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public ReadLockHandle(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+      }
 
       public void Dispose()
       {
-        this.CurrentState = this.Pop();
+        m_lock.ExitReadLock();
+      }
+    }
+
+    private sealed class WriteLockHandle : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public WriteLockHandle(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+      }
+
+      public void Dispose()
+      {
+        m_lock.ExitWriteLock();
+      }
+    }
+
+    private sealed class UpgradeableLockHandle : IDisposable
+    {
+      private readonly ReaderWriterLockSlim m_lock;
+
+      public UpgradeableLockHandle(ReaderWriterLockSlim source)
+      {
+        m_lock = source;
+      }
+
+      public void Dispose()
+      {
+        m_lock.ExitUpgradeableReadLock();
       }
     }
   }

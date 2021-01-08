@@ -8,7 +8,8 @@ using System.Collections.ObjectModel;
 namespace Notung.ComponentModel
 {
   /// <summary>
-  /// Конвертер для локализации перечислений
+  /// Конвертер для локализации перечислений. Локализованная
+  /// метка задаётся атрибутом DisplayName или DisplayNameRes.
   /// </summary>
   public class EnumLabelConverter : EnumConverter
   {

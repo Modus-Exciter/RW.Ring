@@ -43,23 +43,6 @@ namespace Notung
     }
 
     /// <summary>
-    /// Настройка нового домена для работы с сервисами приложения. 
-    /// Этот метод необходимо вызывать сразу после создания нового домена
-    /// </summary>
-    /// <param name="newDomain">Новый домен</param>
-    public static void ShareServices(this AppDomain newDomain)
-    {
-      if (newDomain == null)
-        throw new ArgumentNullException("newDomain");
-
-      if (newDomain == AppDomain.CurrentDomain)
-        return;
-
-      foreach (var action in ShareableTypes.List)
-        action(newDomain);
-    }
-
-    /// <summary>
     /// Получение всех типов, доступных в сборке,
     /// даже если при загрузке сборки возникла ошибка
     /// </summary>
@@ -123,29 +106,6 @@ namespace Notung
         Type.DefaultBinder, types, null);
 
       return method;
-    }
-
-    private static class ShareableTypes
-    {
-      public static readonly HashSet<Action<AppDomain>> List = new HashSet<Action<AppDomain>>();
-
-      static ShareableTypes()
-      {
-        var parameters = new Type[] { typeof(AppDomain) };
-
-        foreach (var type in Global.BaseAssembly.GetTypes())
-        {
-          if (type.IsDefined(typeof(AppDomainShareAttribute), false))
-          {
-            var method = type.GetMethod("Share",
-              BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static,
-              Type.DefaultBinder, parameters, null);
-
-            if (method != null)
-              List.Add((Action<AppDomain>)Delegate.CreateDelegate(typeof(Action<AppDomain>), method, true));
-          }
-        }
-      }
     }
 
     #endregion

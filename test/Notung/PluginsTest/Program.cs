@@ -60,7 +60,7 @@ namespace PluginsTest
 
       AppDomain newDomain = AppDomain.CreateDomain("Plugin domain");
 
-      newDomain.ShareServices();
+      AppManager.AssemblyClassifier.ShareServices(newDomain);
 
       newDomain.DoCallBack(() =>
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading;
-using Notung.ComponentModel;
 
 namespace Notung
 {
@@ -92,14 +91,6 @@ namespace Notung
     protected RunBase() { }
 
     /// <summary>
-    /// Поддерживается ли оповещение о прогрессе операции
-    /// </summary>
-    protected bool SupportsPercentNotification
-    {
-      get { return m_percent != ProgressPercentage.Unknown; }
-    }
-
-    /// <summary>
     /// Буфер, в который можно писать сообщения, накапливающиеся во время выполнения задачи
     /// </summary>
     protected InfoBuffer Infolog
@@ -177,7 +168,6 @@ namespace Notung
           return;
 
         m_can_cancel = value;
-
         var handler = this.CanCancelChanged;
 
        if (handler != null)

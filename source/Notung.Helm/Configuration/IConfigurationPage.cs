@@ -183,19 +183,15 @@ namespace Notung.Helm.Configuration
         if (typeof(TSection).IsDefined(typeof(DataContractAttribute), false))
         {
           var ser = new DataContractSerializer(typeof(TSection));
-
           ser.WriteObject(ms, original);
           ms.Position = 0;
-
           return (TSection)ser.ReadObject(ms);
         }
         else
         {
           var ser = new XmlSerializer(typeof(TSection));
-
           ser.Serialize(ms, original);
           ms.Position = 0;
-
           return (TSection)ser.Deserialize(ms);
         }
       }
