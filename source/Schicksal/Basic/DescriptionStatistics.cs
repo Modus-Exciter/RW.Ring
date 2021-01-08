@@ -73,6 +73,11 @@ namespace Schicksal.Basic
     }
 
     public DescriptionStatisticsEntry[] Result { get; private set; }
+
+    public string[] Factors
+    {
+      get { return m_factors; }
+    }
     
     public override void Run()
     {

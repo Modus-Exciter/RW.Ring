@@ -120,6 +120,9 @@
   <data name="ACTUAL_DIFFERENCE" xml:space="preserve">
     <value>Разность</value>
   </data>
+  <data name="AFFECTED_RESULT" xml:space="preserve">
+    <value>Исследуемый показатель, зависящий от воздействия факторов</value>
+  </data>
   <data name="BASIC_METRICS" xml:space="preserve">
     <value>Базовые статистические показатели</value>
   </data>
@@ -135,10 +138,19 @@
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
   </data>
+  <data name="SUMMARY" xml:space="preserve">
+    <value>Сводная информация по таблице</value>
+  </data>
   <data name="TABLE" xml:space="preserve">
     <value>Таблица</value>
   </data>
+  <data name="TOTAL_COUNT" xml:space="preserve">
+    <value>Общее количество наблюдений</value>
+  </data>
   <data name="VARIANTS_COMPARISON" xml:space="preserve">
     <value>Сравнение вариантов</value>
+  </data>
+  <data name="VARIED_FACTORS" xml:space="preserve">
+    <value>Факторы, которые были проварьированы</value>
   </data>
 </root>

@@ -30,6 +30,10 @@ namespace Schicksal.Helm
       }
     }
 
+    public string[] Factors { get; set; }
+
+    public string ResultColumn { get; set; }
+
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
@@ -59,16 +63,6 @@ namespace Schicksal.Helm
       m_cmd_export.Text = Resources.EXPORT;
     }
 
-    private Dictionary<string, string> GetColumnNames()
-    {
-      var ret = new Dictionary<string, string>();
-
-      foreach (DataGridViewColumn col in m_grid.Columns)
-        ret[col.DataPropertyName] = col.HeaderText;
-
-      return ret;
-    }
-
     private void exportToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (var dlg = new SaveFileDialog())
@@ -77,8 +71,13 @@ namespace Schicksal.Helm
 
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          if (AppManager.OperationLauncher.Run(new HtmlSaver(dlg.FileName,
-            m_binding_source.DataSource as DescriptionStatisticsEntry[])) == TaskStatus.RanToCompletion)
+          if (AppManager.OperationLauncher.Run(new DescriptionHtmlSaver(dlg.FileName,
+            m_binding_source.DataSource as DescriptionStatisticsEntry[])
+          {
+            Caption = this.Text,
+            Factors = this.Factors,
+            Result = this.ResultColumn
+          }) == TaskStatus.RanToCompletion)
             Process.Start(dlg.FileName);
         }
       }

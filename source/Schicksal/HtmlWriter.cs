@@ -95,6 +95,32 @@ namespace Schicksal
       m_writer.WriteLine("\t</table>");
     }
 
+    public void WriteList(IList list)
+    {
+      if (list == null)
+        throw new ArgumentNullException("list");
+
+      m_writer.WriteLine("\t<ol>");
+
+      foreach (object item in list)
+        m_writer.WriteLine("\t\t<li>{0}</li>", FormatValue(item));
+
+      m_writer.WriteLine("\t</ol>");
+    }
+
+    public void WriteCollection(ICollection collection)
+    {
+      if (collection == null)
+        throw new ArgumentNullException("collection");
+
+      m_writer.WriteLine("\t<ul>");
+
+      foreach (object item in collection)
+        m_writer.WriteLine("\t\t<li>{0}</li>", FormatValue(item));
+
+      m_writer.WriteLine("\t</ul>");
+    }
+
     public void WriteGlossary(Dictionary<string, string> glossary)
     {
       if (glossary == null)
@@ -120,6 +146,11 @@ namespace Schicksal
     public void WriteText(string text)
     {
       m_writer.WriteLine(FormatValue(text));
+    }
+
+    public void WriteSpace()
+    {
+      m_writer.Write(" &nbsp; ");
     }
 
     private static string FormatValue(object value)

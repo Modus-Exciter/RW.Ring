@@ -402,9 +402,11 @@ namespace Schicksal.Helm
           {
             dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
             var results_form = new BasicStatisticsForm();
-            results_form.Text = string.Format("{0}: {1}, p={2}",
-              Resources.BASIC_STATISTICS, table_form.Text, dlg.DataSource.Probability);
+            results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
+              Resources.BASIC_STATISTICS, table_form.Text, dlg.DataSource.Probability, dlg.DataSource.Filter);
             results_form.DataSorce = processor.Result;
+            results_form.Factors = processor.Factors;
+            results_form.ResultColumn = dlg.DataSource.Result;
             results_form.Show(this);
           }
         }

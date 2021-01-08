@@ -145,4 +145,16 @@
   <data name="TABLE" xml:space="preserve">
     <value>Table</value>
   </data>
+  <data name="SUMMARY" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="AFFECTED_RESULT" xml:space="preserve">
+    <value>Dependent parameter studied</value>
+  </data>
+  <data name="TOTAL_COUNT" xml:space="preserve">
+    <value>Total count of observations</value>
+  </data>
+  <data name="VARIED_FACTORS" xml:space="preserve">
+    <value>Factors were varied</value>
+  </data>
 </root>

@@ -70,6 +70,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Dependent parameter studied.
+        /// </summary>
+        internal static string AFFECTED_RESULT {
+            get {
+                return ResourceManager.GetString("AFFECTED_RESULT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Basic statistics metrics.
         /// </summary>
         internal static string BASIC_METRICS {
@@ -125,6 +134,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Summary.
+        /// </summary>
+        internal static string SUMMARY {
+            get {
+                return ResourceManager.GetString("SUMMARY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Table.
         /// </summary>
         internal static string TABLE {
@@ -134,11 +152,29 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Total count of observations.
+        /// </summary>
+        internal static string TOTAL_COUNT {
+            get {
+                return ResourceManager.GetString("TOTAL_COUNT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Wariants comparison.
         /// </summary>
         internal static string VARIANTS_COMPARISON {
             get {
                 return ResourceManager.GetString("VARIANTS_COMPARISON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Factors were varied.
+        /// </summary>
+        internal static string VARIED_FACTORS {
+            get {
+                return ResourceManager.GetString("VARIED_FACTORS", resourceCulture);
             }
         }
     }
