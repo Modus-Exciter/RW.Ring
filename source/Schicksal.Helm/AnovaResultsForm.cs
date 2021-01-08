@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Notung;
@@ -30,6 +31,8 @@ namespace Schicksal.Helm
     public string ResultColumn { get; set; }
 
     public string Filter { get; set; }
+
+    public string[] Factors { get; set; }
 
     protected override void OnShown(EventArgs e)
     {
@@ -65,6 +68,29 @@ namespace Schicksal.Helm
 
       if (row.P <= this.Probability)
         e.CellStyle.ForeColor = m_significat_color;
+    }
+
+    private void m_cmd_export_Click(object sender, EventArgs e)
+    {
+      using (var dlg = new SaveFileDialog())
+      {
+        dlg.Filter = "Html files|*.html";
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+          if (AppManager.OperationLauncher.Run(new AnovaHtmlSaver(dlg.FileName,
+              this.SourceTable, this.DataSource, this.Probability, 
+              string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
+          {
+            Factors = this.Factors,
+            Result = this.ResultColumn,
+            Filter = this.Filter
+          })
+            == System.Threading.Tasks.TaskStatus.RanToCompletion)
+          {
+            Process.Start(dlg.FileName);
+          }
+        }
+      }
     }
   }
 }

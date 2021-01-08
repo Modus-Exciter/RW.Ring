@@ -153,21 +153,33 @@ namespace Schicksal
       m_writer.Write(" &nbsp; ");
     }
 
-    private static string FormatValue(object value)
+    public static string FormatValue(object value)
     {
       if (value is double)
       {
         var copy = (double)value;
 
         if (copy > 0.00005)
-          return copy.ToString("0.0000");
+        {
+          return Math.Round(copy, 4).ToString();
+        }
+        else
+        {
+          var ret = copy.ToString();
+          return FormatFloatValue(ret);
+        }
       }
       if (value is float)
       {
         var copy = (float)value;
 
         if (copy > 0.00005)
-          return copy.ToString("0.0000");
+          return Math.Round(copy, 4).ToString();
+        else
+        {
+          var ret = copy.ToString();
+          return FormatFloatValue(ret);
+        }
       }
 
       if (value is string)
@@ -182,6 +194,19 @@ namespace Schicksal
         return CoreResources.NULL;
       else
         return value.ToString();
+    }
+
+    private static string FormatFloatValue(string ret)
+    {
+      if (ret.Contains("E") || ret.Contains("e"))
+      {
+        var parts = ret.Split('e', 'E');
+
+        ret = string.Format("{0:0.0000}*10<sup>{1}</sup>",
+          double.Parse(parts[0]), parts[1]);
+      }
+
+      return ret;
     }
 
     private static string GetDisplayName(Dictionary<string, string> columnNames, PropertyDescriptor pd)

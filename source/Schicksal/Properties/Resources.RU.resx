@@ -123,20 +123,68 @@
   <data name="AFFECTED_RESULT" xml:space="preserve">
     <value>Исследуемый показатель, зависящий от воздействия факторов</value>
   </data>
+  <data name="AND" xml:space="preserve">
+    <value>и</value>
+  </data>
   <data name="BASIC_METRICS" xml:space="preserve">
     <value>Базовые статистические показатели</value>
   </data>
   <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
     <value>НСР</value>
   </data>
+  <data name="DIFFERENCE_VALUE" xml:space="preserve">
+    <value>её значение составило</value>
+  </data>
+  <data name="ETC" xml:space="preserve">
+    <value>и т. д.</value>
+  </data>
+  <data name="EXPORT" xml:space="preserve">
+    <value>Экспорт результатов статистического анализа</value>
+  </data>
   <data name="FACTOR" xml:space="preserve">
     <value>Фактор</value>
+  </data>
+  <data name="F_CRITERIA" xml:space="preserve">
+    <value>Дисперсионный анализ, F-критерий</value>
   </data>
   <data name="INVALID_COLUMN_TYPE" xml:space="preserve">
     <value>Неподходящий тип колонки для сохранения</value>
   </data>
+  <data name="MAX_DIFFERENCE" xml:space="preserve">
+    <value>Максимальная разница наблюдалась между вариантами</value>
+  </data>
+  <data name="MAX_INFLUENCE" xml:space="preserve">
+    <value>Максимальное влияние было отмечено для фактора или комбинации факторов {0}. Оно составило {1}% вероятности ошибки первого рода.</value>
+  </data>
+  <data name="MAX_VALUE" xml:space="preserve">
+    <value>Максимальное значение наблюдалось в варианте «{0}», оно составило {1}.</value>
+  </data>
+  <data name="MIN_INFLUENCE" xml:space="preserve">
+    <value>Минимальное влияние было отмечено для фактора или комбинации факторов {0}. Оно составило {1}% вероятности ошибки первого рода.</value>
+  </data>
+  <data name="MIN_VALUE" xml:space="preserve">
+    <value>Минимальное значение наблюдалось в варианте «{0}», оно составило {1}.</value>
+  </data>
+  <data name="MOST_SIGNIFICAT_DIFFERENCE" xml:space="preserve">
+    <value>Наиболее статистически значимая разница наблюдалась между вариантами</value>
+  </data>
+  <data name="OTHER_UNSIGNIFICAT" xml:space="preserve">
+    <value>а прочие различия оказались несущественными.</value>
+  </data>
+  <data name="PAIRED_COMPARISON" xml:space="preserve">
+    <value>Попарное сравнение</value>
+  </data>
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
+  </data>
+  <data name="SIGNIFICANT_DIFFERENCES" xml:space="preserve">
+    <value>Проведённое исследование показало, что существенные различия наблюдаются между вариантами</value>
+  </data>
+  <data name="SIGNIFICAT" xml:space="preserve">
+    <value>Факторы и комбинации факторов {0} оказались статистически незначимыми на уровне значимости {1:0.0}%</value>
+  </data>
+  <data name="SIGNIFICAT_FACTORS" xml:space="preserve">
+    <value>Статистически значимые факторы и комбинации</value>
   </data>
   <data name="SUMMARY" xml:space="preserve">
     <value>Сводная информация по таблице</value>
@@ -146,6 +194,9 @@
   </data>
   <data name="TOTAL_COUNT" xml:space="preserve">
     <value>Общее количество наблюдений</value>
+  </data>
+  <data name="UNSIGNIFICAT" xml:space="preserve">
+    <value>В ходе исследования выяснилось, что следующие факторы и комбинации оказались статистически незначимыми на уровне значимости {0:0.0}%</value>
   </data>
   <data name="VARIANTS_COMPARISON" xml:space="preserve">
     <value>Сравнение вариантов</value>

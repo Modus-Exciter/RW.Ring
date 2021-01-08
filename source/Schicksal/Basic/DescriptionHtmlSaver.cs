@@ -70,6 +70,11 @@ namespace Schicksal.Basic
       }
     }
 
+    public override string ToString()
+    {
+      return Resources.EXPORT;
+    }
+
     private Dictionary<string, string> CalculateSummary()
     {
       Dictionary<string, string> summary = new Dictionary<string, string>();

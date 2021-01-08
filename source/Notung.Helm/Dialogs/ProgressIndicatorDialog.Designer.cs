@@ -37,48 +37,53 @@
       // 
       // m_picture
       // 
-      this.m_picture.Location = new System.Drawing.Point(12, 12);
+      this.m_picture.Location = new System.Drawing.Point(16, 15);
+      this.m_picture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_picture.Name = "m_picture";
-      this.m_picture.Size = new System.Drawing.Size(60, 60);
+      this.m_picture.Size = new System.Drawing.Size(80, 80);
       this.m_picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.m_picture.TabIndex = 0;
       this.m_picture.TabStop = false;
       // 
       // m_progress_bar
       // 
-      this.m_progress_bar.Location = new System.Drawing.Point(79, 40);
+      this.m_progress_bar.Location = new System.Drawing.Point(105, 49);
+      this.m_progress_bar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_progress_bar.Name = "m_progress_bar";
-      this.m_progress_bar.Size = new System.Drawing.Size(353, 23);
+      this.m_progress_bar.Size = new System.Drawing.Size(471, 28);
       this.m_progress_bar.TabIndex = 1;
       // 
       // m_button
       // 
-      this.m_button.Location = new System.Drawing.Point(187, 70);
+      this.m_button.Location = new System.Drawing.Point(249, 86);
+      this.m_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_button.Name = "m_button";
-      this.m_button.Size = new System.Drawing.Size(75, 23);
+      this.m_button.Size = new System.Drawing.Size(100, 28);
       this.m_button.TabIndex = 2;
       this.m_button.Text = "Cancel";
       this.m_button.UseVisualStyleBackColor = true;
       // 
       // m_state_label
       // 
-      this.m_state_label.Location = new System.Drawing.Point(78, 12);
+      this.m_state_label.Location = new System.Drawing.Point(104, 15);
+      this.m_state_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.m_state_label.Name = "m_state_label";
-      this.m_state_label.Size = new System.Drawing.Size(353, 25);
+      this.m_state_label.Size = new System.Drawing.Size(471, 31);
       this.m_state_label.TabIndex = 3;
       this.m_state_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // ProgressIndicatorDialog
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(444, 99);
+      this.ClientSize = new System.Drawing.Size(592, 122);
       this.ControlBox = false;
       this.Controls.Add(this.m_state_label);
       this.Controls.Add(this.m_button);
       this.Controls.Add(this.m_progress_bar);
       this.Controls.Add(this.m_picture);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.MaximizeBox = false;
       this.MinimizeBox = false;
       this.Name = "ProgressIndicatorDialog";

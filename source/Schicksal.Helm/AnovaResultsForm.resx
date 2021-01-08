@@ -120,23 +120,85 @@
   <data name="factorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Factor</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="factorDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
   <data name="kdfDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>K - 1</value>
+  </data>
+  <data name="kdfDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="kdfDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
   <data name="ndfDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>N - K</value>
   </data>
+  <data name="ndfDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="ndfDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
   <data name="fDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>F</value>
+  </data>
+  <data name="fDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="fDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
   <data name="f005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>F 5%</value>
   </data>
+  <data name="f005DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="f005DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
   <data name="f001DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>F 1%</value>
   </data>
+  <data name="f001DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="f001DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
   <data name="pDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>p</value>
+  </data>
+  <data name="pDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <metadata name="m_context_menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>197, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 24</value>
+  </data>
+  <data name="m_cmd_export.Text" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 28</value>
+  </data>
+  <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
+    <value>m_context_menu</value>
+  </data>
+  <data name="&gt;&gt;m_context_menu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -145,14 +207,18 @@
   <data name="m_grid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
+  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>812, 593</value>
+  </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
@@ -166,16 +232,16 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;m_grid.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>8, 16</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
+    <value>812, 593</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -626,17 +692,23 @@
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
   </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>AnovaResultsForm</value>
   </data>
-  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
-    <value>m_binding_source</value>
+  <data name="&gt;&gt;m_cmd_export.Name" xml:space="preserve">
+    <value>m_cmd_export</value>
   </data>
-  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;m_cmd_export.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>factorDataGridViewTextBoxColumn</value>
@@ -679,6 +751,12 @@
   </data>
   <data name="&gt;&gt;pDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
+    <value>m_binding_source</value>
+  </data>
+  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>AnovaResultsForm</value>

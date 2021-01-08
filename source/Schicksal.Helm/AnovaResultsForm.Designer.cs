@@ -35,7 +35,8 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       this.m_grid = new System.Windows.Forms.DataGridView();
-      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
+      this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
       this.factorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.kdfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ndfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,7 +44,9 @@
       this.f005DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.f001DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.pDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
+      this.m_context_menu.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
       this.SuspendLayout();
       // 
@@ -59,6 +62,7 @@
             this.f005DataGridViewTextBoxColumn,
             this.f001DataGridViewTextBoxColumn,
             this.pDataGridViewTextBoxColumn});
+      this.m_grid.ContextMenuStrip = this.m_context_menu;
       this.m_grid.DataSource = this.m_binding_source;
       dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
@@ -74,9 +78,19 @@
       this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellDoubleClick);
       this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_grid_CellPainting);
       // 
-      // m_binding_source
+      // m_context_menu
       // 
-      this.m_binding_source.DataSource = typeof(Schicksal.Anova.FisherTestResult);
+      this.m_context_menu.ImageScalingSize = new System.Drawing.Size(20, 20);
+      this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_cmd_export});
+      this.m_context_menu.Name = "m_context_menu";
+      resources.ApplyResources(this.m_context_menu, "m_context_menu");
+      // 
+      // m_cmd_export
+      // 
+      this.m_cmd_export.Name = "m_cmd_export";
+      resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
+      this.m_cmd_export.Click += new System.EventHandler(this.m_cmd_export_Click);
       // 
       // factorDataGridViewTextBoxColumn
       // 
@@ -133,6 +147,10 @@
       this.pDataGridViewTextBoxColumn.Name = "pDataGridViewTextBoxColumn";
       this.pDataGridViewTextBoxColumn.ReadOnly = true;
       // 
+      // m_binding_source
+      // 
+      this.m_binding_source.DataSource = typeof(Schicksal.Anova.FisherTestResult);
+      // 
       // AnovaResultsForm
       // 
       resources.ApplyResources(this, "$this");
@@ -140,6 +158,7 @@
       this.Controls.Add(this.m_grid);
       this.Name = "AnovaResultsForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
+      this.m_context_menu.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
       this.ResumeLayout(false);
 
@@ -156,5 +175,7 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn f005DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn f001DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn pDataGridViewTextBoxColumn;
+    private System.Windows.Forms.ContextMenuStrip m_context_menu;
+    private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
   }
 }

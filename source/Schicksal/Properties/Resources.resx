@@ -157,4 +157,55 @@
   <data name="VARIED_FACTORS" xml:space="preserve">
     <value>Factors were varied</value>
   </data>
+  <data name="UNSIGNIFICAT" xml:space="preserve">
+    <value>Ducring reasearch it was realized, that the following factors and factor combinations are not significat with probability level {0:0.0}%</value>
+  </data>
+  <data name="MAX_INFLUENCE" xml:space="preserve">
+    <value>Maximal influence achieved for the factor or factor combination {0}. Probability of the first type error is {1}%.</value>
+  </data>
+  <data name="MIN_INFLUENCE" xml:space="preserve">
+    <value>Minimal influence achieved for the factor or factor combination {0}. Probability of the first type error is {1}%.</value>
+  </data>
+  <data name="SIGNIFICAT" xml:space="preserve">
+    <value>Factors and factor combinations {0} realized to be significat with probability level {1:0.0}%</value>
+  </data>
+  <data name="SIGNIFICAT_FACTORS" xml:space="preserve">
+    <value>Significat factors and combinations</value>
+  </data>
+  <data name="AND" xml:space="preserve">
+    <value>and</value>
+  </data>
+  <data name="DIFFERENCE_VALUE" xml:space="preserve">
+    <value>it's value was</value>
+  </data>
+  <data name="ETC" xml:space="preserve">
+    <value>etc.</value>
+  </data>
+  <data name="EXPORT" xml:space="preserve">
+    <value>Export of statistic analysis results</value>
+  </data>
+  <data name="F_CRITERIA" xml:space="preserve">
+    <value>Analysis of variance, F-criteria</value>
+  </data>
+  <data name="MAX_DIFFERENCE" xml:space="preserve">
+    <value>Maximal difference occured between variants</value>
+  </data>
+  <data name="MAX_VALUE" xml:space="preserve">
+    <value>Maximal value was in variant {0}, it was {1}.</value>
+  </data>
+  <data name="MIN_VALUE" xml:space="preserve">
+    <value>Minimal value was in variant {0}, it was {1}.</value>
+  </data>
+  <data name="MOST_SIGNIFICAT_DIFFERENCE" xml:space="preserve">
+    <value>Most significat difference occured between variants</value>
+  </data>
+  <data name="OTHER_UNSIGNIFICAT" xml:space="preserve">
+    <value>other differences were unsignificat.</value>
+  </data>
+  <data name="PAIRED_COMPARISON" xml:space="preserve">
+    <value>Paired comparison</value>
+  </data>
+  <data name="SIGNIFICANT_DIFFERENCES" xml:space="preserve">
+    <value>Ducring reasearch it was realized, that significat diferences were obtained between</value>
+  </data>
 </root>

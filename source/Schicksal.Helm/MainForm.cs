@@ -290,6 +290,7 @@ namespace Schicksal.Helm
             results_form.ResultColumn = dlg.DataSource.Result;
             results_form.Filter = dlg.DataSource.Filter;
             results_form.Probability = dlg.DataSource.Probability;
+            results_form.Factors = dlg.DataSource.Predictors.ToArray();
             results_form.Show(this);
           }
         }

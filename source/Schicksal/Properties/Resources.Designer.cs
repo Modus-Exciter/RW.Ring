@@ -79,6 +79,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на and.
+        /// </summary>
+        internal static string AND {
+            get {
+                return ResourceManager.GetString("AND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Basic statistics metrics.
         /// </summary>
         internal static string BASIC_METRICS {
@@ -107,6 +116,42 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на it&apos;s value was.
+        /// </summary>
+        internal static string DIFFERENCE_VALUE {
+            get {
+                return ResourceManager.GetString("DIFFERENCE_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на etc..
+        /// </summary>
+        internal static string ETC {
+            get {
+                return ResourceManager.GetString("ETC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Export of statistic analysis results.
+        /// </summary>
+        internal static string EXPORT {
+            get {
+                return ResourceManager.GetString("EXPORT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Analysis of variance, F-criteria.
+        /// </summary>
+        internal static string F_CRITERIA {
+            get {
+                return ResourceManager.GetString("F_CRITERIA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Factor.
         /// </summary>
         internal static string FACTOR {
@@ -125,11 +170,110 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Maximal difference occured between variants.
+        /// </summary>
+        internal static string MAX_DIFFERENCE {
+            get {
+                return ResourceManager.GetString("MAX_DIFFERENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Maximal influence achieved for the factor or factor combination {0}. Probability of the first type error is {1}%..
+        /// </summary>
+        internal static string MAX_INFLUENCE {
+            get {
+                return ResourceManager.GetString("MAX_INFLUENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Maximal value was in variant {0}, it was {1}..
+        /// </summary>
+        internal static string MAX_VALUE {
+            get {
+                return ResourceManager.GetString("MAX_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Minimal influence achieved for the factor or factor combination {0}. Probability of the first type error is {1}%..
+        /// </summary>
+        internal static string MIN_INFLUENCE {
+            get {
+                return ResourceManager.GetString("MIN_INFLUENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Minimal value was in variant {0}, it was {1}..
+        /// </summary>
+        internal static string MIN_VALUE {
+            get {
+                return ResourceManager.GetString("MIN_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Most significat difference occured between variants.
+        /// </summary>
+        internal static string MOST_SIGNIFICAT_DIFFERENCE {
+            get {
+                return ResourceManager.GetString("MOST_SIGNIFICAT_DIFFERENCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на other differences were unsignificat..
+        /// </summary>
+        internal static string OTHER_UNSIGNIFICAT {
+            get {
+                return ResourceManager.GetString("OTHER_UNSIGNIFICAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Paired comparison.
+        /// </summary>
+        internal static string PAIRED_COMPARISON {
+            get {
+                return ResourceManager.GetString("PAIRED_COMPARISON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Report.
         /// </summary>
         internal static string REPORT {
             get {
                 return ResourceManager.GetString("REPORT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ducring reasearch it was realized, that significat diferences were obtained between.
+        /// </summary>
+        internal static string SIGNIFICANT_DIFFERENCES {
+            get {
+                return ResourceManager.GetString("SIGNIFICANT_DIFFERENCES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Factors and factor combinations {0} realized to be significat with probability level {1:0.0}%.
+        /// </summary>
+        internal static string SIGNIFICAT {
+            get {
+                return ResourceManager.GetString("SIGNIFICAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Significat factors and combinations.
+        /// </summary>
+        internal static string SIGNIFICAT_FACTORS {
+            get {
+                return ResourceManager.GetString("SIGNIFICAT_FACTORS", resourceCulture);
             }
         }
         
@@ -157,6 +301,15 @@ namespace Schicksal.Properties {
         internal static string TOTAL_COUNT {
             get {
                 return ResourceManager.GetString("TOTAL_COUNT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ducring reasearch it was realized, that the following factors and factor combinations are not significat with probability level {0:0.0}%.
+        /// </summary>
+        internal static string UNSIGNIFICAT {
+            get {
+                return ResourceManager.GetString("UNSIGNIFICAT", resourceCulture);
             }
         }
         

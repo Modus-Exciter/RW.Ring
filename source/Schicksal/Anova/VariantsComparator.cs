@@ -132,6 +132,9 @@ namespace Schicksal.Anova
         result.Probability = 1;
       }
 
+      if (result.Probability < 0)
+        result.Probability = 0;
+
       return result;
     }
 

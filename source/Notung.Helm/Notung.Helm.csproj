@@ -107,6 +107,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WinResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WinResources.RU.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WinResources.RU.resx</DependentUpon>
+    </Compile>
     <None Include="Helm.snk" />
     <Compile Include="Dialogs\SplashScreenDialog.cs">
       <SubType>Form</SubType>
@@ -162,7 +167,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WinResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinResources.RU.resx" />
+    <EmbeddedResource Include="WinResources.RU.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WinResources.RU.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\defaultsplash.jpg" />
