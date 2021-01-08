@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Notung
@@ -110,11 +109,4 @@ namespace Notung
 
     #endregion
   }
-
-  /// <summary>
-  /// Помечает класс для расшаривания находящихся в нём сервисов между доменами приложений,
-  /// за это отвечает метод static void Share(AppDomain newDomain) в этом классе
-  /// </summary>
-  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-  public sealed class AppDomainShareAttribute : Attribute { }
 }

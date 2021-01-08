@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Linq;
 
@@ -17,4 +18,11 @@ namespace Notung
     public static readonly Assembly MainAssembly = Assembly.GetEntryAssembly() ?? BaseAssembly;
     public static readonly object[] EmptyArgs = Enumerable.Empty<object>() as object[] ?? new object[0];
   }
+
+  /// <summary>
+  /// Помечает класс для расшаривания находящихся в нём сервисов между доменами приложений,
+  /// за это отвечает метод static void Share(AppDomain newDomain) в этом классе
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
+  public sealed class AppDomainShareAttribute : Attribute { }
 }
