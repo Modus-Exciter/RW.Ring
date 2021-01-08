@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -6,7 +7,6 @@ using System.Threading.Tasks;
 using Notung.ComponentModel;
 using Notung.Logging;
 using Notung.Threading;
-using System.Collections.Generic;
 
 namespace Notung.Services
 {
