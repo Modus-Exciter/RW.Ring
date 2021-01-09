@@ -254,6 +254,12 @@ namespace Notung.Services
         action(newDomain);
     }
 
+    public void Dispose()
+    {
+      this.Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
       if (disposing)
@@ -261,12 +267,6 @@ namespace Notung.Services
         m_domain.AssemblyLoad -= HandleAssemblyLoad;
         m_plugin_loader.Dispose();
       }
-    }
-
-    public void Dispose()
-    {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
     }
 
     /// <summary>
