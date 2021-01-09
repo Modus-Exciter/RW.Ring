@@ -133,7 +133,7 @@ namespace Notung.Services
     private void SetContext()
     {
       if (m_context == null)
-        m_context = System.Threading.SynchronizationContext.Current;
+        m_context = System.Threading.SynchronizationContext.Current ?? new SynchronizationContext();
     }
   }
 

@@ -116,7 +116,7 @@ namespace Notung.Net
 
     Type[] IParametersList.GetTypes()
     {
-      return ArrayExtensions.Empty<Type>();
+      return Type.EmptyTypes;
     }
 
     object[] IParametersList.GetValues()
