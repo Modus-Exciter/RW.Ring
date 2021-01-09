@@ -8,6 +8,9 @@ namespace Notung.Helm.Dialogs
     public ProgressIndicatorDialog()
     {
       InitializeComponent();
+
+      this.MinimumSize = new System.Drawing.Size(this.Width, m_button.Bottom + 2
+        + (this.Size.Height - this.ClientSize.Height));
     }
 
     public static bool? ToNeitralResult(DialogResult resutl)
