@@ -26,7 +26,7 @@ namespace Notung.Data
     public WeakSet(bool synchronize = true)
     {
       if (synchronize)
-        m_lock = new SharedLock(false);
+        m_lock = new SharedLock(true);
     }
 
     /// <summary>
@@ -92,6 +92,7 @@ namespace Notung.Data
         else
         {
           this.RemoveSlot(bucket_index, slot_index, previous);
+
           return true;
         }
       }
@@ -114,6 +115,35 @@ namespace Notung.Data
         m_count = 0;
         m_free_index = -1;
         m_last_index = 0;
+      }
+    }
+
+    /// <summary>
+    /// Удаление избытка резерва памяти, используемого множеством
+    /// </summary>
+    public void TrimExcess()
+    {
+      using (this.WriteLock())
+      {
+        var list = new List<T>(m_count);
+
+        for (int i = 0; i < m_last_index; i++)
+        {
+          var item = m_slots[i].Target;
+
+          if (item != null)
+            list.Add(item);
+        }
+
+        this.Clear();
+
+        if (list.Count > 0)
+        {
+          m_slots = new Slot[PrimeHelper.GetPrime(list.Count)];
+
+          foreach (var item in list)
+            this.Add(item);
+        }
       }
     }
 
