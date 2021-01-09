@@ -16,13 +16,13 @@ namespace Notung.Services
   public sealed class LengthyOperation : IDisposable
   {
     private readonly IRunBase m_run_base;
-    private readonly IOperationWrapper m_wrapper;
-    private readonly Action m_progress_changed;
+    private readonly ISynchronizeInvoke m_invoker;
     private readonly Action m_can_cancel_changed;
+    private readonly Action m_task_completed;
     private readonly object m_lock = new object();
-    private Queue<ProgressChangedEventArgs> m_current_progress;
     private IAsyncResult m_operation;
     private CancellationTokenSource m_cancel_source;
+    private ProgressChangedEventArgs m_current_args;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(LengthyOperation));
 
@@ -37,14 +37,9 @@ namespace Notung.Services
         throw new ArgumentNullException("runBase");
 
       m_run_base = runBase;
-
-      if (invoker != null)
-        m_wrapper = new SynchronizeOperationWrapper(invoker, true);
-      else
-        m_wrapper = new EmptyOperationWrapper();
-
-      m_current_progress = new Queue<ProgressChangedEventArgs>(100); // 100 %
-      m_progress_changed = new Action(this.OnProgressChanged);
+      m_current_args = new ProgressChangedEventArgs(ProgressPercentage.Unknown, string.Empty);
+      m_invoker = invoker ?? EmptySynchronizeProvider.Default;
+      m_task_completed = new Action(this.OnTaskCompleted);
 
       if (runBase is ICancelableRunBase)
         m_can_cancel_changed = new Action(this.OnCanCancelChanged);
@@ -148,7 +143,7 @@ namespace Notung.Services
     /// </summary>
     public void ShowCurrentProgress()
     {
-      m_wrapper.Invoke(m_progress_changed);
+      this.HandleProgressChanged(this, m_current_args);
     }
 
     /// <summary>
@@ -212,6 +207,7 @@ namespace Notung.Services
     private void Run()
     {
       ThreadTracker.RegisterThread(Thread.CurrentThread);
+
       m_run_base.ProgressChanged += HandleProgressChanged;
 
       if (m_run_base is ICancelableRunBase)
@@ -240,8 +236,16 @@ namespace Notung.Services
         if (m_run_base is ICancelableRunBase)
           ((ICancelableRunBase)m_run_base).CanCancelChanged -= HandleCanCancelChanged;
 
-        m_wrapper.Invoke(this.OnTaskCompleted);
+        this.HandleCompleted();
       }
+    }
+
+    private void HandleCompleted()
+    {
+      if (m_invoker.InvokeRequired)
+        m_invoker.BeginInvoke(m_task_completed, Global.EmptyArgs);
+      else
+        this.OnTaskCompleted();
     }
 
     private void CloseHandle(IAsyncResult result)
@@ -259,37 +263,33 @@ namespace Notung.Services
 
     private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
     {
-      lock (m_current_progress)
-        m_current_progress.Enqueue(e);
+      var current = m_current_args;
+      var handler = this.ProgressChanged;
 
-      m_wrapper.Invoke(m_progress_changed);
+      if (e.ProgressPercentage != current.ProgressPercentage 
+        || !object.Equals(e.UserState, current.UserState))
+        m_current_args = e;
+
+      if (handler != null)
+      {
+        if (m_invoker.InvokeRequired)
+          m_invoker.BeginInvoke(handler, new object[] { this, e });
+        else
+          handler(this, e);
+      }
     }
 
     private void HandleCanCancelChanged(object sender, EventArgs e)
     {
-      m_wrapper.Invoke(m_can_cancel_changed);
+      if (m_invoker.InvokeRequired)
+        m_invoker.BeginInvoke(m_can_cancel_changed, Global.EmptyArgs);
+      else
+        this.OnCanCancelChanged();
     }
 
     private void OnCanCancelChanged()
     {
       this.CanCancelChanged.InvokeIfSubscribed(this, EventArgs.Empty);
-    }
-
-    private void OnProgressChanged()
-    {
-      while (m_current_progress.Count > 0)
-      {
-        ProgressChangedEventArgs args = null;
-        
-        lock (m_current_progress)
-        {
-          if (m_current_progress.Count > 0)
-            args = m_current_progress.Dequeue();
-        }
-
-        if (args != null)
-          this.ProgressChanged.InvokeIfSubscribed(this, args);
-      }
     }
 
     private void OnTaskCompleted()
