@@ -15,7 +15,7 @@ namespace Notung.Services
   /// <summary>
   /// Текущий экземпляр приложения
   /// </summary>
-  public interface IAppInstance : IMainThreadInfo
+  public interface IAppInstance 
   {
     /// <summary>
     /// Аргументы командной строки
@@ -63,7 +63,7 @@ namespace Notung.Services
     void Restart();
   }
 
-  public class AppInstance : MarshalByRefObject, IAppInstance
+  public class AppInstance : MarshalByRefObject, IAppInstance, IMainThreadInfo
   {
     private readonly IAppInstanceView m_view;
     private Thread m_main_thread;
