@@ -155,6 +155,12 @@
     <EmbeddedResource Include="Dialogs\SettingsDialog.resx">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LogSection.resx">
+      <DependentUpon>LogSection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogSection.RU.resx">
+      <DependentUpon>LogSection.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

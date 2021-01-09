@@ -25,7 +25,6 @@ namespace Notung.Helm
 
     private static SplashScreen _splash;
     private static string _splash_resource;
-
     private static readonly ILog _log = LogManager.GetLogger(typeof(ApplicationStarter));
 
     /// <summary>
@@ -254,6 +253,7 @@ namespace Notung.Helm
           return;
 
         var image = m_starter.GetSplashScreenImage();
+
         using (var container = new DependencyContainer())
         {
           var work = new ApplicationLoadingWork(queue, container);

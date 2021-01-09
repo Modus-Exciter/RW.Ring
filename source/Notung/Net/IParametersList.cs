@@ -121,7 +121,7 @@ namespace Notung.Net
 
     object[] IParametersList.GetValues()
     {
-      return ArrayExtensions.Empty<object>();
+      return Global.EmptyArgs;
     }
 
     [Serializable, DataContract]
