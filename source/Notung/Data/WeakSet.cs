@@ -15,8 +15,9 @@ namespace Notung.Data
     private int m_free_index = -1;
     private int m_last_index = 0;
     private Slot[] m_slots;
+    private readonly SharedLock m_lock;
 
-    private readonly ISharedLock m_lock;
+    private static readonly DisposableStub _fake_lock = new DisposableStub();
 
     /// <summary>
     /// Инициализация нового экземпляра множества удаляемых элементов
@@ -26,8 +27,6 @@ namespace Notung.Data
     {
       if (synchronize)
         m_lock = new SharedLock(false);
-      else
-        m_lock = new SharedLockStub();
     }
 
     /// <summary>
@@ -40,7 +39,7 @@ namespace Notung.Data
       if (item == null)
         throw new ArgumentNullException("item");
 
-      using (m_lock.WriteLock())
+      using (this.WriteLock())
       {
         if (m_slots == null)
           m_slots = new Slot[3];
@@ -68,7 +67,7 @@ namespace Notung.Data
       int previous;
       int index;
 
-      using (m_lock.ReadLock())
+      using (this.ReadLock())
       {
         return this.FindSlotIndex(item, out index, out previous, false) >= 0;
       }
@@ -84,7 +83,7 @@ namespace Notung.Data
       int previous;
       int bucket_index;
 
-      using (m_lock.WriteLock())
+      using (this.WriteLock())
       {
         var slot_index = this.FindSlotIndex(item, out bucket_index, out previous, true);
 
@@ -103,7 +102,7 @@ namespace Notung.Data
     /// </summary>
     public void Clear()
     {
-      using (m_lock.WriteLock())
+      using (this.WriteLock())
       {
         for (int i = 0; i < m_slots.Length; i++)
         {
@@ -124,7 +123,7 @@ namespace Notung.Data
     /// <returns>Элементы множества, ещё активные в памяти</returns>
     public IEnumerator<T> GetEnumerator()
     {
-      using (m_lock.ReadLock())
+      using (this.ReadLock())
       {
         for (int i = 0; i < m_count; i++)
         {
@@ -142,6 +141,22 @@ namespace Notung.Data
     }
 
     #region Implementation ------------------------------------------------------------------------
+
+    private IDisposable ReadLock()
+    {
+      if (m_lock != null)
+        return m_lock.ReadLock();
+      else
+        return _fake_lock;
+    }
+
+    private IDisposable WriteLock()
+    {
+      if (m_lock != null)
+        return m_lock.WriteLock();
+      else
+        return _fake_lock;
+    }
 
     private void IncreaseCapacity()
     {
@@ -243,6 +258,11 @@ namespace Notung.Data
       }
       else
         m_free_index = slotIndex;
+    }
+
+    private sealed class DisposableStub : IDisposable
+    {
+      public void Dispose() { }
     }
 
     private struct Slot

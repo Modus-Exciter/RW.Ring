@@ -1,88 +1,16 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace Notung.Threading
 {
   /// <summary>
-  /// Интерфейс разделяемой блокировки
-  /// </summary>
-  public interface ISharedLock
-  {
-    /// <summary>
-    /// Статус блокировки - нет, чтение, обновляемый режим или запись
-    /// </summary>
-    LockState LockState { get; }
-
-    /// <summary>
-    /// Устанавливает блокировку на чтение
-    /// </summary>
-    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>   
-    IDisposable ReadLock();
-
-    /// <summary>
-    /// Устанавливает блокировку на чтение с возможностью перехода к блокировке на запись
-    /// </summary>
-    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
-    IDisposable UpgradeableLock();
-
-    /// <summary>
-    /// Устанавливает блокировку на запись
-    /// </summary>
-    /// <returns>Дескриптор, позволяющий завершить блокировку</returns>
-    IDisposable WriteLock();
-
-    /// <summary>
-    /// Выполнение операции в контексте блокировки на чтение
-    /// </summary>
-    /// <param name="action">Выполняемая операция</param>
-    /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
-    void RunInReadLock(Action action, int millisecondsTimeout);
-
-    /// <summary>
-    /// Выполнение операции в контексте блокировки на запись
-    /// </summary>
-    /// <param name="action">Выполняемая операция</param>
-    /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
-    void RunInWriteLock(Action action, int millisecondsTimeout);
-
-    /// <summary>
-    /// Завершает работу объекта блокировки
-    /// </summary>
-    void Close();
-  }
-
-  /// <summary>
-  /// Статус блокировки
-  /// </summary>
-  public enum LockState
-  {
-    /// <summary>
-    /// Блокировка отсутствует
-    /// </summary>
-    None,
-
-    /// <summary>
-    /// Блокировка на чтение
-    /// </summary>
-    Read,
-
-    /// <summary>
-    /// Блокировка на чтение с возможностью перехода к блокировке на запись
-    /// </summary>
-    Upgradeable,
-
-    /// <summary>
-    /// Блокировка на запись
-    /// </summary>
-    Write
-  }
-
-  /// <summary>
   /// Обёртка над классом ReaderWriterLockSlim, делающая работу с ним более удобной. 
   /// <example>SharedLock locker = new SharedLock();
   /// using (locker.ReadLock()) { DoSomething(); }</example>
   /// </summary>
-  public sealed class SharedLock : ISharedLock
+  [SuppressMessage("Microsoft.Design", "CA1001")]
+  public sealed class SharedLock
   {
     private readonly ReaderWriterLockSlim m_lock;
     private readonly ReadLockHandle m_reader;
@@ -252,5 +180,31 @@ namespace Notung.Threading
         m_lock.ExitUpgradeableReadLock();
       }
     }
+  }
+
+  /// <summary>
+  /// Статус блокировки
+  /// </summary>
+  public enum LockState
+  {
+    /// <summary>
+    /// Блокировка отсутствует
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Блокировка на чтение
+    /// </summary>
+    Read,
+
+    /// <summary>
+    /// Блокировка на чтение с возможностью перехода к блокировке на запись
+    /// </summary>
+    Upgradeable,
+
+    /// <summary>
+    /// Блокировка на запись
+    /// </summary>
+    Write
   }
 }

@@ -116,14 +116,13 @@
     </Compile>
     <Compile Include="ComponentModel\ComponentExtensions.cs" />
     <Compile Include="Threading\IProgressIndicator.cs" />
-    <Compile Include="Threading\SharedLockStub.cs" />
     <Compile Include="Services\LengthyOperation.cs" />
     <Compile Include="Services\OperationLauncherProxy.cs" />
     <Compile Include="IRunBase.cs" />
     <Compile Include="Threading\ISynchronizeProvider.cs" />
     <Compile Include="Services\IOperationLauncher.cs" />
     <Compile Include="Services\LaunchParameters.cs" />
-    <Compile Include="Threading\ISharedLock.cs" />
+    <Compile Include="Threading\SharedLock.cs" />
     <Compile Include="Threading\ThreadField.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Threading\IThreadCollection.cs" />
