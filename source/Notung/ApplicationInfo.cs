@@ -24,7 +24,7 @@ namespace Notung
     private static readonly object _lock = new object();
 
     /// <summary>
-    /// Инициализация сведений о текущем продукте
+    /// Инициализация сведений о продукте с указанной сборкой
     /// </summary>
     /// <param name="productAssembly">Главная сборка продукта</param>
     public ApplicationInfo(Assembly productAssembly)
@@ -35,8 +35,14 @@ namespace Notung
       m_product_assembly = productAssembly;
     }
 
+    /// <summary>
+    /// Инициализация сведений о текущем продукте
+    /// </summary>
     public ApplicationInfo() : this(Global.MainAssembly) { }
 
+    /// <summary>
+    /// Получение сведений о текущем продукте
+    /// </summary>
     public static ApplicationInfo Instance
     {
       get
@@ -60,11 +66,17 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Сборка, из которой получаются сведения о продукте
+    /// </summary>
     public Assembly ProductAssembly
     {
       get { return m_product_assembly; }
     }
 
+    /// <summary>
+    /// Компания, которая произвела продукт
+    /// </summary>
     public string Company
     {
       get
@@ -87,6 +99,9 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Товарный знак компании, которая произвела продукт
+    /// </summary>
     public string Copyright
     {
       get
@@ -109,6 +124,9 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Название продукта
+    /// </summary>
     public string Product
     {
       get
@@ -131,6 +149,9 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Описание продукта
+    /// </summary>
     public string Description
     {
       get
@@ -153,6 +174,9 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Версия сборки продукта
+    /// </summary>
     public Version Version
     {
       get
@@ -164,6 +188,9 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Версия файла продукта
+    /// </summary>
     public Version FileVersion
     {
       get
@@ -181,6 +208,10 @@ namespace Notung
       }
     }
 
+    /// <summary>
+    /// Получение папки текущего пользователя, предназначенной для хранения данных продукта
+    /// </summary>
+    /// <returns>Полный путь к директории</returns>
     public string GetWorkingPath()
     {
       var basePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -191,6 +222,10 @@ namespace Notung
       return Path.Combine(basePath, this.Product);
     }
 
+    /// <summary>
+    /// Получение  общей папки, предназначенной для хранения данных продукта
+    /// </summary>
+    /// <returns>Полный путь к директории</returns>
     public string GetCommonDataPath()
     {
       var basePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
