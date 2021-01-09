@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using Notung.Threading;
 
 namespace Notung.Loader
 {
   /// <summary>
-  /// Контейнер компонентов
+  /// Строго типизированный потокобезопасный контейнер компонентов
   /// </summary>
-  public sealed class DependencyContainer : IServiceProvider, IDisposable
+  public sealed class DependencyContainer : IServiceContainer, IDisposable
   {
-    private readonly Dictionary<Type, Func<object>> m_creators = new Dictionary<Type, Func<object>>();
+    private static readonly TypeComparer _comparer = new TypeComparer();
+    private static readonly Func<object> _empty_creator = () => null;
+
+    private readonly Dictionary<Type, Func<object>> m_creators = new Dictionary<Type, Func<object>>(_comparer);
     private readonly SharedLock m_lock = new SharedLock(false);
     private volatile bool m_search_descendants = true;
 
@@ -22,13 +26,9 @@ namespace Notung.Loader
       set
       {
         using (m_lock.WriteLock())
-        {
           m_search_descendants = value;
-        }
       }
     }
-
-    #region IServiceProvider Members
 
     /// <summary>
     /// Возвращает экземпляр компонента по типу
@@ -41,7 +41,7 @@ namespace Notung.Loader
       if (serviceType == null)
         throw new ArgumentNullException("serviceType");
 
-      return (this.GetCreator(serviceType) ?? (() => null)).Invoke();
+      return (this.GetCreator(serviceType) ?? _empty_creator).Invoke();
     }
 
     /// <summary>
@@ -49,9 +49,9 @@ namespace Notung.Loader
     /// </summary>
     /// <typeparam name="TService">Тип компонента</typeparam>
     /// <param name="instance">Экземпляр компонента</param>
-    public void SetService<TService>(TService instance)
+    public void AddService<TService>(TService instance)
     {
-      this.SetService(typeof(TService), instance);
+      this.AddService(typeof(TService), instance);
     }
 
     /// <summary>
@@ -59,10 +59,9 @@ namespace Notung.Loader
     /// </summary>
     /// <typeparam name="TService">Тип компонента</typeparam>
     /// <param name="creator">Метод, порождающий компонент</param>
-    public void SetService<TService>(Func<TService> creator)
+    public void AddService<TService>(Func<TService> creator) where TService : class
     {
-      this.SetService(typeof(TService), creator == null ?
-        (Func<object>)null : (() => creator()));
+      this.AddService(typeof(TService), creator);
     }
 
     /// <summary>
@@ -70,22 +69,20 @@ namespace Notung.Loader
     /// </summary>
     /// <param name="type">Тип компонента</param>
     /// <param name="instance">Экземпляр компонента</param>
-    public void SetService(Type type, object instance)
+    public void AddService(Type type, object instance)
     {
       if (type == null)
         throw new ArgumentNullException("type");
 
+      if (instance == null)
+        throw new ArgumentNullException("instance");
+
       using (m_lock.WriteLock())
       {
-        if (instance == null)
-          m_creators.Remove(type);
-        else
-        {
-          if (!type.IsInstanceOfType(instance))
-            throw new ArgumentException("\"instance\" is not instance of type \"type\"", "instance");
+        if (!type.IsInstanceOfType(instance))
+          throw new ArgumentException("\"instance\" is not instance of type \"type\"", "instance");
 
-          m_creators[type] = () => instance;
-        }
+        m_creators[type] = () => instance;
       }
     }
 
@@ -94,21 +91,62 @@ namespace Notung.Loader
     /// </summary>
     /// <param name="type">Тип компонента</param>
     /// <param name="creator">Метод, порождающий компонент</param>
-    public void SetService(Type type, Func<object> creator)
+    public void AddService(Type type, Func<object> creator)
     {
       if (type == null)
         throw new ArgumentNullException("type");
 
+      if (creator == null)
+        throw new ArgumentNullException("creator");
+
       using (m_lock.WriteLock())
-      {
-        if (creator == null)
-          m_creators.Remove(type);
-        else
-          m_creators[type] = creator;
-      }
+        m_creators[type] = creator;
+    }
+
+    /// <summary>
+    /// Удаление сервиса из списка сервисов
+    /// </summary>
+    /// <param name="serviceType"></param>
+    public void RemoveService(Type serviceType)
+    {
+      using (m_lock.WriteLock())
+        m_creators.Remove(serviceType);
+    }
+
+    /// <summary>
+    /// Очистка ресурсов, используемых текущим объектом DependencyContainer
+    /// </summary>
+    public void Dispose()
+    {
+      m_creators.Clear();
+      m_lock.Close();
+    }
+
+    #region IServiceContainer members -------------------------------------------------------------
+
+    void IServiceContainer.AddService(Type serviceType, ServiceCreatorCallback callback, bool promote)
+    {
+      this.AddService(serviceType, () => callback(this, serviceType));
+    }
+
+    void IServiceContainer.AddService(Type serviceType, ServiceCreatorCallback callback)
+    {
+      this.AddService(serviceType, () => callback(this, serviceType));
+    }
+
+    void IServiceContainer.AddService(Type serviceType, object serviceInstance, bool promote)
+    {
+      this.AddService(serviceType, serviceInstance);
+    }
+
+    void IServiceContainer.RemoveService(Type serviceType, bool promote)
+    {
+      this.RemoveService(serviceType);
     }
 
     #endregion
+
+    #region Private methods -----------------------------------------------------------------------
 
     private Func<object> GetCreator(Type serviceType)
     {
@@ -125,13 +163,13 @@ namespace Notung.Loader
           {
             if (serviceType.IsAssignableFrom(kv.Key))
             {
-              if (creator == null)
-                creator = kv.Value;
-              else
+              if (creator != null) // Проверка на однозначность результата
               {
                 creator = null;
                 break;
               }
+              else
+                creator = kv.Value;
             }
           }
         }
@@ -140,13 +178,23 @@ namespace Notung.Loader
       }
     }
 
-    /// <summary>
-    /// Очистка ресурсов, используемых текущим объектом DependencyContainer
-    /// </summary>
-    public void Dispose()
+    #endregion
+
+    #region Implementation ------------------------------------------------------------------------
+    
+    private sealed class TypeComparer : IEqualityComparer<Type>
     {
-      m_creators.Clear();
-      m_lock.Close();
+      public bool Equals(Type x, Type y)
+      {
+        return x.IsEquivalentTo(y);
+      }
+
+      public int GetHashCode(Type obj)
+      {
+        return obj.FullName.GetHashCode();
+      }
     }
+
+    #endregion
   }
 }

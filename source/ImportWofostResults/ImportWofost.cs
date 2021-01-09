@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using Schicksal.Exchange;
 
 namespace ImportWofostResults
@@ -52,37 +53,16 @@ namespace ImportWofostResults
 
     private Dictionary<int, double> ReadJson(string fileName)
     {
-      string text = File.ReadAllText(fileName);
-      Dictionary<int, double> result = new Dictionary<int, double>();
+      var ret = new Dictionary<int, double>();
+      var j_object = JObject.Parse(File.ReadAllText(fileName));
 
-      var splitted = text.Split(new string[]{"\": {"}, StringSplitOptions.RemoveEmptyEntries);
-      for (int i = 0; i < splitted.Length; i++)
+      foreach (JProperty property in j_object["data"]["results"])
       {
-        splitted[i] = splitted[i].Trim();
-
-        if (i <= 1)
-          continue;
-
-        if (splitted[i].StartsWith("\"yield\": "))
-        {
-          var ret = splitted[i - 2].Substring(splitted[i - 2].LastIndexOf('"') + 1);
-
-          int value;
-
-          if (int.TryParse(ret, out value))
-          {
-            var end = splitted[i].IndexOf(',');
-
-            double yield;
-
-            if (double.TryParse(splitted[i].Substring("\"yield\": ".Length, end - "\"yield\": ".Length),
-              NumberStyles.Any, CultureInfo.InvariantCulture, out yield))
-              result[value] = yield;
-          }
-        }
+        var value = (JValue)property.Value["data"]["yield"];
+        ret[int.Parse(property.Name)] = (double)value.Value;
       }
 
-      return result;
+      return ret;
     }
 
     private DataTable ReadFromExcel(string fileName)

@@ -41,7 +41,7 @@ namespace Notung.Loader
       }
 
       AppManager.AssemblyClassifier.PluginsDirectory = m_plugins_directory;
-      context.Container.SetService(this);
+      context.Container.AddService(this);
 
       return true;
     }
@@ -93,7 +93,7 @@ namespace Notung.Loader
           list.Add(t);
       }
 
-      context.Container.SetService<IList<T>>(list);
+      context.Container.AddService<List<T>>(list);
       return true;
     }
 

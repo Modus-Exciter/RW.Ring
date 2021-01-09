@@ -168,6 +168,7 @@ namespace Notung
           return;
 
         m_can_cancel = value;
+
         var handler = this.CanCancelChanged;
 
        if (handler != null)

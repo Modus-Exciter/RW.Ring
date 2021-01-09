@@ -74,7 +74,7 @@ namespace Notung.Loader
       if (item == null)
         return false;
 
-      context.Container.SetService(typeof(TContract), item);
+      context.Container.AddService(typeof(TContract), item);
 
       return true;
     }
