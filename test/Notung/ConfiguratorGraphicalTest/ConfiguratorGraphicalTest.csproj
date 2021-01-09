@@ -107,6 +107,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="app.manifest" />
     <None Include="Properties\DataSources\OuterSectionDataContract.datasource" />
     <None Include="Properties\DataSources\OuterSectionDataContractName.datasource" />
     <None Include="Properties\DataSources\OuterSectionXml.datasource" />
