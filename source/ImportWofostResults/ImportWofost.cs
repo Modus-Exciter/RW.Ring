@@ -57,10 +57,7 @@ namespace ImportWofostResults
       var j_object = JObject.Parse(File.ReadAllText(fileName));
 
       foreach (JProperty property in j_object["data"]["results"])
-      {
-        var value = (JValue)property.Value["data"]["yield"];
-        ret[int.Parse(property.Name)] = (double)value.Value;
-      }
+        ret[int.Parse(property.Name)] = (double)property.Value["data"]["yield"];
 
       return ret;
     }
