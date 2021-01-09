@@ -42,11 +42,11 @@
       // m_picture
       // 
       this.m_picture.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_picture.Location = new System.Drawing.Point(7, 7);
-      this.m_picture.Margin = new System.Windows.Forms.Padding(7);
+      this.m_picture.Location = new System.Drawing.Point(9, 9);
+      this.m_picture.Margin = new System.Windows.Forms.Padding(9, 9, 9, 9);
       this.m_picture.Name = "m_picture";
       this.m_layout_panel.SetRowSpan(this.m_picture, 3);
-      this.m_picture.Size = new System.Drawing.Size(72, 72);
+      this.m_picture.Size = new System.Drawing.Size(97, 88);
       this.m_picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.m_picture.TabIndex = 0;
       this.m_picture.TabStop = false;
@@ -54,19 +54,20 @@
       // m_progress_bar
       // 
       this.m_progress_bar.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_progress_bar.Location = new System.Drawing.Point(89, 26);
-      this.m_progress_bar.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
-      this.m_progress_bar.MinimumSize = new System.Drawing.Size(0, 20);
+      this.m_progress_bar.Location = new System.Drawing.Point(119, 32);
+      this.m_progress_bar.Margin = new System.Windows.Forms.Padding(4, 4, 27, 4);
+      this.m_progress_bar.MinimumSize = new System.Drawing.Size(0, 25);
       this.m_progress_bar.Name = "m_progress_bar";
-      this.m_progress_bar.Size = new System.Drawing.Size(355, 20);
+      this.m_progress_bar.Size = new System.Drawing.Size(473, 25);
       this.m_progress_bar.TabIndex = 1;
       // 
       // m_button
       // 
       this.m_button.AutoSize = true;
-      this.m_button.Location = new System.Drawing.Point(130, 3);
+      this.m_button.Location = new System.Drawing.Point(173, 4);
+      this.m_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_button.Name = "m_button";
-      this.m_button.Size = new System.Drawing.Size(83, 26);
+      this.m_button.Size = new System.Drawing.Size(111, 33);
       this.m_button.TabIndex = 2;
       this.m_button.Text = "Cancel";
       this.m_button.UseVisualStyleBackColor = true;
@@ -74,16 +75,17 @@
       // m_state_label
       // 
       this.m_state_label.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_state_label.Location = new System.Drawing.Point(89, 0);
+      this.m_state_label.Location = new System.Drawing.Point(119, 0);
+      this.m_state_label.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
       this.m_state_label.Name = "m_state_label";
-      this.m_state_label.Size = new System.Drawing.Size(372, 23);
+      this.m_state_label.Size = new System.Drawing.Size(496, 28);
       this.m_state_label.TabIndex = 3;
       this.m_state_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
       // 
       // m_layout_panel
       // 
       this.m_layout_panel.ColumnCount = 2;
-      this.m_layout_panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 86F));
+      this.m_layout_panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 115F));
       this.m_layout_panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
       this.m_layout_panel.Controls.Add(this.m_picture, 0, 0);
       this.m_layout_panel.Controls.Add(this.m_progress_bar, 1, 1);
@@ -91,12 +93,13 @@
       this.m_layout_panel.Controls.Add(this.m_table_button, 1, 2);
       this.m_layout_panel.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_layout_panel.Location = new System.Drawing.Point(0, 0);
+      this.m_layout_panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_layout_panel.Name = "m_layout_panel";
       this.m_layout_panel.RowCount = 3;
       this.m_layout_panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
       this.m_layout_panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.00001F));
       this.m_layout_panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.m_layout_panel.Size = new System.Drawing.Size(464, 86);
+      this.m_layout_panel.Size = new System.Drawing.Size(619, 106);
       this.m_layout_panel.TabIndex = 4;
       // 
       // m_table_button
@@ -108,23 +111,26 @@
       this.m_table_button.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
       this.m_table_button.Controls.Add(this.m_button, 1, 0);
       this.m_table_button.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.m_table_button.Location = new System.Drawing.Point(89, 50);
+      this.m_table_button.Location = new System.Drawing.Point(119, 60);
+      this.m_table_button.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.m_table_button.Name = "m_table_button";
       this.m_table_button.RowCount = 1;
       this.m_table_button.RowStyles.Add(new System.Windows.Forms.RowStyle());
-      this.m_table_button.Size = new System.Drawing.Size(372, 33);
+      this.m_table_button.Size = new System.Drawing.Size(496, 42);
       this.m_table_button.TabIndex = 4;
       // 
       // ProgressIndicatorDialog
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(464, 86);
+      this.ClientSize = new System.Drawing.Size(619, 106);
       this.ControlBox = false;
       this.Controls.Add(this.m_layout_panel);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+      this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
       this.MaximizeBox = false;
       this.MinimizeBox = false;
+      this.MinimumSize = new System.Drawing.Size(637, 120);
       this.Name = "ProgressIndicatorDialog";
       this.ShowInTaskbar = false;
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
