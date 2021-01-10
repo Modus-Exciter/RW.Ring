@@ -51,6 +51,7 @@
     <Compile Include="CommonTest.cs" />
     <Compile Include="ConfigurationTest.cs" />
     <Compile Include="GraphTest.cs" />
+    <Compile Include="LoaderTest.cs" />
     <Compile Include="LoggingTest.cs" />
     <Compile Include="MatrixTest.cs" />
     <Compile Include="ParametersListTest.cs" />

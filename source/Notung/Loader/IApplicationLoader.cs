@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Notung.Data;
@@ -13,7 +14,7 @@ namespace Notung.Loader
   /// Загрузчик компонента приложения с зависимостями
   /// </summary>
   public interface IApplicationLoader : IDependencyItem<Type>
-  {    
+  {
     /// <summary>
     /// Загрузка компонента приложения
     /// </summary>
@@ -33,12 +34,11 @@ namespace Notung.Loader
   /// </summary>
   /// <typeparam name="TContract">Контракт, реализуемый типом компонента</typeparam>
   /// <typeparam name="TService">Реальный тип компонента</typeparam>
-  public class ApplicationLoader<TContract, TService> : IApplicationLoader
-    where TService : TContract
+  public class ApplicationLoader<TContract, TService> : IApplicationLoader 
+    where TService : TContract 
     where TContract : class
   {
-    public static readonly bool _synchronization_required
-      = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
+    public static readonly bool _synchronization_required = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
 
     public bool Load(LoadingContext context)
     {
@@ -115,8 +115,6 @@ namespace Notung.Loader
       return true;
     }
 
-    #region IDependencyItem<Type> Members
-
     public Type Key
     {
       get { return typeof(TContract); }
@@ -127,16 +125,11 @@ namespace Notung.Loader
       get { return Ctor.Dependencies; }
     }
 
-    #endregion
+    #region Implementation ------------------------------------------------------------------------
 
     private static Action<object, object> CreateSetter(PropertyInfo pi)
     {
       return (obj, val) => pi.SetValue(obj, val, null);
-    }
-
-    private static bool IsScalar(Type type)
-    {
-      return type.IsValueType || type == typeof(string);
     }
 
     private static class Ctor
@@ -145,19 +138,20 @@ namespace Notung.Loader
       public static readonly Type[] Types;
       public static readonly ReadOnlySet<Type> Dependencies;
 
+      [SuppressMessage("Microsoft.Design", "CA1065")]
       static Ctor()
       {
         if (typeof(TService).IsAbstract)
           throw new InvalidProgramException(string.Format(Resources.ABSTRACT_COMPONENT_TYPE, typeof(TService)));
 
         var constructor = (from ci in typeof(TService).GetConstructors()
-                           let item = new
-                           {
-                             Method = ci,
-                             Params = ci.GetParameters()
+                           let item = new 
+                           { 
+                             Method = ci, 
+                             Params = ci.GetParameters() 
                            }
                            where item.Params.Length == 0 ||
-                           item.Params.All(p => !IsScalar(p.ParameterType))
+                           item.Params.All(p => !p.ParameterType.IsScalar())
                            orderby item.Params.Length descending
                            select item).First();
 
@@ -165,7 +159,10 @@ namespace Notung.Loader
         Types = new Type[constructor.Params.Length];
 
         for (int i = 0; i < Types.Length; i++)
-          Types[i] = constructor.Params[i].ParameterType;
+        {
+          var type = constructor.Params[i].ParameterType;
+          Types[i] = type.IsByRef ? type.GetElementType() : type;
+        }
 
         Dependencies = new ReadOnlySet<Type>(new HashSet<Type>(Types));
       }
@@ -174,14 +171,15 @@ namespace Notung.Loader
     private static class Props
     {
       public static readonly ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>> List;
-        
+
       static Props()
       {
-        var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
-        
-        foreach (var pi in typeof(TService).GetProperties())
+        var raw_properties = typeof(TService).GetProperties();
+        var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>(raw_properties.Length);
+
+        foreach (var pi in raw_properties)
         {
-          if (IsScalar(pi.PropertyType))
+          if (pi.PropertyType.IsScalar())
             continue;
 
           if (pi.GetIndexParameters().Length > 0)
@@ -196,5 +194,7 @@ namespace Notung.Loader
         List = new ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>>(properties);
       }
     }
+
+    #endregion
   }
 }
