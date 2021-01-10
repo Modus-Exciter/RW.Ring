@@ -215,8 +215,7 @@ namespace Notung.Helm.Controls
 
     private class ControlPlaceholderApplicationLoader<TContract, TService>
       : ApplicationLoader<TContract, TService>
-      where TService : TContract
-      where TContract : class
+      where TService : class, TContract
     {
       protected override bool FilterProperty(PropertyInfo property)
       {
