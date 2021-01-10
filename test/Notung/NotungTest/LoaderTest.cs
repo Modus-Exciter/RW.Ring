@@ -14,7 +14,6 @@ namespace NotungTest
       try
       {
         ApplicationLoader<ILoader1, ILoader2> wrong = new ApplicationLoader<ILoader1, ILoader2>();
-        wrong.Dependencies.ToString();
       }
       catch
       {

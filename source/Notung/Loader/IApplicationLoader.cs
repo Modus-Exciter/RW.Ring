@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Notung.Data;
@@ -35,10 +34,15 @@ namespace Notung.Loader
   /// <typeparam name="TContract">Контракт, реализуемый типом компонента</typeparam>
   /// <typeparam name="TService">Реальный тип компонента</typeparam>
   public class ApplicationLoader<TContract, TService> : IApplicationLoader 
-    where TService : TContract 
-    where TContract : class
+    where TService : class, TContract
   {
     public static readonly bool _synchronization_required = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
+
+    public ApplicationLoader()
+    {
+      if (typeof(TService).IsAbstract)
+        throw new InvalidProgramException(string.Format(Resources.ABSTRACT_COMPONENT_TYPE, typeof(TService)));
+    }
 
     public bool Load(LoadingContext context)
     {
@@ -138,12 +142,8 @@ namespace Notung.Loader
       public static readonly Type[] Types;
       public static readonly ReadOnlySet<Type> Dependencies;
 
-      [SuppressMessage("Microsoft.Design", "CA1065")]
       static Ctor()
       {
-        if (typeof(TService).IsAbstract)
-          throw new InvalidProgramException(string.Format(Resources.ABSTRACT_COMPONENT_TYPE, typeof(TService)));
-
         var constructor = (from ci in typeof(TService).GetConstructors()
                            let item = new 
                            { 
@@ -175,7 +175,7 @@ namespace Notung.Loader
       static Props()
       {
         var raw_properties = typeof(TService).GetProperties();
-        var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>(raw_properties.Length);
+        var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
 
         foreach (var pi in raw_properties)
         {
