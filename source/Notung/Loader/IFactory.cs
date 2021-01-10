@@ -23,7 +23,6 @@ namespace Notung.Loader
     /// <typeparam name="TContract">Требуемый тип данных</typeparam>
     /// <typeparam name="TService">Тип объекта, реально порождаемый фабрикой</typeparam>
     public static IFactory<TContract> Default<TContract, TService>()
-      where TContract : class
       where TService : TContract, new()
     {
       return DefaultFactory<TContract, TService>.Instance;
@@ -32,14 +31,30 @@ namespace Notung.Loader
     /// <summary>
     /// Возвращает фабрику, которая всегда возвращает null в качестве созданного объекта
     /// </summary>
+    /// <typeparam name="T">Тип объекта, порождаемого фабрикой</typeparam>
     /// <returns>Фабрика, которая всегда возвращает null</returns>
     public static IFactory<T> Empty<T>() where T : class
     {
       return EmptyFactory<T>.Instance;
     }
 
+    /// <summary>
+    /// Возвращает фабрику, которая возвращает объект, который уже был создан
+    /// </summary>
+    /// <typeparam name="T">Тип объекта, порождаемого фабрикой</typeparam>
+    /// <param name="item">Реальный, который нужно получать от фабрики</param>
+    /// <returns></returns>
+    public static IFactory<T> Wrapper<T>(T item)
+    {
+      if (item == null)
+        throw new ArgumentNullException("item");
+
+      return new WrapperFactory<T>(item);
+    }
+
+    #region Implementation ------------------------------------------------------------------------
+
     private sealed class DefaultFactory<TContract, TService> : IFactory<TContract>
-      where TContract : class
       where TService : TContract, new()
     {
       public static readonly IFactory<TContract> Instance = new DefaultFactory<TContract, TService>();
@@ -54,8 +69,28 @@ namespace Notung.Loader
     {
       public static readonly IFactory<T> Instance = new EmptyFactory<T>();
 
-      public T Create() { return null; }
+      public T Create() 
+      { 
+        return null;
+      }
     }
+
+    private sealed class WrapperFactory<T> : IFactory<T>
+    {
+      private readonly T m_item;
+
+      public WrapperFactory(T item)
+      {
+        m_item = item;
+      }
+
+      public T Create()
+      {
+        return m_item;
+      }
+    }
+
+    #endregion
   }
 
   /// <summary>
