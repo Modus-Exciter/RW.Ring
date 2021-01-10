@@ -140,9 +140,9 @@ namespace Notung.Loader
     {
       public static readonly Func<object[], object> Method;
       public static readonly Type[] Types;
-      public static readonly ReadOnlySet<Type> Dependencies;
+      public static readonly ReadOnlySet<Type> Dependencies = SearchDependencies(ref Method, ref Types);
 
-      static Ctor()
+      static ReadOnlySet<Type> SearchDependencies(ref Func<object[], object> method, ref Type[] types)
       {
         var constructor = (from ci in typeof(TService).GetConstructors()
                            let item = new 
@@ -155,8 +155,8 @@ namespace Notung.Loader
                            orderby item.Params.Length descending
                            select item).First();
 
-        Method = constructor.Method.Invoke;
-        Types = new Type[constructor.Params.Length];
+        method = constructor.Method.Invoke;
+        types = new Type[constructor.Params.Length];
 
         for (int i = 0; i < Types.Length; i++)
         {
@@ -164,15 +164,15 @@ namespace Notung.Loader
           Types[i] = type.IsByRef ? type.GetElementType() : type;
         }
 
-        Dependencies = new ReadOnlySet<Type>(new HashSet<Type>(Types));
+        return new ReadOnlySet<Type>(new HashSet<Type>(Types));
       }
     }
 
     private static class Props
     {
-      public static readonly ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>> List;
+      public static readonly ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>> List = Search();
 
-      static Props()
+      static ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>> Search()
       {
         var raw_properties = typeof(TService).GetProperties();
         var properties = new List<KeyValuePair<PropertyInfo, Action<object, object>>>();
@@ -191,7 +191,7 @@ namespace Notung.Loader
           properties.Add(new KeyValuePair<PropertyInfo, Action<object, object>>(pi, CreateSetter(pi)));
         }
 
-        List = new ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>>(properties);
+        return new ReadOnlyCollection<KeyValuePair<PropertyInfo, Action<object, object>>>(properties);
       }
     }
 

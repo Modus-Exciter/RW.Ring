@@ -311,7 +311,7 @@ namespace Notung.Data
     #endregion
   }
 
-  internal class PrimeHelper
+  internal static class PrimeHelper
   {
     public static bool IsPrime(int value)
     {

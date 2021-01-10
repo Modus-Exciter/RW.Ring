@@ -1,7 +1,4 @@
-﻿using System;
-using System.Configuration;
-using System.IO;
-using Notung.Logging;
+﻿using System.Configuration;
 using Notung.Properties;
 
 namespace Notung.Logging

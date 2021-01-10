@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Collections.ObjectModel;
 
 namespace Notung.ComponentModel
 {
@@ -25,7 +25,7 @@ namespace Notung.ComponentModel
         throw new ArgumentNullException("type");
 
       if (!type.IsEnum)
-        throw new ArgumentException("type");
+        throw new ArgumentException(string.Format("{0} is not a enum type", type));
     }
 
     /// <summary>

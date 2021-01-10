@@ -110,7 +110,7 @@ namespace Notung.Services
       m_exclude_prefixes.Add("System");
       m_exclude_prefixes.Add("mscorlib");
       m_exclude_prefixes.Add("Windows");
-      m_exclude_prefixes.Add("Accessibility");
+      m_exclude_prefixes.Add("SMDiagnostics");
       m_prefix_tree.AddRange(m_exclude_prefixes);
 
       m_domain = domain;
@@ -163,7 +163,7 @@ namespace Notung.Services
       var old_count = m_plugins.Count;
 
       AppDomain separate_domain = mode == LoadPluginsMode.SeparateDomain ?
-        CreateDomain(string.Format("Plugins ({0})", searchPattern), search_path) : null;
+        CreateDomain(string.Format("Plugins ({0})", searchPattern)) : null;
 
       try
       {
@@ -183,7 +183,7 @@ namespace Notung.Services
               break;
 
             case LoadPluginsMode.DomainPerPlugin:
-              LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name, search_path), true);
+              LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name), true);
               break;
 
             case LoadPluginsMode.SeparateDomain:
@@ -349,7 +349,7 @@ namespace Notung.Services
       }
     }
 
-    private AppDomain CreateDomain(string friendlyName, string searchPath)
+    private AppDomain CreateDomain(string friendlyName)
     {
       AppDomainSetup setup = new AppDomainSetup();
 

@@ -7,7 +7,7 @@ namespace Notung.Data
   /// <summary>
   ///  Методы топологической сортировки графа
   /// </summary>
-  public class TopologicalSort
+  public static class TopologicalSort
   {
     /// <summary>
     /// Топологическая сортировка методом Кана

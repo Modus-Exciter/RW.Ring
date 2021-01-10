@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Notung.Data;
 using Notung.Logging;
 using Notung.Threading;
 

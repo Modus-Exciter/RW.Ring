@@ -6,6 +6,7 @@ namespace Notung.ComponentModel
   /// <summary>
   /// Локализуемое описание типа данных
   /// </summary>
+  [AttributeUsage(AttributeTargets.All)]
   public sealed class DescriptionResAttribute : DescriptionAttribute
   {
     /// <summary>

@@ -5,7 +5,7 @@ using System.Resources;
 
 namespace Notung.ComponentModel
 {
-  internal class ResourceHelper
+  internal static class ResourceHelper
   {
     private static readonly Dictionary<Type, ResourceManager[]> _data = new Dictionary<Type, ResourceManager[]>();
     private static readonly Dictionary<Type, int> _counts = new Dictionary<Type, int>();

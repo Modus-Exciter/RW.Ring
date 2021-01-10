@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -207,7 +206,6 @@ namespace Notung.Services
     private void Run()
     {
       ThreadTracker.RegisterThread(Thread.CurrentThread);
-
       m_run_base.ProgressChanged += HandleProgressChanged;
 
       if (m_run_base is ICancelableRunBase)
@@ -216,7 +214,9 @@ namespace Notung.Services
       try
       {
         this.Status = TaskStatus.Running;
+
         m_run_base.Run();
+
         this.Status = IsCanceled ? TaskStatus.Canceled : TaskStatus.RanToCompletion;
       }
       catch (OperationCanceledException)
