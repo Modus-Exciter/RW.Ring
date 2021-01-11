@@ -58,13 +58,8 @@ namespace Notung.Net
     private SessionManager m_session_manager;
 
     [ThreadStatic]
-    private static ProcessHeaders _command_headers;
-    private static readonly ProcessHeaders _global_headers = new ProcessHeaders
-    {
-      Application = (Assembly.GetEntryAssembly() ?? typeof(HostedService).Assembly).GetName().Name,
-      MachineName = Environment.MachineName,
-      UserName = Environment.UserName
-    };
+    private static ClientInfo _command_headers;
+    private static readonly ClientInfo _global_headers = ClientInfo.ProcessInfo;
 
     public HostedService(IServerTransportFactory transportFactory, ICommandSerializer serializer)
     {
@@ -93,17 +88,17 @@ namespace Notung.Net
       }
     }
 
-    public static ProcessHeaders GlobalHeaders
+    public static ClientInfo GlobalHeaders
     {
       get { return _global_headers; }
     }
 
-    public static ProcessHeaders CommandHeaders
+    public static ClientInfo CommandHeaders
     {
       get { return _command_headers; }
     }
 
-    public static ProcessHeaders CurrentHeaders
+    public static ClientInfo CurrentHeaders
     {
       get { return _command_headers ?? _global_headers; }
     }
