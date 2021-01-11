@@ -67,40 +67,40 @@ namespace Notung.Loader
     /// <summary>
     /// Регистрация компонента
     /// </summary>
-    /// <param name="type">Тип компонента</param>
+    /// <param name="serviceType">Тип компонента</param>
     /// <param name="instance">Экземпляр компонента</param>
-    public void AddService(Type type, object instance)
+    public void AddService(Type serviceType, object instance)
     {
-      if (type == null)
-        throw new ArgumentNullException("type");
+      if (serviceType == null)
+        throw new ArgumentNullException("serviceType");
 
       if (instance == null)
         throw new ArgumentNullException("instance");
 
       using (m_lock.WriteLock())
       {
-        if (!type.IsInstanceOfType(instance))
+        if (!serviceType.IsInstanceOfType(instance))
           throw new ArgumentException("\"instance\" is not instance of type \"type\"", "instance");
 
-        m_creators[type] = () => instance;
+        m_creators[serviceType] = () => instance;
       }
     }
 
     /// <summary>
     /// Регистрация компонента
     /// </summary>
-    /// <param name="type">Тип компонента</param>
+    /// <param name="serviceType">Тип компонента</param>
     /// <param name="creator">Метод, порождающий компонент</param>
-    public void AddService(Type type, Func<object> creator)
+    public void AddService(Type serviceType, Func<object> creator)
     {
-      if (type == null)
-        throw new ArgumentNullException("type");
+      if (serviceType == null)
+        throw new ArgumentNullException("serviceType");
 
       if (creator == null)
         throw new ArgumentNullException("creator");
 
       using (m_lock.WriteLock())
-        m_creators[type] = creator;
+        m_creators[serviceType] = creator;
     }
 
     /// <summary>

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Notung.Configuration;
-using System.IO;
 using System.ComponentModel;
-using Notung;
-using System.Xml.Serialization;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Notung;
+using Notung.Configuration;
+using Notung.Services;
 
 namespace NotungTest
 {

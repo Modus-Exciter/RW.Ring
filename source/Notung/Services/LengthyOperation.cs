@@ -214,9 +214,7 @@ namespace Notung.Services
       try
       {
         this.Status = TaskStatus.Running;
-
         m_run_base.Run();
-
         this.Status = IsCanceled ? TaskStatus.Canceled : TaskStatus.RanToCompletion;
       }
       catch (OperationCanceledException)
@@ -235,6 +233,8 @@ namespace Notung.Services
 
         if (m_run_base is ICancelableRunBase)
           ((ICancelableRunBase)m_run_base).CanCancelChanged -= HandleCanCancelChanged;
+
+        ThreadTracker.RemoveThread(Thread.CurrentThread);
 
         this.HandleCompleted();
       }

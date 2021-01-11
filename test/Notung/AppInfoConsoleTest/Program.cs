@@ -1,7 +1,7 @@
 ﻿using System;
-using Notung;
-using Notung.Threading;
 using System.Threading;
+using Notung;
+using Notung.Services;
 
 namespace AppInfoConsoleTest
 {

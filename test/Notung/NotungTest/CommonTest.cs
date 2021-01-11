@@ -1,14 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung;
+using Notung.ComponentModel;
 using Notung.Data;
 using Notung.Loader;
-using System.Collections.Generic;
-using System.Reflection;
-using System;
-using Notung.Threading;
-using System.Threading;
-using Notung.ComponentModel;
+using Notung.Services;
 
 namespace NotungTest
 {

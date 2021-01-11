@@ -45,18 +45,18 @@ namespace Notung.Threading
     public static void AddThreadHandlers(Action<Thread> registered,
       Action<Thread> removed, Action<Thread, Exception> onError)
     {
-      if (registered != null)
-        _thread_registered += registered;
-
-      if (removed != null)
-        _thread_removed += removed;
-
-      if (onError != null)
-        _thread_error += onError;
-
-      if (registered != null)
+      lock (_threads)
       {
-        lock (_threads)
+        if (registered != null)
+          _thread_registered += registered;
+
+        if (removed != null)
+          _thread_removed += removed;
+
+        if (onError != null)
+          _thread_error += onError;
+
+        if (registered != null)
         {
           foreach (var thread in _threads)
           {

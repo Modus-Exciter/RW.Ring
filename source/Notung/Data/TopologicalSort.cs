@@ -116,6 +116,7 @@ namespace Notung.Data
         get
         {
           index <<= 1;
+
           if (m_bits[index])
           {
             if (m_bits[index + 1])
@@ -129,6 +130,7 @@ namespace Notung.Data
         set
         {
           index <<= 1;
+
           switch (value)
           {
             case PeakMark.NotReady:
