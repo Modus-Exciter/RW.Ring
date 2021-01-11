@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Schicksal.Basic;
 using Notung;
 using System.Threading.Tasks;
+using Notung.Services;
 
 namespace Schicksal.Helm
 {

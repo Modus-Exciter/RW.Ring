@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using Notung;
+using Notung.Services;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm.Dialogs

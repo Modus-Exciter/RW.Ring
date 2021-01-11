@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using Notung.Configuration;
+using Notung.Services;
 
 namespace Notung.Helm.Configuration
 {
@@ -50,8 +51,7 @@ namespace Notung.Helm.Configuration
       return item.GetType().GetGenericArguments()[0];
     }
 
-    public SettingsBindingSource<TSection> Get<TSection>()
-      where TSection : ConfigurationSection, new()
+    public SettingsBindingSource<TSection> Get<TSection>()  where TSection : ConfigurationSection, new()
     {
       return this[typeof(TSection)] as SettingsBindingSource<TSection>;
     }

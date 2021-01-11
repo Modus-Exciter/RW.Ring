@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Notung.Data;
 using Notung.Helm.Windows.Properties;
+using Notung.Services;
 
 namespace Notung.Helm.Windows
 {

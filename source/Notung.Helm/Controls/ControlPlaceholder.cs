@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Notung.Helm.Properties;
 using Notung.Loader;
+using Notung.Services;
 using Notung.Threading;
 
 namespace Notung.Helm.Controls
