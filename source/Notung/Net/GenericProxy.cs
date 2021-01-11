@@ -18,8 +18,6 @@ namespace Notung.Net
     private readonly Dictionary<Type, object> m_local_services = new Dictionary<Type, object>();
     private readonly SharedLock m_lock = new SharedLock(false);
 
-    private static readonly Func<ParameterInfo, bool> _parameter_predicate = IsByRef;
-
     /// <summary>
     /// Создание прокси с настройками по умолчанию
     /// </summary>
@@ -31,7 +29,7 @@ namespace Notung.Net
     /// <param name="stub">Указатель на заглушку</param>
     /// <param name="stubData">Данные заглушки</param>
     protected GenericProxy(IntPtr stub, object stubData) : base(typeof(T), stub, stubData) { }
-    
+
     /// <summary>
     /// Обеспечивает общую инфраструктуру локальных и удалённых вызовов
     /// </summary>
@@ -43,7 +41,7 @@ namespace Notung.Net
       {
         switch (message.MethodName)
         {
-          case "GetType": 
+          case "GetType":
             return CreateReturnMesage(typeof(T), message);
 
           case "Equals":
@@ -53,7 +51,7 @@ namespace Notung.Net
             return CreateReturnMesage(this.GetHashCode(), message);
 
           case "ToString":
-            return CreateReturnMesage(this.TypeName, message);
+            return CreateReturnMesage(this.GetProxyName(), message);
         }
       }
 
@@ -83,19 +81,34 @@ namespace Notung.Net
     /// <typeparam name="TContract">Тип интерфейса, реализуемый прозрачным прокси</typeparam>
     /// <param name="localService">Локальный объект, реализующий этот объект</param>
     /// <param name="overwrite">Затереть ли существующие сервисы того же типа или его предков</param>
-    protected void AddLocalService<TContract>(TContract localService, bool overwrite = false)
-      where TContract : class
+    protected void AddLocalService<TContract>(TContract localService,
+      LocalServiceOverride overwrite = LocalServiceOverride.No) where TContract : class
     {
       if (localService == null)
         throw new ArgumentNullException("localService");
 
       using (m_lock.WriteLock())
       {
-        if (overwrite)
+        if (overwrite == LocalServiceOverride.All)
           m_local_services[typeof(TContract)] = localService;
         else
           m_local_services.Add(typeof(TContract), localService);
+
+        foreach (var itf in typeof(TContract).GetInterfaces())
+        {
+          if (overwrite == LocalServiceOverride.No && m_local_services.ContainsKey(itf))
+            continue;
+
+          m_local_services[itf] = localService;
+        }
       }
+    }
+
+    protected enum LocalServiceOverride : byte
+    {
+      No,
+      OnlyParent,
+      All
     }
 
     /// <summary>
@@ -111,18 +124,42 @@ namespace Notung.Net
     }
 
     /// <summary>
-    /// Имя типа данных для прозрачного прокси
+    /// Получение текстового представления прозрачного прокси
     /// </summary>
-    protected string TypeName
+    /// <returns>То, что должен вернуть метод ToString() прозрачного прокси</returns>
+    protected virtual string GetProxyName()
     {
-      get { return typeof(T).FullName; }
-      set { }
+      return typeof(T).FullName;
     }
 
     /// <summary>
-    /// Проверка возможности преобразования прозрачного прокси в указанный тип
+    /// При перекрытии в произвольном классе, реализует специфическую логику вызова метода через прокси
     /// </summary>
-    protected bool CanCastTo(Type fromType, object o)
+    /// <param name="message">Сообщение, описывающее вызов метода</param>
+    /// <returns>Сообщение, описывающее результат вызова метода</returns>
+    protected abstract ReturnMessage Invoke(IMethodCallMessage message);
+
+    #region Implementation ------------------------------------------------------------------------
+
+    private static IMethodReturnMessage InvokeByReflection(IMethodCallMessage message, object item)
+    {
+      try
+      {
+        var args = message.Args;
+        var ret = message.MethodBase.Invoke(item, args);
+
+        if (message.MethodBase.GetParameters().Any(pi => pi.ParameterType.IsByRef))
+          return new ReturnMessage(ret, args, args.Length, message.LogicalCallContext, message);
+        else
+          return new ReturnMessage(ret, null, 0, message.LogicalCallContext, message);
+      }
+      catch (TargetInvocationException ex)
+      {
+        return new ReturnMessage(ex.InnerException, message);
+      }
+    }
+
+    bool IRemotingTypeInfo.CanCastTo(Type fromType, object o)
     {
       if (fromType.IsAssignableFrom(typeof(T)))
         return true;
@@ -136,47 +173,10 @@ namespace Notung.Net
       return false;
     }
 
-    /// <summary>
-    /// При перекрытии в произвольном классе, реализует специфическую логику вызова метода через прокси
-    /// </summary>
-    /// <param name="message">Сообщение, описывающее вызов метода</param>
-    /// <returns>Сообщение, описывающее результат вызова метода</returns>
-    protected abstract ReturnMessage Invoke(IMethodCallMessage message);
-
-    #region Implementation ------------------------------------------------------------------------
-
-    private static bool IsByRef(ParameterInfo parameterInfo)
-    {
-      return parameterInfo.ParameterType.IsByRef;
-    }
-    
-    private static IMethodReturnMessage InvokeByReflection(IMethodCallMessage message, object item)
-    {
-      try
-      {
-        var args = message.Args;
-        var ret = message.MethodBase.Invoke(item, args);
-
-        if (message.MethodBase.GetParameters().Any(_parameter_predicate))
-          return new ReturnMessage(ret, args, args.Length, message.LogicalCallContext, message);
-        else
-          return new ReturnMessage(ret, null, 0, message.LogicalCallContext, message);
-      }
-      catch (TargetInvocationException ex)
-      {
-        return new ReturnMessage(ex.InnerException, message);
-      }
-    }
-
-    bool IRemotingTypeInfo.CanCastTo(Type fromType, object o)
-    {
-      return this.CanCastTo(fromType, o);
-    }
-
     string IRemotingTypeInfo.TypeName
     {
-      get { return this.TypeName; }
-      set { this.TypeName = value; }
+      get { return typeof(T).FullName; }
+      set { }
     }
 
     #endregion
