@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Notung;
+using Notung.Services;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm

@@ -3,7 +3,7 @@ using System.Reflection;
 using Notung.Configuration;
 using Notung.Services;
 
-namespace Notung
+namespace Notung.Services
 {
   /// <summary>
   /// Набор сервисов для управления приложением

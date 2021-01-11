@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using Notung.Logging;
+using Notung.Services;
 
 namespace Notung.Helm
 {
@@ -129,7 +130,6 @@ namespace Notung.Helm
             return WinResources.p_16_error;
         }
         return null;
-
       }
     }
 

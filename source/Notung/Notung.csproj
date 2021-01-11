@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
-    <Compile Include="AppManager.cs" />
+    <Compile Include="Services\AppManager.cs" />
     <Compile Include="ComponentModel\LanguageSwitcher.cs">
       <SubType>Component</SubType>
     </Compile>

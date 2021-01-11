@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Notung.Helm.Windows.Properties;
+using Notung.Services;
 
 namespace Notung.Helm.Windows
 {

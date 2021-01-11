@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using Notung;
+using Notung.Services;
 using Schicksal.Anova;
 
 namespace Schicksal.Helm

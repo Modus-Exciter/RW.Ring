@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Notung;
+using Notung.Services;
 using Schicksal.Anova;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
@@ -70,7 +71,6 @@ namespace Schicksal.Helm
         }
 
         AutoResizeColumnsByExample(mult.CreateExample());
-
         m_binding_source.DataSource = new DifferenceInfoList(m_all_data = mult.Results);
       }
     }
