@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Notung;
 using Schicksal.Anova;
+using System.Threading.Tasks;
 
 namespace Schicksal.Helm
 {
@@ -77,15 +78,19 @@ namespace Schicksal.Helm
         dlg.Filter = "Html files|*.html";
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          if (AppManager.OperationLauncher.Run(new AnovaHtmlSaver(dlg.FileName,
-              this.SourceTable, this.DataSource, this.Probability, 
-              string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
+          var saver = new AnovaHtmlSaver(
+            dlg.FileName, 
+            this.SourceTable,
+            this.DataSource,
+            this.Probability,
+            string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
           {
             Factors = this.Factors,
             Result = this.ResultColumn,
             Filter = this.Filter
-          })
-            == System.Threading.Tasks.TaskStatus.RanToCompletion)
+          };
+
+          if (AppManager.OperationLauncher.Run(saver) == TaskStatus.RanToCompletion)
           {
             Process.Start(dlg.FileName);
           }
