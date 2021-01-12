@@ -250,11 +250,11 @@ namespace Notung.Services
 
     private void CloseHandle(IAsyncResult result)
     {
-      if (!ReferenceEquals(m_operation, result))
-        throw new InvalidOperationException();
-
       lock (m_lock)
       {
+        if (!ReferenceEquals(m_operation, result))
+          throw new InvalidOperationException();
+
         result.AsyncWaitHandle.Dispose();
         m_operation = null;
         this.Dispose();

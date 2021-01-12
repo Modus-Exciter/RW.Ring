@@ -32,6 +32,7 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompareVariantsForm));
       System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
       System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+      System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       this.m_splitter = new System.Windows.Forms.SplitContainer();
@@ -93,18 +94,28 @@
       this.m_chart.ChartAreas.Add(chartArea1);
       this.m_chart.ContextMenuStrip = this.m_graph_context_menu;
       this.m_chart.Name = "m_chart";
+      series1.BorderColor = System.Drawing.Color.Maroon;
       series1.BorderWidth = 2;
       series1.ChartArea = "MeansArea";
-      series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.BoxPlot;
+      series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.ErrorBar;
       series1.Color = System.Drawing.Color.DarkRed;
-      series1.CustomProperties = "PointWidth=0.4";
+      series1.CustomProperties = "PointWidth=0.3";
       series1.MarkerBorderWidth = 2;
-      series1.Name = "Means";
-      series1.ShadowOffset = 1;
+      series1.Name = "Intervals";
+      series1.ShadowColor = System.Drawing.Color.Empty;
       series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
       series1.YValuesPerPoint = 6;
       series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+      series2.BorderColor = System.Drawing.Color.DarkRed;
+      series2.BorderDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.NotSet;
+      series2.BorderWidth = 3;
+      series2.ChartArea = "MeansArea";
+      series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+      series2.Color = System.Drawing.Color.IndianRed;
+      series2.Name = "Means";
+      series2.YValuesPerPoint = 2;
       this.m_chart.Series.Add(series1);
+      this.m_chart.Series.Add(series2);
       // 
       // m_graph_context_menu
       // 

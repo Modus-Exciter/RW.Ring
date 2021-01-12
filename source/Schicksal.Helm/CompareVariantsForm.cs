@@ -59,15 +59,18 @@ namespace Schicksal.Helm
 
         m_grid.AutoResizeColumns();
 
-        var series = m_chart.Series["Means"];
+        var series_in = m_chart.Series["Intervals"];
+        var series_m = m_chart.Series["Means"];
 
-        series.Points.Clear();
+        series_in.Points.Clear();
+        series_m.Points.Clear();
 
         foreach (DataRow row in res.Rows)
         {
           var mean = (double)row["Mean"];
           var interval = (double)row["Interval"];
-          series.Points.AddXY(row["Factor"], mean - interval, mean + interval, mean, mean);
+          series_in.Points.AddXY(row["Factor"], 0, mean - interval, mean + interval);
+          series_m.Points.AddXY(row["Factor"], mean);
         }
 
         AutoResizeColumnsByExample(mult.CreateExample());

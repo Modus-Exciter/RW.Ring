@@ -133,8 +133,8 @@
   <data name="&gt;&gt;m_splitter.Panel2.Parent" xml:space="preserve">
     <value>m_splitter</value>
   </data>
-  <data name="&gt;&gt;m_splitter.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="&gt;&gt;differenceInfoBindingSource.Name" xml:space="preserve">
+    <value>differenceInfoBindingSource</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_summary_page.TabIndex" type="System.Int32, mscorlib">
@@ -204,9 +204,6 @@
   <data name="&gt;&gt;factor2DataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>factor2DataGridViewTextBoxColumn</value>
   </data>
-  <data name="m_tab_control.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
   <data name="&gt;&gt;mean1DataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -216,11 +213,8 @@
   <data name="m_details_page.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
   </data>
-  <data name="&gt;&gt;m_splitter.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="probabilityDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Probability</value>
+  <data name="m_details_page.Size" type="System.Drawing.Size, System.Drawing">
+    <value>739, 243</value>
   </data>
   <data name="&gt;&gt;m_chart.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataVisualization.Charting.Chart, System.Windows.Forms.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</value>
@@ -240,8 +234,8 @@
   <data name="m_details_page.Text" xml:space="preserve">
     <value>Comparison in pairs</value>
   </data>
-  <data name="m_details_page.Size" type="System.Drawing.Size, System.Drawing">
-    <value>739, 243</value>
+  <data name="m_tab_control.Size" type="System.Drawing.Size, System.Drawing">
+    <value>747, 269</value>
   </data>
   <data name="&gt;&gt;m_details_page.Name" xml:space="preserve">
     <value>m_details_page</value>
@@ -260,6 +254,9 @@
   </data>
   <data name="m_nsr_grid.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 3</value>
+  </data>
+  <data name="probabilityDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Probability</value>
   </data>
   <data name="m_chart.Size" type="System.Drawing.Size, System.Drawing">
     <value>747, 346</value>
@@ -333,11 +330,8 @@
   <data name="&gt;&gt;m_summary_page.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="minimalDifferenceDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>MinimalDifference</value>
-  </data>
-  <data name="&gt;&gt;m_splitter.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;m_splitter.Parent" xml:space="preserve">
+    <value>$this</value>
   </data>
   <data name="&gt;&gt;m_chart.Name" xml:space="preserve">
     <value>m_chart</value>
@@ -797,8 +791,8 @@
         AAAAAwAA/4AAAAADAAD/gAAAAAMAAP+AAAAAAwAA/4AAAAADAAD///////8AAP///////wAA
 </value>
   </data>
-  <data name="&gt;&gt;m_nsr_context_menu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;m_splitter.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -836,11 +830,14 @@
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
   </data>
-  <data name="m_cmd_filter.Size" type="System.Drawing.Size, System.Drawing">
-    <value>109, 22</value>
+  <data name="&gt;&gt;m_nsr_context_menu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="mean1DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Mean1</value>
+  </data>
+  <data name="m_cmd_copy_chart.Text" xml:space="preserve">
+    <value>Copy</value>
   </data>
   <data name="m_splitter.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -860,6 +857,9 @@
   <data name="m_chart.Text" xml:space="preserve">
     <value>chart1</value>
   </data>
+  <data name="m_cmd_filter.Size" type="System.Drawing.Size, System.Drawing">
+    <value>109, 22</value>
+  </data>
   <data name="m_nsr_grid.Size" type="System.Drawing.Size, System.Drawing">
     <value>733, 237</value>
   </data>
@@ -878,8 +878,8 @@
   <data name="m_splitter.SplitterDistance" type="System.Int32, mscorlib">
     <value>346</value>
   </data>
-  <data name="m_tab_control.Size" type="System.Drawing.Size, System.Drawing">
-    <value>747, 269</value>
+  <data name="&gt;&gt;m_splitter.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="&gt;&gt;m_details_page.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -887,11 +887,11 @@
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>747, 619</value>
   </data>
+  <data name="minimalDifferenceDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>MinimalDifference</value>
+  </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_nsr_grid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
   </data>
   <data name="m_chart.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -902,11 +902,11 @@
   <data name="&gt;&gt;mean1DataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>mean1DataGridViewTextBoxColumn</value>
   </data>
-  <data name="&gt;&gt;differenceInfoBindingSource.Name" xml:space="preserve">
-    <value>differenceInfoBindingSource</value>
+  <data name="m_tab_control.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="m_cmd_copy_chart.Text" xml:space="preserve">
-    <value>Copy</value>
+  <data name="m_nsr_grid.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
   </data>
   <data name="m_summary_page.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>

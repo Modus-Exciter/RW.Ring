@@ -119,13 +119,13 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_copy_chart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 22</value>
+    <value>146, 22</value>
   </data>
   <data name="m_cmd_copy_chart.Text" xml:space="preserve">
     <value>Копировать</value>
   </data>
   <data name="m_graph_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>153, 48</value>
+    <value>147, 26</value>
   </data>
   <data name="m_summary_page.Text" xml:space="preserve">
     <value>Статистика</value>
