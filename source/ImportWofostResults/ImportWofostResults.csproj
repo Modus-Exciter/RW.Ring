@@ -8,8 +8,8 @@
     <ProjectGuid>{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImportWofostResults</RootNamespace>
-    <AssemblyName>ImportWofostResults</AssemblyName>
+    <RootNamespace>JetExcelOleDbImport</RootNamespace>
+    <AssemblyName>ExcelJetImport</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,9 +32,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\lib\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -43,13 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImportWofost.cs" />
+    <Compile Include="ImportExcel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WofostResultsImportForm.cs">
+    <Compile Include="ExcelImportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WofostResultsImportForm.Designer.cs">
-      <DependentUpon>WofostResultsImportForm.cs</DependentUpon>
+    <Compile Include="ExcelImportForm.Designer.cs">
+      <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -59,13 +56,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="WofostResults.import">
+    <Content Include="ExcelJet4.import">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WofostResultsImportForm.resx">
-      <DependentUpon>WofostResultsImportForm.cs</DependentUpon>
+    <EmbeddedResource Include="ExcelImportForm.resx">
+      <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
