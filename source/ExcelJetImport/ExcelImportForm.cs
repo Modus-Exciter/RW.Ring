@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace JetExcelOleDbImport
 {
-  public partial class ExcelImportForm : Form
+  partial class ExcelImportForm : Form
   {
     public ExcelImportForm()
     {

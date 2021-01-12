@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schicksal.Exchange", "Schic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{85466309-C38B-473A-977B-B44F0762BD5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportWofostResults", "ImportWofostResults\ImportWofostResults.csproj", "{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelJetImport", "ExcelJetImport\ExcelJetImport.csproj", "{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupSchicksal", "SetupSchicksal\SetupSchicksal.vdproj", "{E6B10001-C5DF-49B8-AC21-AAEFED5959E9}"
 EndProject

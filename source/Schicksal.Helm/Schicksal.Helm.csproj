@@ -205,6 +205,7 @@
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
+    <Content Include="Schicksal.Manual.pdf" />
     <None Include="Schicksal.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -243,7 +244,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Schicksal\Schicksal.csproj">
       <Project>{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}</Project>
-      <Name>Schicksal</Name>
+      <Name>Schicksal %28Schicksal\Schicksal%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

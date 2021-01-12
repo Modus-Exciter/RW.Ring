@@ -50,6 +50,36 @@ namespace JetExcelOleDbImport
       HashSet<string> nulls = new HashSet<string>();
       HashSet<string> unconvertable = new HashSet<string>();
 
+      bool reload_required = CollectNormalizationData(table, nulls, unconvertable);
+
+      var copy = reload_required? table.Clone() : table;
+
+      foreach (DataColumn col in copy.Columns)
+      {
+        if (nulls.Contains(col.ColumnName))
+          continue;
+
+        if (col.DataType == typeof(string))
+          col.DefaultValue = string.Empty;
+
+        if (col.DataType == typeof(double) || col.DataType == typeof(float))
+        {
+          if (!unconvertable.Contains(col.ColumnName))
+            col.DataType = typeof(int);
+        }
+
+        if (col.DataType != typeof(double) && col.DataType != typeof(float))
+          col.AllowDBNull = false;
+      }
+
+      if (reload_required)
+        copy.Load(table.CreateDataReader());
+
+      return copy;
+    }
+
+    private static bool CollectNormalizationData(DataTable table, HashSet<string> nulls, HashSet<string> unconvertable)
+    {
       foreach (DataRow row in table.Rows)
       {
         foreach (DataColumn col in table.Columns)
@@ -76,28 +106,21 @@ namespace JetExcelOleDbImport
         }
       }
 
-      var copy = table.Clone();
+      bool reload_required = false;
 
-      foreach (DataColumn col in copy.Columns)
+      foreach (DataColumn col in table.Columns)
       {
-        if (nulls.Contains(col.ColumnName))
-          continue;
-
-        if (col.DataType == typeof(string))
-          col.DefaultValue = string.Empty;
-
         if (col.DataType == typeof(double) || col.DataType == typeof(float))
         {
           if (!unconvertable.Contains(col.ColumnName))
-            col.DataType = typeof(int);
+          {
+            reload_required = true;
+            break;
+          }
         }
-
-        if (col.DataType != typeof(double) && col.DataType != typeof(float))
-          col.AllowDBNull = false;
       }
 
-      copy.Load(table.CreateDataReader());
-      return copy;
+      return reload_required;
     }
 
     public override string ToString()
