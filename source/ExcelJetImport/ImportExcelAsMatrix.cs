@@ -36,11 +36,11 @@ namespace JetExcelOleDbImport
           }
 
           table = Utils.NormalizeTable(result);
-          result.AcceptChanges();
+          table.AcceptChanges();
 
           return new ImportResult
           {
-            Table = result,
+            Table = table,
             Description = string.Format("Import from {0}", Path.GetFileName(dlg.ExcelFileName))
           };
         }
