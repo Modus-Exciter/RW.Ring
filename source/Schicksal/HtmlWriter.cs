@@ -227,7 +227,7 @@ namespace Schicksal
     private static PropertyDescriptorCollection GetProperties(IList dataSource)
     {
       if (dataSource is ITypedList)
-        return ((ITypedList)dataSource).GetItemProperties(new PropertyDescriptor[0]);
+        return ((ITypedList)dataSource).GetItemProperties(ArrayExtensions.Empty<PropertyDescriptor>());
       else if (dataSource.Count > 0)
         return TypeDescriptor.GetProperties(dataSource[0]);
 
