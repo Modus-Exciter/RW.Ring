@@ -40,7 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcelImportAsMatrixForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExcelImportAsMatrixForm.Designer.cs">
+      <DependentUpon>ExcelImportAsMatrixForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImportExcel.cs" />
+    <Compile Include="ImportExcelAsMatrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ExcelImportForm.cs">
       <SubType>Form</SubType>
@@ -48,6 +55,7 @@
     <Compile Include="ExcelImportForm.Designer.cs">
       <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Schicksal.Exchange\Schicksal.Exchange.csproj">
@@ -61,6 +69,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ExcelImportAsMatrixForm.resx">
+      <DependentUpon>ExcelImportAsMatrixForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExcelImportForm.resx">
       <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </EmbeddedResource>

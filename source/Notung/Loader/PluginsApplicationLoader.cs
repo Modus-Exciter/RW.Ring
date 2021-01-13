@@ -63,7 +63,7 @@ namespace Notung.Loader
   {
     private readonly string m_filter;
     private readonly LoadPluginsMode m_mode;
-    private readonly List<Type> m_dependencies = new List<Type>();
+    private static readonly Type[] _dependencies = new Type[] { typeof(PluginsApplicationLoader) };
 
     public PluginsApplicationLoader(string filter, LoadPluginsMode mode)
     {
@@ -106,7 +106,7 @@ namespace Notung.Loader
 
     public ICollection<Type> Dependencies
     {
-      get { return m_dependencies; }
+      get { return _dependencies; }
     }
   }
 
@@ -130,7 +130,7 @@ namespace Notung.Loader
 
       foreach (var type in Assembly.Load(m_name).GetAvailableTypes())
       {
-        if (m_type.IsAssignableFrom(type))
+        if (!type.IsAbstract && m_type.IsAssignableFrom(type) && type.GetConstructor(Type.EmptyTypes) != null)
           list.Add(Activator.CreateInstance(type));
       }
 
