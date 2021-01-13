@@ -96,7 +96,6 @@ namespace Notung.Services
         throw new ArgumentNullException("view");
 
       m_view = view;
-      m_view.Source = this;
     }
 
     internal Notificator() : this(new ConsoleNotificatorView()) { }
@@ -154,7 +153,9 @@ namespace Notung.Services
 
       if (buffer.Count == 1 && buffer[0].InnerMessages.Count == 0 
         && (string.IsNullOrEmpty(summary) || buffer[0].Message.Equals(summary)))
+      {
         return this.AlertSync(buffer[0], ConfirmationRegime.Confirm).GetValueOrDefault();
+      }
       else
       {
         var level = GetMaxLevel(buffer);
@@ -272,8 +273,6 @@ namespace Notung.Services
 
   public interface INotificatorView : ISynchronizeProvider
   {
-    INotificator Source { get; set; }
-
     bool? Alert(Info info, ConfirmationRegime confirm);
 
     bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm);
@@ -311,6 +310,7 @@ namespace Notung.Services
       if (confirm != ConfirmationRegime.None)
       {
         Console.Write("Y / N: ");
+
         if (Console.ReadLine().ToUpper().Trim() == "Y")
           return true;
         else

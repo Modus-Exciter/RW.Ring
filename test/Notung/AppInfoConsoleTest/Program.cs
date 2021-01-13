@@ -27,7 +27,7 @@ namespace AppInfoConsoleTest
       wrk.CancellationToken = src.Token;
 
       src.Cancel();
-      Console.WriteLine(AppManager.OperationLauncher.Run(wrk, null));
+      Console.WriteLine(AppManager.OperationLauncher.Run(wrk));
 
 #if ANOTHER_DOMAIN
       wrk = (ICancelableRunBase)domain.CreateInstanceAndUnwrap(
@@ -35,7 +35,7 @@ namespace AppInfoConsoleTest
 #endif
       wrk.CancellationToken = CancellationToken.None;
 
-      Console.WriteLine(AppManager.OperationLauncher.Run(wrk, null));
+      Console.WriteLine(AppManager.OperationLauncher.Run(wrk));
 
       Console.ReadKey();
     }

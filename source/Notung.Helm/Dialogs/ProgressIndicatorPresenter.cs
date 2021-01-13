@@ -15,41 +15,38 @@ namespace Notung.Helm.Dialogs
   public sealed class ProgressIndicatorPresenter
   {
     private readonly IProcessIndicatorView m_view;
-    private readonly LaunchParameters m_launch_parameters;
+    private readonly bool m_close_on_finish;
     private readonly LengthyOperation m_operation;
     private CancellationTokenSource m_cancel_source;
 
-    public ProgressIndicatorPresenter(LengthyOperation operation, LaunchParameters parameters, IProcessIndicatorView view)
+    public ProgressIndicatorPresenter(LengthyOperation operation, IProcessIndicatorView view, bool closeOnFinish)
     {
       if (operation == null)
         throw new ArgumentNullException("operation");
 
-      if (parameters == null)
-        throw new ArgumentNullException("parameters");
-
       if (view == null)
         throw new ArgumentNullException("view");
 
-      m_launch_parameters = parameters;
+      m_close_on_finish = closeOnFinish;
       m_operation = operation;
       m_view = view;
 
       m_cancel_source = m_operation.GetCancellationTokenSource();
 
-      if (m_cancel_source == null)
-        m_view.ButtonVisible = false;
-      else
+      if (m_cancel_source != null)
       {
         m_operation.CanCancelChanged += HandleCanCancelChanged;
         m_view.ButtonText = WinResources.CANCEL;
       }
+      else
+        m_view.ButtonVisible = false;
 
       m_operation.ProgressChanged += HandleProgressChanged;
       m_operation.Completed += HandleOperationCompleted;
 
       m_view.ButtonEnabled = m_operation.CanCancel;
-      m_view.Text = m_launch_parameters.Caption;
-      m_view.Image = m_launch_parameters.Bitmap;
+      m_view.Text = m_operation.GetWorkCaption();
+      m_view.Image = m_operation.GetWorkImage();
       m_view.ButtonClick += this.ButtonClick;
       m_view.Load += HandleLoad;
     }
@@ -105,7 +102,7 @@ namespace Notung.Helm.Dialogs
         m_view.DialogResult = DialogResult.Cancel;
         m_view.Close();
       }
-      else if (m_launch_parameters.CloseOnFinish)
+      else if (m_close_on_finish)
       {
         m_view.DialogResult = DialogResult.OK;
         m_view.Close();

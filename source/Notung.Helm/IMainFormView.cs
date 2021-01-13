@@ -18,6 +18,8 @@ namespace Notung.Helm
   {
     Form MainForm { get; }
 
+    INotificator Notificator { get; set; }
+
     bool RestartOnCriticalError { get; }
 
     ISplashScreenView GetSplashScreenView();
@@ -104,11 +106,11 @@ namespace Notung.Helm
       }
     }
 
-    public void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
+    public void ShowProgressDialog(LengthyOperation operation, bool closeOnFinish)
     {
       using (var dlg = this.GetProgressIndicatorView())
       {
-        var presenter = new ProgressIndicatorPresenter(operation, parameters, dlg);
+        var presenter = new ProgressIndicatorPresenter(operation, dlg, closeOnFinish);
         dlg.ShowDialog(m_main_form);
       }
     }
@@ -122,7 +124,7 @@ namespace Notung.Helm
 
     #region Alerts --------------------------------------------------------------------------------
 
-    public INotificator Source { get; set; }
+    public INotificator Notificator { get; set; }
 
     public void ShowError(Exception error)
     {
@@ -131,7 +133,7 @@ namespace Notung.Helm
 
     public void ShowMessages(InfoBuffer messages) 
     {
-      var notificator = this.Source;
+      var notificator = this.Notificator;
 
       if (notificator != null)
         notificator.Show(messages);
@@ -213,7 +215,6 @@ namespace Notung.Helm
     public bool SendArgsToProcess(Process previous, IList<string> args)
     {
       var text_to_send = string.Join("\n", args);
-
       var cd = new CopyData(Encoding.Unicode.GetBytes(text_to_send), StringArgsMessageCode);
 
       if (cd.Send(previous.MainWindowHandle, SendMessageTimeout) != IntPtr.Zero)

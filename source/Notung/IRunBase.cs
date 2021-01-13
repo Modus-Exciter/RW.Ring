@@ -145,6 +145,25 @@ namespace Notung
     {
       return serviceType == typeof(InfoBuffer) ? m_infolog : null;
     }
+
+    /// <summary>
+    /// Получение названия задачи по умолчанию
+    /// </summary>
+    /// <returns>Если у задачи переопределён метод ToString(), то его. Иначе, значение атрибута DisplayName</returns>
+    public static string GetDefaultCaption(IRunBase work)
+    {
+      var ret = work.ToString();
+
+      if (object.Equals(ret, work.GetType().ToString()))
+      {
+        var dn = work.GetType().GetCustomAttribute<DisplayNameAttribute>(true);
+
+        if (dn != null && !string.IsNullOrWhiteSpace(dn.DisplayName))
+          ret = dn.DisplayName;
+      }
+
+      return ret;
+    }
   }
 
   /// <summary>

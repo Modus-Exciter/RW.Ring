@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
@@ -26,9 +27,17 @@ namespace Notung.Services
     /// Запуск задачи на выполнение
     /// </summary>
     /// <param name="runBase">Задача, которую требуется выполнить</param>
-    /// <param name="parameters">Параметры отображения задачи в пользовательском интерфейсе</param>
+    /// <param name="closeOnFinish">Закрывать ли диалог с прогрессом операции по завершении</param>
     /// <returns>Результат выполнения задачи</returns>
-    TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null);
+    TaskStatus Run(IRunBase runBase);
+
+    /// <summary>
+    /// Запуск задачи на выполнение
+    /// </summary>
+    /// <param name="runBase">Задача, которую требуется выполнить</param>
+    /// <param name="parameters">Дополнительные параметры отображения задачи</param>
+    /// <returns>Результат выполнения задачи</returns>
+    TaskStatus Run(IRunBase runBase, LaunchParameters parameters);
   }
 
   /// <summary>
@@ -40,6 +49,10 @@ namespace Notung.Services
     private readonly Action m_set_context;
     private SynchronizationContext m_context;
 
+    /// <summary>
+    /// Инициализациа нового сервиса по управлению задачами
+    /// </summary>
+    /// <param name="view">Представление для сервивса</param>
     public OperationLauncher(IOperationLauncherView view)
     {
       if (view == null)
@@ -74,16 +87,45 @@ namespace Notung.Services
       }
     }
 
-    public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
+    public TaskStatus Run(IRunBase runBase)
     {
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      using (var operation = CreateOperation(ref runBase, ref parameters))
+      return this.Run(runBase, true);
+    }
+
+    public TaskStatus Run(IRunBase runBase, LaunchParameters parameters)
+    {
+      if (runBase == null)
+        throw new ArgumentNullException("runBase");
+
+      if (parameters == null)
+        return this.Run(runBase, true);
+
+      using (var wrapper = parameters.Wrap(WrapIfRemote(runBase)))
+        return this.Run(wrapper, parameters.CloseOnFinish);
+    }
+
+    #region Implementation ------------------------------------------------------------------------
+
+    private IRunBase WrapIfRemote(IRunBase runBase)
+    {
+      if (runBase is CancelableRunBaseCallerWrapper)
+        runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
+      else if (runBase is RunBaseCallerWrapper)
+        runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
+
+      return runBase;
+    }
+
+    private TaskStatus Run(IRunBase runBase, bool closeOnFinish)
+    {
+      using (var operation = new LengthyOperation(WrapIfRemote(runBase), m_view.Invoker))
       {
         operation.Start();
 
-        var ret = Complete(operation, parameters);
+        var ret = Complete(operation, closeOnFinish);
 
         if (operation.Error != null)
           m_view.ShowError(operation.Error);
@@ -99,33 +141,18 @@ namespace Notung.Services
       }
     }
 
-    private LengthyOperation CreateOperation(ref IRunBase runBase, ref LaunchParameters parameters)
-    {
-      if (parameters == null)
-        parameters = new LaunchParameters();
-
-      if (runBase is CancelableRunBaseCallerWrapper)
-        runBase = new CancelableRunBaseProxyWrapper((CancelableRunBaseCallerWrapper)runBase);
-      else if (runBase is RunBaseCallerWrapper)
-        runBase = new RunBaseProxyWrapper((RunBaseCallerWrapper)runBase);
-
-      parameters.Setup(runBase);
-
-      return new LengthyOperation(runBase, m_view.Invoker);
-    }
-
-    private TaskStatus Complete(LengthyOperation operation, LaunchParameters parameters)
+    private TaskStatus Complete(LengthyOperation operation, bool closeOnFinish)
     {
       if (this.SyncWaitingTime > TimeSpan.Zero && operation.Wait(this.SyncWaitingTime))
         return operation.Status;
 
       if (m_view.Invoker.InvokeRequired)
       {
-        m_view.Invoker.Invoke(new Action<LengthyOperation, LaunchParameters>
-          (m_view.ShowProgressDialog), new object[] { operation, parameters });
+        m_view.Invoker.Invoke(new Action<LengthyOperation, bool>
+          (m_view.ShowProgressDialog), new object[] { operation, closeOnFinish });
       }
       else
-        m_view.ShowProgressDialog(operation, parameters);
+        m_view.ShowProgressDialog(operation, closeOnFinish);
 
       return operation.Status;
     }
@@ -135,11 +162,13 @@ namespace Notung.Services
       if (m_context == null)
         m_context = System.Threading.SynchronizationContext.Current ?? new SynchronizationContext();
     }
+
+    #endregion
   }
 
   public interface IOperationLauncherView : ISynchronizeProvider
   {
-    void ShowProgressDialog(LengthyOperation task, LaunchParameters parameters);
+    void ShowProgressDialog(LengthyOperation task, bool closeOnFinish);
 
     void ShowError(Exception error);
 
@@ -150,13 +179,6 @@ namespace Notung.Services
   {
     private class ProgressInConsole
     {
-      private LaunchParameters m_parameters;
-
-      public ProgressInConsole(LaunchParameters parameters)
-      {
-        m_parameters = parameters;
-      }
-
       public void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
       {
         if (e.ProgressPercentage != ProgressPercentage.Unknown)
@@ -177,9 +199,9 @@ namespace Notung.Services
       }
     }
 
-    public void ShowProgressDialog(LengthyOperation operation, LaunchParameters parameters)
+    public void ShowProgressDialog(LengthyOperation operation, bool closeOnFinish)
     {
-      var progress = new ProgressInConsole(parameters);
+      var progress = new ProgressInConsole();
 
       operation.ProgressChanged += progress.HandleProgressChanged;
       operation.Completed += progress.HandleTaskCompleted;

@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
 using Notung.ComponentModel;
+using System.Threading;
 
 namespace Notung.Services
 {
@@ -79,38 +80,119 @@ namespace Notung.Services
       return !string.IsNullOrWhiteSpace(this.Caption) ? this.Caption : base.ToString();
     }
 
-    #region Implementation
-
-    internal void Setup(IRunBase work)
+    internal IDisposableRunBase Wrap(IRunBase runBase)
     {
-      if (string.IsNullOrWhiteSpace(this.Caption))
-      {
-        if (work is RunBaseProxyWrapper)
-        {
-          var proxy = (RunBaseProxyWrapper)work;
-          this.Caption = proxy.Caption;
-        }
-        else
-          this.Caption = GetDefaultCaption(work);
-      }
+      if (runBase == null)
+        throw new ArgumentNullException("runBase");
 
-      if (m_bitmap == null && work is IServiceProvider)
-        m_bitmap = ((IServiceProvider)work).GetService<Image>();
+      if (runBase is ICancelableRunBase)
+        return new CancelableLaunchParametersWrapper((ICancelableRunBase)runBase, this);
+      else
+        return new LaunchParametersWrapper(runBase, this);
     }
 
-    internal static string GetDefaultCaption(IRunBase work)
+    internal interface IDisposableRunBase : IRunBase, IDisposable { }
+
+    #region Implementation ------------------------------------------------------------------------
+
+    private class LaunchParametersWrapper : IDisposableRunBase, IServiceProvider
     {
-      var ret = work.ToString();
+      protected readonly IRunBase m_run_base;
+      private readonly LaunchParameters m_parameters;
+      private readonly ProgressChangedEventHandler m_handler;
+      private Image m_image;
 
-      if (object.Equals(ret, work.GetType().ToString()))
+      public LaunchParametersWrapper(IRunBase runBase, LaunchParameters parameters)
       {
-        var dn = work.GetType().GetCustomAttribute<DisplayNameAttribute>(true);
+        m_run_base = runBase;
+        m_parameters = parameters;
+        m_handler = this.HandleProgressChanged;
 
-        if (dn != null && !string.IsNullOrWhiteSpace(dn.DisplayName))
-          ret = dn.DisplayName;
+        if (m_run_base is IServiceProvider)
+          m_run_base.ProgressChanged += m_handler;
       }
 
-      return ret;
+      public void Run()
+      {
+        m_run_base.Run();
+      }
+
+      private void HandleProgressChanged(object sender, ProgressChangedEventArgs e)
+      {
+        if (e.UserState is LaunchParametersChange)
+        {
+          var change = (LaunchParametersChange)e.UserState;
+
+          if ((change & LaunchParametersChange.Image) != 0)
+            m_image = ((IServiceProvider)m_run_base).GetService<Image>();
+        }
+      }
+
+      public event ProgressChangedEventHandler ProgressChanged
+      {
+        add { m_run_base.ProgressChanged += value; }
+        remove { m_run_base.ProgressChanged -= value; }
+      }
+
+      public override string ToString()
+      {
+        var caption = m_parameters.Caption;
+
+        if (!string.IsNullOrWhiteSpace(caption))
+          return caption;
+        else
+          return RunBase.GetDefaultCaption(m_run_base);
+      }
+
+      public object GetService(Type serviceType)
+      {
+        if (serviceType == typeof(Image))
+        {
+          if (m_image != null)
+            return m_image;
+
+          if (m_parameters.Bitmap != null)
+            return m_parameters.Bitmap;
+        }
+        else if (serviceType == typeof(LaunchParameters))
+          return m_parameters;
+
+        var provider = m_run_base as IServiceProvider;
+
+        if (provider != null)
+          return provider.GetService(serviceType);
+        else
+          return null;
+      }
+
+      public void Dispose()
+      {
+        if (m_run_base is IServiceProvider)
+          m_run_base.ProgressChanged -= m_handler;
+      }
+    }
+
+    private class CancelableLaunchParametersWrapper : LaunchParametersWrapper, ICancelableRunBase
+    {
+      public CancelableLaunchParametersWrapper(ICancelableRunBase runBase, LaunchParameters parameters)
+        : base(runBase, parameters) { }
+
+      public CancellationToken CancellationToken
+      {
+        get { return ((ICancelableRunBase)m_run_base).CancellationToken; }
+        set { ((ICancelableRunBase)m_run_base).CancellationToken = value; }
+      }
+
+      public bool CanCancel
+      {
+        get { return ((ICancelableRunBase)m_run_base).CanCancel; }
+      }
+
+      public event EventHandler CanCancelChanged
+      {
+        add { ((ICancelableRunBase)m_run_base).CanCancelChanged += value; }
+        remove { ((ICancelableRunBase)m_run_base).CanCancelChanged -= value; }
+      }
     }
 
     #endregion

@@ -175,10 +175,7 @@ namespace Notung.Services
     /// <returns>Заголовок задачи</returns>
     public string GetWorkCaption()
     {
-      if (m_run_base is RunBaseProxyWrapper)
-        return ((RunBaseProxyWrapper)m_run_base).Caption;
-      else
-        return LaunchParameters.GetDefaultCaption(m_run_base);
+      return RunBase.GetDefaultCaption(m_run_base);
     }
 
     /// <summary>
@@ -196,10 +193,13 @@ namespace Notung.Services
     /// </summary>
     public void Dispose()
     {
-      if (m_cancel_source != null)
+      lock (m_lock)
       {
-        m_cancel_source.Dispose();
-        m_cancel_source = null;
+        if (m_cancel_source != null)
+        {
+          m_cancel_source.Dispose();
+          m_cancel_source = null;
+        }
       }
     }
 

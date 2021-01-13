@@ -226,7 +226,7 @@ namespace Notung.Helm
         var handlers = new MainFormHandlers(starter);
 
         AppManager.Instance = new AppInstance(starter.m_view);
-        AppManager.Notificator = new Notificator(starter.m_view);
+        AppManager.Notificator = starter.m_view.Notificator = new Notificator(starter.m_view);
         AppManager.OperationLauncher = new OperationLauncher(starter.m_view);
 
         if (starter.AllowOnlyOneInstance)

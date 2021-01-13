@@ -36,7 +36,15 @@ namespace Notung.Services
       get { return EmptySynchronizeProvider.Default; }
     }
 
-    public TaskStatus Run(IRunBase runBase, LaunchParameters parameters = null)
+    public TaskStatus Run(IRunBase runBase)
+    {
+      if (runBase is ICancelableRunBase)
+        return m_real_launcher.Run(new CancelableRunBaseCallerWrapper((ICancelableRunBase)runBase));
+      else
+        return m_real_launcher.Run(new RunBaseCallerWrapper(runBase));
+    }
+
+    public TaskStatus Run(IRunBase runBase, LaunchParameters parameters)
     {
       if (runBase is ICancelableRunBase)
         return m_real_launcher.Run(new CancelableRunBaseCallerWrapper((ICancelableRunBase)runBase), parameters);
@@ -79,7 +87,7 @@ namespace Notung.Services
 
     public string GetCaption()
     {
-      return LaunchParameters.GetDefaultCaption(m_run_base);
+      return RunBase.GetDefaultCaption(m_run_base);
     }
 
     public object GetService(Type serviceType)
@@ -93,6 +101,7 @@ namespace Notung.Services
     public virtual void Run()
     {
       m_run_base.ProgressChanged += this.HandleProgressChanged;
+
       try
       {
         m_run_base.Run();
@@ -131,7 +140,11 @@ namespace Notung.Services
       return source;
     }
 
-    event ProgressChangedEventHandler IRunBase.ProgressChanged { add { } remove { } }
+    event ProgressChangedEventHandler IRunBase.ProgressChanged 
+    { 
+      add { } 
+      remove { } 
+    }
   }
 
   /// <summary>
@@ -153,6 +166,7 @@ namespace Notung.Services
       using (m_token_source = new CancellationTokenSource())
       {
         ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
+
         try
         {
           ((ICancelableRunBase)m_run_base).CancellationToken = m_token_source.Token;
@@ -192,6 +206,7 @@ namespace Notung.Services
         throw new ArgumentNullException("caller");
 
       m_caller = caller;
+
       this.Caption = caller.GetCaption();
     }
 
@@ -226,6 +241,11 @@ namespace Notung.Services
       }
 
       return ret;
+    }
+
+    public override string ToString()
+    {
+      return this.Caption ?? m_caller.GetCaption();
     }
 
     public void ReportProgress(int percentage, string state)
