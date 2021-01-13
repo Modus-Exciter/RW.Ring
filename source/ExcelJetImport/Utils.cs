@@ -5,18 +5,19 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using JetExcelOleDbImport.Properties;
 
 namespace JetExcelOleDbImport
 {
   internal class Utils
   {
+    private const string MASK = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{0}\";Extended Properties=\"Excel 8.0;HDR=YES;IMEX=1\"";
+
     public static void FillTableList(string excelFile, IList tableList)
     {
       tableList.Clear();
       
-      var mask = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{0}\";Extended Properties=\"Excel 8.0;HDR=YES;IMEX=1\"";
-
-      using (var ole_cn = new OleDbConnection(string.Format(mask, excelFile)))
+      using (var ole_cn = new OleDbConnection(string.Format(MASK, excelFile)))
       {
         ole_cn.Open();
         DataTable tables = ole_cn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
@@ -33,20 +34,14 @@ namespace JetExcelOleDbImport
       using (var excel_process = Process.GetProcessesByName("EXCEL").Where(p =>
        p.MainWindowTitle.Contains(short_name)).FirstOrDefault())
       {
-
         if (excel_process != null)
-        {
-          errors.Add(string.Format(@"Файл {0} открыт в Excel. Импорт может привести к нестабильной работы системы.
-Закройте Excel и повторите попытку", short_name));
-        }
+          errors.Add(string.Format(Resources.FILE_OPENED, short_name));
       }
     }
 
     public static DataTable LoadTable(string fileName, string tableName)
     {
-      var mask = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{0}\";Extended Properties=\"Excel 8.0;HDR=YES;IMEX=1\"";
-
-      using (var connection = new OleDbConnection(string.Format(mask, fileName)))
+      using (var connection = new OleDbConnection(string.Format(MASK, fileName)))
       {
         connection.Open();
 
@@ -67,10 +62,11 @@ namespace JetExcelOleDbImport
     {
       HashSet<string> nulls = new HashSet<string>();
       HashSet<string> unconvertable = new HashSet<string>();
-      bool last_row_empty = true;
 
       if (table.Rows.Count > 0)
       {
+        bool last_row_empty = true;
+
         foreach (DataColumn col in table.Columns)
         {
           if (!table.Rows[table.Rows.Count - 1].IsNull(col))
@@ -85,7 +81,6 @@ namespace JetExcelOleDbImport
       }
 
       bool reload_required = CollectNormalizationData(table, nulls, unconvertable);
-
       var copy = reload_required ? table.Clone() : table;
 
       foreach (DataColumn col in copy.Columns)
@@ -140,21 +135,16 @@ namespace JetExcelOleDbImport
         }
       }
 
-      bool reload_required = false;
-
       foreach (DataColumn col in table.Columns)
       {
         if (col.DataType == typeof(double) || col.DataType == typeof(float))
         {
           if (!unconvertable.Contains(col.ColumnName))
-          {
-            reload_required = true;
-            break;
-          }
+            return true;
         }
       }
 
-      return reload_required;
+      return false;
     }
   }
 }

@@ -40,6 +40,8 @@ namespace Schicksal.Helm
       m_grid.AllowUserToAddRows = false;
       m_grid.AllowUserToDeleteRows = false;
 
+      m_cmd_remove.Visible = false;
+
       foreach (DataGridViewColumn col in m_grid.Columns)
       {
         if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
@@ -104,13 +106,15 @@ namespace Schicksal.Helm
       if (File.Exists(fileName))
         File.Delete(fileName);
 
+      table.AcceptChanges();
+
       using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
       {
         DataTableSaver.WriteDataTable(table, fs);
       }
 
       AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
-      table.AcceptChanges();
+
       this.FileName = Path.GetFileName(this.FileName);
       this.Text = Path.GetFileName(this.FileName);
     }
@@ -140,6 +144,17 @@ namespace Schicksal.Helm
     private void m_grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
     {
       AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
+    }
+
+    private void m_switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    {
+      m_cmd_remove.Text = Resources.REMOVE;
+    }
+
+    private void m_cmd_remove_Click(object sender, EventArgs e)
+    {
+      if (m_grid.Rows.Count > 0 && m_grid.AllowUserToDeleteRows && m_grid.SelectedRows.Count > 0)
+        m_grid.Rows.Remove(m_grid.SelectedRows[0]);
     }
   }
 }

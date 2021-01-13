@@ -246,7 +246,7 @@ namespace Schicksal.Helm
 
     private void x2ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<X^2>", string.Format("X^2 {0}", Resources.DISTRIBUTION), StatisticsTables.GetStudentTable);
+      OpenReadOnlyTable("<X^2>", string.Format("X^2 {0}", Resources.DISTRIBUTION), StatisticsTables.GetChiSquare);
     }
 
     private void m_cmd_anova_Click(object sender, EventArgs e)

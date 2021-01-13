@@ -11,7 +11,7 @@ namespace Schicksal
     {
       DataTable ret = new DataTable();
 
-      ret.Columns.Add("N", typeof(int));
+      ret.Columns.Add("N", typeof(string));
       ret.Columns.Add("0.05", typeof(double));
       ret.Columns.Add("0.01", typeof(double));
       ret.Columns.Add("0.001", typeof(double));
@@ -26,7 +26,7 @@ namespace Schicksal
       foreach (int i in list)
       {
         var row = ret.NewRow();
-        row[0] = i;
+        row[0] = i != int.MaxValue ? i.ToString() : SchicksalResources.INFINITY;
 
         for (int j = 1; j < ret.Columns.Count; j++)
         {
@@ -51,7 +51,7 @@ namespace Schicksal
     {
       DataTable ret = new DataTable();
 
-      ret.Columns.Add("N", typeof(int));
+      ret.Columns.Add("N", typeof(string));
 
       for (int i = 1; i <= 10; i++)
         ret.Columns.Add(i.ToString(), typeof(double));
@@ -75,7 +75,7 @@ namespace Schicksal
         foreach (DataColumn col in ret.Columns)
         {
           if (col.ColumnName == "N")
-            row[col] = i;
+            row[col] = i != int.MaxValue ? i.ToString() : SchicksalResources.INFINITY;
           else
           {
             row[col] = SpecialFunctions.invfdistribution(int.Parse(col.ColumnName), i, p);

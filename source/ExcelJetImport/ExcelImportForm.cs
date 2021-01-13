@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.OleDb;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
+using JetExcelOleDbImport.Properties;
 
 namespace JetExcelOleDbImport
 {
@@ -53,9 +46,10 @@ namespace JetExcelOleDbImport
       List<string> messages = new List<string>();
 
       if (string.IsNullOrEmpty(m_path_edit.Text))
-        messages.Add("Не выбран файл Excel");
+        messages.Add(Resources.NO_EXCEL_FILE);
+
       if (string.IsNullOrEmpty(this.TableName))
-        messages.Add("Не выбрана таблица");
+        messages.Add(Resources.NO_TABLE);
 
       Utils.CheckFileIsOpen(m_path_edit.Text, messages);
 

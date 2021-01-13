@@ -117,61 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BOOL" xml:space="preserve">
-    <value>Логический</value>
+  <data name="EXCEL_IMPORT" xml:space="preserve">
+    <value>Import from Excel</value>
   </data>
-  <data name="COUNT" xml:space="preserve">
-    <value>Количество</value>
+  <data name="FILE_OPENED" xml:space="preserve">
+    <value>File {0} is opened in Excel. It may cause unstable worling of the system.
+Close Excel and try again</value>
   </data>
-  <data name="DATE" xml:space="preserve">
-    <value>Дата</value>
+  <data name="IMPORT_FROM" xml:space="preserve">
+    <value>Import from {0}</value>
   </data>
-  <data name="DECIMAL" xml:space="preserve">
-    <value>Финансы</value>
+  <data name="MATRIX_EXCEL_IMPORT" xml:space="preserve">
+    <value>Matrix import from Excel</value>
   </data>
-  <data name="DESCRIPTION" xml:space="preserve">
-    <value>Описание</value>
+  <data name="NO_CELL" xml:space="preserve">
+    <value>Cell name is not set</value>
   </data>
-  <data name="DOUBLE" xml:space="preserve">
-    <value>Вещественное число (двойная точность)</value>
+  <data name="NO_COLUMN" xml:space="preserve">
+    <value>Column name is not set</value>
   </data>
-  <data name="FLOAT" xml:space="preserve">
-    <value>Вещественное число (обычная точность)</value>
+  <data name="NO_EXCEL_FILE" xml:space="preserve">
+    <value>Excel file is not selected</value>
   </data>
-  <data name="INFINITY" xml:space="preserve">
-    <value>Бесконечность</value>
+  <data name="NO_ROW" xml:space="preserve">
+    <value>Row name is not set</value>
   </data>
-  <data name="INT" xml:space="preserve">
-    <value>Целое число ({0} - {1})</value>
-  </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Доверительный интервал</value>
-  </data>
-  <data name="MAX" xml:space="preserve">
-    <value>Максимум</value>
-  </data>
-  <data name="MEAN" xml:space="preserve">
-    <value>Среднее</value>
-  </data>
-  <data name="MEDIAN" xml:space="preserve">
-    <value>Медиана</value>
-  </data>
-  <data name="MIN" xml:space="preserve">
-    <value>Минимум</value>
-  </data>
-  <data name="STD_ERROR" xml:space="preserve">
-    <value>Стандартное отклонение</value>
-  </data>
-  <data name="SYMBOL" xml:space="preserve">
-    <value>Символ</value>
-  </data>
-  <data name="TEXT" xml:space="preserve">
-    <value>Текст</value>
-  </data>
-  <data name="TIME" xml:space="preserve">
-    <value>Время</value>
-  </data>
-  <data name="UINT" xml:space="preserve">
-    <value>Натуральное число (0 - {0})</value>
+  <data name="NO_TABLE" xml:space="preserve">
+    <value>Table is not selected</value>
   </data>
 </root>

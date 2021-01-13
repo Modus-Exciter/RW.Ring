@@ -2,6 +2,7 @@
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
+using JetExcelOleDbImport.Properties;
 using Schicksal.Exchange;
 
 namespace JetExcelOleDbImport
@@ -41,7 +42,7 @@ namespace JetExcelOleDbImport
           return new ImportResult
           {
             Table = table,
-            Description = string.Format("Import from {0}", Path.GetFileName(dlg.ExcelFileName))
+            Description = string.Format(Resources.IMPORT_FROM, Path.GetFileName(dlg.ExcelFileName))
           };
         }
       }
@@ -51,7 +52,7 @@ namespace JetExcelOleDbImport
 
     public override string ToString()
     {
-      return "Импорт из Excel в матричной форме";
+      return Resources.MATRIX_EXCEL_IMPORT;
     }
   }
 }

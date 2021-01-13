@@ -192,6 +192,9 @@
   <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
     <value>Открыть системную папку</value>
   </data>
+  <data name="REMOVE" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
   <data name="SAVE" xml:space="preserve">
     <value>Сохранить</value>
   </data>

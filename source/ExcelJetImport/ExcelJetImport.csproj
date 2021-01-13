@@ -55,6 +55,11 @@
     <Compile Include="ExcelImportForm.Designer.cs">
       <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,9 +77,20 @@
     <EmbeddedResource Include="ExcelImportAsMatrixForm.resx">
       <DependentUpon>ExcelImportAsMatrixForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExcelImportAsMatrixForm.ru.resx">
+      <DependentUpon>ExcelImportAsMatrixForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExcelImportForm.resx">
       <DependentUpon>ExcelImportForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExcelImportForm.ru.resx">
+      <DependentUpon>ExcelImportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.RU.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

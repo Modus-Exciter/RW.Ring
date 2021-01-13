@@ -268,4 +268,7 @@
   <data name="EXPORT" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="REMOVE" xml:space="preserve">
+    <value>Remove</value>
+  </data>
 </root>

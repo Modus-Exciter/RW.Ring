@@ -117,61 +117,41 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BOOL" xml:space="preserve">
-    <value>Логический</value>
+  <data name="m_button_cancel.Text" xml:space="preserve">
+    <value>Отмена</value>
   </data>
-  <data name="COUNT" xml:space="preserve">
-    <value>Количество</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_column_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 13</value>
   </data>
-  <data name="DATE" xml:space="preserve">
-    <value>Дата</value>
+  <data name="m_column_label.Text" xml:space="preserve">
+    <value>Столбец</value>
   </data>
-  <data name="DECIMAL" xml:space="preserve">
-    <value>Финансы</value>
+  <data name="m_row_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 13</value>
   </data>
-  <data name="DESCRIPTION" xml:space="preserve">
-    <value>Описание</value>
+  <data name="m_row_label.Text" xml:space="preserve">
+    <value>Строка</value>
   </data>
-  <data name="DOUBLE" xml:space="preserve">
-    <value>Вещественное число (двойная точность)</value>
+  <data name="m_cell_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>44, 13</value>
   </data>
-  <data name="FLOAT" xml:space="preserve">
-    <value>Вещественное число (обычная точность)</value>
+  <data name="m_cell_label.Text" xml:space="preserve">
+    <value>Ячейка</value>
   </data>
-  <data name="INFINITY" xml:space="preserve">
-    <value>Бесконечность</value>
+  <data name="m_file_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
   </data>
-  <data name="INT" xml:space="preserve">
-    <value>Целое число ({0} - {1})</value>
+  <data name="m_file_label.Text" xml:space="preserve">
+    <value>Файл</value>
   </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Доверительный интервал</value>
+  <data name="m_table_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 13</value>
   </data>
-  <data name="MAX" xml:space="preserve">
-    <value>Максимум</value>
+  <data name="m_table_label.Text" xml:space="preserve">
+    <value>Диапазон</value>
   </data>
-  <data name="MEAN" xml:space="preserve">
-    <value>Среднее</value>
-  </data>
-  <data name="MEDIAN" xml:space="preserve">
-    <value>Медиана</value>
-  </data>
-  <data name="MIN" xml:space="preserve">
-    <value>Минимум</value>
-  </data>
-  <data name="STD_ERROR" xml:space="preserve">
-    <value>Стандартное отклонение</value>
-  </data>
-  <data name="SYMBOL" xml:space="preserve">
-    <value>Символ</value>
-  </data>
-  <data name="TEXT" xml:space="preserve">
-    <value>Текст</value>
-  </data>
-  <data name="TIME" xml:space="preserve">
-    <value>Время</value>
-  </data>
-  <data name="UINT" xml:space="preserve">
-    <value>Натуральное число (0 - {0})</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Импорт данных из Excel</value>
   </data>
 </root>
