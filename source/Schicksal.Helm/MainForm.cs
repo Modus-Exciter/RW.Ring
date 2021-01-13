@@ -104,6 +104,9 @@ namespace Schicksal.Helm
       m_cmd_basic.Text = Resources.BASIC_STATISTICS;
       m_cmd_anova.Text = Resources.ANOVA;
       m_cmd_about.Text = Resources.ABOUT;
+
+      foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)
+        item.Text = item.Tag.ToString();
     }
 
     private void m_menu_last_files_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
