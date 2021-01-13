@@ -79,6 +79,7 @@ namespace Schicksal
       }
 
       m_writer.WriteLine("\t\t</tr>");
+
      foreach (var line in dataSource)
       {
         m_writer.WriteLine("\t\t<tr>");
@@ -169,6 +170,7 @@ namespace Schicksal
           return FormatFloatValue(ret);
         }
       }
+
       if (value is float)
       {
         var copy = (float)value;
@@ -218,6 +220,7 @@ namespace Schicksal
 
       if (string.IsNullOrWhiteSpace(display_name))
         display_name = pd.Name;
+
       return display_name;
     }
 
