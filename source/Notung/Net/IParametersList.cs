@@ -120,6 +120,8 @@ namespace Notung.Net
       return Global.EmptyArgs;
     }
 
+    #region Implementaion types -------------------------------------------------------------------
+
     [Serializable, DataContract]
     private abstract class ParametersListBase : IParametersList
     {
@@ -442,5 +444,7 @@ namespace Notung.Net
         return new object[] { m_1, m_2, m_3, m_4, m_5, m_6, m_7, m_8 };
       }
     }
+
+    #endregion
   }
 }

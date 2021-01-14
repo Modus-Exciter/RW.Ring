@@ -17,7 +17,7 @@ namespace Notung.Data
       m_set = set;
     }
 
-    #region Methods
+    #region Methods -------------------------------------------------------------------------------
 
     public bool IsProperSubsetOf(IEnumerable<T> other)
     {
@@ -81,7 +81,7 @@ namespace Notung.Data
 
     #endregion
 
-    #region Unsupported methods
+    #region Unsupported methods -------------------------------------------------------------------
 
     bool ISet<T>.Add(T item)
     {

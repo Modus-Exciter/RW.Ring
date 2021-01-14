@@ -45,7 +45,7 @@ namespace Notung.Logging
       return string.Join("", m_blocks.Select(b => b.ToString()));
     }
 
-    #region Private methods
+    #region Private methods -----------------------------------------------------------------------
 
     private List<IBuildBlock> StateMachine(string template)
     {
@@ -136,7 +136,7 @@ namespace Notung.Logging
 
     #endregion
 
-    #region Implementation types
+    #region Implementation types ------------------------------------------------------------------
 
     private enum State
     {

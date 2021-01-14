@@ -27,12 +27,12 @@ namespace Schicksal.Anova
       for (int i = 0; i < means.Length; i++)
         means[i] = DescriptionStatistics.Mean(group[i]);
 
-      double gMean = DescriptionStatistics.Mean(join);
+      double g_mean = DescriptionStatistics.Mean(join);
 
       double outer_dispersion = 0;
 
       for (int i = 0; i < group.Count; i++)
-        outer_dispersion += (means[i] - gMean) * (means[i] - gMean) * group[i].Count;
+        outer_dispersion += (means[i] - g_mean) * (means[i] - g_mean) * group[i].Count;
 
       outer_dispersion /= degrees.Kdf;
 

@@ -22,8 +22,6 @@ namespace Notung.Threading
     [Serializable]
     private class Synchronizer : ISynchronizeInvoke
     {
-      #region ISynchronizeInvoke Members
-
       public IAsyncResult BeginInvoke(Delegate method, object[] args)
       {
         var func = new Func<object[], object>(method.DynamicInvoke);
@@ -44,13 +42,9 @@ namespace Notung.Threading
       {
         get { return false; }
       }
-
-      #endregion
     }
 
     public static readonly ISynchronizeInvoke Default = new Synchronizer();
-
-    #region ISynchronizeProvider Members
 
     /// <summary>
     /// Объект синхронизации, не меняющий поток (работает как базовый SynchronizationContext)
@@ -59,7 +53,5 @@ namespace Notung.Threading
     {
       get { return Default; }
     }
-
-    #endregion
   }
 }

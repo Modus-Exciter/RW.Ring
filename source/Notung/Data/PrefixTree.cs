@@ -102,7 +102,7 @@ namespace Notung.Data
       get { return m_count; }
     }
 
-    #region Implementation
+    #region Implementation ------------------------------------------------------------------------
 
     private void Collect(PrefixTreeItem item, LinkedList<PrefixTreeItem> list)
     {

@@ -8,7 +8,7 @@ namespace Notung.Helm.Windows
   /// </summary>
   public static class WinAPIHelper
   {
-    #region Close button helper
+    #region Close button helper -------------------------------------------------------------------
 
     [Flags]
     enum WFlags : long
@@ -57,7 +57,7 @@ namespace Notung.Helm.Windows
 
     #endregion
 
-    #region Message helper
+    #region Message helper ------------------------------------------------------------------------
 
     public const uint WM_COPYDATA = 0x004A;
 

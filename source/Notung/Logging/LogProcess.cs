@@ -68,6 +68,7 @@ namespace Notung.Logging
       private readonly object m_close_lock = new object();
       private volatile int m_size = 0;
       private volatile bool m_shutdown;
+
       private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 
       public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAppender> acceptors) : base(acceptors)

@@ -122,7 +122,7 @@ namespace Notung.Loader
         m_type = keyType;
       }
 
-      #region IApplicationLoader Members
+      #region IApplicationLoader Members ----------------------------------------------------------
 
       public bool Load(LoadingContext context)
       {
@@ -131,7 +131,7 @@ namespace Notung.Loader
 
       #endregion
 
-      #region IDependencyItem<Type> Members
+      #region IDependencyItem<Type> Members -------------------------------------------------------
 
       public Type Key
       {

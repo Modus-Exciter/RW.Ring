@@ -12,10 +12,10 @@ namespace Notung.ComponentModel
     /// <summary>
     /// Конвертирует локализованную строку в логическое значение
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="culture"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
+    /// <param name="context">Контекст</param>
+    /// <param name="culture">Настройки локализации</param>
+    /// <param name="value">Конвертируемое значение</param>
+    /// <returns>Логическое значение, соответствущее строке</returns>
     public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
     {
       if (value is string)
@@ -43,11 +43,11 @@ namespace Notung.ComponentModel
     /// <summary>
     /// Конвертирует логическое значение в локализованную строку
     /// </summary>
-    /// <param name="context"></param>
-    /// <param name="culture"></param>
-    /// <param name="value"></param>
-    /// <param name="destinationType"></param>
-    /// <returns></returns>
+    /// <param name="context">Контекст</param>
+    /// <param name="culture">Настройки локализации</param>
+    /// <param name="value">Конвертируемое значение</param>
+    /// <param name="destinationType">Тип, в который требуется сконвертировать</param>
+    /// <returns>Значение, сконвертированное в нужный тип</returns>
     public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
     {
       var ret = (bool)value;

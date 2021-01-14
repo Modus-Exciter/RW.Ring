@@ -126,7 +126,7 @@ namespace Notung.Helm.Controls
 
     #endregion
 
-    #region Implementation methods
+    #region Implementation methods ----------------------------------------------------------------
 
     protected override void OnControlAdded(ControlEventArgs e)
     {

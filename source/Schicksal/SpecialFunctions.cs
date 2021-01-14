@@ -8,7 +8,7 @@ namespace Schicksal
   /// </summary>
   internal static class SpecialFunctions
   {
-    #region Helper
+    #region Helper --------------------------------------------------------------------------------
 
     const double machineepsilon = 5E-16;
     const double maxrealnumber = 1E300;

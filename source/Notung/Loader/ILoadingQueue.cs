@@ -56,7 +56,7 @@ namespace Notung.Loader
       m_queues = new HashSet<ILoadingQueue>(queues.Where(q => q != null));
     }
 
-    #region ILoadingQueue Members
+    #region ILoadingQueue Members -----------------------------------------------------------------
 
     public IApplicationLoader[] GetLoaders()
     {

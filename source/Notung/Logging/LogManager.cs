@@ -101,7 +101,7 @@ namespace Notung.Logging
       }
     }
 
-    #region Extensions
+    #region Extensions ----------------------------------------------------------------------------
 
     public static void Alert(this ILog logger, Info info)
     {
@@ -178,7 +178,7 @@ namespace Notung.Logging
 
     #endregion
 
-    #region Sharing log between domains
+    #region Sharing log between domains -----------------------------------------------------------
 
     private static void Share(AppDomain newDomain)
     {

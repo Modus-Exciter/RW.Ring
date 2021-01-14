@@ -105,7 +105,7 @@ namespace Notung.Threading
     /// </summary>
     public bool CallProceduresAsync { get; set; }
 
-    #region IOperationWrapper Members
+    #region IOperationWrapper Members -------------------------------------------------------------
 
     public TType Invoke<TType>(Func<TType> action)
     {

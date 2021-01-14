@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Notung.Properties;
 using Notung.Threading;
-using SysThread = System.Threading.Thread;
+using Thread = System.Threading.Thread;
 
 namespace Notung.Logging
 {
@@ -16,7 +16,7 @@ namespace Notung.Logging
 
   public interface IThreadLoggingContext : ILoggingContext
   {
-    SysThread CurrentThread { get; }
+    Thread CurrentThread { get; }
 
     void Clear();
   }
@@ -73,7 +73,7 @@ namespace Notung.Logging
     private class ThreadContextData : MarshalByRefObject, IThreadLoggingContext
     {
       private readonly Dictionary<string, object> m_data = new Dictionary<string, object>();
-      private readonly SysThread m_thread = SysThread.CurrentThread;
+      private readonly Thread m_thread = Thread.CurrentThread;
       private readonly bool m_check_thread;
 
       public ThreadContextData(bool checkThread)
@@ -94,7 +94,7 @@ namespace Notung.Logging
         }
         set
         {
-          if (m_check_thread && SysThread.CurrentThread != m_thread)
+          if (m_check_thread && Thread.CurrentThread != m_thread)
             throw new InvalidOperationException(Resources.THREAD_CONTEXT_MISMATCH);
 
           if (_forbidden.Contains(key))
@@ -113,7 +113,7 @@ namespace Notung.Logging
         return m_data.ContainsKey(key);
       }
 
-      public SysThread CurrentThread
+      public Thread CurrentThread
       {
         get { return m_thread; }
       }

@@ -193,7 +193,7 @@ namespace Notung
       get { return m_items.Count; }
     }
 
-    #region IEnumerable<Info> Members
+    #region IEnumerable<Info> Members -------------------------------------------------------------
 
     /// <summary>
     /// Возвращает перечислитель для сообщений

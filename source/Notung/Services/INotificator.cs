@@ -207,7 +207,7 @@ namespace Notung.Services
       return this.AlertSync(new Info(message, level), ConfirmationRegime.CancelableConfirm);
     }
 
-    #region Implementation
+    #region Implementation ------------------------------------------------------------------------
 
     private InfoLevel GetMaxLevel(InfoBuffer buffer)
     {
