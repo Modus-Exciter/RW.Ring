@@ -24,7 +24,7 @@ namespace Notung.Data
     /// <param name="from">Номер вершины, из которой исходит дуга</param>
     /// <param name="to">Номер вершины, в которую приходит дуга</param>
     /// <returns>Вес дуги</returns>
-    T GetWeight(int from, int to);
+    T this[int from, int to] { get; set; }
 
     /// <summary>
     /// Получение списка дуг, приходящих в указанную вершину

@@ -50,8 +50,6 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Net\IRemotableCaller.cs" />
-    <Compile Include="Net\IRemotableCommand.cs" />
     <Compile Include="Services\AppManager.cs" />
     <Compile Include="ComponentModel\LanguageSwitcher.cs">
       <SubType>Component</SubType>

@@ -14,6 +14,9 @@ namespace Notung.Data
     private readonly Dictionary<int, T>[] m_forward;
     private readonly Dictionary<int, T>[] m_reverse;
 
+    private static readonly Func<KeyValuePair<int, T>, Tuple<int, T>> _converter
+      = kv => new Tuple<int, T>(kv.Key, kv.Value);
+
     /// <summary>
     /// Создание нового графа, хранимого в виде списка смежных вершин
     /// </summary>
@@ -68,9 +71,16 @@ namespace Notung.Data
       return true;
     }
 
-    public T GetWeight(int from, int to)
+    public T this[int from, int to]
     {
-      return m_forward[from][to];
+      get { return m_forward[from][to]; }
+      set
+      {
+        this.HasArc(from, to);
+
+        m_forward[from].Add(to, value);
+        (m_reverse ?? m_forward)[to][from] = value;
+      }
     }
 
     public int IncomingCount(int peak)
@@ -85,13 +95,12 @@ namespace Notung.Data
 
     public IEnumerable<Tuple<int, T>> IncomingArcs(int peak)
     {
-      return (m_reverse ?? m_forward)[peak].Select(kv => new Tuple<int, T>(kv.Key, kv.Value));
+      return (m_reverse ?? m_forward)[peak].Select(_converter);
     }
 
     public IEnumerable<Tuple<int, T>> OutgoingArcs(int peak)
     {
-      return m_forward[peak].Select(kv => new Tuple<int, T>(kv.Key, kv.Value));
+      return m_forward[peak].Select(_converter);
     }
   }
 }
-
