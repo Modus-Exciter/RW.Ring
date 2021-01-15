@@ -1,6 +1,6 @@
 ﻿using System;
-using Notung.Loader;
 using System.Reflection;
+using Notung.Loader;
 
 namespace Notung.Net
 {

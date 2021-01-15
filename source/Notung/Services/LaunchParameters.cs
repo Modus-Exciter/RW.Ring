@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.Serialization;
-using Notung.ComponentModel;
 using System.Threading;
+using Notung.ComponentModel;
 
 namespace Notung.Services
 {

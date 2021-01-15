@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using Notung.ComponentModel;
@@ -205,6 +204,7 @@ namespace Notung.Services
 
       operation.ProgressChanged += progress.HandleProgressChanged;
       operation.Completed += progress.HandleTaskCompleted;
+
       operation.Wait();
     }
 

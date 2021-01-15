@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Notung.Configuration;
-using Notung.Services;
 
 namespace Notung.Services
 {
