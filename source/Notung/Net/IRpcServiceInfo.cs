@@ -24,32 +24,11 @@ namespace Notung.Net
     string GetMethodName(MethodBase method);
 
     /// <summary>
-    /// Получение метода сервиса по логическому имени
+    /// Получение сведений об операции сервиса
     /// </summary>
     /// <param name="methodName">Логическое имя метода сервиса</param>
-    /// <returns>Метод интерфейса сервиса</returns>
-    MethodInfo GetMethod(string methodName);
-
-    /// <summary>
-    /// Получение типа для сериализации параметров сервиса
-    /// </summary>
-    /// <param name="methodName">Логическое имя метода сервиса</param>
-    /// <returns>Тип, используемый для сериализации параметров сервиса</returns>
-    Type GetParametersType(string methodName);
-
-    /// <summary>
-    /// Получение типа для сериализации ответа сервиса
-    /// </summary>
-    /// <param name="methodName">Логическое имя метода сервиса</param>
-    /// <returns>Тип, используемый для сериализации параметров сервиса</returns>
-    Type GetReturnType(string methodName);
-
-    /// <summary>
-    /// Получение информации о наличии параметров, передаваемых по ссылке
-    /// </summary>
-    /// <param name="methodName">Логическое имя метода сервиса</param>
-    /// <returns>True, если есть параметры, передаваемые по ссылке. Иначе, false</returns>
-    bool HasReferenceParameters(string methodName);
+    /// <returns>Сведения об операции сервиса</returns>
+    RpcOperationInfo GetOperationInfo(string methodName);
 
     /// <summary>
     /// Проверка наличия метода у сервиса с указанным логическим именем
@@ -59,10 +38,95 @@ namespace Notung.Net
     bool HasMethod(string methodName);
   }
 
+  /// <summary>
+  /// Сведения об операции сервиса
+  /// </summary>
+  public sealed class RpcOperationInfo
+  {
+    private readonly MethodInfo m_method;
+    private readonly Type m_request_type;
+    private readonly Type m_response_type;
+    private readonly bool m_has_refs;
+    private readonly ParameterInfo[] m_parameters;
+
+    internal RpcOperationInfo(MethodInfo method)
+    {
+      m_method = method;
+      m_parameters = method.GetParameters();
+      m_request_type = ParametersList.GetRequiredType(method);
+      m_response_type = method.ReturnType;
+      m_has_refs = false;
+
+      foreach (var pi in method.GetParameters())
+      {
+        if (pi.ParameterType.IsByRef)
+        {
+          if (m_response_type == typeof(void))
+            m_response_type = m_request_type;
+          else
+            m_response_type = typeof(ReturnWithOut<,>).MakeGenericType(m_response_type, m_request_type);
+
+          m_has_refs = true;
+          break;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Метод интерфейса сервиса
+    /// </summary>
+    public MethodInfo Method
+    {
+      get { return m_method; }
+    }
+
+    /// <summary>
+    /// Тип, используемый для сериализации параметров операции
+    /// </summary>
+    public Type RequestType
+    {
+      get { return m_request_type; }
+    }
+
+    /// <summary>
+    /// Тип, используемый для сериализации ответа операции
+    /// </summary>
+    public Type ResponseType
+    {
+      get { return m_response_type; }
+    }
+
+    /// <summary>
+    /// Наличие параметров, передаваемых по ссылке
+    /// </summary>
+    public bool HasReferenceParameters
+    {
+      get { return m_has_refs; }
+    }
+
+    /// <summary>
+    /// Параметры метода
+    /// </summary>
+    public ParameterInfo[] Parameters
+    {
+      get { return m_parameters; }
+    }
+  }
+
+  /// <summary>
+  /// Результат удалённой операции, содержащий
+  /// и возвращаемое значение, и параметры, передаваемые по ссылке
+  /// </summary>
   public interface IRefReturnResult
   {
+    /// <summary>
+    /// Возвращаемое значение
+    /// </summary>
     object Return { get; set; }
 
+    /// <summary>
+    /// Параметры, передаваемые по ссылке
+    /// </summary>
     IParametersList References { get; set; }
   }
 
@@ -72,11 +136,13 @@ namespace Notung.Net
   /// </summary>
   /// <typeparam name="TReturn">Тип возвращаемого значения метода</typeparam>
   /// <typeparam name="TRef">Тип для сериализации копии параметров</typeparam>
-  [Serializable, DataContract(Name = "RET", Namespace = "")]
+  [Serializable]
+  [DataContract(Name = "RET", Namespace = "")]
   internal class ReturnWithOut<TReturn, TRef> : IRefReturnResult where TRef : class, IParametersList
   {
     [DataMember(Name = "Ret")]
     private TReturn m_ret;
+
     [DataMember(Name = "Ref")]
     private TRef m_ref;
 
@@ -142,10 +208,14 @@ namespace Notung.Net
     }
   }
 
+  /// <summary>
+  /// Сведения о методах конкретного сервиса
+  /// </summary>
+  /// <typeparam name="T">Тип сервиса для поиска сведений</typeparam>
   public class RpcServiceInfo<T> : IRpcServiceInfo where T : class
   {
     private static string _serviceName = GetServiceName();
-    private static Dictionary<string, MethodDescription> _methods = BuildMethods();
+    private static Dictionary<string, RpcOperationInfo> _methods = BuildMethods();
     private static RpcServiceInfo<T> _instance = new RpcServiceInfo<T>();
 
     private RpcServiceInfo() { }
@@ -175,29 +245,14 @@ namespace Notung.Net
         return name;
     }
 
-    public MethodInfo GetMethod(string methodName)
-    {
-      return _methods[methodName].Method;
-    }
-
-    public Type GetParametersType(string methodName)
-    {
-      return _methods[methodName].ParametersType;
-    }
-
-    public Type GetReturnType(string methodName)
-    {
-      return _methods[methodName].ReturnType;
-    }
-
-    public bool HasReferenceParameters(string methodName)
-    {
-      return _methods[methodName].HasReferenceParameters;
-    }
-
     public bool HasMethod(string methodName)
     {
       return _methods.ContainsKey(methodName);
+    }
+
+    public RpcOperationInfo GetOperationInfo(string methodName)
+    {
+      return _methods[methodName];
     }
 
     #region Implementation ------------------------------------------------------------------------
@@ -212,12 +267,12 @@ namespace Notung.Net
         return service.Name;
     }
 
-    private static Dictionary<string, MethodDescription> BuildMethods()
+    private static Dictionary<string, RpcOperationInfo> BuildMethods()
     {
       if (!typeof(T).IsInterface)
         throw new ApplicationException();
 
-      var result = new Dictionary<string, MethodDescription>();
+      var result = new Dictionary<string, RpcOperationInfo>();
 
       foreach (MethodInfo method in typeof(T).GetMethods())
       {
@@ -234,42 +289,10 @@ namespace Notung.Net
         if (string.IsNullOrWhiteSpace(name))
           name = method.Name;
 
-        var params_type = ParametersList.GetRequiredType(method);
-        var return_type = method.ReturnType;
-        var has_refs = false;
-
-        foreach (var pi in method.GetParameters())
-        {
-          if (pi.ParameterType.IsByRef)
-          {
-            if (return_type == typeof(void))
-              return_type = params_type;
-            else
-              return_type = typeof(ReturnWithOut<,>).MakeGenericType(return_type, params_type);
-
-            has_refs = true;
-            break;
-          }
-        }
-
-        result.Add(name, new MethodDescription
-        {
-          Method = method,
-          ParametersType = params_type,
-          ReturnType = return_type,
-          HasReferenceParameters = has_refs
-        });
+        result.Add(name, new RpcOperationInfo(method));
       }
 
       return result;
-    }
-
-    private struct MethodDescription
-    {
-      public MethodInfo Method;
-      public Type ParametersType;
-      public Type ReturnType;
-      public bool HasReferenceParameters;
     }
 
     #endregion

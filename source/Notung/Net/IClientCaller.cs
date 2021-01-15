@@ -1,39 +1,92 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Net;
-using System.Reflection;
+using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Notung.Net
 {
+  /// <summary>
+  /// Набор операций, поддерживаемых сетевым клиентом
+  /// </summary>
   public interface IClientCaller
   {
-    ICallResult Call(string serverOperation, IParametersList request, OperationInfo operation);
+    /// <summary>
+    /// Выполнение удалённой процедуры
+    /// </summary>
+    /// <param name="serverOperation">Полное логическое имя удалённой процедуры</param>
+    /// <param name="request">Сериализуемые параметры удалённой процедуры</param>
+    /// <param name="operation">Сведения об удалённой процедуре</param>
+    /// <returns>Результат выполнения удалённой процедуры</returns>
+    ICallResult Call(string serverOperation, IParametersList request, RpcOperationInfo operation);
+
+    /// <summary>
+    /// Обмен с сервером потоками данных
+    /// </summary>
+    /// <param name="processRequest">Обработчик потока запроса</param>
+    /// <returns>Поток данных с ответом от сервера</returns>
+    Stream StreamExchange(Action<Stream> processRequest);
+
+    /// <summary>
+    /// Обмен с сервером массивами данных
+    /// </summary>
+    /// <param name="data">Данные, отправленные на сервер</param>
+    /// <returns>Данные, полученные от сервера</returns>
+    byte[] BinaryExchange(byte[] data);
   }
 
+  /// <summary>
+  /// Результат выполнения удалённой процедуры
+  /// </summary>
   public interface ICallResult
   {
+    /// <summary>
+    /// Возвращаемое значение удалённой процедуры
+    /// </summary>
     object Value { get; set; }
 
-    Exception Error { get; set; }
+    /// <summary>
+    /// Ошибка, возникшая при выполнении процедуры на сервере
+    /// </summary>
+    ClientServerException Error { get; set; }
   }
 
-  public struct OperationInfo
+  /// <summary>
+  /// Ошибка выполнения удалённой процедуры на сервере
+  /// </summary>
+  [Serializable]
+  public sealed class ClientServerException : ApplicationException
   {
-    public Type ReturnType { get; set; }
+    private readonly string m_server_stack;
 
-    public ParameterInfo[] Parameters { get; set; }
+    private ClientServerException(SerializationInfo info, StreamingContext context)
+      : base(info, context)
+    {
+      m_server_stack = info.GetString("ServerStack");
+    }
+
+    public ClientServerException(string message, string stack) : base(message)
+    {
+      m_server_stack = stack;
+    }
+
+    public override void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+      base.GetObjectData(info, context);
+      info.AddValue("ServerStack", m_server_stack);
+    }
+
+    public string ServerStack
+    {
+      get { return m_server_stack; }
+    }
   }
 
   [Serializable, DataContract(Name = "RES", Namespace = "")]
   internal class CallResult<TResult> : ICallResult
   {
-    [DataMember(Name = "Res")]
+    [DataMember(Name = "data")]
     private TResult m_result;
-    [DataMember(Name = "Err")]
-    private ApplicationException m_error;
+    [DataMember(Name = "error")]
+    private ClientServerException m_error;
 
     public object Value
     {
@@ -41,73 +94,10 @@ namespace Notung.Net
       set { m_result = (TResult)value; }
     }
 
-    public Exception Error
+    public ClientServerException Error
     {
       get { return m_error; }
-      set { m_error = (ApplicationException)value; }
-    }
-  }
-
-  public class WebRequestClientCaller : IClientCaller
-  {
-    private readonly ISerializationFactory m_factory;
-    private readonly string m_base_url;
-
-    public WebRequestClientCaller(string baseUrl, ISerializationFactory serializationFactory)
-    {
-      m_base_url = baseUrl;
-      m_factory = serializationFactory;
-    }
-    
-    public ICallResult Call(string serverOperation, IParametersList request, OperationInfo operation)
-    {
-      var builder = new StringBuilder(m_base_url);
-
-      if (m_base_url.Last() != '/')
-        builder.Append('/');
-
-      builder.Append(serverOperation);
-
-      if (request.GetTypes().Length > 0 && ConversionHelper.CanConvert(request.GetType()))
-      {
-        var parameters = operation.Parameters;
-        var args = request.GetValues();
-
-        builder.Append("/?");
-
-        builder.AppendFormat("{0}={1}", parameters[0].Name, Uri.EscapeDataString(
-          TypeDescriptor.GetConverter(parameters[0].ParameterType).ConvertToInvariantString(args[0])));
-
-        for (int i = 1; i < parameters.Length; i++)
-          builder.AppendFormat("&{0}={1}", parameters[i].Name, Uri.EscapeDataString(
-            TypeDescriptor.GetConverter(parameters[i].ParameterType).ConvertToInvariantString(args[i])));
-      }
-
-      var web_request = (HttpWebRequest)WebRequest.Create(builder.ToString());
-
-      web_request.UseDefaultCredentials = true;
-      web_request.UserAgent = ClientInfo.ProcessInfo.Application;
-      web_request.Headers.Add("Machine-name", ClientInfo.ProcessInfo.MachineName);
-
-      if (request.GetTypes().Length > 0 && !ConversionHelper.CanConvert(request.GetType()))
-      {
-        web_request.Method = "POST";
-
-        var serializer = m_factory.GetSerializer(request.GetType());
-
-        using (var stream = web_request.GetRequestStream())
-          serializer.Serialize(stream, request);
-      }
-
-      var response = web_request.GetResponse();
-
-      using (var stream = response.GetResponseStream())
-      {
-        var return_type = ConversionHelper.GetResponseType(operation.ReturnType);
-        var serializer = m_factory.GetSerializer(return_type);
-
-        return (ICallResult)serializer.Deserialize(stream);
-      }
+      set { m_error = value; }
     }
   }
 }

@@ -15,6 +15,7 @@ namespace Notung.Net
         throw new ArgumentNullException("caller");
 
       m_caller = caller;
+      base.AddLocalService(caller);
     }
 
     protected override ReturnMessage Invoke(IMethodCallMessage message)
@@ -22,20 +23,16 @@ namespace Notung.Net
       try
       {
         var method_name = _info.GetMethodName(message.MethodBase);
+        var operation_info = _info.GetOperationInfo(method_name);
 
         var result = m_caller.Call(string.Format("{0}/{1}", _info.ServiceName, method_name),
-          ParametersList.Create(message.MethodBase, message.Args),
-          new OperationInfo 
-          { 
-            ReturnType = _info.GetReturnType(method_name),
-            Parameters = message.MethodBase.GetParameters()
-          });
+          ParametersList.Create(message.MethodBase, message.Args), operation_info);
 
         if (result.Error != null)
           return new ReturnMessage(result.Error, message);
         else
         {
-          if (_info.HasReferenceParameters(method_name))
+          if (operation_info.HasReferenceParameters)
           {
             IParametersList refs = (result.Value is IRefReturnResult) ?
               ((IRefReturnResult)result.Value).References : (IParametersList)result.Value;

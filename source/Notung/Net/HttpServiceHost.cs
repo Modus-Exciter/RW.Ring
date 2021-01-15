@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -14,6 +13,7 @@ namespace Notung.Net
   public class HttpServiceHost : IDisposable
   {
     private Thread m_working_thread;
+    private IBinaryService m_binary_service;
     private readonly object m_lock = new object();
     private readonly Dictionary<string, ServerCaller> m_callers = new Dictionary<string, ServerCaller>();
     private readonly SharedLock m_callers_lock = new SharedLock(false);
@@ -32,6 +32,16 @@ namespace Notung.Net
       m_listener = listener;
     }
 
+    public IBinaryService BinaryService
+    {
+      get { return m_binary_service; }
+      set
+      {
+        using (m_callers_lock.WriteLock())
+          m_binary_service = value;
+      }
+    }
+
     public void AddService<T>(IFactory<T> creator) where T : class
     {
       if (creator == null)
@@ -44,6 +54,12 @@ namespace Notung.Net
 
         using (m_callers_lock.WriteLock())
           m_callers.Add(RpcServiceInfo.Register(contract).ServiceName, new ServerCaller(creator));
+      }
+
+      using (m_callers_lock.WriteLock())
+      {
+        if (typeof(IBinaryService).IsAssignableFrom(typeof(T)) && m_binary_service == null)
+          m_binary_service = new FactoryBinaryService(creator);
       }
     }
 
@@ -123,44 +139,39 @@ namespace Notung.Net
       {
         try
         {
-          var bits = ReadBits(context);
+          var bits = ParseLocalPath(context);
 
-          if (bits.Length == 1 && bits[0] == "favicon.ico")
+          if (bits.Length == 1)
           {
-            context.Response.ContentType = "image/x-icon";
-            Resources.DotChart.Save(stream);
-            return;
+            if (this.ProcessSingleRequest(context, bits[0]))
+              return;
           }
 
-          var info = RpcServiceInfo.GetByName(bits[0]);
-          var parms = ReadParameters(context, info, bits[1]);
-
-          ServerCaller caller;
-
-          using (m_callers_lock.ReadLock())
-            caller = m_callers[bits[0]];
-
-          var result = caller.Call(bits, parms);
-
-          if (result != null)
+          if (bits.Length == 2)
           {
-            context.Response.ContentType = "application/json; Charset=utf-8";
+            var info = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
+            var result = GetCaller(bits[0]).Call(info, ReadParameters(context, info));
 
-            var return_type = ConversionHelper.GetResponseType(info.GetReturnType(bits[1]));
-            var serializer = m_serialization.GetSerializer(return_type);
+            if (result != null)
+            {
+              context.Response.ContentType = "application/json; Charset=utf-8";
 
-            serializer.Serialize(stream, result);
+              var return_type = HttpTypeHelper.GetResponseType(info.ResponseType);
+              var serializer = m_serialization.GetSerializer(return_type);
+
+              serializer.Serialize(stream, result);
+            }
           }
+          else
+            throw new ArgumentOutOfRangeException();
         }
         catch (Exception ex)
         {
           context.Response.StatusCode = 400;
           context.Response.StatusDescription = ex.Message;
 
-          using (var sw = new StreamWriter(context.Response.OutputStream))
-          {
-            sw.WriteLine("<html><body><h1>" + ex.Message + "</h1></body></html>");
-          }
+          var sw = new StreamWriter(context.Response.OutputStream);
+          sw.WriteLine("<html><body><h1>{0}</h1></body></html>", ex.Message);
         }
         finally
         {
@@ -170,50 +181,117 @@ namespace Notung.Net
       }
     }
 
-    private IParametersList ReadParameters(HttpListenerContext context, IRpcServiceInfo info, string methodName)
+    private bool ProcessSingleRequest(HttpListenerContext context, string request)
     {
-      var params_type = info.GetParametersType(methodName);
-      var method = info.GetMethod(methodName);
-      var parameters = method.GetParameters();
-
-      if (ConversionHelper.CanConvert(params_type))
+      switch (request)
       {
-        var args = new object[parameters.Length];
-        var query = ParseQueryString(context.Request.Url.Query);
+        case "favicon.ico":
+          context.Response.ContentType = "image/x-icon";
+          Resources.DotChart.Save(context.Response.OutputStream);
+          return true;
 
-        for (int i = 0; i < parameters.Length; i++)
-        {
-          var value = query[parameters[i].Name];
+        case "BinaryExchange":
+          return BinaryExchange(context);
 
-          if (value == null)
-          {
-            var par_type = parameters[i].ParameterType;
-
-            if (par_type.IsByRef)
-              par_type = par_type.GetElementType();
-
-            if (par_type.IsValueType)
-              args[i] = Activator.CreateInstance(par_type);
-          }
-          else
-            args[i] = TypeDescriptor.GetConverter(
-              parameters[i].ParameterType).ConvertFromInvariantString(value);
-        }
-
-        return ParametersList.Create(method, args);
+        case "StreamExchange":
+          return StreamExchange(context);
       }
-      else if (parameters.Length > 0)
+
+      return false;
+    }
+
+    private bool StreamExchange(HttpListenerContext context)
+    {
+      using (m_callers_lock.ReadLock())
       {
-        var req_serializer = m_serialization.GetSerializer(params_type);
+        if (m_binary_service != null)
+        {
+          m_binary_service.StreamExchange(context.Request.InputStream, context.Response.OutputStream);
+          return true;
+        }
+        else
+          return false;
+      }
+    }
+
+    private bool BinaryExchange(HttpListenerContext context)
+    {
+      using (m_callers_lock.ReadLock())
+      {
+        if (m_binary_service != null)
+        {
+          List<byte> result = new List<byte>();
+          byte[] buffer = new byte[512];
+          int count;
+
+          while ((count = context.Request.InputStream.Read(buffer, 0, buffer.Length)) > 0)
+          {
+            for (int i = 0; i < count; i++)
+              result.Add(buffer[i]);
+          }
+
+          var ret = m_binary_service.BinaryExchange(result.ToArray());
+          context.Response.OutputStream.Write(ret, 0, ret.Length);
+
+          return true;
+        }
+        else
+          return false;
+      }
+    }
+
+    private ServerCaller GetCaller(string serviceName)
+    {
+      ServerCaller caller;
+
+      using (m_callers_lock.ReadLock())
+        caller = m_callers[serviceName];
+
+      return caller;
+    }
+
+    private IParametersList ReadParameters(HttpListenerContext context, RpcOperationInfo info)
+    {
+      var parameters = info.Parameters;
+
+      if (parameters.Length > 0)
+      {
+        if (HttpTypeHelper.CanConvert(info.RequestType))
+        {
+          var args = new object[parameters.Length];
+          var query = ParseQueryString(context.Request.Url.Query);
+          var converter = HttpTypeHelper.GetConverter(info.RequestType);
+
+          for (int i = 0; i < parameters.Length; i++)
+          {
+            var value = query[parameters[i].Name];
+
+            if (value == null)
+            {
+              var par_type = parameters[i].ParameterType;
+
+              if (par_type.IsByRef)
+                par_type = par_type.GetElementType();
+
+              if (par_type.IsValueType)
+                args[i] = Activator.CreateInstance(par_type);
+            }
+            else
+              args[i] = converter.ConvertFromString(value, i);
+          }
+
+          return ParametersList.Create(info.Method, args);
+        }
+        var req_serializer = m_serialization.GetSerializer(info.RequestType);
 
         using (var input = context.Request.InputStream)
           return (IParametersList)req_serializer.Deserialize(input);
       }
       else
-        return ParametersList.Create(method, Global.EmptyArgs);
+        return ParametersList.Create(info.Method, Global.EmptyArgs);
     }
 
-    private NameValueCollection ParseQueryString(string queryString)
+    private static NameValueCollection ParseQueryString(string queryString)
     {
       var parameters = new NameValueCollection();
 
@@ -223,15 +301,15 @@ namespace Notung.Net
 
         if (index >= 0)
         {
-          parameters.Add(segment.Substring(0, index).Trim(new char[] { '?', ' ' }),
-            Uri.UnescapeDataString(segment.Substring(index + 1)));
+          parameters.Add(segment.Substring(0, index).Trim(
+            new char[] { '?', ' ' }), segment.Substring(index + 1));
         }
       }
 
       return parameters;
     }
 
-    private static string[] ReadBits(HttpListenerContext context)
+    private static string[] ParseLocalPath(HttpListenerContext context)
     {
       var raw = context.Request.Url.LocalPath;
 

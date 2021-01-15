@@ -50,14 +50,16 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Net\HttpClientCaller.cs" />
     <Compile Include="Net\HttpServiceHost.cs" />
+    <Compile Include="Net\IBinaryService.cs" />
     <Compile Include="Net\IClientCaller.cs" />
     <Compile Include="Net\ISerializer.cs" />
     <Compile Include="Net\NetworkProxy.cs" />
     <Compile Include="Net\RpcServiceAttribute.cs" />
     <Compile Include="Net\IRpcServiceInfo.cs" />
     <Compile Include="Net\ServerCaller.cs" />
-    <Compile Include="Net\ConversionHelper.cs" />
+    <Compile Include="Net\HttpTypeHelper.cs" />
     <Compile Include="Services\AppManager.cs" />
     <Compile Include="ComponentModel\LanguageSwitcher.cs">
       <SubType>Component</SubType>

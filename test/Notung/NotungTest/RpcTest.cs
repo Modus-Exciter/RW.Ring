@@ -57,17 +57,17 @@ namespace NotungTest
       Assert.AreEqual(contract, RpcServiceInfo.GetByName("TEST_C2"));
 
       Assert.AreEqual("DO_ONE", contract.GetMethodName(typeof(ITestContract2).GetMethod("DoOne")));
-      Assert.AreEqual(typeof(int), contract.GetReturnType("DO_ONE"));
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("DO_ONE").ResponseType);
       Assert.IsTrue(contract.HasMethod("Swap"));
-      Assert.AreEqual(2, contract.GetReturnType("Swap").GetGenericArguments().Length);
-      Assert.AreEqual(typeof(int), contract.GetReturnType("Swap").GetGenericArguments()[0]);
-      Assert.AreEqual(typeof(uint), contract.GetReturnType("Swap").GetGenericArguments()[1]);
-      Assert.AreEqual("ReturnWithOut`2", contract.GetReturnType("CALCULATE").GetGenericTypeDefinition().Name);
-      Assert.AreEqual(typeof(double), contract.GetReturnType("CALCULATE").GetGenericArguments()[0]);
-      Assert.AreEqual(3, contract.GetReturnType("CALCULATE").GetGenericArguments()[1].GetGenericArguments().Length);
-      Assert.AreEqual(typeof(string), contract.GetReturnType("CALCULATE").GetGenericArguments()[1].GetGenericArguments()[0]);
-      Assert.AreEqual(typeof(int), contract.GetReturnType("CALCULATE").GetGenericArguments()[1].GetGenericArguments()[1]);
-      Assert.AreEqual(typeof(object), contract.GetReturnType("CALCULATE").GetGenericArguments()[1].GetGenericArguments()[2]);
+      Assert.AreEqual(2, contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments().Length);
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments()[0]);
+      Assert.AreEqual(typeof(uint), contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments()[1]);
+      Assert.AreEqual("ReturnWithOut`2", contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericTypeDefinition().Name);
+      Assert.AreEqual(typeof(double), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[0]);
+      Assert.AreEqual(3, contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments().Length);
+      Assert.AreEqual(typeof(string), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[0]);
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[1]);
+      Assert.AreEqual(typeof(object), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[2]);
     }
 
     [TestMethod]
@@ -117,9 +117,34 @@ namespace NotungTest
 
       Assert.AreEqual("Ric, Byte".Length, res3);
 
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetReturnType("Swap"), res.GetType());
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetReturnType("CALCULATE"), res2.GetType());
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetReturnType("DO_ONE"), res3.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("Swap").ResponseType, res.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("CALCULATE").ResponseType, res2.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("DO_ONE").ResponseType, res3.GetType());
+    }
+
+    private class ClientCaller : IClientCaller
+    {
+      private readonly ServerCaller m_caller;
+
+      public ClientCaller(ServerCaller caller)
+      {
+        m_caller = caller;
+      }
+
+      public ICallResult Call(string serverOperation, IParametersList request, RpcOperationInfo operation)
+      {
+        return m_caller.Call(serverOperation.Split('/'), request);
+      }
+
+      public System.IO.Stream StreamExchange(Action<System.IO.Stream> processRequest)
+      {
+        throw new NotImplementedException();
+      }
+
+      public byte[] BinaryExchange(byte[] data)
+      {
+        throw new NotImplementedException();
+      }
     }
 
     [TestMethod]
@@ -127,7 +152,7 @@ namespace NotungTest
     {
       var contract = new Contract2();
       var caller = new ServerCaller(Factory.Wrapper<object>(contract));
-      var proxy = new NetworkProxy<ITestContract2>(caller).GetTransparentProxy();
+      var proxy = new NetworkProxy<ITestContract2>(new ClientCaller(caller)).GetTransparentProxy();
 
       int a = 13;
       uint b = 24;
