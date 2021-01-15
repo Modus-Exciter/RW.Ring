@@ -87,6 +87,13 @@ namespace Notung.Properties {
             }
         }
         
+        internal static System.Drawing.Icon DotChart {
+            get {
+                object obj = ResourceManager.GetObject("DotChart", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Another configuration section {0} already has the same name as {1}.
         /// </summary>

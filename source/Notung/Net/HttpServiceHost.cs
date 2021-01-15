@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using Notung.Loader;
+using Notung.Properties;
 using Notung.Threading;
 
 namespace Notung.Net
@@ -31,7 +32,7 @@ namespace Notung.Net
       m_listener = listener;
     }
 
-    public void AddService<T>(IFactory<T> creator) where T :class
+    public void AddService<T>(IFactory<T> creator) where T : class
     {
       if (creator == null)
         throw new ArgumentNullException("creator");
@@ -126,7 +127,8 @@ namespace Notung.Net
 
           if (bits.Length == 1 && bits[0] == "favicon.ico")
           {
-            context.Response.StatusCode = 200;
+            context.Response.ContentType = "image/x-icon";
+            Resources.DotChart.Save(stream);
             return;
           }
 

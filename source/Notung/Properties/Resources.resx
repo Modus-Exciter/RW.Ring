@@ -126,6 +126,10 @@
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Key '{0}' is reserved</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="DotChart" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dot-chart.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="DUPLICATE_SECTION_NAME" xml:space="preserve">
     <value>Another configuration section {0} already has the same name as {1}</value>
   </data>
