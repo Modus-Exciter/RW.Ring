@@ -131,6 +131,14 @@ namespace Notung.Logging
         return LoggingContext.Global.Contains(key);
     }
 
+    public void Write(TextWriter writer)
+    {
+      if (writer == null)
+        throw new ArgumentNullException("writer");
+
+      _builder.BuildString(writer, this);
+    }
+
     public override string ToString()
     {
       var builder = new StringBuilder(256);

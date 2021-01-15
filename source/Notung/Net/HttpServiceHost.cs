@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using Notung.Loader;
+using Notung.Logging;
 using Notung.Properties;
 using Notung.Threading;
 
@@ -20,6 +21,8 @@ namespace Notung.Net
     private readonly ISerializationFactory m_serialization;
     private readonly HttpListener m_listener;
 
+    private static readonly ILog _log = LogManager.GetLogger(typeof(HttpServiceHost));
+    
     public HttpServiceHost(ISerializationFactory serializationFactory, HttpListener listener)
     {
       if (serializationFactory == null)
@@ -122,18 +125,15 @@ namespace Notung.Net
     private void ProcessRequest(object state)
     {
       HttpListenerContext context = (HttpListenerContext)state;
-
-      Console.WriteLine(context.Request.HttpMethod + " " + context.Request.Url);
-
       ClientInfo.ThreadInfo = GetClientInfo(context);
 
-      if (ClientInfo.ThreadInfo != null)
-      {
-        Console.WriteLine("User: {0}, Application: {1}, Machine: {2}",
-          ClientInfo.ThreadInfo.UserName, ClientInfo.ThreadInfo.Application, ClientInfo.ThreadInfo.MachineName);
-      }
+      string details = "";
 
-      Console.WriteLine();
+      if (ClientInfo.ThreadInfo != null)
+        details = string.Format("\nUser: {0}, Application: {1}, Machine: {2}",
+          ClientInfo.ThreadInfo.UserName, ClientInfo.ThreadInfo.Application, ClientInfo.ThreadInfo.MachineName);
+
+      _log.Info(string.Format("{0} {1} {2}", context.Request.HttpMethod, context.Request.Url, details));
 
       using (var stream = context.Response.OutputStream)
       {
@@ -154,11 +154,10 @@ namespace Notung.Net
 
             if (result != null)
             {
-              context.Response.ContentType = "application/json; Charset=utf-8";
-
               var return_type = HttpTypeHelper.GetResponseType(info.ResponseType);
               var serializer = m_serialization.GetSerializer(return_type);
 
+              context.Response.ContentType = "application/json; Charset=utf-8";
               serializer.Serialize(stream, result);
             }
           }
@@ -167,9 +166,10 @@ namespace Notung.Net
         }
         catch (Exception ex)
         {
-          context.Response.StatusCode = 400;
-          context.Response.StatusDescription = ex.Message;
+          _log.Error("ProcessRequest(): exception", ex);
 
+          context.Response.StatusCode = 400;
+          context.Response.StatusDescription = Uri.EscapeDataString(ex.Message);
           var sw = new StreamWriter(context.Response.OutputStream);
           sw.WriteLine("<html><body><h1>{0}</h1></body></html>", ex.Message);
         }

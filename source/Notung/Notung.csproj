@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Logging\ConsoleAppender.cs" />
     <Compile Include="Net\HttpClientCaller.cs" />
     <Compile Include="Net\HttpServiceHost.cs" />
     <Compile Include="Net\IBinaryService.cs" />
