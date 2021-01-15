@@ -22,8 +22,8 @@ namespace Notung.Net
     /// Обмен с сервером потоками данных
     /// </summary>
     /// <param name="processRequest">Обработчик потока запроса</param>
-    /// <returns>Поток данных с ответом от сервера</returns>
-    Stream StreamExchange(Action<Stream> processRequest);
+    /// <param name="processResponse">Обработчик потока ответа</param>
+    void StreamExchange(Action<Stream> processRequest, Action<Stream> processResponse);
 
     /// <summary>
     /// Обмен с сервером массивами данных

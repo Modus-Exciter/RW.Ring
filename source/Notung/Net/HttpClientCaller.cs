@@ -61,10 +61,13 @@ namespace Notung.Net
       }
     }
 
-    public Stream StreamExchange(Action<Stream> processRequest)
+    public void StreamExchange(Action<Stream> processRequest, Action<Stream> processResponse)
     {
       if (processRequest == null)
         throw new ArgumentNullException("processRequest");
+
+      if (processResponse == null)
+        throw new ArgumentNullException("processResponse");
 
       var web_request = CreateWebRequest(string.Format("{0}/StreamExchange", m_base_url));
       web_request.Method = "POST";
@@ -72,7 +75,8 @@ namespace Notung.Net
       using (var stream = web_request.GetRequestStream())
         processRequest(stream);
 
-      return web_request.GetResponse().GetResponseStream();
+      using (var response = web_request.GetResponse())
+        processResponse(response.GetResponseStream());
     }
 
     public byte[] BinaryExchange(byte[] data)
