@@ -7,7 +7,7 @@ namespace Notung.Loader
   /// Фабрика для отложенной загрузки
   /// </summary>
   /// <typeparam name="T">Тип порождаемого объекта</typeparam>
-  public interface IFactory<T>
+  public interface IFactory<out T>
   {
     T Create();
   }

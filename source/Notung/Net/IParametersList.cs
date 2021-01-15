@@ -31,15 +31,13 @@ namespace Notung.Net
   {
     private static readonly ParametersList _instance = new ParametersList();
 
-    private ParametersList() { }
-
     /// <summary>
     /// Преобразование метода и значений его параметров в объект упаковки
     /// </summary>
     /// <param name="method">Метод, для которого нужно сформировать набор параметров</param>
     /// <param name="values">Значения параметров для метода</param>
     /// <returns>Объект для упаковки параметров удалённой операции</returns>
-    public static IParametersList Create(MethodInfo method, params object[] values)
+    public static IParametersList Create(MethodBase method, params object[] values)
     {
       Debug.Assert(method != null);
       Debug.Assert(values != null);
@@ -52,13 +50,13 @@ namespace Notung.Net
     /// </summary>
     /// <param name="method">метод, который нужно вызвать удалённо</param>
     /// <returns>Тип объекта упаковки</returns>
-    public static Type GetRequiredType(MethodInfo method)
+    public static Type GetRequiredType(MethodBase method)
     {
       Debug.Assert(method != null);
       return GetRequiredType(method, null);
     }
 
-    private static Type GetRequiredType(MethodInfo method, object[] values)
+    private static Type GetRequiredType(MethodBase method, object[] values)
     {
       var parameters = method.GetParameters();
 

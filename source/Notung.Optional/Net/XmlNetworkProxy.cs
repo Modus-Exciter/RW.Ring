@@ -13,7 +13,7 @@ namespace Notung.Net
   /// Прокси для сервисов, использующих механизм удалённых команд для обмена данными
   /// </summary>
   /// <typeparam name="T">Тип контракта сервиса</typeparam>
-  public class NetworkProxy<T> : GenericProxy<T> where T : class
+  public class XmlNetworkProxy<T> : GenericProxy<T> where T : class
   {
     private readonly Guid m_object_id;
     private readonly IRemotableCaller m_caller;
@@ -22,7 +22,7 @@ namespace Notung.Net
     /// Создание прокси с возможностью абстрагироваться от сети
     /// </summary>
     /// <param name="caller">Абстрактный исполнитель команд</param>
-    public NetworkProxy(IRemotableCaller caller)
+    public XmlNetworkProxy(IRemotableCaller caller)
     {
       if (caller == null)
         throw new ArgumentNullException("caller");
@@ -44,7 +44,7 @@ namespace Notung.Net
     /// </summary>
     /// <param name="transportFactory">Транспорт команд</param>
     /// <param name="serializer">Сериализация команд</param>
-    public NetworkProxy(IClientTransportFactory transportFactory, ICommandSerializer serializer)
+    public XmlNetworkProxy(IClientTransportFactory transportFactory, ICommandSerializer serializer)
       : this(new RemoteCaller(transportFactory, serializer)) { }
 
     #region Overridables --------------------------------------------------------------------------

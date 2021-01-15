@@ -56,6 +56,7 @@
     <Compile Include="MatrixTest.cs" />
     <Compile Include="ParametersListTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcTest.cs" />
     <Compile Include="SerializeTest.cs" />
   </ItemGroup>
   <ItemGroup>
