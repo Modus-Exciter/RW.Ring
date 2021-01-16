@@ -23,14 +23,14 @@ namespace Notung.Net
     /// </summary>
     /// <param name="processRequest">Обработчик потока запроса</param>
     /// <param name="processResponse">Обработчик потока ответа</param>
-    void StreamExchange(Action<Stream> processRequest, Action<Stream> processResponse);
+    void StreamExchange(string command, Action<Stream> processRequest, Action<Stream> processResponse);
 
     /// <summary>
     /// Обмен с сервером массивами данных
     /// </summary>
     /// <param name="data">Данные, отправленные на сервер</param>
     /// <returns>Данные, полученные от сервера</returns>
-    byte[] BinaryExchange(byte[] data);
+    byte[] BinaryExchange(string command, byte[] data);
   }
 
   /// <summary>

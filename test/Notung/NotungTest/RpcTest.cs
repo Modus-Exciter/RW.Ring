@@ -57,17 +57,17 @@ namespace NotungTest
       Assert.AreEqual(contract, RpcServiceInfo.GetByName("TEST_C2"));
 
       Assert.AreEqual("DO_ONE", contract.GetMethodName(typeof(ITestContract2).GetMethod("DoOne")));
-      Assert.AreEqual(typeof(int), contract.GetOperationInfo("DO_ONE").ResponseType);
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("DO_ONE").ResultType);
       Assert.IsTrue(contract.HasMethod("Swap"));
-      Assert.AreEqual(2, contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments().Length);
-      Assert.AreEqual(typeof(int), contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments()[0]);
-      Assert.AreEqual(typeof(uint), contract.GetOperationInfo("Swap").ResponseType.GetGenericArguments()[1]);
-      Assert.AreEqual("ReturnWithOut`2", contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericTypeDefinition().Name);
-      Assert.AreEqual(typeof(double), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[0]);
-      Assert.AreEqual(3, contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments().Length);
-      Assert.AreEqual(typeof(string), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[0]);
-      Assert.AreEqual(typeof(int), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[1]);
-      Assert.AreEqual(typeof(object), contract.GetOperationInfo("CALCULATE").ResponseType.GetGenericArguments()[1].GetGenericArguments()[2]);
+      Assert.AreEqual(2, contract.GetOperationInfo("Swap").ResultType.GetGenericArguments().Length);
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("Swap").ResultType.GetGenericArguments()[0]);
+      Assert.AreEqual(typeof(uint), contract.GetOperationInfo("Swap").ResultType.GetGenericArguments()[1]);
+      Assert.AreEqual("ReturnWithOut`2", contract.GetOperationInfo("CALCULATE").ResultType.GetGenericTypeDefinition().Name);
+      Assert.AreEqual(typeof(double), contract.GetOperationInfo("CALCULATE").ResultType.GetGenericArguments()[0]);
+      Assert.AreEqual(3, contract.GetOperationInfo("CALCULATE").ResultType.GetGenericArguments()[1].GetGenericArguments().Length);
+      Assert.AreEqual(typeof(string), contract.GetOperationInfo("CALCULATE").ResultType.GetGenericArguments()[1].GetGenericArguments()[0]);
+      Assert.AreEqual(typeof(int), contract.GetOperationInfo("CALCULATE").ResultType.GetGenericArguments()[1].GetGenericArguments()[1]);
+      Assert.AreEqual(typeof(object), contract.GetOperationInfo("CALCULATE").ResultType.GetGenericArguments()[1].GetGenericArguments()[2]);
     }
 
     [TestMethod]
@@ -117,9 +117,9 @@ namespace NotungTest
 
       Assert.AreEqual("Ric, Byte".Length, res3);
 
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("Swap").ResponseType, res.GetType());
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("CALCULATE").ResponseType, res2.GetType());
-      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("DO_ONE").ResponseType, res3.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("Swap").ResultType, res.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("CALCULATE").ResultType, res2.GetType());
+      Assert.AreEqual(RpcServiceInfo.GetByName("TEST_C2").GetOperationInfo("DO_ONE").ResultType, res3.GetType());
     }
 
     private class ClientCaller : IClientCaller
@@ -136,12 +136,12 @@ namespace NotungTest
         return m_caller.Call(serverOperation.Split('/'), request);
       }
 
-      public System.IO.Stream StreamExchange(Action<System.IO.Stream> processRequest)
+      public void StreamExchange(string serverOperation, Action<System.IO.Stream> processRequest, Action<System.IO.Stream> processResponse)
       {
         throw new NotImplementedException();
       }
 
-      public byte[] BinaryExchange(byte[] data)
+      public byte[] BinaryExchange(string serverOperation, byte[] data)
       {
         throw new NotImplementedException();
       }
@@ -180,6 +180,19 @@ namespace NotungTest
       proxy.JustSend("Fortune");
 
       Assert.AreEqual("Fortune", contract.Value);
+    }
+  }
+
+  static class RpcExtensions
+  {
+    public static ICallResult Call(this ServerCaller caller, string[] bits, IParametersList request)
+    {
+      if (bits.Length != 2)
+        throw new ArgumentException();
+
+      var operation = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
+
+      return caller.Call(operation, request);
     }
   }
 

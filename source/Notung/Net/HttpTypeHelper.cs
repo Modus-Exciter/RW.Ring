@@ -12,14 +12,6 @@ namespace Notung.Net
     private static readonly Dictionary<Type, HttpConversionHelper> _converters 
       = new Dictionary<Type, HttpConversionHelper>();
 
-    public static Type GetResponseType(Type returnType)
-    {
-      if (returnType == typeof(void))
-        returnType = typeof(string);
-
-      return typeof(CallResult<>).MakeGenericType(returnType);
-    }
-
     public static bool CanConvert(Type parametersType)
     {
       if (!typeof(IParametersList).IsAssignableFrom(parametersType))

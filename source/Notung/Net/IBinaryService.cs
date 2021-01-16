@@ -12,16 +12,18 @@ namespace Notung.Net
     /// <summary>
     /// Обмен потоками
     /// </summary>
+    /// <param name="command">Команда, которую нужно выполнить над бинарными данными</param>
     /// <param name="request">Поток данных, полученный от клиента</param>
     /// <param name="response">Поток данных для отправки клиенту</param>
-    void StreamExchange(Stream request, Stream response);
+    void StreamExchange(string command, Stream request, Stream response);
 
     /// <summary>
     /// Обмен массивами байт
     /// </summary>
+    /// <param name="command">Команда, которую нужно выполнить над бинарными данными</param>
     /// <param name="data">Массив байт, полученный от клиента</param>
     /// <returns>Массив байт для отправки клиенту</returns>
-    byte[] BinaryExchange(byte[] data);
+    byte[] BinaryExchange(string command, byte[] data);
   }
 
   internal class FactoryBinaryService : IBinaryService
@@ -36,14 +38,14 @@ namespace Notung.Net
       m_factory = factory;
     }
 
-    public void StreamExchange(Stream request, Stream response)
+    public void StreamExchange(string command, Stream request, Stream response)
     {
-      ((IBinaryService)m_factory.Create()).StreamExchange(request, response);
+      ((IBinaryService)m_factory.Create()).StreamExchange(command, request, response);
     }
 
-    public byte[] BinaryExchange(byte[] data)
+    public byte[] BinaryExchange(string command, byte[] data)
     {
-      return ((IBinaryService)m_factory.Create()).BinaryExchange(data);
+      return ((IBinaryService)m_factory.Create()).BinaryExchange(command, data);
     }
   }
 }

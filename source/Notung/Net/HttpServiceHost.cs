@@ -154,7 +154,7 @@ namespace Notung.Net
 
             if (result != null)
             {
-              var return_type = HttpTypeHelper.GetResponseType(info.ResponseType);
+              var return_type = info.ResponseType;
               var serializer = m_serialization.GetSerializer(return_type);
 
               context.Response.ContentType = "application/json; Charset=utf-8";
@@ -206,7 +206,10 @@ namespace Notung.Net
       {
         if (m_binary_service != null)
         {
-          m_binary_service.StreamExchange(context.Request.InputStream, context.Response.OutputStream);
+          m_binary_service.StreamExchange(
+            Uri.UnescapeDataString(context.Request.Url.Query.Trim('?', ' ')), 
+            context.Request.InputStream, context.Response.OutputStream);
+
           return true;
         }
         else
@@ -230,7 +233,9 @@ namespace Notung.Net
               result.Add(buffer[i]);
           }
 
-          var ret = m_binary_service.BinaryExchange(result.ToArray());
+          var ret = m_binary_service.BinaryExchange(
+            Uri.UnescapeDataString(context.Request.Url.Query.Trim('?', ' ')), result.ToArray());
+
           context.Response.OutputStream.Write(ret, 0, ret.Length);
 
           return true;

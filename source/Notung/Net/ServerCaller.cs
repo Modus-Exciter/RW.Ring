@@ -34,7 +34,7 @@ namespace Notung.Net
         if (operation.Method.ReturnType == typeof(void))
           return ParametersList.Create(operation.Method, values);
 
-        IRefReturnResult res = (IRefReturnResult)Activator.CreateInstance(operation.ResponseType);
+        IRefReturnResult res = (IRefReturnResult)Activator.CreateInstance(operation.ResultType);
         res.References = ParametersList.Create(operation.Method, values);
         res.Return = result;
 
@@ -44,9 +44,9 @@ namespace Notung.Net
         return result;
     }
 
-    internal ICallResult Call(RpcOperationInfo operation, IParametersList request)
+    public ICallResult Call(RpcOperationInfo operation, IParametersList request)
     {
-      var return_type = HttpTypeHelper.GetResponseType(operation.ResponseType);
+      var return_type = operation.ResponseType;
       var ret = (ICallResult)Activator.CreateInstance(return_type);
 
       try
@@ -63,16 +63,6 @@ namespace Notung.Net
       }
 
       return ret;
-    }
-
-    public ICallResult Call(string [] bits, IParametersList request)
-    {
-      if (bits.Length != 2)
-        throw new ArgumentException();
-
-      var operation = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
-
-      return this.Call(operation, request);
     }
   }
 }

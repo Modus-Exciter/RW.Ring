@@ -54,14 +54,14 @@ namespace Notung.Net
 
       using (var stream = response.GetResponseStream())
       {
-        var return_type = HttpTypeHelper.GetResponseType(operation.ResponseType);
+        var return_type = operation.ResponseType;
         var serializer = m_factory.GetSerializer(return_type);
 
         return (ICallResult)serializer.Deserialize(stream);
       }
     }
 
-    public void StreamExchange(Action<Stream> processRequest, Action<Stream> processResponse)
+    public void StreamExchange(string command, Action<Stream> processRequest, Action<Stream> processResponse)
     {
       if (processRequest == null)
         throw new ArgumentNullException("processRequest");
@@ -69,7 +69,9 @@ namespace Notung.Net
       if (processResponse == null)
         throw new ArgumentNullException("processResponse");
 
-      var web_request = CreateWebRequest(string.Format("{0}/StreamExchange", m_base_url));
+      var web_request = CreateWebRequest(string.Format("{0}/StreamExchange/?{1}",
+        m_base_url, Uri.EscapeDataString(command)));
+
       web_request.Method = "POST";
 
       using (var stream = web_request.GetRequestStream())
@@ -79,9 +81,11 @@ namespace Notung.Net
         processResponse(response.GetResponseStream());
     }
 
-    public byte[] BinaryExchange(byte[] data)
+    public byte[] BinaryExchange(string command, byte[] data)
     {
-      var web_request = CreateWebRequest(string.Format("{0}/BinaryExchange", m_base_url));
+      var web_request = CreateWebRequest(string.Format("{0}/BinaryExchange?{1}",
+        m_base_url, Uri.EscapeDataString(command)));
+
       web_request.Method = "POST";
 
       if (data != null && data.Length > 0)

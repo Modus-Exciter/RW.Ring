@@ -45,6 +45,7 @@ namespace Notung.Net
   {
     private readonly MethodInfo m_method;
     private readonly Type m_request_type;
+    private readonly Type m_result_type;
     private readonly Type m_response_type;
     private readonly bool m_has_refs;
     private readonly ParameterInfo[] m_parameters;
@@ -54,22 +55,27 @@ namespace Notung.Net
       m_method = method;
       m_parameters = method.GetParameters();
       m_request_type = ParametersList.GetRequiredType(method);
-      m_response_type = method.ReturnType;
       m_has_refs = false;
+      m_result_type = method.ReturnType;
 
       foreach (var pi in method.GetParameters())
       {
         if (pi.ParameterType.IsByRef)
         {
-          if (m_response_type == typeof(void))
-            m_response_type = m_request_type;
+          if (m_result_type == typeof(void))
+            m_result_type = m_request_type;
           else
-            m_response_type = typeof(ReturnWithOut<,>).MakeGenericType(m_response_type, m_request_type);
+            m_result_type = typeof(ReturnWithOut<,>).MakeGenericType(m_result_type, m_request_type);
 
           m_has_refs = true;
           break;
         }
       }
+
+      if (m_result_type == typeof(void))
+        m_result_type = typeof(string);
+
+      m_response_type = typeof(CallResult<>).MakeGenericType(m_result_type);
     }
 
     /// <summary>
@@ -94,6 +100,14 @@ namespace Notung.Net
     public Type ResponseType
     {
       get { return m_response_type; }
+    }
+
+    /// <summary>
+    /// Тип, используемый для передачи результатов операции
+    /// </summary>
+    public Type ResultType
+    {
+      get { return m_result_type; }
     }
 
     /// <summary>
@@ -136,13 +150,11 @@ namespace Notung.Net
   /// </summary>
   /// <typeparam name="TReturn">Тип возвращаемого значения метода</typeparam>
   /// <typeparam name="TRef">Тип для сериализации копии параметров</typeparam>
-  [Serializable]
-  [DataContract(Name = "RET", Namespace = "")]
+  [Serializable, DataContract(Name = "RET", Namespace = "")]
   internal class ReturnWithOut<TReturn, TRef> : IRefReturnResult where TRef : class, IParametersList
   {
     [DataMember(Name = "Ret")]
     private TReturn m_ret;
-
     [DataMember(Name = "Ref")]
     private TRef m_ref;
 
