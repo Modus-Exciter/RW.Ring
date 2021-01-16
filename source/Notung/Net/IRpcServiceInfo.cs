@@ -48,12 +48,10 @@ namespace Notung.Net
     private readonly Type m_result_type;
     private readonly Type m_response_type;
     private readonly bool m_has_refs;
-    private readonly ParameterInfo[] m_parameters;
 
     internal RpcOperationInfo(MethodInfo method)
     {
       m_method = method;
-      m_parameters = method.GetParameters();
       m_request_type = ParametersList.GetRequiredType(method);
       m_has_refs = false;
       m_result_type = method.ReturnType;
@@ -116,14 +114,6 @@ namespace Notung.Net
     public bool HasReferenceParameters
     {
       get { return m_has_refs; }
-    }
-
-    /// <summary>
-    /// Параметры метода
-    /// </summary>
-    public ParameterInfo[] Parameters
-    {
-      get { return m_parameters; }
     }
   }
 
@@ -298,10 +288,8 @@ namespace Notung.Net
 
         string name = operation.Name;
 
-        if (string.IsNullOrWhiteSpace(name))
-          name = method.Name;
-
-        result.Add(name, new RpcOperationInfo(method));
+        result.Add(string.IsNullOrWhiteSpace(name) ? 
+          method.Name : name, new RpcOperationInfo(method));
       }
 
       return result;

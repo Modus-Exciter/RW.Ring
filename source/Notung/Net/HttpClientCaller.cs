@@ -28,7 +28,7 @@ namespace Notung.Net
 
       if (request.GetTypes().Length > 0 && HttpTypeHelper.CanConvert(request.GetType()))
       {
-        var parameters = operation.Parameters;
+        var parameters = operation.Method.GetParameters();
         var args = request.GetValues();
         var converter = HttpTypeHelper.GetConverter(request.GetType());
 

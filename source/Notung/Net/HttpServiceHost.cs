@@ -267,7 +267,7 @@ namespace Notung.Net
 
     private IParametersList ReadParameters(HttpListenerContext context, RpcOperationInfo info)
     {
-      var parameters = info.Parameters;
+      var parameters = info.Method.GetParameters();
 
       if (parameters.Length > 0)
       {
