@@ -8,10 +8,10 @@ namespace Notung.Net
   /// </summary>
   /// <typeparam name="TResult">Тип результата</typeparam>
   [Serializable, DataContract]
-  public abstract class RemotableCommand<TResult> : IRemotableCommand<TResult> 
+  public abstract class RemotableCommand<TResult> : IRemotableCommand
     where TResult : RemotableResult
   {
-    TResult IRemotableCommand<TResult>.Execute(IServiceProvider service)
+    RemotableResult IRemotableCommand.Execute(IServiceProvider service)
     {
       var res = this.CreateEmptyResult(service);
       try
@@ -36,12 +36,12 @@ namespace Notung.Net
     protected abstract void Fill(TResult result, IServiceProvider service);
 
     [DataMember(Name = "Headers")]
-    ClientInfo IRemotableCommand<TResult>.Headers { get; set; }
+    ClientInfo IRemotableCommand.Headers { get; set; }
   }
 
-  interface IRemotableCommand<out TResult> where TResult : RemotableResult
+  interface IRemotableCommand
   {
-    TResult Execute(IServiceProvider service);
+    RemotableResult Execute(IServiceProvider service);
 
     ClientInfo Headers { get; set; }
   }

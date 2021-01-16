@@ -69,7 +69,7 @@ namespace Notung.Net
     public void StreamExchange(string command, Stream request, Stream response)
     {
       var serializer = m_factory.GetSerializer(Type.GetType(command));
-      var cmd = (IRemotableCommand<RemotableResult>)serializer.Deserialize(request);
+      var cmd = (IRemotableCommand)serializer.Deserialize(request);
 
       ClientInfo.ThreadInfo = cmd.Headers;
       try

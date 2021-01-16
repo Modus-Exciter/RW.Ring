@@ -23,7 +23,7 @@ namespace Notung.Net
   {
     public TResult Call<TResult>(RemotableCommand<TResult> command) where TResult : RemotableResult
     {
-      return ((IRemotableCommand<TResult>)command).Execute(this);
+      return (TResult)((IRemotableCommand)command).Execute(this);
     }
 
     public object GetService(Type serviceType)
@@ -78,7 +78,7 @@ namespace Notung.Net
 
       public object Result;
 
-      public IRemotableCommand<RemotableResult> Command;
+      public IRemotableCommand Command;
 
       public Type ResultType;
 
