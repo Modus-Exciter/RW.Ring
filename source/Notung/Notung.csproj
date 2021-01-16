@@ -56,7 +56,7 @@
     <Compile Include="Net\IBinaryService.cs" />
     <Compile Include="Net\IClientCaller.cs" />
     <Compile Include="Net\IRemotableCaller.cs" />
-    <Compile Include="Net\IRemotableCommand.cs" />
+    <Compile Include="Net\RemotableCommand.cs" />
     <Compile Include="Net\ISerializer.cs" />
     <Compile Include="Net\NetworkProxy.cs" />
     <Compile Include="Net\RpcServiceAttribute.cs" />
