@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Notung
 {
@@ -23,6 +24,16 @@ namespace Notung
     public static bool IsScalar(this Type type)
     {
       return type.IsValueType || type == typeof(string);
+    }
+
+    /// <summary>
+    /// Проверяет, является ли строка допустимым идентификатором
+    /// </summary>
+    /// <param name="value">Строка, которую нужно проверить</param>
+    /// <returns>True, если строка является допустимым идентификатором. Иначе, false</returns>
+    public static bool IsIdentifier(this string value)
+    {
+      return IdentifierChecker.Check.IsMatch(value);
     }
 
     /// <summary>
@@ -105,6 +116,11 @@ namespace Notung
         Type.DefaultBinder, types, null);
 
       return method;
+    }
+
+    private static class IdentifierChecker
+    {
+      public static readonly Regex Check = new Regex("^[a-zA-Z_]+[a-zA-Z_1-9]*$", RegexOptions.Compiled);
     }
 
     #endregion

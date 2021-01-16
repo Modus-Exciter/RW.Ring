@@ -4,6 +4,9 @@ using System.Runtime.Serialization.Json;
 
 namespace Notung.Net
 {
+  /// <summary>
+  /// Сериализатор данных
+  /// </summary>
   public interface ISerializer
   {
     object Deserialize(Stream serializationStream);
@@ -11,8 +14,16 @@ namespace Notung.Net
     void Serialize(Stream serializationStream, object graph);
   }
 
+  /// <summary>
+  /// Фабрика, от которой сервис получает сериализаторы
+  /// </summary>
   public interface ISerializationFactory
   {
+    /// <summary>
+    /// Получение сериализатора для указанного типа данных
+    /// </summary>
+    /// <param name="typeToSerialize">Тип, который требуется сериализовывать</param>
+    /// <returns>Сериализатор для этого типа</returns>
     ISerializer GetSerializer(Type typeToSerialize);
 
     /// <summary>

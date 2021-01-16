@@ -92,8 +92,6 @@ namespace Notung.Net
 
   internal static class RpcAttributeHelper
   {
-    private static readonly Regex _check = new Regex("^[a-zA-Z_]+[a-zA-Z_1-9]*$", RegexOptions.Compiled);
-
     public static bool IsDefault<T>(T instance) where T : Attribute, INamedAttribute, new()
     {
       return Instances<T>.Instance.Equals(instance);
@@ -124,7 +122,7 @@ namespace Notung.Net
       if (string.IsNullOrEmpty(name))
         return name;
 
-      if (!_check.IsMatch(name))
+      if (!name.IsIdentifier())
         throw new FormatException();
 
       return name;
