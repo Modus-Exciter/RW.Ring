@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Net.Mime;
 
 namespace Notung.Net
 {
@@ -42,7 +43,7 @@ namespace Notung.Net
 
       if (request.GetTypes().Length > 0 && !HttpTypeHelper.CanConvert(request.GetType()))
       {
-        web_request.Method = "POST";
+        this.SetPostMethod(web_request);
 
         var serializer = m_factory.GetSerializer(request.GetType());
 
@@ -72,7 +73,7 @@ namespace Notung.Net
       var web_request = CreateWebRequest(string.Format("{0}/StreamExchange/?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
-      web_request.Method = "POST";
+      this.SetPostMethod(web_request);
 
       using (var stream = web_request.GetRequestStream())
         processRequest(stream);
@@ -86,7 +87,7 @@ namespace Notung.Net
       var web_request = CreateWebRequest(string.Format("{0}/BinaryExchange?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
-      web_request.Method = "POST";
+      this.SetPostMethod(web_request);
 
       if (data != null && data.Length > 0)
       {
@@ -114,7 +115,7 @@ namespace Notung.Net
       }
     }
 
-    private static HttpWebRequest CreateWebRequest(string builder)
+    private HttpWebRequest CreateWebRequest(string builder)
     {
       var web_request = (HttpWebRequest)WebRequest.Create(builder.ToString());
 
@@ -123,6 +124,26 @@ namespace Notung.Net
       web_request.Headers.Add("Machine-name", ClientInfo.ProcessInfo.MachineName);
 
       return web_request;
+    }
+
+    private void SetPostMethod(HttpWebRequest web_request)
+    {
+      web_request.Method = "POST";
+
+      switch (m_factory.Format)
+      {
+        case SerializationFormat.Binary:
+          web_request.ContentType = MediaTypeNames.Application.Octet;
+          break;
+
+        case SerializationFormat.JSON:
+          web_request.ContentType = "application/json";
+          break;
+
+        case SerializationFormat.Xml:
+          web_request.ContentType = MediaTypeNames.Text.Xml;
+          break;
+      }
     }
   }
 }

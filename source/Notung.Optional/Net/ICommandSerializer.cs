@@ -44,17 +44,7 @@ namespace Notung.Net
     /// <summary>
     /// Формат, в котором сериализуются команды
     /// </summary>
-    CommandSerializationFormat Format { get; }
-  }
-
-  /// <summary>
-  /// Формат, в котором сериализуются команды
-  /// </summary>
-  public enum CommandSerializationFormat : byte
-  {
-    Binary,
-    Xml,
-    JSON
+    SerializationFormat Format { get; }
   }
 
   /// <summary>
@@ -84,9 +74,9 @@ namespace Notung.Net
       return (RemotableResult1)m_formatter.Deserialize(stream);
     }
 
-    public CommandSerializationFormat Format
+    public SerializationFormat Format
     {
-      get { return CommandSerializationFormat.Binary; }
+      get { return SerializationFormat.Binary; }
     }
   }
 
@@ -159,9 +149,9 @@ namespace Notung.Net
       return (RemotableResult1)Read(stream);
     }
 
-    public CommandSerializationFormat Format
+    public SerializationFormat Format
     {
-      get { return CommandSerializationFormat.Xml; }
+      get { return SerializationFormat.Xml; }
     }
   }
 }

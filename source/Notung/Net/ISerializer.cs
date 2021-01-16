@@ -14,6 +14,21 @@ namespace Notung.Net
   public interface ISerializationFactory
   {
     ISerializer GetSerializer(Type typeToSerialize);
+
+    /// <summary>
+    /// Формат, в котором сериализуются команды
+    /// </summary>
+    SerializationFormat Format { get; }
+  }
+
+  /// <summary>
+  /// Формат, в котором сериализуются команды
+  /// </summary>
+  public enum SerializationFormat : byte
+  {
+    Binary,
+    Xml,
+    JSON
   }
 
   public class DataContractSerializationFactory : ISerializationFactory
@@ -24,6 +39,11 @@ namespace Notung.Net
         throw new ArgumentNullException("typeToSerialize");
 
       return new DataContractSerializerImpl(typeToSerialize);
+    }
+
+    public SerializationFormat Format
+    {
+      get { return SerializationFormat.JSON; }
     }
 
     private class DataContractSerializerImpl : ISerializer
