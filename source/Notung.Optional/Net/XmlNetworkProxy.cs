@@ -53,7 +53,7 @@ namespace Notung.Net
     {
       var result = new MethodCallCommand(message.MethodName, message.Args, m_object_id).Execute(m_caller);
 
-      if (result.State == RemotableResultState.Error)
+      if (result.State != RemotableResultState.Success)
         return new ReturnMessage(result.Exception, message);
       else if (result.RefParameters != null && result.RefParameters.Length != 0)
         return new ReturnMessage(result.ReturnValue, result.RefParameters, result.RefParameters.Length, message.LogicalCallContext, message);
@@ -74,7 +74,7 @@ namespace Notung.Net
     #region Create reference ----------------------------------------------------------------------
 
     [Serializable, DataContract(Name = "Ref")]
-    internal class CreateReferenceResult : RemotableResult
+    internal class CreateReferenceResult : RemotableResult1
     {
       [DataMember(Name = "Guid")]
       public Guid ObjectGuid;
@@ -99,7 +99,7 @@ namespace Notung.Net
     #region Clear cache ---------------------------------------------------------------------------
 
     [Serializable, DataContract(Name = "Clear")]
-    internal class ClearItemCommand : RemotableCommand<RemotableResult>
+    internal class ClearItemCommand : RemotableCommand<RemotableResult1>
     {
       [DataMember(Name = "Guid")]
       private readonly Guid m_guid;
@@ -109,7 +109,7 @@ namespace Notung.Net
         m_guid = guid;
       }
 
-      protected override void Fill(RemotableResult result, IServiceProvider service)
+      protected override void Fill(RemotableResult1 result, IServiceProvider service)
       {
         InstanceDictionary<T>.Clear(m_guid);
       }
@@ -195,7 +195,7 @@ namespace Notung.Net
     #region Method call ---------------------------------------------------------------------------
 
     [Serializable, DataContract(Name = "CallResult")]
-    internal class MethodCallResult : RemotableResult
+    internal class MethodCallResult : RemotableResult1
     {
       [DataMember(Order = 0)]
       public string Method;

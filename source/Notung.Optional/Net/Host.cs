@@ -146,7 +146,7 @@ namespace Notung.Net
 
 #if DEBUG
 
-    private static void WriteToConsole(IRemotableCommand command, RemotableResult result)
+    private static void WriteToConsole(IRemotableCommand command, RemotableResult1 result)
     {
       var xml_writer = new XmlTextWriter(Console.Out);
       {

@@ -4,25 +4,6 @@ using System.Runtime.Serialization;
 namespace Notung.Net
 {
   /// <summary>
-  /// Заглушка, выполняющая команду локально
-  /// </summary>
-  public sealed class RemotableCallerStub<TService> : IRemotableCaller, IServiceProvider where TService : new()
-  {
-    public RemotableResult Call(IRemotableCommand command)
-    {
-      return command.Execute(this);
-    }
-
-    public object GetService(Type serviceType)
-    {
-      if (serviceType.IsAssignableFrom(typeof(TService)))
-        return new TService();
-      else
-        return null;
-    }
-  }
-
-  /// <summary>
   /// Объект для запуска команды удалённо
   /// </summary>
   public class RemoteCaller : IRemotableCaller
@@ -42,7 +23,7 @@ namespace Notung.Net
       m_serializer = serializer;
     }
     
-    public RemotableResult Call(IRemotableCommand command)
+    public RemotableResult1 Call(IRemotableCommand command)
     {
       command.Headers = HostedService.GlobalHeaders;
       

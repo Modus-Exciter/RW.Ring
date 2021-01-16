@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Loader;
 using Notung.Net;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NotungTest
 {
@@ -29,6 +31,23 @@ namespace NotungTest
       Assert.IsTrue(check.IsMatch("a_2_b"));
       Assert.IsTrue(check.IsMatch("A2B_"));
       Assert.IsTrue(check.IsMatch("_DB23_34"));
+    }
+
+    [TestMethod]
+    public void RemotableCommandCast()
+    {
+      using (var ms = new MemoryStream())
+      {
+        var bf = new BinaryFormatter();
+
+        bf.Serialize(ms, new Test { Text = "Roma" });
+
+        ms.Position = 0;
+
+        ITest<object> value = (ITest<object>)bf.Deserialize(ms);
+
+        Assert.AreEqual("Roma", value.Get());
+      }
     }
 
     [TestMethod]
@@ -267,4 +286,20 @@ namespace NotungTest
 
   [RpcService("Test/Symbol")]
   public interface IWrongSymbol { }
+
+  public interface ITest<out T> where T : class
+  {
+    T Get();
+  }
+
+  [Serializable]
+  public class Test : ITest<string>
+  {
+    public string Text;
+    
+    public string Get()
+    {
+      return Text;
+    }
+  }
 }

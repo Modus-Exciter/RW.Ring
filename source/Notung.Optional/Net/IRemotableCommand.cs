@@ -13,7 +13,7 @@ namespace Notung.Net
     /// </summary>
     /// <param name="service">Сервис, выполняющий команду</param>
     /// <returns>Результат выполнения команды</returns>
-    RemotableResult Execute(IServiceProvider service);
+    RemotableResult1 Execute(IServiceProvider service);
 
     /// <summary>
     /// Заголовки команды
@@ -25,7 +25,7 @@ namespace Notung.Net
   /// Результат выполнения команды
   /// </summary>
   [Serializable, DataContract]
-  public class RemotableResult
+  public class RemotableResult1
   {
     /// <summary>
     /// Исключение, возникшее при выполнении команды
@@ -67,7 +67,7 @@ namespace Notung.Net
   /// </summary>
   /// <typeparam name="TResult">Тип результата</typeparam>
   [Serializable, DataContract]
-  public abstract class RemotableCommand<TResult> : IRemotableCommand where TResult : RemotableResult
+  public abstract class RemotableCommand<TResult> : IRemotableCommand where TResult : RemotableResult1
   {
     /// <summary>
     /// Запуск команды на выполнение
@@ -82,7 +82,7 @@ namespace Notung.Net
       return (TResult)caller.Call(this);
     }
 
-    RemotableResult IRemotableCommand.Execute(IServiceProvider service)
+    RemotableResult1 IRemotableCommand.Execute(IServiceProvider service)
     {
       var res = this.CreateEmptyResult(service);
       try

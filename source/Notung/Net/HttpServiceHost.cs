@@ -127,13 +127,7 @@ namespace Notung.Net
       HttpListenerContext context = (HttpListenerContext)state;
       ClientInfo.ThreadInfo = GetClientInfo(context);
 
-      string details = "";
-
-      if (ClientInfo.ThreadInfo != null)
-        details = string.Format("\nUser: {0}, Application: {1}, Machine: {2}",
-          ClientInfo.ThreadInfo.UserName, ClientInfo.ThreadInfo.Application, ClientInfo.ThreadInfo.MachineName);
-
-      _log.Info(string.Format("{0} {1} {2}", context.Request.HttpMethod, context.Request.Url, details));
+      LogRequest(context);
 
       using (var stream = context.Response.OutputStream)
       {
@@ -179,6 +173,22 @@ namespace Notung.Net
           context.Response.Close();
         }
       }
+    }
+
+    private static void LogRequest(HttpListenerContext context)
+    {
+      string details = "";
+
+      if (ClientInfo.ThreadInfo != null)
+      {
+        details = string.Format("{0}User: {1}, Application: {2}, Machine: {3}",
+          Environment.NewLine,
+          ClientInfo.ThreadInfo.UserName,
+          ClientInfo.ThreadInfo.Application,
+          ClientInfo.ThreadInfo.MachineName);
+      }
+
+      _log.Info(string.Format("{0} {1} {2}", context.Request.HttpMethod, context.Request.Url, details));
     }
 
     private bool ProcessSingleRequest(HttpListenerContext context, string request)

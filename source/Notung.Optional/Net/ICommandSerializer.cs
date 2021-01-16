@@ -25,7 +25,7 @@ namespace Notung.Net
     /// </summary>
     /// <param name="stream">Поток ввода-вывода</param>
     /// <param name="result">Результат выполнения команды</param>
-    void WriteResult(Stream stream, RemotableResult result);
+    void WriteResult(Stream stream, RemotableResult1 result);
 
     /// <summary>
     /// Чтение команды из потока
@@ -39,7 +39,7 @@ namespace Notung.Net
     /// </summary>
     /// <param name="stream">Поток ввода-вывода</param>
     /// <returns>Результат выполнения команды</returns>
-    RemotableResult ReadResult(Stream stream);
+    RemotableResult1 ReadResult(Stream stream);
 
     /// <summary>
     /// Формат, в котором сериализуются команды
@@ -69,7 +69,7 @@ namespace Notung.Net
       m_formatter.Serialize(stream, command);
     }
 
-    public void WriteResult(Stream stream, RemotableResult result)
+    public void WriteResult(Stream stream, RemotableResult1 result)
     {
       m_formatter.Serialize(stream, result);
     }
@@ -79,9 +79,9 @@ namespace Notung.Net
       return (IRemotableCommand)m_formatter.Deserialize(stream);
     }
 
-    public RemotableResult ReadResult(Stream stream)
+    public RemotableResult1 ReadResult(Stream stream)
     {
-      return (RemotableResult)m_formatter.Deserialize(stream);
+      return (RemotableResult1)m_formatter.Deserialize(stream);
     }
 
     public CommandSerializationFormat Format
@@ -144,7 +144,7 @@ namespace Notung.Net
       Write(stream, command);
     }
 
-    public void WriteResult(Stream stream, RemotableResult result)
+    public void WriteResult(Stream stream, RemotableResult1 result)
     {
       Write(stream, result);
     }
@@ -154,9 +154,9 @@ namespace Notung.Net
       return (IRemotableCommand)Read(stream);
     }
 
-    public RemotableResult ReadResult(Stream stream)
+    public RemotableResult1 ReadResult(Stream stream)
     {
-      return (RemotableResult)Read(stream);
+      return (RemotableResult1)Read(stream);
     }
 
     public CommandSerializationFormat Format

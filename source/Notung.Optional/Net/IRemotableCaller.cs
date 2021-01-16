@@ -15,6 +15,6 @@ namespace Notung.Net
     /// </summary>
     /// <param name="command">Выполняемая команда</param>
     /// <returns>Результат выполнения командыы</returns>
-    RemotableResult Call(IRemotableCommand command);
+    RemotableResult1 Call(IRemotableCommand command);
   }
 }

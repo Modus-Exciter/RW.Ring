@@ -48,4 +48,53 @@ namespace Notung.Net
       return ((IBinaryService)m_factory.Create()).BinaryExchange(command, data);
     }
   }
+
+  /// <summary>
+  /// Сервис для выполнения удалённых команд на сервере
+  /// </summary>
+  public class BinaryCommandService : IBinaryService
+  {
+    private readonly ISerializationFactory m_factory;
+    private readonly IServiceProvider m_service_provider;
+
+    public BinaryCommandService(ISerializationFactory factory, IServiceProvider provider = null)
+    {
+      if (factory == null)
+        throw new ArgumentNullException("factory");
+
+      m_factory = factory;
+      m_service_provider = provider;
+    }
+
+    public void StreamExchange(string command, Stream request, Stream response)
+    {
+      var serializer = m_factory.GetSerializer(Type.GetType(command));
+      var cmd = (IRemotableCommand<RemotableResult>)serializer.Deserialize(request);
+
+      ClientInfo.ThreadInfo = cmd.Headers;
+      try
+      {
+        var result = cmd.Execute(m_service_provider);
+
+        serializer = m_factory.GetSerializer(result.GetType());
+        serializer.Serialize(response, result);
+      }
+      finally
+      {
+        ClientInfo.ThreadInfo = null;
+      }
+    }
+
+    public byte[] BinaryExchange(string command, byte[] data)
+    {
+      using (var ms = new MemoryStream(data))
+      {
+        using (var ms2 = new MemoryStream())
+        {
+          this.StreamExchange(command, ms, ms2);
+          return ms2.ToArray();
+        }
+      }
+    }
+  }
 }
