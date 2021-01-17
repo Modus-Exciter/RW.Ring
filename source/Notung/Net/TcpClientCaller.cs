@@ -31,13 +31,7 @@ namespace Notung.Net
 
         using (var stream = new NetworkStream(socket))
         {
-          var writer = new BinaryWriter(stream);
-
-          writer.Write(string.Format("A:{0},U:{1},M:{2}", 
-            ClientInfo.ProcessInfo.Application,
-            ClientInfo.ProcessInfo.UserName,
-            ClientInfo.ProcessInfo.MachineName));
-
+          var writer = InitializeWriter(stream);
           writer.Write(string.Format("c:{0}", serverOperation));
 
           m_factory.GetSerializer(request.GetType()).Serialize(stream, request);
@@ -48,6 +42,18 @@ namespace Notung.Net
       }
     }
 
+    private static BinaryWriter InitializeWriter(NetworkStream stream)
+    {
+      var writer = new BinaryWriter(stream);
+
+      writer.Write(string.Format("A:{0},U:{1},M:{2}",
+        ClientInfo.ProcessInfo.Application,
+        ClientInfo.ProcessInfo.UserName,
+        ClientInfo.ProcessInfo.MachineName));
+
+      return writer;
+    }
+
     public void StreamExchange(string command, Action<Stream> processRequest, Action<Stream> processResponse)
     {
       using (var socket = new Socket(m_endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp))
@@ -56,13 +62,7 @@ namespace Notung.Net
 
         using (var stream = new NetworkStream(socket))
         {
-          var writer = new BinaryWriter(stream);
-
-          writer.Write(string.Format("A:{0},U:{1},M:{2}",
-            ClientInfo.ProcessInfo.Application,
-            ClientInfo.ProcessInfo.UserName,
-            ClientInfo.ProcessInfo.MachineName));
-
+          var writer = InitializeWriter(stream);
           writer.Write(string.Format("s:{0}", command));
 
           processRequest(stream);
@@ -81,13 +81,7 @@ namespace Notung.Net
 
         using (var stream = new NetworkStream(socket))
         {
-          var writer = new BinaryWriter(stream);
-
-          writer.Write(string.Format("A:{0},U:{1},M:{2}",
-            ClientInfo.ProcessInfo.Application,
-            ClientInfo.ProcessInfo.UserName,
-            ClientInfo.ProcessInfo.MachineName));
-
+          var writer = InitializeWriter(stream);
           writer.Write(string.Format("b:{0}", command));
 
           stream.Write(data, 0, data.Length);

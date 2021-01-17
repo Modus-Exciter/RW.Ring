@@ -83,12 +83,12 @@ namespace Notung.Net
             _log.Error("ProcessRequest(): exception", ex);
 
             if (!command.StartsWith("c:"))
-              this.GetSerializer(typeof(ClientServerException)).Serialize(stream,
-                new ClientServerException(ex.Message, ex.StackTrace));
+              new BinaryWriter(stream).Write(ex.Message);
           }
           finally
           {
             ClientInfo.ThreadInfo = null;
+
             socket.Shutdown(SocketShutdown.Both);
           }
         }
