@@ -97,7 +97,7 @@ namespace Notung.Net
 
     #endregion
 
-    #region Implementation
+    #region Implementation ------------------------------------------------------------------------
 
     private ClientInfo ParseClientInfo(string value)
     {
