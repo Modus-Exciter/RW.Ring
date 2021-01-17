@@ -34,16 +34,11 @@ namespace Notung.Net
     }
 
     protected abstract void Fill(TResult result, IServiceProvider service);
-
-    [DataMember(Name = "Headers")]
-    ClientInfo IRemotableCommand.Headers { get; set; }
   }
 
   interface IRemotableCommand
   {
     RemotableResult Execute(IServiceProvider service);
-
-    ClientInfo Headers { get; set; }
   }
 
   /// <summary>

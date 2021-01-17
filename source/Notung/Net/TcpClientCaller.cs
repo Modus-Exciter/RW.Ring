@@ -32,6 +32,12 @@ namespace Notung.Net
         using (var stream = new NetworkStream(socket))
         {
           var writer = new BinaryWriter(stream);
+
+          writer.Write(string.Format("A:{0},U:{1},M:{2}", 
+            ClientInfo.ProcessInfo.Application,
+            ClientInfo.ProcessInfo.UserName,
+            ClientInfo.ProcessInfo.MachineName));
+
           writer.Write(string.Format("c:{0}", serverOperation));
 
           m_factory.GetSerializer(request.GetType()).Serialize(stream, request);
@@ -51,6 +57,12 @@ namespace Notung.Net
         using (var stream = new NetworkStream(socket))
         {
           var writer = new BinaryWriter(stream);
+
+          writer.Write(string.Format("A:{0},U:{1},M:{2}",
+            ClientInfo.ProcessInfo.Application,
+            ClientInfo.ProcessInfo.UserName,
+            ClientInfo.ProcessInfo.MachineName));
+
           writer.Write(string.Format("s:{0}", command));
 
           processRequest(stream);
@@ -70,6 +82,12 @@ namespace Notung.Net
         using (var stream = new NetworkStream(socket))
         {
           var writer = new BinaryWriter(stream);
+
+          writer.Write(string.Format("A:{0},U:{1},M:{2}",
+            ClientInfo.ProcessInfo.Application,
+            ClientInfo.ProcessInfo.UserName,
+            ClientInfo.ProcessInfo.MachineName));
+
           writer.Write(string.Format("b:{0}", command));
 
           stream.Write(data, 0, data.Length);

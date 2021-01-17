@@ -63,6 +63,7 @@
     <Compile Include="Net\IRpcServiceInfo.cs" />
     <Compile Include="Net\ServerCaller.cs" />
     <Compile Include="Net\HttpTypeHelper.cs" />
+    <Compile Include="Net\ServiceHostBase.cs" />
     <Compile Include="Net\TcpClientCaller.cs" />
     <Compile Include="Net\TcpServiceHost.cs" />
     <Compile Include="Services\AppManager.cs" />

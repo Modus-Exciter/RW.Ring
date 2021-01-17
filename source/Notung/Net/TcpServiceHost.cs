@@ -1,110 +1,52 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using Notung.Loader;
-using Notung.Threading;
+using Notung.Logging;
 
 namespace Notung.Net
 {
-  public class TcpServiceHost : IDisposable
+  public class TcpServiceHost : ServiceHostBase
   {
-    private Thread m_working_thread;
-    private readonly object m_lock = new object();
     private readonly Socket m_socket;
     private readonly int m_listeners;
-    private readonly Dictionary<string, ServerCaller> m_callers = new Dictionary<string, ServerCaller>();
-    private readonly SharedLock m_callers_lock = new SharedLock(false);
-    private readonly ISerializationFactory m_serialization;
-    private IBinaryService m_binary_service;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(TcpServiceHost));
 
     public TcpServiceHost(ISerializationFactory serializationFactory, EndPoint endPoint, int listeners)
+      : base(serializationFactory)
     {
-      if (serializationFactory == null)
-        throw new ArgumentNullException("serializationFactory");
-
       if (endPoint == null)
         throw new ArgumentNullException("endPoint");
 
-      m_serialization = serializationFactory;
       m_listeners = listeners;
       m_socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
       m_socket.Bind(endPoint);
     }
 
-    public IBinaryService BinaryService
+    #region Override ------------------------------------------------------------------------------
+
+    protected override void StartListener()
     {
-      get { return m_binary_service; }
-      set
-      {
-        using (m_callers_lock.WriteLock())
-          m_binary_service = value;
-      }
-    }
-
-    public void AddService<T>(IFactory<T> creator) where T : class
-    {
-      if (creator == null)
-        throw new ArgumentNullException("creator");
-
-      foreach (var contract in typeof(T).GetInterfaces())
-      {
-        if (!contract.IsDefined(typeof(RpcServiceAttribute), false))
-          continue;
-
-        using (m_callers_lock.WriteLock())
-          m_callers.Add(RpcServiceInfo.Register(contract).ServiceName, new ServerCaller(creator));
-      }
-
-      using (m_callers_lock.WriteLock())
-      {
-        if (typeof(IBinaryService).IsAssignableFrom(typeof(T)) && m_binary_service == null)
-          m_binary_service = new FactoryBinaryService(creator);
-      }
-    }
-
-    public void Start()
-    {
-      lock (m_lock)
-      {
-        if (m_working_thread != null)
-          throw new InvalidOperationException();
-      }
-
       m_socket.Listen(m_listeners);
-
-      lock (m_lock)
-      {
-        m_working_thread = new Thread(ListeningThread);
-        m_working_thread.Start();
-      }
     }
-    
-    public void Dispose()
+
+    protected override void Dispose(bool disposing)
     {
+      base.Dispose(disposing);
+
       lock (m_lock)
       {
         m_socket.Dispose();
-
-        if (m_working_thread != null && m_working_thread.IsAlive)
-        {
-          m_working_thread.Abort();
-          m_working_thread = null;
-        }
       }
     }
 
-    private void ListeningThread()
+    protected override object GetState()
     {
-      while (m_working_thread != null)
-      {
-        ThreadPool.QueueUserWorkItem(ProcessRequest, m_socket.Accept());
-      }
+      return m_socket.Accept();
     }
 
-    private void ProcessRequest(object state)
+    protected override void ProcessRequest(object state)
     {
       using (var socket = (Socket)state)
       {
@@ -112,90 +54,92 @@ namespace Notung.Net
         {
           var reader = new BinaryReader(stream);
 
+          ClientInfo.ThreadInfo = ParseClientInfo(reader.ReadString());
+
           var command = reader.ReadString();
 
-          switch (command.Substring(0, 2))
+          LogCommand(command);
+
+          try
           {
-            case "c:":
-              ProcessCall(command.Substring(2), stream, socket);
-              break;
+            switch (command.Substring(0, 2))
+            {
+              case "c:":
+                ProcessCall(command.Substring(2), stream, socket);
+                break;
 
-            case "s:":
-              StreamExchange(command.Substring(2), stream, socket);
-              break;
+              case "s:":
+                StreamExchange(command.Substring(2), stream, stream);
+                break;
 
-            case "b:":
-              BinaryExchange(command.Substring(2), stream, socket);
-              break;
+              case "b:":
+                BinaryExchange(command.Substring(2), stream, stream);
+                break;
+            }
           }
-
-          socket.Shutdown(SocketShutdown.Both);
-        }
-      }
-    }
-
-    private ServerCaller GetCaller(string serviceName)
-    {
-      ServerCaller caller;
-
-      using (m_callers_lock.ReadLock())
-        caller = m_callers[serviceName];
-
-      return caller;
-    }
-
-    private void StreamExchange(string command, NetworkStream stream, Socket socket)
-    {
-      using (m_callers_lock.ReadLock())
-      {
-        if (m_binary_service != null)
-        {
-          m_binary_service.StreamExchange(command, stream, stream);
-        }
-      }
-    }
-
-    private void BinaryExchange(string command, NetworkStream stream, Socket socket)
-    {
-      using (m_callers_lock.ReadLock())
-      {
-        if (m_binary_service != null) 
-        {
-          List<byte> result = new List<byte>();
-          byte[] buffer = new byte[512];
-          int count;
-
-          while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
+          catch (Exception ex)
           {
-            for (int i = 0; i < count; i++)
-              result.Add(buffer[i]);
+            _log.Error("ProcessRequest(): exception", ex);
+
+            if (!command.StartsWith("c:"))
+              this.GetSerializer(typeof(ClientServerException)).Serialize(stream,
+                new ClientServerException(ex.Message, ex.StackTrace));
           }
-
-          var ret = m_binary_service.BinaryExchange(command, result.ToArray());
-
-          stream.Write(ret, 0, ret.Length);
-          stream.Flush();
+          finally
+          {
+            ClientInfo.ThreadInfo = null;
+            socket.Shutdown(SocketShutdown.Both);
+          }
         }
       }
+    }
+
+    #endregion
+
+    private ClientInfo ParseClientInfo(string value)
+    {
+      var bits = value.Split(',');
+
+      if (bits.Length != 3)
+        return null;
+
+      if (bits[0].StartsWith("A:") && bits[1].StartsWith("U:") && bits[2].StartsWith("M:"))
+      {
+        return new ClientInfo
+        {
+          Application = bits[0].Substring(2),
+          UserName = bits[1].Substring(2),
+          MachineName = bits[2].Substring(2)
+        };
+      }
+      else
+        return null;
+    }
+
+    private void LogCommand(string command)
+    {
+      if (ClientInfo.ThreadInfo != null)
+      {
+        command = string.Format("{0}{1}User: {2}, Application: {3}, Machine: {4}",
+           command, Environment.NewLine,
+           ClientInfo.ThreadInfo.UserName,
+           ClientInfo.ThreadInfo.Application,
+           ClientInfo.ThreadInfo.MachineName);
+      }
+
+      _log.Info(command);
     }
 
     private void ProcessCall(string command, NetworkStream stream, Socket socket)
     {
       var bits = command.Split('/');
-
       var info = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
 
-      var req_serializer = m_serialization.GetSerializer(info.RequestType);
-
-      var result = GetCaller(bits[0]).Call(info, (IParametersList)req_serializer.Deserialize(stream));
+      var result = GetCaller(bits[0]).Call(info,
+        (IParametersList)this.GetSerializer(info.RequestType).Deserialize(stream));
 
       if (result != null)
-      {
-        var return_type = info.ResponseType;
-        var serializer = m_serialization.GetSerializer(return_type);
-
-        serializer.Serialize(stream, result);
-      }
+        this.GetSerializer(info.ResponseType).Serialize(stream, result);
     }
   }
 }

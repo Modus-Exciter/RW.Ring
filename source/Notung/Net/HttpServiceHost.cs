@@ -11,118 +11,52 @@ using Notung.Threading;
 
 namespace Notung.Net
 {
-  public class HttpServiceHost : IDisposable
+  public class HttpServiceHost : ServiceHostBase
   {
-    private Thread m_working_thread;
-    private IBinaryService m_binary_service;
-    private readonly object m_lock = new object();
-    private readonly Dictionary<string, ServerCaller> m_callers = new Dictionary<string, ServerCaller>();
-    private readonly SharedLock m_callers_lock = new SharedLock(false);
-    private readonly ISerializationFactory m_serialization;
     private readonly HttpListener m_listener;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(HttpServiceHost));
     
     public HttpServiceHost(ISerializationFactory serializationFactory, HttpListener listener)
+      : base(serializationFactory)
     {
       if (serializationFactory == null)
         throw new ArgumentNullException("serializationFactory");
-
-      if (listener == null)
-        throw new ArgumentNullException("listener");
-
-      m_serialization = serializationFactory;
       m_listener = listener;
     }
 
-    public IBinaryService BinaryService
+    protected override void StartListener()
     {
-      get { return m_binary_service; }
-      set
-      {
-        using (m_callers_lock.WriteLock())
-          m_binary_service = value;
-      }
-    }
-
-    public void AddService<T>(IFactory<T> creator) where T : class
-    {
-      if (creator == null)
-        throw new ArgumentNullException("creator");
-
-      foreach (var contract in typeof(T).GetInterfaces())
-      {
-        if (!contract.IsDefined(typeof(RpcServiceAttribute), false))
-          continue;
-
-        using (m_callers_lock.WriteLock())
-          m_callers.Add(RpcServiceInfo.Register(contract).ServiceName, new ServerCaller(creator));
-      }
-
-      using (m_callers_lock.WriteLock())
-      {
-        if (typeof(IBinaryService).IsAssignableFrom(typeof(T)) && m_binary_service == null)
-          m_binary_service = new FactoryBinaryService(creator);
-      }
-    }
-
-    public void Start()
-    {
-      lock (m_lock)
-      {
-        if (m_working_thread != null)
-          throw new InvalidOperationException();
-      }
-      
       m_listener.Start();
-
-      lock (m_lock)
-      {
-        m_working_thread = new Thread(ListeningThread);
-        m_working_thread.Start();
-      }
     }
 
-    #region Destroy -------------------------------------------------------------------------------
+    #region Override ------------------------------------------------------------------------------
 
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
-    }
+      base.Dispose(disposing);
 
-    protected virtual void Dispose(bool disposing)
-    {
       if (!disposing)
         return;
 
       lock (m_lock)
       {
-        if (m_working_thread != null && m_working_thread.IsAlive)
-        {
-          m_working_thread.Abort();
-          m_working_thread = null;
-        }
-
         m_listener.Stop();
         m_listener.Close();
       }
     }
 
-    #endregion
-
-    #region Implementation ------------------------------------------------------------------------
-
-    private void ListeningThread()
+    protected override object GetState()
     {
-      while (m_working_thread != null)
-      {
-        HttpListenerContext context = m_listener.GetContext();
-        ThreadPool.QueueUserWorkItem(ProcessRequest, context);
-      }
+      return m_listener.GetContext();
     }
 
-    private void ProcessRequest(object state)
+    protected override string PrepareCommand(string command)
+    {
+      return Uri.UnescapeDataString(command.Trim('?', ' '));
+    }
+
+    protected override void ProcessRequest(object state)
     {
       HttpListenerContext context = (HttpListenerContext)state;
       ClientInfo.ThreadInfo = GetClientInfo(context);
@@ -149,7 +83,7 @@ namespace Notung.Net
             if (result != null)
             {
               var return_type = info.ResponseType;
-              var serializer = m_serialization.GetSerializer(return_type);
+              var serializer = this.GetSerializer(return_type);
 
               context.Response.ContentType = "application/json; Charset=utf-8";
               serializer.Serialize(stream, result);
@@ -175,21 +109,9 @@ namespace Notung.Net
       }
     }
 
-    private static void LogRequest(HttpListenerContext context)
-    {
-      string details = "";
+    #endregion
 
-      if (ClientInfo.ThreadInfo != null)
-      {
-        details = string.Format("{0}User: {1}, Application: {2}, Machine: {3}",
-          Environment.NewLine,
-          ClientInfo.ThreadInfo.UserName,
-          ClientInfo.ThreadInfo.Application,
-          ClientInfo.ThreadInfo.MachineName);
-      }
-
-      _log.Info(string.Format("{0} {1} {2}", context.Request.HttpMethod, context.Request.Url, details));
-    }
+    #region Implementation ------------------------------------------------------------------------
 
     private bool ProcessSingleRequest(HttpListenerContext context, string request)
     {
@@ -201,68 +123,15 @@ namespace Notung.Net
           return true;
 
         case "BinaryExchange":
-          return BinaryExchange(context);
+          return BinaryExchange(context.Request.Url.Query,
+            context.Request.InputStream, context.Response.OutputStream);
 
         case "StreamExchange":
-          return StreamExchange(context);
+          return base.StreamExchange(context.Request.Url.Query,
+            context.Request.InputStream, context.Response.OutputStream);
       }
 
       return false;
-    }
-
-    private bool StreamExchange(HttpListenerContext context)
-    {
-      using (m_callers_lock.ReadLock())
-      {
-        if (m_binary_service != null)
-        {
-          m_binary_service.StreamExchange(
-            Uri.UnescapeDataString(context.Request.Url.Query.Trim('?', ' ')), 
-            context.Request.InputStream, context.Response.OutputStream);
-
-          return true;
-        }
-        else
-          return false;
-      }
-    }
-
-    private bool BinaryExchange(HttpListenerContext context)
-    {
-      using (m_callers_lock.ReadLock())
-      {
-        if (m_binary_service != null)
-        {
-          List<byte> result = new List<byte>();
-          byte[] buffer = new byte[512];
-          int count;
-
-          while ((count = context.Request.InputStream.Read(buffer, 0, buffer.Length)) > 0)
-          {
-            for (int i = 0; i < count; i++)
-              result.Add(buffer[i]);
-          }
-
-          var ret = m_binary_service.BinaryExchange(
-            Uri.UnescapeDataString(context.Request.Url.Query.Trim('?', ' ')), result.ToArray());
-
-          context.Response.OutputStream.Write(ret, 0, ret.Length);
-
-          return true;
-        }
-        else
-          return false;
-      }
-    }
-
-    private ServerCaller GetCaller(string serviceName)
-    {
-      ServerCaller caller;
-
-      using (m_callers_lock.ReadLock())
-        caller = m_callers[serviceName];
-
-      return caller;
     }
 
     private IParametersList ReadParameters(HttpListenerContext context, RpcOperationInfo info)
@@ -297,13 +166,52 @@ namespace Notung.Net
 
           return ParametersList.Create(info.Method, args);
         }
-        var req_serializer = m_serialization.GetSerializer(info.RequestType);
+        var req_serializer = this.GetSerializer(info.RequestType);
 
         using (var input = context.Request.InputStream)
           return (IParametersList)req_serializer.Deserialize(input);
       }
       else
         return ParametersList.Create(info.Method, Global.EmptyArgs);
+    }
+
+    private static void LogRequest(HttpListenerContext context)
+    {
+      string details = "";
+
+      if (ClientInfo.ThreadInfo != null)
+      {
+        details = string.Format("{0}User: {1}, Application: {2}, Machine: {3}",
+          Environment.NewLine,
+          ClientInfo.ThreadInfo.UserName,
+          ClientInfo.ThreadInfo.Application,
+          ClientInfo.ThreadInfo.MachineName);
+      }
+
+      _log.Info(string.Format("{0} {1} {2}", context.Request.HttpMethod, context.Request.Url, details));
+    }
+
+    private static ClientInfo GetClientInfo(HttpListenerContext context)
+    {
+      if (context.User == null)
+        return null;
+
+      var application = context.Request.Headers["User-agent"];
+
+      if (application == null)
+        return null;
+
+      var machine = context.Request.Headers["Machine-name"];
+
+      if (machine == null)
+        machine = context.Request.RemoteEndPoint.Address.ToString();
+
+      return new ClientInfo
+      {
+        Application = application,
+        UserName = context.User.Identity.Name,
+        MachineName = machine
+      };
     }
 
     private static NameValueCollection ParseQueryString(string queryString)
@@ -335,29 +243,6 @@ namespace Notung.Net
         raw = raw.Substring(0, raw.Length - 1);
 
       return raw.Split('/');;
-    }
-
-    private static ClientInfo GetClientInfo(HttpListenerContext context)
-    {
-      if (context.User == null)
-        return null;
-
-      var application = context.Request.Headers["User-agent"];
-
-      if (application == null)
-        return null;
-
-      var machine = context.Request.Headers["Machine-name"];
-
-      if (machine == null)
-        machine = context.Request.RemoteEndPoint.Address.ToString();
-
-      return new ClientInfo
-      {
-        Application = application,
-        UserName = context.User.Identity.Name,
-        MachineName = machine
-      };
     }
 
     #endregion

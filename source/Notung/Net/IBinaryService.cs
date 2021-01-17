@@ -71,18 +71,10 @@ namespace Notung.Net
       var serializer = m_factory.GetSerializer(Type.GetType(command));
       var cmd = (IRemotableCommand)serializer.Deserialize(request);
 
-      ClientInfo.ThreadInfo = cmd.Headers;
-      try
-      {
-        var result = cmd.Execute(m_service_provider);
+      var result = cmd.Execute(m_service_provider);
 
-        serializer = m_factory.GetSerializer(result.GetType());
-        serializer.Serialize(response, result);
-      }
-      finally
-      {
-        ClientInfo.ThreadInfo = null;
-      }
+      serializer = m_factory.GetSerializer(result.GetType());
+      serializer.Serialize(response, result);
     }
 
     public byte[] BinaryExchange(string command, byte[] data)

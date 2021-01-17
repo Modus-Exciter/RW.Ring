@@ -67,6 +67,9 @@ namespace Notung.Net
       m_caller.StreamExchange(string.Format("{0}, {1}", command.GetType().FullName,
         command.GetType().Assembly.GetName().Name), query.ProcessRequest, query.ProcessResponse);
 
+      if (((TResult)query.Result).Exception != null)
+        throw ((TResult)query.Result).Exception;
+
       return (TResult)query.Result;
     }
 
