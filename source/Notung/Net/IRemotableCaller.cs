@@ -55,6 +55,11 @@ namespace Notung.Net
       m_caller = caller;
     }
 
+    /// <summary>
+    /// Исполнитель команд на клиенте, который будет исполнять по умолчанию
+    /// </summary>
+    public static IRemotableCaller DefaultCaller { get; set; }
+
     public TResult Call<TResult>(RemotableCommand<TResult> command) where TResult : RemotableResult
     {
       var query = new Query

@@ -11,9 +11,24 @@ namespace Notung.Net
   public abstract class RemotableCommand<TResult> : IRemotableCommand
     where TResult : RemotableResult
   {
+    /// <summary>
+    /// Запуск команды на выполнение
+    /// </summary>
+    /// <returns>Результат выполнения команды на другой стороне</returns>
+    public TResult Execute()
+    {
+      var caller = RemoteCaller.DefaultCaller;
+
+      if (caller == null)
+        throw new InvalidOperationException("Default caller is not set");
+
+      return caller.Call(this);
+    }
+    
     RemotableResult IRemotableCommand.Execute(IServiceProvider service)
     {
       var res = this.CreateEmptyResult(service);
+
       try
       {
         this.Fill(res, service);
@@ -33,12 +48,24 @@ namespace Notung.Net
       return Activator.CreateInstance<TResult>();
     }
 
+    /// <summary>
+    /// Выполнение команды на стороне сервера
+    /// </summary>
+    /// <param name="result">Результат выполнения команды, в который можно добавить данные</param>
+    /// <param name="service">Сервис, выполняющий команду</param>
     protected abstract void Fill(TResult result, IServiceProvider service);
+
+    Type IRemotableCommand.ResultType 
+    { 
+      get { return typeof(TResult); } 
+    }
   }
 
   interface IRemotableCommand
   {
     RemotableResult Execute(IServiceProvider service);
+
+    Type ResultType { get; }
   }
 
   /// <summary>
@@ -68,28 +95,6 @@ namespace Notung.Net
     {
       get { return m_ok; }
       internal set { m_ok = value; }
-    }
-  }
-
-  public static class RemotableCommandExtensions
-  {
-    /// <summary>
-    /// Исполнитель команд на клиенте, который будет исполнять по умолчанию
-    /// </summary>
-    public static IRemotableCaller DefaultCaller { get; set; }
-
-    public static TResult Execute<TResult>(this RemotableCommand<TResult> command)
-      where TResult : RemotableResult
-    {
-      if (command == null)
-        throw new ArgumentNullException("command");
-
-      var caller = DefaultCaller;
-
-      if (caller == null)
-        throw new InvalidOperationException("Default caller is not set");
-
-      return caller.Call(command);
     }
   }
 }

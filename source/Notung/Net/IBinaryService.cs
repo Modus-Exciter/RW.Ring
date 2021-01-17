@@ -73,7 +73,7 @@ namespace Notung.Net
 
       var result = cmd.Execute(m_service_provider);
 
-      serializer = m_factory.GetSerializer(result.GetType());
+      serializer = m_factory.GetSerializer(cmd.ResultType);
       serializer.Serialize(response, result);
     }
 
