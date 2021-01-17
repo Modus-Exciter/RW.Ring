@@ -120,6 +120,7 @@ namespace Notung.Net
         if (m_binary_service != null)
         {
           m_binary_service.StreamExchange(PrepareCommand(command), input, output);
+
           return true;
         }
         else
@@ -145,17 +146,11 @@ namespace Notung.Net
 
     protected byte[] ReadFromStream(Stream stream)
     {
-      List<byte> result = new List<byte>();
-      byte[] buffer = new byte[512];
-      int count;
-
-      while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
+      using (var memory_stream = new MemoryStream())
       {
-        for (int i = 0; i < count; i++)
-          result.Add(buffer[i]);
+        stream.CopyTo(memory_stream);
+        return memory_stream.ToArray();
       }
-
-      return result.ToArray();
     }
 
     protected virtual string PrepareCommand(string command)

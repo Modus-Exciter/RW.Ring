@@ -87,17 +87,11 @@ namespace Notung.Net
           stream.Write(data, 0, data.Length);
           socket.Shutdown(SocketShutdown.Send);
 
-          List<byte> result = new List<byte>();
-          byte[] buffer = new byte[512];
-          int count;
-
-          while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
+          using (var memory_stream = new MemoryStream())
           {
-            for (int i = 0; i < count; i++)
-              result.Add(buffer[i]);
+            stream.CopyTo(memory_stream);
+            return memory_stream.ToArray();
           }
-
-          return result.ToArray();
         }
       }
     }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Mime;
 using System.Text;
 
 namespace Notung.Net
@@ -45,7 +43,8 @@ namespace Notung.Net
 
       if (request.GetTypes().Length > 0 && !HttpTypeHelper.CanConvert(request.GetType()))
       {
-        this.SetPostMethod(web_request);
+        web_request.Method = "POST";
+        web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
 
         var serializer = m_factory.GetSerializer(request.GetType());
 
@@ -75,7 +74,8 @@ namespace Notung.Net
       var web_request = CreateWebRequest(string.Format("{0}/StreamExchange/?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
-      this.SetPostMethod(web_request);
+      web_request.Method = "POST";
+      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
 
       using (var stream = web_request.GetRequestStream())
         processRequest(stream);
@@ -89,7 +89,8 @@ namespace Notung.Net
       var web_request = CreateWebRequest(string.Format("{0}/BinaryExchange?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
-      this.SetPostMethod(web_request);
+      web_request.Method = "POST";
+      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
 
       if (data != null && data.Length > 0)
       {
@@ -99,21 +100,14 @@ namespace Notung.Net
 
       using (var response = web_request.GetResponse())
       {
-        List<byte> result = new List<byte>();
-        byte[] buffer = new byte[512];
-
         using (var stream = response.GetResponseStream())
         {
-          int count;
-
-          while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
+          using (var memory_stream = new MemoryStream())
           {
-            for (int i = 0; i < count; i++)
-              result.Add(buffer[i]);
+            stream.CopyTo(memory_stream);
+            return memory_stream.ToArray();
           }
         }
-
-        return result.ToArray();
       }
     }
 
@@ -126,12 +120,6 @@ namespace Notung.Net
       web_request.Headers.Add("Machine-name", ClientInfo.ProcessInfo.MachineName);
 
       return web_request;
-    }
-
-    private void SetPostMethod(HttpWebRequest web_request)
-    {
-      web_request.Method = "POST";
-      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
     }
   }
 }
