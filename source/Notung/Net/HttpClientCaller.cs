@@ -75,7 +75,7 @@ namespace Notung.Net
         m_base_url, Uri.EscapeDataString(command)));
 
       web_request.Method = "POST";
-      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
+      web_request.ContentType = HttpTypeHelper.GetContentType(SerializationFormat.Binary);
 
       using (var stream = web_request.GetRequestStream())
         processRequest(stream);
@@ -90,7 +90,7 @@ namespace Notung.Net
         m_base_url, Uri.EscapeDataString(command)));
 
       web_request.Method = "POST";
-      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
+      web_request.ContentType = HttpTypeHelper.GetContentType(SerializationFormat.Binary);
 
       if (data != null && data.Length > 0)
       {
