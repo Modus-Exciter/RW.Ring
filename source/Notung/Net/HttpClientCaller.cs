@@ -14,6 +14,9 @@ namespace Notung.Net
 
     public HttpClientCaller(string baseUrl, ISerializationFactory serializationFactory)
     {
+      if (serializationFactory == null)
+        throw new ArgumentNullException("serializationFactory");
+      
       m_base_url = baseUrl.Trim();
       m_factory = serializationFactory;
 

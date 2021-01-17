@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using Notung.Logging;
 
 namespace Notung.Net
 {
@@ -15,6 +16,13 @@ namespace Notung.Net
       MachineName = Environment.MachineName,
       UserName = Environment.UserName
     };
+
+    static ClientInfo()
+    {
+      LoggingContext.Global["Application"] = _process.Application;
+      LoggingContext.Global["MachineName"] = _process.MachineName;
+      LoggingContext.Global["UserName"] = _process.UserName;
+    }
 
     [ThreadStatic]
     private static ClientInfo _thread;
@@ -51,7 +59,19 @@ namespace Notung.Net
     public static ClientInfo ThreadInfo
     {
       get { return _thread; }
-      internal set { _thread = value; }
+      internal set
+      {
+        _thread = value;
+
+        if (_thread != null)
+        {
+          LoggingContext.Thread["Application"] = _thread.Application;
+          LoggingContext.Thread["MachineName"] = _thread.MachineName;
+          LoggingContext.Thread["UserName"] = _thread.UserName;
+        }
+        else
+          LoggingContext.Thread.Clear();
+      }
     }
   }
 }
