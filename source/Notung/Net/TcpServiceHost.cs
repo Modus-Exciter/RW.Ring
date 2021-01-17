@@ -6,6 +6,9 @@ using Notung.Logging;
 
 namespace Notung.Net
 {
+  /// <summary>
+  /// Хост для сервисов, работающий по протоколу TCP
+  /// </summary>
   public class TcpServiceHost : ServiceHostBase
   {
     private readonly Socket m_socket;
@@ -36,9 +39,7 @@ namespace Notung.Net
       base.Dispose(disposing);
 
       lock (m_lock)
-      {
         m_socket.Dispose();
-      }
     }
 
     protected override object GetState()
@@ -96,6 +97,8 @@ namespace Notung.Net
 
     #endregion
 
+    #region Implementation
+
     private ClientInfo ParseClientInfo(string value)
     {
       var bits = value.Split(',');
@@ -141,5 +144,7 @@ namespace Notung.Net
       if (result != null)
         this.GetSerializer(info.ResponseType).Serialize(stream, result);
     }
+
+    #endregion
   }
 }

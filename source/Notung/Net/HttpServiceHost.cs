@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Threading;
-using Notung.Loader;
 using Notung.Logging;
 using Notung.Properties;
-using Notung.Threading;
 
 namespace Notung.Net
 {
+  /// <summary>
+  /// Хост для сервисов, работающих по протоколу HTTP
+  /// </summary>
   public class HttpServiceHost : ServiceHostBase
   {
     private readonly HttpListener m_listener;
@@ -22,6 +21,7 @@ namespace Notung.Net
     {
       if (serializationFactory == null)
         throw new ArgumentNullException("serializationFactory");
+
       m_listener = listener;
     }
 
