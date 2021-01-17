@@ -93,14 +93,6 @@ namespace Notung.Net
       }
     }
 
-    private void ListeningThread()
-    {
-      while (m_working_thread != null)
-      {
-        ThreadPool.QueueUserWorkItem(ProcessRequest, GetState());
-      }
-    }
-
     protected SerializationFormat SerializationFormat
     {
       get { return m_serialization.Format; }
@@ -121,20 +113,6 @@ namespace Notung.Net
       return caller;
     }
 
-    protected bool RunBinaryService(string command, Action<string, IBinaryService, object> action, object context)
-    {
-      using (m_callers_lock.ReadLock())
-      {
-        if (m_binary_service != null)
-        {
-          action(command, m_binary_service, context);
-          return true;
-        }
-        else
-          return false;
-      }
-    }
-
     protected bool StreamExchange(string command, Stream input, Stream output)
     {
       using (m_callers_lock.ReadLock())
@@ -142,7 +120,6 @@ namespace Notung.Net
         if (m_binary_service != null)
         {
           m_binary_service.StreamExchange(PrepareCommand(command), input, output);
-
           return true;
         }
         else
@@ -191,5 +168,13 @@ namespace Notung.Net
     protected abstract void ProcessRequest(object state);
 
     protected abstract void StartListener();
+
+    private void ListeningThread()
+    {
+      while (m_working_thread != null)
+      {
+        ThreadPool.QueueUserWorkItem(ProcessRequest, GetState());
+      }
+    }
   }
 }
