@@ -19,19 +19,13 @@ namespace Notung.Net
   /// <summary>
   /// Заглушка, выполняющая команду локально
   /// </summary>
-  public sealed class RemotableCallerStub<TService> : IRemotableCaller, IServiceProvider where TService : new()
+  public sealed class RemotableCallerStub : IRemotableCaller
   {
+    public IServiceProvider Provider { get; set; }
+    
     public TResult Call<TResult>(RemotableCommand<TResult> command) where TResult : RemotableResult
     {
-      return (TResult)((IRemotableCommand)command).Execute(this);
-    }
-
-    public object GetService(Type serviceType)
-    {
-      if (serviceType.IsAssignableFrom(typeof(TService)))
-        return new TService();
-      else
-        return null;
+      return (TResult)((IRemotableCommand)command).Execute(this.Provider);
     }
   }
 
@@ -56,7 +50,7 @@ namespace Notung.Net
     }
 
     /// <summary>
-    /// Исполнитель команд на клиенте, который будет исполнять по умолчанию
+    /// Исполнитель команд на клиенте, который будет исполнять их по умолчанию
     /// </summary>
     public static IRemotableCaller DefaultCaller { get; set; }
 
@@ -72,8 +66,8 @@ namespace Notung.Net
       m_caller.StreamExchange(string.Format("{0}, {1}", command.GetType().FullName,
         command.GetType().Assembly.GetName().Name), query.ProcessRequest, query.ProcessResponse);
 
-      if (((TResult)query.Result).Exception != null)
-        throw ((TResult)query.Result).Exception;
+      if (query.Result.Exception != null)
+        throw query.Result.Exception;
 
       return (TResult)query.Result;
     }
@@ -84,7 +78,7 @@ namespace Notung.Net
     {
       public RemoteCaller Caller;
 
-      public object Result;
+      public RemotableResult Result;
 
       public IRemotableCommand Command;
 
@@ -99,7 +93,7 @@ namespace Notung.Net
       public void ProcessResponse(Stream response)
       {
         var serializer = this.Caller.m_factory.GetSerializer(ResultType);
-        this.Result = serializer.Deserialize(response);
+        this.Result = (RemotableResult)serializer.Deserialize(response);
       }
     }
 
