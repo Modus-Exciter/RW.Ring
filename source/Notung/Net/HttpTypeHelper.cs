@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Notung.Threading;
+using System.Net.Mime;
 
 namespace Notung.Net
 {
@@ -67,6 +68,23 @@ namespace Notung.Net
     {
       using (_lock.ReadLock())
         return _converters[parametersType];
+    }
+
+    public static string GetContentType(SerializationFormat format)
+    {
+      switch (format)
+      {
+        case SerializationFormat.Binary:
+          return MediaTypeNames.Application.Octet;
+
+        case SerializationFormat.JSON:
+          return "application/json; Charset=utf-8";
+
+        case SerializationFormat.Xml:
+          return MediaTypeNames.Text.Xml;
+      }
+
+      return MediaTypeNames.Application.Octet;
     }
   }
 

@@ -85,7 +85,7 @@ namespace Notung.Net
               var return_type = info.ResponseType;
               var serializer = this.GetSerializer(return_type);
 
-              context.Response.ContentType = "application/json; Charset=utf-8";
+              context.Response.ContentType = HttpTypeHelper.GetContentType(this.SerializationFormat);
               serializer.Serialize(stream, result);
             }
           }

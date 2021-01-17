@@ -131,21 +131,7 @@ namespace Notung.Net
     private void SetPostMethod(HttpWebRequest web_request)
     {
       web_request.Method = "POST";
-
-      switch (m_factory.Format)
-      {
-        case SerializationFormat.Binary:
-          web_request.ContentType = MediaTypeNames.Application.Octet;
-          break;
-
-        case SerializationFormat.JSON:
-          web_request.ContentType = "application/json";
-          break;
-
-        case SerializationFormat.Xml:
-          web_request.ContentType = MediaTypeNames.Text.Xml;
-          break;
-      }
+      web_request.ContentType = HttpTypeHelper.GetContentType(m_factory.Format);
     }
   }
 }

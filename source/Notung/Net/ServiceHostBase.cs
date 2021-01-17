@@ -101,6 +101,11 @@ namespace Notung.Net
       }
     }
 
+    protected SerializationFormat SerializationFormat
+    {
+      get { return m_serialization.Format; }
+    }
+
     protected ISerializer GetSerializer(Type serializationType)
     {
       return m_serialization.GetSerializer(serializationType);
