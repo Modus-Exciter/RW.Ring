@@ -43,16 +43,7 @@
     <Compile Include="Data\SerializeCondition.cs" />
     <Compile Include="Data\UnweightedMatrixGraph.cs" />
     <Compile Include="Data\WeightedListGraph.cs" />
-    <Compile Include="Net\Host.cs" />
-    <Compile Include="Net\ICallSerializer.cs" />
-    <Compile Include="Net\ICommandSerializer.cs" />
-    <Compile Include="Net\IRemotableCaller.cs" />
-    <Compile Include="Net\IRemotableCommand.cs" />
-    <Compile Include="Net\RemoteCaller.cs" />
     <Compile Include="Net\ISessionManager.cs" />
-    <Compile Include="Net\IStreamMessage.cs" />
-    <Compile Include="Net\ITransport.cs" />
-    <Compile Include="Net\XmlNetworkProxy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -46,8 +46,7 @@ namespace Notung.Net
 
     public ICallResult Call(RpcOperationInfo operation, IParametersList request)
     {
-      var return_type = operation.ResponseType;
-      var ret = (ICallResult)Activator.CreateInstance(return_type);
+      var ret = (ICallResult)Activator.CreateInstance(operation.ResponseType);
 
       try
       {

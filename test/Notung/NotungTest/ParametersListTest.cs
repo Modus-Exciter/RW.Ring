@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Net;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 
 namespace NotungTest
 {
@@ -94,74 +91,6 @@ namespace NotungTest
       Assert.AreEqual(325f, parList2.GetValues()[1]);
     }
 
-    [TestMethod]
-    public void BinaryCommandSerizlization()
-    {
-      var method = typeof(IAryx).GetMethod("Sum");
-      ISerializationCommand cmd = new SerializationCommand(typeof(IAryx).GetMethod("Sum"), new object[] { 3, 5 });
-      using (var ms = new MemoryStream())
-      {
-        var ser = new BinaryCallSerializer();
-        ser.Serialize(cmd, ms);
-
-        ms.Position = 0;
-
-        cmd = ser.Deserialize(ms);
-      }
-      Assert.AreEqual(8, cmd.Call(new Aryx()));
-    }
-
-    [TestMethod]
-    public void ContractCommandSerizlization()
-    {
-      var method = typeof(IAryx).GetMethod("Sum");
-      ISerializationCommand cmd = new SerializationCommand(typeof(IAryx).GetMethod("Sum"), new object[] { 3, 5 });
-
-      using (var ms = new MemoryStream())
-      {
-        var ser = new DataContractCallSerializer();
-        ser.Serialize(cmd, ms);
-
-        ms.Position = 0;
-
-        cmd = ser.Deserialize(ms);
-      }
-      Assert.AreEqual(8, cmd.Call(new Aryx()));
-    }
-
-    [TestMethod]
-    public void BinaryCustomCommandSerizlization()
-    {
-      ISerializationCommand cmd = new SomeCommand { Data = 5 };
-      using (var ms = new MemoryStream())
-      {
-        var ser = new BinaryCallSerializer();
-        ser.Serialize(cmd, ms);
-
-        ms.Position = 0;
-
-        cmd = ser.Deserialize(ms);
-      }
-      Assert.AreEqual("{5}", cmd.Call(null));
-    }
-
-    [TestMethod]
-    public void ContractCustomCommandSerizlization()
-    {
-      ISerializationCommand cmd = new SomeCommand { Data = 5 };
-
-      using (var ms = new MemoryStream())
-      {
-        var ser = new DataContractCallSerializer();
-        ser.Serialize(cmd, ms);
-
-        ms.Position = 0;
-
-        cmd = ser.Deserialize(ms);
-      }
-      Assert.AreEqual("{5}", cmd.Call(null));
-    }
-
     [Serializable, DataContract(Namespace = "")]
     private class AddClass { }
 
@@ -197,23 +126,6 @@ namespace NotungTest
       mod = a - res * b;
 
       return res;
-    }
-  }
-
-  [Serializable]
-  public class SomeCommand : ISerializationCommand
-  {
-    private int m_data;
-
-    public int Data 
-    {
-      get {return m_data;}
-      set {m_data = value;}
-    }
-
-    public object Call(object instance)
-    {
-      return "{" + this.Data + "}";
     }
   }
 }
