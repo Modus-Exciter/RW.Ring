@@ -88,14 +88,13 @@ namespace Notung.Net
     {
       lock (m_lock)
       {
+        m_socket.Dispose();
+
         if (m_working_thread != null && m_working_thread.IsAlive)
         {
           m_working_thread.Abort();
           m_working_thread = null;
         }
-
-        m_socket.Shutdown(SocketShutdown.Both);
-        m_socket.Dispose();
       }
     }
 
@@ -124,9 +123,11 @@ namespace Notung.Net
               break;
 
             case "s:":
+              StreamExchange(command.Substring(2), stream, socket);
               break;
 
             case "b:":
+              BinaryExchange(command.Substring(2), stream, socket);
               break;
           }
 
@@ -143,6 +144,41 @@ namespace Notung.Net
         caller = m_callers[serviceName];
 
       return caller;
+    }
+
+    private void StreamExchange(string command, NetworkStream stream, Socket socket)
+    {
+      using (m_callers_lock.ReadLock())
+      {
+        if (m_binary_service != null)
+        {
+          m_binary_service.StreamExchange(command, stream, stream);
+        }
+      }
+    }
+
+    private void BinaryExchange(string command, NetworkStream stream, Socket socket)
+    {
+      using (m_callers_lock.ReadLock())
+      {
+        if (m_binary_service != null) 
+        {
+          List<byte> result = new List<byte>();
+          byte[] buffer = new byte[512];
+          int count;
+
+          while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
+          {
+            for (int i = 0; i < count; i++)
+              result.Add(buffer[i]);
+          }
+
+          var ret = m_binary_service.BinaryExchange(command, result.ToArray());
+
+          stream.Write(ret, 0, ret.Length);
+          stream.Flush();
+        }
+      }
     }
 
     private void ProcessCall(string command, NetworkStream stream, Socket socket)

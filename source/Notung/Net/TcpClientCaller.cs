@@ -79,7 +79,7 @@ namespace Notung.Net
           byte[] buffer = new byte[512];
           int count;
 
-          while (stream.DataAvailable && (count = stream.Read(buffer, 0, buffer.Length)) > 0)
+          while ((count = stream.Read(buffer, 0, buffer.Length)) > 0)
           {
             for (int i = 0; i < count; i++)
               result.Add(buffer[i]);
