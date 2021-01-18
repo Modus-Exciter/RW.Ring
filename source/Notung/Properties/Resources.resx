@@ -157,6 +157,9 @@
   <data name="INVALID_PLUGIN_FILE" xml:space="preserve">
     <value>File {0} is not a correct plugin file</value>
   </data>
+  <data name="INVALID_SERVER_OPERATION" xml:space="preserve">
+    <value>Server doesn't support operation {0}</value>
+  </data>
   <data name="PLUGIN_NOT_FOUND" xml:space="preserve">
     <value>Assembly {0} specified in plugin file {1} does not exist</value>
   </data>

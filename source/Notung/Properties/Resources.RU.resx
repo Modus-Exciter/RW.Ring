@@ -153,6 +153,9 @@
   <data name="INVALID_PLUGIN_FILE" xml:space="preserve">
     <value>Файл {0} не является корректным плагином</value>
   </data>
+  <data name="INVALID_SERVER_OPERATION" xml:space="preserve">
+    <value>Север не поддерживает операцию {0}</value>
+  </data>
   <data name="PLUGIN_NOT_FOUND" xml:space="preserve">
     <value>Сборка {0}, указанная в файле плагина {1}, не существует</value>
   </data>

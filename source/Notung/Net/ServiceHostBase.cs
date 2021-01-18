@@ -158,11 +158,11 @@ namespace Notung.Net
       return command;
     }
 
+    protected abstract void StartListener();
+
     protected abstract object GetState();
 
     protected abstract void ProcessRequest(object state);
-
-    protected abstract void StartListener();
 
     private void ListeningThread()
     {

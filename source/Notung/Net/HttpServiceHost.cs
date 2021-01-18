@@ -82,15 +82,15 @@ namespace Notung.Net
 
             if (result != null)
             {
-              var return_type = info.ResponseType;
-              var serializer = this.GetSerializer(return_type);
+              var serializer = this.GetSerializer(info.ResponseType);
 
               context.Response.ContentType = HttpTypeHelper.GetContentType(this.SerializationFormat);
               serializer.Serialize(stream, result);
             }
           }
           else
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException("localPath", string.Format(
+              Resources.INVALID_SERVER_OPERATION, context.Request.Url.LocalPath));
         }
         catch (Exception ex)
         {
