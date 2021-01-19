@@ -103,7 +103,7 @@ namespace Notung.Net
     {
       var bits = value.Split(',');
 
-      if (bits.Length != 3)
+      if (bits.Length < 3)
         return null;
 
       if (bits[0].StartsWith("A:") && bits[1].StartsWith("U:") && bits[2].StartsWith("M:"))

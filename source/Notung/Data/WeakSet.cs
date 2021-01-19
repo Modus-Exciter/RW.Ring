@@ -15,6 +15,7 @@ namespace Notung.Data
     private int m_free_index = -1;
     private int m_last_index = 0;
     private Slot[] m_slots;
+    private int[] m_buckets;
     private readonly SharedLock m_lock;
 
     private static readonly DisposableStub _fake_lock = new DisposableStub();
@@ -42,7 +43,10 @@ namespace Notung.Data
       using (this.WriteLock())
       {
         if (m_slots == null)
+        {
           m_slots = new Slot[3];
+          m_buckets = new int[3];
+        }
 
         int previous;
         int bucket_index;
@@ -197,14 +201,17 @@ namespace Notung.Data
       if (m_slots != null)
         Array.Copy(m_slots, 0, tmp_slots, 0, m_last_index);
 
+      var tmp_buckets = new int[prime];
+
       for (int i = 0; i < m_last_index; i++)
       {
         int index = (tmp_slots[i].hashCode & int.MaxValue) % prime;
-        tmp_slots[i].next = tmp_slots[index].bucket - 1;
-        tmp_slots[index].bucket = i + 1;
+        tmp_slots[i].next = tmp_buckets[index] - 1;
+        tmp_buckets[index] = i + 1;
       }
 
       m_slots = tmp_slots;
+      m_buckets = tmp_buckets;
     }
 
     private int FindSlotIndex(T item, out int bucketIndex, out int previous, bool removeExpired)
@@ -217,7 +224,7 @@ namespace Notung.Data
       previous = -1;
       bucketIndex = (hash_code & int.MaxValue) % m_slots.Length;
 
-      for (int i = m_slots[bucketIndex].bucket - 1; i >= 0; i = m_slots[i].next)
+      for (int i = m_buckets[bucketIndex] - 1; i >= 0; i = m_slots[i].next)
       {
         if (m_slots[i].hashCode == hash_code)
         {
@@ -261,8 +268,8 @@ namespace Notung.Data
 
       m_slots[slotIndex].hashCode = hash_code;
       m_slots[slotIndex].handle = GCHandle.Alloc(item, GCHandleType.Weak);
-      m_slots[slotIndex].next = m_slots[bucketIndex].bucket - 1;
-      m_slots[bucketIndex].bucket = slotIndex + 1;
+      m_slots[slotIndex].next = m_buckets[bucketIndex] - 1;
+      m_buckets[bucketIndex] = slotIndex + 1;
       m_count++;
     }
 
@@ -272,7 +279,7 @@ namespace Notung.Data
         m_slots[slotIndex].handle.Free();
 
       if (previous < 0)
-        m_slots[bucketIndex].bucket = m_slots[slotIndex].next + 1;
+        m_buckets[bucketIndex] = m_slots[slotIndex].next + 1;
       else
         m_slots[previous].next = m_slots[slotIndex].next;
 
@@ -299,7 +306,6 @@ namespace Notung.Data
     {
       public int hashCode;
       public int next;
-      public int bucket;
       public GCHandle handle;
 
       public T Target
