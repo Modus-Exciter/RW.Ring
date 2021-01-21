@@ -22,6 +22,8 @@ namespace Notung.Net
         m_base_url += "/";
     }
 
+    public bool UseDefaultCredentials { get; set; }
+
     public ICallResult Call(string serverOperation, IParametersList request, RpcOperationInfo operation)
     {
       var builder = new StringBuilder(m_base_url);
@@ -115,7 +117,11 @@ namespace Notung.Net
     {
       var web_request = (HttpWebRequest)WebRequest.Create(builder.ToString());
 
-      web_request.UseDefaultCredentials = true;
+      if (this.UseDefaultCredentials)
+        web_request.UseDefaultCredentials = true;
+      else
+        web_request.Credentials = new NetworkCredential(ClientInfo.ProcessInfo.UserName, string.Empty);
+
       web_request.UserAgent = ClientInfo.ProcessInfo.Application;
       web_request.Headers.Add("Machine-name", ClientInfo.ProcessInfo.MachineName);
 

@@ -14,7 +14,7 @@ namespace Notung.Net
     {
       Application = Global.MainAssembly.GetName().Name,
       MachineName = Environment.MachineName,
-      UserName = Environment.UserName
+      UserName = string.Format("{0}\\{1}", Environment.UserDomainName, Environment.UserName)
     };
 
     static ClientInfo()
