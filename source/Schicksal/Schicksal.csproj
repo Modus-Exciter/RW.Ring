@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Anova\AnovaHtmlSaver.cs" />
+    <Compile Include="Anova\DifferenceInfo.cs" />
     <Compile Include="Anova\FisherCriteria.cs" />
     <Compile Include="Anova\FisherMetrics.cs" />
     <Compile Include="Anova\FisherTableProcessor.cs" />
