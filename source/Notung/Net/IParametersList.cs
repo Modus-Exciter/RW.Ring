@@ -53,6 +53,7 @@ namespace Notung.Net
     public static Type GetRequiredType(MethodBase method)
     {
       Debug.Assert(method != null);
+
       return GetRequiredType(method, null);
     }
 
@@ -217,7 +218,8 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4> : ParametersListBase
     {
-      private static readonly Type[] _types = new Type[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+      private static readonly Type[] _types 
+        = new Type[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
 
       [DataMember(Name = "A", EmitDefaultValue = false)]
       private readonly T1 m_1;

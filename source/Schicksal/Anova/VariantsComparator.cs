@@ -63,17 +63,8 @@ namespace Schicksal.Anova
 
           foreach (string factor in m_factors)
           {
-            var search = string.Format("[{0}] = ", factor);
-            var index = filter.IndexOf(search);
-            if (index >= 0)
-            {
-              var next = filter.IndexOf(" AND ", index + search.Length);
+            var search = GetFactorLevel(filter, factor);
 
-              if (next >= 0)
-                search = filter.Substring(index + search.Length, next - (index + search.Length));
-              else
-                search = filter.Substring(index + search.Length);
-            }
             if (m_source.Columns[factor].DataType == typeof(string)
               && search.StartsWith("'") && search.EndsWith("'"))
               search = search.Substring(1, search.Length - 2);
@@ -97,11 +88,38 @@ namespace Schicksal.Anova
             row["Interval"] = double.NaN;
             row["Std error"] = double.NaN;
           }
+
           res.Rows.Add(row);
         }
       }
 
       return res;
+    }
+
+    private static string GetFactorLevel(string filter, string factor)
+    {
+      var search = string.Format("[{0}] = ", factor);
+      var index = filter.IndexOf(search);
+      if (index >= 0)
+      {
+        var next = filter.IndexOf(" AND ", index + search.Length);
+
+        if (next >= 0)
+          search = filter.Substring(index + search.Length, next - (index + search.Length));
+        else
+          search = filter.Substring(index + search.Length);
+      }
+      else
+      {
+        search = string.Format("[{0}] IS NULL", factor);
+
+        if (!filter.Contains(search))
+          search = filter;
+        else
+          search = CoreResources.NULL;
+      }
+
+      return search;
     }
 
     public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
