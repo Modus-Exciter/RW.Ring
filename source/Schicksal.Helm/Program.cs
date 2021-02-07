@@ -32,7 +32,7 @@ namespace Schicksal.Helm
       }.RunApplication();
     }
 
-    public class SchicksalLoadingQueue : LoadingQueue
+    private class SchicksalLoadingQueue : LoadingQueue
     {
       protected override void FillLoaders(Action<IApplicationLoader> add, Func<Type, bool> contains)
       {
