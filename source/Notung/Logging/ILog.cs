@@ -19,7 +19,7 @@ namespace Notung.Logging
 
     public LoggingData(LoggingEvent[] data, int length) : this()
     {
-      Debug.Assert(data == null || (length > 0 && length <= data.Length), "Length is ou of range");
+      Debug.Assert(data == null || (length > 0 && length <= data.Length), "Length is out of range");
 
       m_data = data;
 
