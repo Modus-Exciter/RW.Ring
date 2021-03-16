@@ -29,22 +29,9 @@ namespace Schicksal.Helm
       InitializeComponent();
 
       var size = Screen.PrimaryScreen.WorkingArea.Size;
-
       this.Size = new System.Drawing.Size(size.Width * 3 / 4, size.Height * 3 / 4);
+
       LanguageSwitcher.Switch(AppManager.Configurator.GetSection<Program.Preferences>().Language ?? "RU");
-    }
-
-    protected override void OnShown(EventArgs e)
-    {
-      base.OnShown(e);
-
-      foreach (var arg in AppManager.Instance.CommandLineArgs)
-      {
-        if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
-          this.OpenFile(arg);
-      }
-
-      FillLastFilesMenu();
     }
 
     internal void FillLastFilesMenu()
@@ -142,6 +129,39 @@ namespace Schicksal.Helm
       }
     }
 
+    private void OpenTableForm(string fileName, DataTable table)
+    {
+      if (table == null)
+        return;
+
+      var table_form = new TableForm();
+
+      table_form.DataSource = table;
+      table_form.Text = Path.GetFileName(fileName);
+      table_form.MdiParent = this;
+      table_form.FileName = fileName;
+      table_form.WindowState = FormWindowState.Maximized;
+
+      table_form.Show();
+    }
+
+    private DataTable ReadFile(string fileName)
+    {
+      try
+      {
+        using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+        {
+          return DataTableSaver.ReadDataTable(fs);
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.Error("Serialization exception", ex);
+        AppManager.Notificator.Show(ex.Message, InfoLevel.Error);
+        return null;
+      }
+    }
+
     private void OpenFile(string fileName)
     {
       AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[fileName] = DateTime.Now;
@@ -149,30 +169,7 @@ namespace Schicksal.Helm
       var table_form = this.MdiChildren.OfType<TableForm>().FirstOrDefault(f => f.FileName == fileName);
 
       if (table_form == null)
-      {
-        table_form = new TableForm();
-
-        try
-        {
-          using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-          {
-            table_form.DataSource = DataTableSaver.ReadDataTable(fs);
-          }
-        }
-        catch (Exception ex)
-        {
-          _log.Error("Serialization exception", ex);
-          AppManager.Notificator.Show(ex.Message, InfoLevel.Error);
-          table_form.Dispose();
-          return;
-        }
-
-        table_form.Text = Path.GetFileName(fileName);
-        table_form.MdiParent = this;
-        table_form.FileName = fileName;
-        table_form.WindowState = FormWindowState.Maximized;
-        table_form.Show();
-      }
+        this.OpenTableForm(fileName, ReadFile(fileName));
       else
         table_form.Activate();
     }
@@ -314,7 +311,30 @@ namespace Schicksal.Helm
       else
         CreateImportMenu(imports);
 
+      LoadFilesFromCommandArgs();
+
       return true;
+    }
+
+    private void LoadFilesFromCommandArgs()
+    {
+      foreach (var arg in AppManager.Instance.CommandLineArgs)
+      {
+        if (File.Exists(arg) && Path.GetExtension(arg).ToLower() == ".sks")
+        {
+          AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[arg] = DateTime.Now;
+
+          if (this.InvokeRequired)
+            this.Invoke(new Action<string, DataTable>(this.OpenTableForm), arg, ReadFile(arg));
+          else
+            this.OpenTableForm(arg, ReadFile(arg));
+        }
+      }
+
+      if (this.InvokeRequired)
+        this.Invoke(new Action(this.FillLastFilesMenu));
+      else
+        this.FillLastFilesMenu();
     }
 
     private void CreateImportMenu(IList<ITableImport> imports)
