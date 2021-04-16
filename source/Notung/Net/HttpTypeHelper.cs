@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Notung.Threading;
 using System.Net.Mime;
+using Notung.Threading;
 
 namespace Notung.Net
 {
