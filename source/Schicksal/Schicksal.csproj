@@ -65,6 +65,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Regression\CorrelationMetrics.cs" />
+    <Compile Include="Regression\CorrelationTest.cs" />
+    <Compile Include="Regression\DataColumnGroup.cs" />
     <Compile Include="SchicksalResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

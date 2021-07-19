@@ -50,6 +50,8 @@ namespace Schicksal.Helm
       private Dictionary<string, string[]> m_anova_settings = new Dictionary<string, string[]>();
       [DataMember(Name = "BaseStatSettings")]
       private Dictionary<string, string[]> m_bs_settings = new Dictionary<string, string[]>();
+      [DataMember(Name = "AncovaSettings")]
+      private Dictionary<string, string[]> m_ancova_settings = new Dictionary<string, string[]>();
 
       public Dictionary<string, DateTime> LastFiles
       {
@@ -76,6 +78,17 @@ namespace Schicksal.Helm
             m_anova_settings = new Dictionary<string, string[]>();
 
           return m_anova_settings;
+        }
+      }
+
+      public Dictionary<string, string[]> AncovaSettings
+      {
+        get
+        {
+          if (m_ancova_settings == null)
+            m_ancova_settings = new Dictionary<string, string[]>();
+
+          return m_ancova_settings;
         }
       }
 

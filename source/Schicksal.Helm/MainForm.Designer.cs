@@ -45,6 +45,7 @@
       this.m_menu_analyze = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_basic = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_anova = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_cmd_ancova = new System.Windows.Forms.ToolStripMenuItem();
       this.m_menu_standard_tables = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_student = new System.Windows.Forms.ToolStripMenuItem();
       this.m_cmd_fisher_5 = new System.Windows.Forms.ToolStripMenuItem();
@@ -166,7 +167,8 @@
       // 
       this.m_menu_analyze.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_cmd_basic,
-            this.m_cmd_anova});
+            this.m_cmd_anova,
+            this.m_cmd_ancova});
       this.m_menu_analyze.Enabled = false;
       this.m_menu_analyze.Name = "m_menu_analyze";
       this.m_menu_analyze.Size = new System.Drawing.Size(57, 20);
@@ -187,6 +189,14 @@
       this.m_cmd_anova.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_anova.Text = "ANOVA";
       this.m_cmd_anova.Click += new System.EventHandler(this.m_cmd_anova_Click);
+      // 
+      // m_cmd_ancova
+      // 
+      this.m_cmd_ancova.Image = global::Schicksal.Helm.Properties.Resources.line_chart;
+      this.m_cmd_ancova.Name = "m_cmd_ancova";
+      this.m_cmd_ancova.Size = new System.Drawing.Size(154, 22);
+      this.m_cmd_ancova.Text = "ANCOVA";
+      this.m_cmd_ancova.Click += new System.EventHandler(this.ancovaToolStripMenuItem_Click);
       // 
       // m_menu_standard_tables
       // 
@@ -297,6 +307,7 @@
     private System.Windows.Forms.ToolStripMenuItem m_cmd_basic;
     private System.Windows.Forms.ToolStripMenuItem m_menu_help;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_about;
+    private System.Windows.Forms.ToolStripMenuItem m_cmd_ancova;
   }
 }
 

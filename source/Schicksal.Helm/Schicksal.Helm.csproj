@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AncovaResultsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AncovaResultsForm.Designer.cs">
+      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BasicStatisticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +96,12 @@
     </Compile>
     <Compile Include="AnovaResultsForm.Designer.cs">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CorrelationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CorrelationForm.Designer.cs">
+      <DependentUpon>CorrelationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -146,6 +158,9 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AncovaResultsForm.resx">
+      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnovaResultsForm.RU.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,6 +175,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CompareVariantsForm.RU.resx">
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CorrelationForm.resx">
+      <DependentUpon>CorrelationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -206,6 +224,7 @@
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <Content Include="Schicksal.Manual.pdf" />
+    <None Include="Properties\DataSources\Schicksal.Regression.CorrelationMetrics.datasource" />
     <None Include="Schicksal.snk" />
   </ItemGroup>
   <ItemGroup>

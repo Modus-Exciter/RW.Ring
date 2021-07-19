@@ -17,6 +17,7 @@ using Schicksal.Basic;
 using Schicksal.Exchange;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
+using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
@@ -90,6 +91,7 @@ namespace Schicksal.Helm
       m_menu_analyze.Text = Resources.ANALYZE;
       m_cmd_basic.Text = Resources.BASIC_STATISTICS;
       m_cmd_anova.Text = Resources.ANOVA;
+      m_cmd_ancova.Text = Resources.ANCOVA;
       m_cmd_about.Text = Resources.ABOUT;
 
       foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)
@@ -433,6 +435,55 @@ namespace Schicksal.Helm
             results_form.ResultColumn = dlg.DataSource.Result;
             results_form.Show(this);
           }
+        }
+      }
+    }
+
+    private void ancovaToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      var table_form = this.ActiveMdiChild as TableForm;
+
+      if (table_form == null)
+        return;
+
+      var table = table_form.DataSource;
+
+      if (table == null)
+        return;
+
+      using (var dlg = new StatisticsParametersDialog())
+      {
+        dlg.Text = Resources.ANCOVA;
+        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().AncovaSettings);
+
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+          var processor = new CorrelationTestProcessor(table,
+            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result);
+
+          if (AppManager.OperationLauncher.Run(processor,
+            new LaunchParameters
+            {
+              Caption = Resources.ANCOVA,
+              Bitmap = Resources.column_chart
+            }) == TaskStatus.RanToCompletion)
+          {
+            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().AncovaSettings);
+            var results_form = new AncovaResultsForm();
+            results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
+              Resources.ANCOVA, table_form.Text, dlg.DataSource.Probability, dlg.DataSource.Result);
+            results_form.DataSorce = processor.Results;
+            results_form.Factors = dlg.DataSource.Predictors.ToArray();
+            results_form.ResultColumn = dlg.DataSource.Result;
+            results_form.Filter = dlg.DataSource.Filter;
+            results_form.Probability = dlg.DataSource.Probability;
+            results_form.SourceTable = table;
+            results_form.Show(this);
+          }
+          //{
+          //  results_form.Factors = processor.Factors;
+          //  results_form.ResultColumn = dlg.DataSource.Result;
+          //}
         }
       }
     }
