@@ -73,6 +73,7 @@ namespace Notung.Threading
     private static void RunInParallelThread(ThreadStart threadStart)
     {
       Thread thread = new Thread(threadStart);
+
       thread.CurrentCulture = Thread.CurrentThread.CurrentCulture;
       thread.CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
       thread.SetApartmentState(ApartmentState.STA);

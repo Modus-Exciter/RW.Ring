@@ -93,6 +93,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Analysis of covariance.
+        /// </summary>
+        internal static string ANCOVA {
+            get {
+                return ResourceManager.GetString("ANCOVA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Analysis of variance.
         /// </summary>
         internal static string ANOVA {

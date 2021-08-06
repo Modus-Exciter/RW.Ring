@@ -123,10 +123,10 @@ namespace Schicksal.Anova
 
         var max_dif = comparator.Results[0];
         var sig_dif = comparator.Results[0];
-        var max_val = comparator.Results[0];
-        var min_val = comparator.Results[0];
+        var max_val = new Tuple<string, double>(comparator.Results[0].Factor1,comparator.Results[0].Mean1);  //comparator.Results[0];
+        var min_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1);//comparator.Results[0];
 
-        for (int i = 1; i < comparator.Results.Length; i++)
+        for (int i = 0; i < comparator.Results.Length; i++)
         {
           if (max_dif.ActualDifference < comparator.Results[i].ActualDifference
             && max_dif.Probability < m_probability)
@@ -135,11 +135,17 @@ namespace Schicksal.Anova
           if (sig_dif.Probability > comparator.Results[i].Probability)
             sig_dif = comparator.Results[i];
 
-          if (max_val.Mean1 < comparator.Results[i].Mean1)
-            max_val = comparator.Results[i];
+          if (max_val.Item2 < comparator.Results[i].Mean1)
+            max_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);// comparator.Results[i];
 
-          if (min_val.Mean1 > comparator.Results[i].Mean1)
-            min_val = comparator.Results[i];
+          if (max_val.Item2 < comparator.Results[i].Mean2)
+            max_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);// comparator.Results[i];
+
+          if (min_val.Item2 > comparator.Results[i].Mean1)
+            min_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);// comparator.Results[i];
+
+          if (min_val.Item2 > comparator.Results[i].Mean2)
+            min_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);// comparator.Results[i];
         }
 
         writer.WriteText(string.Format("{0} «{1}» {2} «{3}»; {4} {5}.",
@@ -149,8 +155,8 @@ namespace Schicksal.Anova
           Resources.MOST_SIGNIFICAT_DIFFERENCE, sig_dif.Factor1, Resources.AND, sig_dif.Factor2,
           Resources.DIFFERENCE_VALUE, HtmlWriter.FormatValue(sig_dif.ActualDifference)));
 
-        writer.WriteText(string.Format(Resources.MAX_VALUE, max_val.Factor1, HtmlWriter.FormatValue(max_val.Mean1)));
-        writer.WriteText(string.Format(Resources.MIN_VALUE, min_val.Factor1, HtmlWriter.FormatValue(min_val.Mean1)));
+        writer.WriteText(string.Format(Resources.MAX_VALUE, max_val.Item1, HtmlWriter.FormatValue(max_val.Item2)));
+        writer.WriteText(string.Format(Resources.MIN_VALUE, min_val.Item1, HtmlWriter.FormatValue(min_val.Item2)));
       }
     }
 

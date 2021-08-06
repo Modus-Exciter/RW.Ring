@@ -76,7 +76,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
-        "OwnerKey" = "8:_9FC24015E632FBC087D96F8569FCBA07"
+        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,7 +88,7 @@
         "Entry"
         {
         "MsmKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
-        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
+        "OwnerKey" = "8:_9FC24015E632FBC087D96F8569FCBA07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -100,25 +100,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9FC24015E632FBC087D96F8569FCBA07"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3F82983343D2E6A6DCEACAFB30C7E3C6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
+        "OwnerKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,7 +112,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C48241ABE68844ABE1C512F70812CF25"
+        "OwnerKey" = "8:_4F69E4B575B181D348E6EFF000578CF9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3F82983343D2E6A6DCEACAFB30C7E3C6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9FC24015E632FBC087D96F8569FCBA07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -240,11 +240,6 @@
             "AssemblyAsmDisplayName" = "8:Schicksal.Exchange, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fadaeb4ae3dbf01c, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_3F82983343D2E6A6DCEACAFB30C7E3C6"
-                    {
-                    "Name" = "8:Schicksal.Exchange.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Schicksal.Exchange.dll"
             "TargetName" = "8:"
@@ -271,11 +266,6 @@
             "AssemblyAsmDisplayName" = "8:Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4F69E4B575B181D348E6EFF000578CF9"
-                    {
-                    "Name" = "8:Notung.Helm.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Notung.Helm.dll"
             "TargetName" = "8:"
@@ -322,11 +312,6 @@
             "AssemblyAsmDisplayName" = "8:Notung.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=731c9219ae4cca3f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9A6530402448456DA0392C548B58B4A5"
-                    {
-                    "Name" = "8:Notung.Windows.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Notung.Windows.dll"
             "TargetName" = "8:"
@@ -353,11 +338,6 @@
             "AssemblyAsmDisplayName" = "8:Schicksal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=3fc1f84b92224dd1, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_9FC24015E632FBC087D96F8569FCBA07"
-                    {
-                    "Name" = "8:Schicksal.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Schicksal.dll"
             "TargetName" = "8:"
@@ -384,11 +364,6 @@
             "AssemblyAsmDisplayName" = "8:Notung, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9a2e5a452b465810, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C48241ABE68844ABE1C512F70812CF25"
-                    {
-                    "Name" = "8:Notung.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Notung.dll"
             "TargetName" = "8:"
@@ -509,15 +484,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Schicksal"
-        "ProductCode" = "8:{17C17387-0EF1-4598-8584-FF91111DE8E4}"
-        "PackageCode" = "8:{B07C9C5D-5DFE-4266-9057-BD51059B7DBB}"
+        "ProductCode" = "8:{42D80792-75E1-4E09-BBD6-130BF5DF2C5A}"
+        "PackageCode" = "8:{CBFF4E25-C2BF-491E-81AD-0A163D3AC42F}"
         "UpgradeCode" = "8:{CB8DEE96-41E6-43D7-AD37-B0A25CA37D1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Агрофизический научно-исследовательский институт"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

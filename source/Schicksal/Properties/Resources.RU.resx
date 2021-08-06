@@ -132,6 +132,9 @@
   <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
     <value>НСР</value>
   </data>
+  <data name="DATA_GROUP_SIZE_MISMATCH" xml:space="preserve">
+    <value>Обе группы данных для регрессионного анализа должны быть одинакового размера</value>
+  </data>
   <data name="DIFFERENCE_VALUE" xml:space="preserve">
     <value>её значение составило</value>
   </data>
@@ -181,7 +184,7 @@
     <value>Проведённое исследование показало, что существенные различия наблюдаются между вариантами</value>
   </data>
   <data name="SIGNIFICAT" xml:space="preserve">
-    <value>Факторы и комбинации факторов {0} оказались статистически незначимыми на уровне значимости {1:0.0}%</value>
+    <value>Факторы и комбинации факторов {0} оказались статистически значимыми на уровне значимости {1:0.0}%</value>
   </data>
   <data name="SIGNIFICAT_FACTORS" xml:space="preserve">
     <value>Статистически значимые факторы и комбинации</value>

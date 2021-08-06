@@ -21,7 +21,10 @@ namespace Schicksal.Basic
 
     public static double Median(IDataGroup group)
     {
-      return group.OrderBy(d => d).Skip(group.Count / 2).First();
+      if (group.Count % 2 == 0)
+        return group.OrderBy(d => d).Skip(group.Count / 2 - 1).Take(2).Average();
+      else
+        return group.OrderBy(d => d).Skip(group.Count / 2).First();
     }
 
     /// <summary>

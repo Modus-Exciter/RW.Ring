@@ -35,7 +35,9 @@ namespace Schicksal.Anova
       var result = new List<FisherTestResult>(group_count);
 
       if (this.RunInParrallel)
+      {
         Parallel.For(1, group_count, (i) => this.ProcessFactor(group_count, result, i));
+      }
       else
       {
         for (int i = 1; i < group_count; i++)

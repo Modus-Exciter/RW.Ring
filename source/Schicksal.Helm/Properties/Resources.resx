@@ -271,4 +271,7 @@
   <data name="REMOVE" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="ANCOVA" xml:space="preserve">
+    <value>Analysis of covariance</value>
+  </data>
 </root>

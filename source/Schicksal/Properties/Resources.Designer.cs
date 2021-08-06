@@ -113,6 +113,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Both groups must be equal for regression analysis.
+        /// </summary>
+        internal static string DATA_GROUP_SIZE_MISMATCH {
+            get {
+                return ResourceManager.GetString("DATA_GROUP_SIZE_MISMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to it&apos;s value was.
         /// </summary>
         internal static string DIFFERENCE_VALUE {

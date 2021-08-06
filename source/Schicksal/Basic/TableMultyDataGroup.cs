@@ -46,7 +46,12 @@ namespace Schicksal.Basic
           sb.AppendFormat("[{0}] is not null", resultColumn);
 
           for (int i = 0; i < factorColumns.Length; i++)
-            sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
+          {
+            if (row.Row.IsNull(columnIndexes[i]))
+              sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
+            else
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
+          }
 
           if (!string.IsNullOrEmpty(filter))
             sb.AppendFormat(" AND {0}", filter);
