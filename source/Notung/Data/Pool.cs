@@ -1,25 +1,36 @@
 ﻿using System;
 using System.Threading;
-using Notung.Threading;
+using Notung.Properties;
 
 namespace Notung.Data
 {
   /// <summary>
-  /// Пул объектов заданного размера
+  /// Объект, который можно взять из пула и вернуть в пул
   /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в пуле</typeparam>
-  public class Pool<T> : IDisposable
+  /// <typeparam name="T">Тип объектов, находящихся в пуле</typeparam>
+  public interface IPoolItem<T> : IDisposable where T : class
   {
-    private readonly Entry[] m_entries;
-    private readonly EventWaitHandle m_signal = new EventWaitHandle(false, EventResetMode.AutoReset);
-    private readonly SharedLock m_lock = new SharedLock(false);
-    private volatile int m_trottle;
+    /// <summary>
+    /// Объект, взятый из пула
+    /// </summary>
+    T Data { get; }
+  }
+
+  /// <summary>
+  /// Пул объектов
+  /// </summary>
+  /// <typeparam name="T">Тип объектов, находящихся в пуле</typeparam>
+  public sealed class Pool<T> : IDisposable where T : class
+  {
     private Entry m_root;
+    private readonly Entry[] m_entries;
+    private volatile int m_throttle;
+    private readonly Semaphore m_semaphore;
 
     /// <summary>
     /// Инициализация пула объектов
     /// </summary>
-    /// <param name="elements">Объекты, которые будут помещены в пул</param>
+    /// <param name="elements">Объекты, которые будут храниться в пуле</param>
     public Pool(T[] elements)
     {
       if (elements == null)
@@ -35,13 +46,14 @@ namespace Notung.Data
         if (elements[i] == null)
           throw new ArgumentNullException(string.Format("elements[{0}]", i));
 
-        m_entries[i] = new Entry(i, elements[i]);
+        m_entries[i] = new Entry(elements[i]);
       }
 
       for (int i = 1; i < m_entries.Length; i++)
         m_entries[i - 1].Next = m_entries[i];
 
       m_root = m_entries[0];
+      m_semaphore = new Semaphore(m_entries.Length, m_entries.Length);
     }
 
     /// <summary>
@@ -55,194 +67,114 @@ namespace Notung.Data
     /// <summary>
     /// Сколько объектов пула задействовано
     /// </summary>
-    public int Trottle
+    public int Throttle
     {
-      get { return m_trottle; }
+      get { return m_throttle; }
     }
 
     /// <summary>
-    /// Получение объекта из пула по дескриптору
+    /// Получение объекта из пула
     /// </summary>
-    /// <param name="handle">Дескриптор объекта в пуле</param>
-    /// <returns>Объект с указанным дескриптором</returns>
-    public T this[int handle]
+    /// <param name="waitIfAllBusy">True, если нужно дожидаться освобождения при заполнения пула.
+    /// False, если нужно вернуть пустой объект, если пул заполнен</param>
+    /// <returns>Объект, полученный из пула</returns>
+    public IPoolItem<T> Accuire(bool waitIfAllBusy = false)
     {
-      get
+      if (!waitIfAllBusy)
       {
-        if (handle < 0 || handle >= m_entries.Length)
-          throw new ArgumentOutOfRangeException("index");
-
-        using (m_lock.ReadLock())
+        lock (m_entries)
         {
-          if (m_entries[handle].Free)
-            throw new ArgumentException("Pool entry is not acquired");
-
-          return m_entries[handle].Data;
+          if (m_root == null)
+            return null;
         }
       }
+
+      m_semaphore.WaitOne();
+
+      lock (m_entries)
+      {
+        var ret = m_root;
+        ret.Busy = true;
+        m_root = m_root.Next;
+        m_throttle++;
+
+        return new PoolItem(ret, this);
+      }
+    }
+
+    private void Release(Entry entry)
+    {
+      lock (m_entries)
+      {
+        entry.Next = m_root;
+        entry.Busy = false;
+        m_root = entry;
+        m_throttle--;
+      }
+
+      m_semaphore.Release();
     }
 
     /// <summary>
-    /// Запрос дескриптора нового объекта, который требуется занять
-    /// </summary>
-    /// <param name="wait">Что делать, если в пуле не осталось объектов: 
-    /// true, чтобы дождаться освобождения, false, чтобы отказаться от получения объекта</param>
-    /// <returns></returns>
-    public int Accuire(bool wait)
-    {
-      using (m_lock.WriteLock())
-      {
-        if (m_root != null)
-          return GetRootEntryHandle();
-      }
-
-      if (wait)
-      {
-        while (true)
-        {
-          m_signal.WaitOne();
-
-          using (m_lock.WriteLock())
-          {
-            if (m_root != null) 
-              return GetRootEntryHandle();
-          }
-        }
-      }
-      else
-        return PoolItem.InvalidHandle;
-    }
-
-    /// <summary>
-    /// Освобождение объекта, взятого из пула
-    /// </summary>
-    /// <param name="handle">Десриптор освобождаемого объекта</param>
-    public void Release(int handle)
-    {
-      if (handle < 0 || handle >= m_entries.Length)
-        throw new ArgumentOutOfRangeException("handle");
-
-      using (m_lock.WriteLock())
-      {
-        if (m_entries[handle].Free)
-          return;
-
-        m_entries[handle].Next = m_root;
-        m_entries[handle].Free = true;
-        m_root = m_entries[handle];
-        m_trottle--;
-        m_signal.Set();
-      }
-   }
-
-    /// <summary>
-    /// Очистка ресурсов, используемых пулом
+    /// Прекращает работу пула и освобождает связанные ресурсы
     /// </summary>
     public void Dispose()
     {
-      this.Dispose(true);
-      GC.SuppressFinalize(this);
+      m_semaphore.Dispose();
     }
 
-    protected virtual void Dispose(bool disposing)
-    {
-      if (disposing)
-      {
-        m_lock.Close();
-        m_signal.Dispose();
-      }
-    }
-
-    #region Implementation ------------------------------------------------------------------------
-
-    private int GetRootEntryHandle()
-    {
-      var ret = m_root;
-      ret.Free = false;
-      m_root = m_root.Next;
-      m_trottle++;
-
-      m_signal.Reset();
-
-      return ret.Handle;
-    }
+    #region Inner classes -------------------------------------------------------------------------
 
     private class Entry
     {
-      public Entry(int index, T data)
+      public Entry(T data)
       {
-        this.Handle = index;
         this.Data = data;
       }
 
-      public readonly int Handle;
       public readonly T Data;
-      public bool Free = true;
+      public volatile bool Busy;
       public Entry Next;
     }
 
+    private sealed class PoolItem : IPoolItem<T>
+    {
+      private readonly Entry m_entry;
+      private readonly Pool<T> m_pool;
+      private readonly Thread m_thread;
+
+      public PoolItem(Entry entry, Pool<T> pool)
+      {
+        m_entry = entry;
+        m_pool = pool;
+        m_thread = Thread.CurrentThread;
+      }
+
+      public T Data
+      {
+        get
+        {
+          if (!m_entry.Busy)
+            throw new InvalidOperationException(Resources.POOL_ITEM_NOT_ACCQUIRED);
+
+          return m_entry.Data;
+        }
+      }
+
+      public void Dispose()
+      {
+        if (m_thread != Thread.CurrentThread)
+          throw new InvalidOperationException(Resources.WRONG_THREAD);
+        
+        m_pool.Release(m_entry);
+      }
+
+      public override string ToString()
+      {
+        return m_entry.Data.ToString();
+      }
+    }
+
     #endregion
-  }
-
-  /// <summary>
-  /// Обёртка над объектом, взятым из пула
-  /// </summary>
-  public static class PoolItem
-  {
-    /// <summary>
-    /// Запрос объекта из пула
-    /// </summary>
-    /// <typeparam name="T">Тип объектов, хранящихся в пуле</typeparam>
-    /// <param name="pool">Пул объектов нужного типа</param>
-    /// <returns>Объект, получаемый из пула</returns>
-    public static PoolItem<T> Create<T>(Pool<T> pool)
-    {
-      return new PoolItem<T>(pool);
-    }
-
-    /// <summary>
-    /// Дескриптор объекта, который не удалось взять из пула
-    /// </summary>
-    public const int InvalidHandle = -1;
-  }
-
-  /// <summary>
-  /// Обёртка над объектом, взятым из пула
-  /// </summary>
-  /// <typeparam name="T">Тип объектов, хранящихся в пуле</typeparam>
-  public sealed class PoolItem<T> : IDisposable
-  {
-    private readonly Pool<T> m_pool;
-    private readonly int m_index;
-
-    internal PoolItem(Pool<T> pool)
-    {
-      if (pool == null)
-        throw new ArgumentNullException("pool");
-
-      m_pool = pool;
-      m_index = pool.Accuire(true);
-    }
-
-    /// <summary>
-    /// Объект, взятый из пула
-    /// </summary>
-    public T Data
-    {
-      get { return m_pool[m_index]; }
-    }
-
-    /// <summary>
-    /// Возврат объекта в пул
-    /// </summary>
-    public void Dispose()
-    {
-      m_pool.Release(m_index);
-    }
-
-    public override string ToString()
-    {
-      return this.Data.ToString();
-    }
   }
 }

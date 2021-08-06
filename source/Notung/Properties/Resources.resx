@@ -193,4 +193,10 @@
   <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
     <value>File name contains wrong symbols</value>
   </data>
+  <data name="POOL_ITEM_NOT_ACCQUIRED" xml:space="preserve">
+    <value>Pool item is not accquired!</value>
+  </data>
+  <data name="WRONG_THREAD" xml:space="preserve">
+    <value>Pool item is not created in current thread</value>
+  </data>
 </root>
