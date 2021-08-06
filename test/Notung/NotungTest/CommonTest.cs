@@ -238,7 +238,7 @@ namespace NotungTest
               Assert.AreEqual(3, pool.Throttle);
               Assert.AreEqual("Three", r3.Data);
 
-              Assert.AreEqual(null, pool.Accuire(false));
+              Assert.AreEqual(null, pool.Accuire(false).Data);
               Assert.AreEqual(pool.Throttle, pool.Size);
             }
           }

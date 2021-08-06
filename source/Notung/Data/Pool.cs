@@ -24,8 +24,7 @@ namespace Notung.Data
   {
     private Entry m_root;
     private readonly Entry[] m_entries;
-    private volatile int m_throttle;
-    private readonly Semaphore m_semaphore;
+    private readonly SemaphoreSlim m_semaphore;
 
     /// <summary>
     /// Инициализация пула объектов
@@ -53,7 +52,7 @@ namespace Notung.Data
         m_entries[i - 1].Next = m_entries[i];
 
       m_root = m_entries[0];
-      m_semaphore = new Semaphore(m_entries.Length, m_entries.Length);
+      m_semaphore = new SemaphoreSlim(m_entries.Length, m_entries.Length);
     }
 
     /// <summary>
@@ -69,14 +68,14 @@ namespace Notung.Data
     /// </summary>
     public int Throttle
     {
-      get { return m_throttle; }
+      get { return m_entries.Length - m_semaphore.CurrentCount; }
     }
 
     /// <summary>
     /// Получение объекта из пула
     /// </summary>
-    /// <param name="waitIfAllBusy">True, если нужно дожидаться освобождения при заполнения пула.
-    /// False, если нужно вернуть пустой объект, если пул заполнен</param>
+    /// <param name="waitIfAllBusy">True, если нужно дожидаться освобождения при исчерпании пула.
+    /// False, если нужно вернуть пустой объект при исчерпании пула</param>
     /// <returns>Объект, полученный из пула</returns>
     public IPoolItem<T> Accuire(bool waitIfAllBusy = false)
     {
@@ -85,18 +84,17 @@ namespace Notung.Data
         lock (m_entries)
         {
           if (m_root == null)
-            return null;
+            return new PoolItemStub();
         }
       }
 
-      m_semaphore.WaitOne();
+      m_semaphore.Wait();
 
       lock (m_entries)
       {
         var ret = m_root;
         ret.Busy = true;
         m_root = m_root.Next;
-        m_throttle++;
 
         return new PoolItem(ret, this);
       }
@@ -109,7 +107,6 @@ namespace Notung.Data
         entry.Next = m_root;
         entry.Busy = false;
         m_root = entry;
-        m_throttle--;
       }
 
       m_semaphore.Release();
@@ -137,7 +134,22 @@ namespace Notung.Data
       public Entry Next;
     }
 
-    private sealed class PoolItem : IPoolItem<T>
+    private class PoolItemStub : IPoolItem<T>
+    {
+      public T Data
+      {
+        get { return null; }
+      }
+
+      public void Dispose() { }
+
+      public override string ToString()
+      {
+        return CoreResources.NULL;
+      }
+    }
+
+    private class PoolItem : IPoolItem<T>
     {
       private readonly Entry m_entry;
       private readonly Pool<T> m_pool;
