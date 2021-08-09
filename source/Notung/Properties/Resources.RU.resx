@@ -159,6 +159,9 @@
   <data name="PLUGIN_NOT_FOUND" xml:space="preserve">
     <value>Сборка {0}, указанная в файле плагина {1}, не существует</value>
   </data>
+  <data name="POOL_ITEM_NOT_ACCQUIRED" xml:space="preserve">
+    <value>Элемент не взят из пула!</value>
+  </data>
   <data name="SECTION_TYPE_UNINHERITABLE" xml:space="preserve">
     <value>Невозможно сохранить унаследованную секцию. Требуется тип {0}, передан {1}</value>
   </data>
@@ -188,5 +191,8 @@
   </data>
   <data name="WRONG_FILE_SYMBOLS" xml:space="preserve">
     <value>Имя файла содержит недопустимые знаки</value>
+  </data>
+  <data name="WRONG_THREAD" xml:space="preserve">
+    <value>Элемент взят из пула в другом потоке</value>
   </data>
 </root>

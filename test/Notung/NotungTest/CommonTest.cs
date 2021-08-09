@@ -223,27 +223,36 @@ namespace NotungTest
         "One", "Two", "Three"
       }))
       {
-        Assert.AreEqual(0, pool.Trottle);
+        Assert.AreEqual(0, pool.Throttle);
         using (var r1 = PoolItem.Create(pool))
         {
-          Assert.AreEqual(1, pool.Trottle);
+          Assert.AreEqual(1, pool.Throttle);
           Assert.AreEqual("One", r1.Data);
 
           using (var r2 = PoolItem.Create(pool))
           {
-            Assert.AreEqual(2, pool.Trottle);
+            Assert.AreEqual(2, pool.Throttle);
             Assert.AreEqual("Two", r2.Data);
             using (var r3 = PoolItem.Create(pool))
             {
-              Assert.AreEqual(3, pool.Trottle);
+              Assert.AreEqual(3, pool.Throttle);
               Assert.AreEqual("Three", r3.Data);
 
-              Assert.AreEqual(-1, pool.Accuire(false));
+              Assert.AreEqual(null, pool.Accuire(false).Data);
+              Assert.AreEqual(pool.Throttle, pool.Size);
             }
           }
         }
 
-        Assert.AreEqual(0, pool.Trottle);
+        Assert.AreEqual(0, pool.Throttle);
+      }
+    }
+
+    private class PoolItem
+    {
+      public static IPoolItem<T> Create<T>(Pool<T> pool) where T : class
+      {
+        return pool.Accuire(true);
       }
     }
 
