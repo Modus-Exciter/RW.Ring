@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using Notung;
+using Notung.Configuration;
 using Notung.Services;
 using Schicksal.Anova;
 using Schicksal.Helm.Dialogs;
@@ -30,10 +32,30 @@ namespace Schicksal.Helm
 
       this.Text = string.Format("{0}({1}) [{2}]", result, factor.Replace("+", ", "), filter);
 
+      Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
+      if (resolution.height != 0) Height = resolution.height;
+      if (resolution.width != 0) Width = resolution.width;
+
       m_comparator = new VariantsComparator(table, factor, result, filter);
       m_probability = p;
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
       m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;
+    }
+
+    [DataContract]
+    public class Resolution : ConfigurationSection
+    {
+      [DataMember(Name = "Height")]
+      public int height;
+      [DataMember(Name = "Width")]
+      public int width;
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+      AppManager.Configurator.GetSection<Resolution>().height = Size.Height;
+      AppManager.Configurator.GetSection<Resolution>().width = Size.Width;
+      AppManager.Configurator.SaveSettings();
     }
 
     protected override void OnShown(EventArgs e)

@@ -142,9 +142,7 @@
       // 
       resources.ApplyResources(this.m_summary_page, "m_summary_page");
       this.m_summary_page.Controls.Add(this.m_grid);
-      this.m_summary_page.ImageKey = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       this.m_summary_page.Name = "m_summary_page";
-      this.m_summary_page.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       this.m_summary_page.UseVisualStyleBackColor = true;
       // 
       // m_grid
@@ -169,9 +167,7 @@
       // 
       resources.ApplyResources(this.m_details_page, "m_details_page");
       this.m_details_page.Controls.Add(this.m_nsr_grid);
-      this.m_details_page.ImageKey = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       this.m_details_page.Name = "m_details_page";
-      this.m_details_page.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       this.m_details_page.UseVisualStyleBackColor = true;
       // 
       // m_nsr_grid
@@ -208,7 +204,6 @@
       resources.ApplyResources(this.factor1DataGridViewTextBoxColumn, "factor1DataGridViewTextBoxColumn");
       this.factor1DataGridViewTextBoxColumn.Name = "factor1DataGridViewTextBoxColumn";
       this.factor1DataGridViewTextBoxColumn.ReadOnly = true;
-      this.factor1DataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // mean1DataGridViewTextBoxColumn
       // 
@@ -216,7 +211,6 @@
       resources.ApplyResources(this.mean1DataGridViewTextBoxColumn, "mean1DataGridViewTextBoxColumn");
       this.mean1DataGridViewTextBoxColumn.Name = "mean1DataGridViewTextBoxColumn";
       this.mean1DataGridViewTextBoxColumn.ReadOnly = true;
-      this.mean1DataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // factor2DataGridViewTextBoxColumn
       // 
@@ -224,7 +218,6 @@
       resources.ApplyResources(this.factor2DataGridViewTextBoxColumn, "factor2DataGridViewTextBoxColumn");
       this.factor2DataGridViewTextBoxColumn.Name = "factor2DataGridViewTextBoxColumn";
       this.factor2DataGridViewTextBoxColumn.ReadOnly = true;
-      this.factor2DataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // mean2DataGridViewTextBoxColumn
       // 
@@ -232,7 +225,6 @@
       resources.ApplyResources(this.mean2DataGridViewTextBoxColumn, "mean2DataGridViewTextBoxColumn");
       this.mean2DataGridViewTextBoxColumn.Name = "mean2DataGridViewTextBoxColumn";
       this.mean2DataGridViewTextBoxColumn.ReadOnly = true;
-      this.mean2DataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // actualDifferenceDataGridViewTextBoxColumn
       // 
@@ -240,7 +232,6 @@
       resources.ApplyResources(this.actualDifferenceDataGridViewTextBoxColumn, "actualDifferenceDataGridViewTextBoxColumn");
       this.actualDifferenceDataGridViewTextBoxColumn.Name = "actualDifferenceDataGridViewTextBoxColumn";
       this.actualDifferenceDataGridViewTextBoxColumn.ReadOnly = true;
-      this.actualDifferenceDataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // minimalDifferenceDataGridViewTextBoxColumn
       // 
@@ -248,7 +239,6 @@
       resources.ApplyResources(this.minimalDifferenceDataGridViewTextBoxColumn, "minimalDifferenceDataGridViewTextBoxColumn");
       this.minimalDifferenceDataGridViewTextBoxColumn.Name = "minimalDifferenceDataGridViewTextBoxColumn";
       this.minimalDifferenceDataGridViewTextBoxColumn.ReadOnly = true;
-      this.minimalDifferenceDataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // probabilityDataGridViewTextBoxColumn
       // 
@@ -256,7 +246,6 @@
       resources.ApplyResources(this.probabilityDataGridViewTextBoxColumn, "probabilityDataGridViewTextBoxColumn");
       this.probabilityDataGridViewTextBoxColumn.Name = "probabilityDataGridViewTextBoxColumn";
       this.probabilityDataGridViewTextBoxColumn.ReadOnly = true;
-      this.probabilityDataGridViewTextBoxColumn.ToolTipText = global::Schicksal.Helm.Properties.Resources.SCHICKSAL_DATA_FILES;
       // 
       // m_nsr_context_menu
       // 
