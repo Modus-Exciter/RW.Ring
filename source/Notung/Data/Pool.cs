@@ -84,7 +84,7 @@ namespace Notung.Data
         lock (m_entries)
         {
           if (m_root == null)
-            return new PoolItemStub();
+            return PoolItemStub.Instance;
         }
       }
 
@@ -136,6 +136,10 @@ namespace Notung.Data
 
     private class PoolItemStub : IPoolItem<T>
     {
+      public static readonly PoolItemStub Instance = new PoolItemStub();
+      
+      private PoolItemStub() { }
+
       public T Data
       {
         get { return null; }
