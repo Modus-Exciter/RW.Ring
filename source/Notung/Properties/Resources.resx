@@ -199,4 +199,13 @@
   <data name="WRONG_THREAD" xml:space="preserve">
     <value>Pool item is not created in current thread</value>
   </data>
+  <data name="ENUM_PARSE_FAIL" xml:space="preserve">
+    <value>Unable to find suitable enum member in type {0}</value>
+  </data>
+  <data name="LOG_PARSE_FAIL" xml:space="preserve">
+    <value>Log parsing failed: not all tokens found</value>
+  </data>
+  <data name="NO_TOKEN_LENGTH" xml:space="preserve">
+    <value>Size of the token {0} cannot be calculated automatically</value>
+  </data>
 </root>
