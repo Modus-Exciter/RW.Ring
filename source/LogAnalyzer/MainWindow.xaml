@@ -1,0 +1,33 @@
+﻿<Window x:Class="LogAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:LogAnalyzer"
+        Title="MainWindow"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Height="350"
+        Width="525">
+    <Window.DataContext>
+        <local:TablePresenter />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Открыть" Click="OpenFile_Click"/>
+            </MenuItem>
+        </Menu>
+        <DataGrid Grid.Row="2"
+            AutoGenerateColumns="True"
+            IsReadOnly="True"
+            ItemsSource="{Binding Path=LoadedTable}"/>
+        <StatusBar Grid.Row="3">
+            <TextBlock>Done</TextBlock>
+        </StatusBar>
+    </Grid>
+</Window>

@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notung.Optional", "Notung.O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notung.Windows", "Notung.Windows\Notung.Windows.csproj", "{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogAnalyzer", "LogAnalyzer\LogAnalyzer.csproj", "{B89F703D-962C-495B-8B5B-BEC3D46D03A0}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = RW.Ring.vsmdi
@@ -212,12 +214,23 @@ Global
 		{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A35FCA0D-6E24-42A0-9E7F-77E241A26C45}.Release|x86.ActiveCfg = Release|Any CPU
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Debug|x86.ActiveCfg = Debug|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Debug|x86.Build.0 = Debug|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Release|Any CPU.ActiveCfg = Release|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Release|Mixed Platforms.Build.0 = Release|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Release|x86.ActiveCfg = Release|x86
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4BE5DB67-00E0-4E7F-A34C-A112337E9CBE} = {79C446DC-9735-4F07-88F5-E03AA0A8CA49}
+		{B89F703D-962C-495B-8B5B-BEC3D46D03A0} = {79C446DC-9735-4F07-88F5-E03AA0A8CA49}
 		{D08E1588-14AE-473E-A714-207AB84B3DB4} = {3C7B3476-85E6-4698-9D2B-AE2962E9F2E9}
 		{23C8DC0F-B1CE-4F21-A5BE-AF05B27F7492} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
 		{ACB28711-7615-48EF-8096-4BE678E22E19} = {5F05621F-620D-47F7-9F5C-D7221AD40677}

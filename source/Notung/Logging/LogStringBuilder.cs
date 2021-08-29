@@ -62,12 +62,13 @@ namespace Notung.Logging
     /// </summary>
     /// <param name="rawText">Сообщение логгирования, преобразованное в текст</param>
     /// <param name="table">Таблица, в которой требуется создать строку</param>
-    public void FillRow(string rawText, DataTable table)
+    /// <param name="createDetailsColumn">Создавать ли колонку с деталями в таблицу</param>
+    public void FillRow(string rawText, DataTable table, bool createDetailsColumn = false)
     {
       int[] token_starts = this.GetTokenStarts(rawText);
 
       if (table.Rows.Count == 0)
-        this.CreateTableColumns(table);
+        this.CreateTableColumns(table, createDetailsColumn);
 
       var row = table.NewRow();
 
@@ -276,7 +277,7 @@ namespace Notung.Logging
       }
     }
 
-    private void CreateTableColumns(DataTable table)
+    private void CreateTableColumns(DataTable table, bool createDetailsColumn)
     {
       for (int i = 0; i < m_blocks.Length; i++)
       {
@@ -305,6 +306,9 @@ namespace Notung.Logging
           }
         }
       }
+
+      if (!table.Columns.Contains("Details") && createDetailsColumn)
+        table.Columns.Add("Details").DataType = typeof(string);
     }
 
     #endregion
