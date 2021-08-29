@@ -14,6 +14,12 @@ namespace LogAnalyzer
 
     private DataTable m_loaded_table;
 
+    public TablePresenter()
+    {
+      m_loaded_table = new DataTable();
+      m_loaded_table.Columns.Add("Данные");
+    }
+
     public DataTable LoadedTable
     {
       get { return m_loaded_table; }
