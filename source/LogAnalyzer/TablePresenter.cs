@@ -279,13 +279,27 @@ namespace LogAnalyzer
 
   public class FileEntry
   {
+    private static readonly string _user_directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    
     public string FileName { get; set; }
 
     public DataTable Table { get; set; }
 
     public override string ToString()
     {
-      return this.FileName ?? "log.log";
+      string file = this.FileName;
+
+      if (file == null)
+        return "log.log";
+
+      if (file.StartsWith(_user_directory))
+        file = file.Substring(_user_directory[_user_directory.Length - 1] == '\\' ?
+          _user_directory.Length : _user_directory.Length + 1);
+
+      if (Path.GetFileName(Path.GetDirectoryName(file)).Equals("Logs", StringComparison.OrdinalIgnoreCase))
+        file = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(file)), Path.GetFileName(file));
+
+      return file;
     }
   }
 }

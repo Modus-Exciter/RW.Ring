@@ -182,10 +182,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Margin="0,0,20,0"/>
-            <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click"/>
+            <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Padding="10,5"/>
+            <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click" Padding="10,5"/>
         </Menu>
         <ListBox Grid.Row="1" 
+                 Padding="-1"
                  BorderThickness="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                  ItemsSource="{Binding Path=OpenedFiles}" 
