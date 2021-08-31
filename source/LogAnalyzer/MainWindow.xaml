@@ -2,32 +2,271 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:LogAnalyzer"
-        Title="MainWindow"
+        Title="Анализатор протокола"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Height="350"
-        Width="525">
+        WindowStyle="ThreeDBorderWindow"
+        Height="346"
+        Width="727.4"
+        TextOptions.TextFormattingMode="Display">
     <Window.DataContext>
         <local:TablePresenter />
     </Window.DataContext>
-    <Grid>
+    <Window.Resources>
+        <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Color="Silver" Offset="0"/>
+                        <GradientStop Color="WhiteSmoke" Offset="0.3"/>
+                        <GradientStop Color="Gray" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Background" Value="DimGray"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <RadialGradientBrush RadiusX="1.5" GradientOrigin="0.4,0.5">
+                                <GradientStop Color="Goldenrod"/>
+                                <GradientStop Color="DimGray" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="DimGray"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
+                        <GradientStop Color="WhiteSmoke" Offset="0"/>
+                        <GradientStop Color="Gray" Offset="0.6"/>
+                    </RadialGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Border Background="{TemplateBinding Property=Background}" 
+                                BorderBrush="{TemplateBinding Property=BorderBrush}" 
+                                BorderThickness="{TemplateBinding Property=BorderThickness}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding}" Margin="{TemplateBinding Property=Padding}"/>
+                                <Path x:Name="SortArrow" 
+                                        Visibility="Collapsed" 
+                                        Data="M 0,0 L 1,0 0.5,1 z" 
+                                        Stretch="Fill"
+                                        Stroke="DarkSlateGray"
+                                        Fill="Silver"
+                                        Grid.Column="1"
+                                        Width="9"
+                                        Height="7" 
+                                        Margin="0,0,8,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        RenderTransformOrigin="0.5, 0.4">
+                                </Path>
+                                <TextBox Grid.Row="1"
+                                         Grid.ColumnSpan="2"
+                                         BorderThickness="0,0,0,3"
+                                         x:Name="FilterRow"
+                                         TextChanged="FilterRow_TextChanged" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <RadialGradientBrush Center="0.3,0.4" RadiusX="1" GradientOrigin="0.4,0.15">
+                                            <GradientStop Color="Cornsilk" Offset="0"/>
+                                            <GradientStop Color="Gainsboro" Offset="0.3"/>
+                                            <GradientStop Color="DarkGray" Offset="0.6"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="SortArrow" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="180"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="HasContent" Value="False">
+                                <Setter TargetName="FilterRow" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Color="WhiteSmoke" Offset="0"/>
+                        <GradientStop Color="#FFCDD5E0" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border Padding="3" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="CornflowerBlue"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="White" Offset="0"/>
+                                <GradientStop Color="#FFD2DAE5" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Foreground" Value="RoyalBlue"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Background="Silver">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="Файл">
-                <MenuItem Header="Открыть" Click="OpenFile_Click"/>
-            </MenuItem>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Margin="0,0,20,0"/>
+            <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click"/>
+            <MenuItem Header="Закрыть" HorizontalAlignment="Right" Click="MenuItemClose_Click"/>
         </Menu>
+        <ListView Grid.Row="1" 
+                 BorderThickness="0"
+                 ItemsSource="{Binding Path=OpenedFiles}" 
+                 SelectedItem="{Binding Path=CurrentFile}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" Background="DimGray" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border x:Name="tab1"
+                            CornerRadius="5,5,0,0"
+                            BorderThickness="0" 
+                            Padding="6">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <DataGrid Grid.Row="2"
-            AutoGenerateColumns="True"
-            IsReadOnly="True"
-            ItemsSource="{Binding Path=LoadedTable}"/>
-        <StatusBar Grid.Row="3">
-            <TextBlock>Done</TextBlock>
-        </StatusBar>
+                  Background="Silver"
+                  AutoGenerateColumns="True"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Vertical"
+                  VerticalGridLinesBrush="Gray"
+                  AutoGeneratedColumns="DataGrid_AutoGeneratedColumns"
+                  ItemsSource="{Binding Path=LoadedTable}">
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Level}" Value="Fatal">
+                            <Setter Property="Foreground" Value="Crimson"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=Level}" Value="Error">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=Level}" Value="Warning">
+                            <Setter Property="Foreground" Value="Coral"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Path=Level}" Value="Info">
+                            <Setter Property="Foreground" Value="Blue"/>
+                        </DataTrigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Foreground" Value="RoyalBlue"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+        </DataGrid>
+        <Border HorizontalAlignment="Stretch" Height="5" Grid.Row="3" CornerRadius="3">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="Gray" Offset="0"/>
+                    <GradientStop Color="Gainsboro" Offset="0.4"/>
+                    <GradientStop Color="#444444" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Grid Background="DimGray" TextBlock.Foreground="White" Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="10,10,0,10" Orientation="Vertical" Grid.Column="0">
+                <TextBlock Margin="0,0,0,5" FontWeight="Bold">Шаблон сообщения:</TextBlock>
+                <TextBlock Text="{Binding Path=MessageTemplate}"/>
+                <TextBlock Text="{Binding Path=Separator}"/>
+            </StackPanel>
+            <Rectangle />
+            <StackPanel Orientation="Vertical" Grid.Column="2" Margin="0,0,10,0">
+                <TextBlock Margin="0,10,0,5" FontWeight="Bold">Файл протокола:</TextBlock>
+                <TextBlock Text="{Binding Path=FileName}"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
