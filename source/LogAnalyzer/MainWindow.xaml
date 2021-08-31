@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:LogAnalyzer"
-        Title="Анализатор протокола"
+        Title="Анализатор протоколов"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
         WindowStyle="ThreeDBorderWindow"
@@ -25,27 +25,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style TargetType="MenuItem">
-            <Setter Property="Background" Value="DimGray"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <RadialGradientBrush RadiusX="1.5" GradientOrigin="0.4,0.5">
-                                <GradientStop Color="Goldenrod"/>
-                                <GradientStop Color="DimGray" Offset="1"/>
-                            </RadialGradientBrush>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        <Style TargetType="Menu">
-            <Setter Property="Background" Value="DimGray"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -66,13 +45,15 @@
                         <Border  x:Name="FilterRow"
                                 Background="{TemplateBinding Property=Background}" 
                                 BorderBrush="{TemplateBinding Property=BorderBrush}" 
-                                BorderThickness="{TemplateBinding Property=BorderThickness}">
+                                BorderThickness="0.5">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
@@ -94,9 +75,28 @@
                                         RenderTransformOrigin="0.5, 0.4">
                                 </Path>
                                 <TextBox Grid.Row="1"
-                                         Grid.ColumnSpan="2"
-                                         BorderThickness="0,0,0,3"
+                                         Grid.ColumnSpan="3"
+                                         BorderThickness="0"
+                                         Padding="2"
+                                         FontWeight="Regular"
                                          TextChanged="FilterRow_TextChanged" />
+                                <Thumb x:Name="PART_RightHeaderGripper"
+                                       Grid.Column="2"
+                                       HorizontalAlignment="Right"
+                                       Width="3" BorderThickness="2"
+                                       BorderBrush="Transparent"
+                                       Cursor="SizeWE"/>
+                                <Border Grid.Row="2" 
+                                        Grid.ColumnSpan="3"
+                                        Height="5">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Color="Silver" Offset="0"/>
+                                            <GradientStop Color="Gainsboro" Offset="0.4"/>
+                                            <GradientStop Color="Gray" Offset="0.8"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -132,49 +132,10 @@
             <Style.Triggers>
             </Style.Triggers>
         </Style>
-        <Style TargetType="DataGridCell">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                        <GradientStop Color="WhiteSmoke" Offset="0"/>
-                        <GradientStop Color="#FFCDD5E0" Offset="1"/>
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border Padding="3"
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" 
-                                SnapsToDevicePixels="True">
-                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter Property="Background" Value="CornflowerBlue"/>
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="White" Offset="0"/>
-                                <GradientStop Color="#FFD2DAE5" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Foreground" Value="RoyalBlue"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
     <Grid Background="Silver">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -185,10 +146,11 @@
             <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Padding="10,5"/>
             <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click" Padding="10,5"/>
         </Menu>
-        <ListBox Grid.Row="1" 
+        <ListBox Grid.Row="1"
                  Padding="-1"
                  BorderThickness="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                 x:Name="MdiPanel"
                  ItemsSource="{Binding Path=OpenedFiles}" 
                  SelectedItem="{Binding Path=CurrentFile}">
             <ListBox.ItemsPanel>
@@ -206,13 +168,15 @@
                                             CornerRadius="5,5,0,0"
                                             BorderThickness="0" 
                                             BorderBrush="LightGray"
-                                            Padding="10,0,5,5">
+                                            Margin="5,0,0,0">
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding}"
+                                                   VerticalAlignment="Center"
+                                                   Padding="10,5,5,5"/>
                                         <Button Content="×"
                                                 VerticalAlignment="Top"
                                                 FontSize="15"
-                                                Margin="10,0,0,5"
+                                                Margin="10,0,5,10"
                                                 Padding="0"
                                                 Click="MenuItemClose_Click"
                                                 Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
@@ -236,13 +200,20 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                    <Style.Triggers>
-                    </Style.Triggers>
                 </Style>
             </ListBox.Resources>
         </ListBox>
-        <DataGrid Grid.Row="2"
+        <Border Grid.Row="2" HorizontalAlignment="Stretch" Height="3" CornerRadius="3">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="LightGray" Offset="0"/>
+                    <GradientStop Color="Silver" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <DataGrid Grid.Row="3"
                   Background="Silver"
+                  BorderBrush="Transparent"
                   AutoGenerateColumns="True"
                   IsReadOnly="True"
                   GridLinesVisibility="Vertical"
@@ -274,7 +245,7 @@
                 </Style>
             </DataGrid.CellStyle>
         </DataGrid>
-        <Border HorizontalAlignment="Stretch" Height="5" Grid.Row="3" CornerRadius="3">
+        <Border Grid.Row="4" HorizontalAlignment="Stretch" Height="5" CornerRadius="3">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                     <GradientStop Color="Gray" Offset="0"/>
@@ -283,7 +254,7 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <Grid Background="DimGray" TextBlock.Foreground="White" Grid.Row="4">
+        <Grid Grid.Row="5" Background="DimGray" TextBlock.Foreground="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>

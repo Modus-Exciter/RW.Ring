@@ -50,9 +50,7 @@ namespace LogAnalyzer
     private void FilterRow_TextChanged(object sender, TextChangedEventArgs e)
     {
       var ctrl = sender as TextBox;
-
       var obj= ctrl.TemplatedParent as DataGridColumnHeader;
-
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
       ((TablePresenter)this.DataContext).SetFilter(name, ctrl.Text);
@@ -62,6 +60,7 @@ namespace LogAnalyzer
     {
       var button = sender as Button;
       var obj = button.TemplatedParent as ListBoxItem;
+
       ((TablePresenter)this.DataContext).ClosePage(obj.Content as FileEntry);
     }
   }
