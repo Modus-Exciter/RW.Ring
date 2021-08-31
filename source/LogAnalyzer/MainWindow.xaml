@@ -53,8 +53,8 @@
             <Setter Property="Background">
                 <Setter.Value>
                     <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
-                        <GradientStop Color="WhiteSmoke" Offset="0"/>
-                        <GradientStop Color="Gray" Offset="0.6"/>
+                        <GradientStop Color="Gainsboro" Offset="0"/>
+                        <GradientStop Color="Gray" Offset="0.8"/>
                     </RadialGradientBrush>
                 </Setter.Value>
             </Setter>
@@ -102,9 +102,9 @@
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
-                                            <GradientStop Color="#FFF7CB" Offset="0"/>
+                                            <GradientStop Color="#FFFFF0CB" Offset="0"/>
                                             <GradientStop Color="#B9B7AC" Offset="0.3"/>
-                                            <GradientStop Color="Gray" Offset="0.6"/>
+                                            <GradientStop Color="Gray" Offset="0.8"/>
                                         </RadialGradientBrush>
                                     </Setter.Value>
                                 </Setter>
