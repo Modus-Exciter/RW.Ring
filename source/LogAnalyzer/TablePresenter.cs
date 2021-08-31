@@ -216,7 +216,7 @@ namespace LogAnalyzer
           else
             sb.Append(" AND ");
 
-          sb.AppendFormat("Convert({0}, System.String) LIKE '{1}%'", kv.Key, kv.Value);
+          sb.AppendFormat("Convert({0}, System.String) LIKE '{1}%'", kv.Key, kv.Value.Replace("'", "''"));
         }
 
         CurrentFile.Table.DefaultView.RowFilter = sb.ToString();
