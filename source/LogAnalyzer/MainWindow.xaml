@@ -161,18 +161,18 @@
                     <StackPanel Orientation="Horizontal" Background="DimGray" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <ListBox.Resources>
+            <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
-                                    <Border x:Name="tab1"
-                                            TextBlock.Foreground="White"
-                                            CornerRadius="5,5,0,0"
-                                            BorderThickness="0" 
-                                            BorderBrush="LightGray"
-                                            Margin="5,0,0,0">
-                                        <StackPanel Orientation="Horizontal">
+                                <Border x:Name="tab1"
+                                        TextBlock.Foreground="White"
+                                        CornerRadius="5,5,0,0"
+                                        BorderThickness="0" 
+                                        BorderBrush="LightGray"
+                                        Margin="5,0,0,0">
+                                    <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding}"
                                                    VerticalAlignment="Center"
                                                    Padding="10,5,5,5"/>
@@ -184,7 +184,7 @@
                                                 Click="MenuItemClose_Click"
                                                 Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
                                     </StackPanel>
-                                    </Border>
+                                </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="ListBoxItem.IsSelected" Value="True">
                                         <Setter TargetName="tab1" Property="Background">
@@ -204,7 +204,7 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </ListBox.Resources>
+            </ListBox.ItemContainerStyle>
         </ListBox>
         <Border Grid.Row="2" HorizontalAlignment="Stretch" Height="3" CornerRadius="3">
             <Border.Background>

@@ -14,14 +14,17 @@ namespace LogAnalyzer
   /// </summary>
   public partial class MainWindow : Window, System.Windows.Forms.IWin32Window
   {
+    private readonly WindowInteropHelper m_helper;
+
     public IntPtr Handle
     {
-      get { return new WindowInteropHelper(this).Handle; }
+      get { return m_helper.Handle; }
     }
 
     public MainWindow()
     {
       InitializeComponent();
+      m_helper = new WindowInteropHelper(this);
     }
 
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
@@ -49,10 +52,9 @@ namespace LogAnalyzer
       using (var dlg = new FolderBrowserDialog())
       {
         dlg.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-        {
           ((TablePresenter)this.DataContext).OpenDirectory(dlg.SelectedPath);
-        }
       }
     }
 
