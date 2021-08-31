@@ -22,6 +22,7 @@ namespace LogAnalyzer
     private readonly Dictionary<string, string> m_filters = new Dictionary<string, string>();
 
     public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<ExceptionEventArgs> ExceptionOccured;
 
     public ObservableCollection<FileEntry> OpenedFiles
     {
@@ -157,13 +158,53 @@ namespace LogAnalyzer
         }
       }
 
-      m_file_entries.Add(new FileEntry
+      try
       {
-        FileName = fileName,
-        Table = this.LoadLogTable(fileName)
-      });
+        m_file_entries.Add(new FileEntry
+        {
+          FileName = fileName,
+          Table = this.LoadLogTable(fileName)
+        });
 
-      ChangeCurrentFile(m_file_entries.Count - 1);
+        ChangeCurrentFile(m_file_entries.Count - 1);
+      }
+      catch (Exception ex)
+      {
+        if (this.ExceptionOccured != null)
+          this.ExceptionOccured(this, new ExceptionEventArgs(ex));
+      }
+    }
+
+    public void OpenDirectory(string selectedPath)
+    {
+      if (Directory.GetFiles(selectedPath, "*.log").Length == 0 &&
+        Directory.Exists(Path.Combine(selectedPath, "Logs")))
+        selectedPath = Path.Combine(selectedPath, "Logs");
+
+      for (int i = 0; i < m_file_entries.Count; i++)
+      {
+        if (m_file_entries[i].FileName.Equals(selectedPath))
+        {
+          ChangeCurrentFile(i);
+          return;
+        }
+      }
+
+      try
+      {
+        m_file_entries.Add(new FileEntry
+        {
+          FileName = selectedPath,
+          Table = this.LoadLogDirectory(selectedPath)
+        });
+
+        ChangeCurrentFile(m_file_entries.Count - 1);
+      }
+      catch (Exception ex)
+      {
+        if (this.ExceptionOccured != null)
+          this.ExceptionOccured(this, new ExceptionEventArgs(ex));
+      }
     }
 
     public void ClosePage(FileEntry page)
@@ -228,6 +269,28 @@ namespace LogAnalyzer
       var table = new DataTable();
       table.BeginLoadData();
 
+      this.FillTable(fileName, table);
+
+      table.EndLoadData();
+      return table;
+    }
+
+    private DataTable LoadLogDirectory(string path)
+    {
+      var table = new DataTable();
+      table.BeginLoadData();
+
+      foreach (var fileName in Directory.GetFiles(path, "*.log"))
+      {
+        this.FillTable(fileName, table);
+      }
+
+      table.EndLoadData();
+      return table;
+    }
+
+    private void FillTable(string fileName, DataTable table)
+    {
       List<string> lines = new List<string>();
       var builder = new LogStringBuilder(this.MessageTemplate);
 
@@ -257,9 +320,6 @@ namespace LogAnalyzer
             lines.Add(line);
         }
       }
-
-      table.EndLoadData();
-      return table;
     }
 
     private void ChangeCurrentFile(int index)
@@ -301,5 +361,15 @@ namespace LogAnalyzer
 
       return file;
     }
+  }
+
+  public class ExceptionEventArgs : EventArgs
+  {
+    public ExceptionEventArgs(Exception error)
+    {
+      this.Error = error;
+    }
+
+    public Exception Error { get; private set; }
   }
 }

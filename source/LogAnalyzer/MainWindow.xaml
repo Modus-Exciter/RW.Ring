@@ -11,7 +11,7 @@
         Icon="text_find.ico"
         TextOptions.TextFormattingMode="Display">
     <Window.DataContext>
-        <local:TablePresenter />
+        <local:TablePresenter ExceptionOccured="TablePresenter_ExceptionOccured" />
     </Window.DataContext>
     <Window.Resources>
         <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
@@ -45,7 +45,7 @@
                         <Border  x:Name="FilterRow"
                                 Background="{TemplateBinding Property=Background}" 
                                 BorderBrush="{TemplateBinding Property=BorderBrush}" 
-                                BorderThickness="0.5">
+                                BorderThickness="0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -76,14 +76,16 @@
                                 </Path>
                                 <TextBox Grid.Row="1"
                                          Grid.ColumnSpan="3"
-                                         BorderThickness="0"
+                                         BorderThickness="0,0,1,0"
+                                         BorderBrush="Gray"
                                          Padding="2"
                                          FontWeight="Regular"
                                          TextChanged="FilterRow_TextChanged" />
                                 <Thumb x:Name="PART_RightHeaderGripper"
                                        Grid.Column="2"
                                        HorizontalAlignment="Right"
-                                       Width="3" BorderThickness="2"
+                                       Width="4" 
+                                       BorderThickness="2"
                                        BorderBrush="Transparent"
                                        Cursor="SizeWE"/>
                                 <Border Grid.Row="2" 
@@ -104,8 +106,8 @@
                                 <Setter Property="Background">
                                     <Setter.Value>
                                         <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
-                                            <GradientStop Color="#FFFFF0CB" Offset="0"/>
-                                            <GradientStop Color="#B9B7AC" Offset="0.3"/>
+                                            <GradientStop Color="SeaShell" Offset="0"/>
+                                            <GradientStop Color="Silver" Offset="0.3"/>
                                             <GradientStop Color="Gray" Offset="0.8"/>
                                         </RadialGradientBrush>
                                     </Setter.Value>
@@ -145,6 +147,7 @@
         <Menu Grid.Row="0">
             <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Padding="10,5"/>
             <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click" Padding="10,5"/>
+            <MenuItem Header="Открыть папку с протоколом" Click="OpenDirectory_Click" Padding="10,5"/>
         </Menu>
         <ListBox Grid.Row="1"
                  Padding="-1"
