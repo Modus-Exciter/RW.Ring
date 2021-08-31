@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Notung.Logging;
 
@@ -13,19 +14,19 @@ namespace LogAnalyzer
 {
   public class TablePresenter : INotifyPropertyChanged
   {
-    public event PropertyChangedEventHandler PropertyChanged;
-
     private string m_file_name = string.Empty;
     private string m_separator = "===============================================";
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
-    private ObservableCollection<FileEntry> m_file_entries = new ObservableCollection<FileEntry>();
     private int m_current_file = -1;
+    private ObservableCollection<FileEntry> m_file_entries = new ObservableCollection<FileEntry>();
+    private readonly Dictionary<string, string> m_filters = new Dictionary<string, string>();
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public ObservableCollection<FileEntry> OpenedFiles
     {
       get { return m_file_entries; }
     }
-
 
     public FileEntry CurrentFile
     {
@@ -128,6 +129,43 @@ namespace LogAnalyzer
       return m_file_name ?? string.Empty;
     }
 
+    public void OpenConfig(string fileName)
+    {
+      ConfigXmlDocument doc = new ConfigXmlDocument();
+      doc.Load(fileName);
+
+      var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
+
+      foreach (var element in nodeList.OfType<XmlElement>())
+      {
+        if (element.GetAttribute("name") == "Separator")
+          this.Separator = element.SelectSingleNode("value").InnerText;
+
+        if (element.GetAttribute("name") == "MessageTemplate")
+          this.MessageTemplate = element.SelectSingleNode("value").InnerText;
+      }
+    }
+
+    public void OpenLog(string fileName)
+    {
+      for (int i = 0; i < m_file_entries.Count; i++)
+      {
+        if (m_file_entries[i].FileName.Equals(fileName))
+        {
+          ChangeCurrentFile(i);
+          return;
+        }
+      }
+
+      m_file_entries.Add(new FileEntry
+      {
+        FileName = fileName,
+        Table = this.LoadLogTable(fileName)
+      });
+
+      ChangeCurrentFile(m_file_entries.Count - 1);
+    }
+
     public void CloseCurrent()
     {
       var old_value = m_current_file;
@@ -141,17 +179,40 @@ namespace LogAnalyzer
         this.ChangeCurrentFile(old_value);
     }
 
-    public void OpenFile(string fileName)
+    public void SetFilter(string column, string value)
     {
-      for (int i = 0; i < m_file_entries.Count; i++)
-      {
-        if (m_file_entries[i].FileName.Equals(fileName))
-        {
-          ChangeCurrentFile(i);
-          return;
-        }
-      }
+      if (string.IsNullOrEmpty(column))
+        return;
 
+      if (string.IsNullOrEmpty(value))
+        m_filters.Remove(column);
+      else
+        m_filters[column] = value;
+
+      if (this.CurrentFile != null)
+      {
+        StringBuilder sb = new StringBuilder();
+        bool first = true;
+
+        foreach (var kv in m_filters)
+        {
+          if (!this.CurrentFile.Table.Columns.Contains(kv.Key))
+            continue;
+
+          if (first)
+            first = false;
+          else
+            sb.Append(" AND ");
+
+          sb.AppendFormat("Convert({0}, System.String) LIKE '{1}%'", kv.Key, kv.Value);
+        }
+
+        CurrentFile.Table.DefaultView.RowFilter = sb.ToString();
+      }
+    }
+
+    private DataTable LoadLogTable(string fileName)
+    {
       var table = new DataTable();
       table.BeginLoadData();
 
@@ -186,39 +247,21 @@ namespace LogAnalyzer
       }
 
       table.EndLoadData();
-
-      m_file_entries.Add(new FileEntry
-      {
-        FileName = fileName,
-        Table = table
-      });
-
-      ChangeCurrentFile(m_file_entries.Count - 1);
+      return table;
     }
 
-    private void ChangeCurrentFile(int i)
+    private void ChangeCurrentFile(int index)
     {
-      m_current_file = i;
+      if (m_current_file == index)
+        return;
+      
+      m_current_file = index;
+
+      m_filters.Clear();
+
       this.OnPropertyChanged("CurrentFile");
       this.OnPropertyChanged("LoadedTable");
       this.OnPropertyChanged("FileName");
-    }
-
-    public void OpenConfig(string fileName)
-    {
-      ConfigXmlDocument doc = new ConfigXmlDocument();
-      doc.Load(fileName);
-
-      var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
-
-      foreach (var element in nodeList.OfType<XmlElement>())
-      {
-        if (element.GetAttribute("name") == "Separator")
-          this.Separator = element.SelectSingleNode("value").InnerText;
-
-        if (element.GetAttribute("name") == "MessageTemplate")
-            this.MessageTemplate = element.SelectSingleNode("value").InnerText;
-      }
     }
   }
 
