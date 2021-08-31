@@ -8,6 +8,7 @@
         WindowStyle="ThreeDBorderWindow"
         Height="346"
         Width="727.4"
+        Icon="text_find.ico"
         TextOptions.TextFormattingMode="Display">
     <Window.DataContext>
         <local:TablePresenter />
