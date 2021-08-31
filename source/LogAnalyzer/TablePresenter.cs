@@ -166,17 +166,29 @@ namespace LogAnalyzer
       ChangeCurrentFile(m_file_entries.Count - 1);
     }
 
-    public void CloseCurrent()
+    public void ClosePage(FileEntry page)
     {
-      var old_value = m_current_file;
-      
-      if (this.CurrentFile != null)
-        m_file_entries.RemoveAt(old_value--);
+      if (page == null)
+        return;
 
-      if (m_file_entries.Count > 0 && old_value < 0)
-        this.ChangeCurrentFile(0);
+      var index = m_file_entries.IndexOf(page);
+
+      if (index < 0)
+        return;
+
+      var old_value = m_current_file;
+
+      if (index <= old_value)
+      {
+        m_file_entries.RemoveAt(index);
+
+        if (m_current_file >= 0)
+          this.ChangeCurrentFile(old_value - 1);
+        else if (m_file_entries.Count > 0)
+          this.ChangeCurrentFile(0);
+      }
       else
-        this.ChangeCurrentFile(old_value);
+        m_file_entries.RemoveAt(index);
     }
 
     public void SetFilter(string column, string value)

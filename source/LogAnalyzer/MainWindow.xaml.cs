@@ -43,6 +43,8 @@ namespace LogAnalyzer
 
       if (grid.Columns.Count > 0)
         grid.Columns[grid.Columns.Count - 1].Width = new DataGridLength(1, DataGridLengthUnitType.Star);
+      if (grid.Columns.Count > 1)
+        grid.Columns[grid.Columns.Count - 2].Width = new DataGridLength(1, DataGridLengthUnitType.Star);
     }
 
     private void FilterRow_TextChanged(object sender, TextChangedEventArgs e)
@@ -58,7 +60,9 @@ namespace LogAnalyzer
 
     private void MenuItemClose_Click(object sender, RoutedEventArgs e)
     {
-      ((TablePresenter)this.DataContext).CloseCurrent();
+      var button = sender as Button;
+      var obj = button.TemplatedParent as ListBoxItem;
+      ((TablePresenter)this.DataContext).ClosePage(obj.Content as FileEntry);
     }
   }
 }

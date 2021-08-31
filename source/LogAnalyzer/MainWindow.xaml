@@ -28,6 +28,7 @@
         <Style TargetType="MenuItem">
             <Setter Property="Background" Value="DimGray"/>
             <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background">
@@ -62,7 +63,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="DataGridColumnHeader">
-                        <Border Background="{TemplateBinding Property=Background}" 
+                        <Border  x:Name="FilterRow"
+                                Background="{TemplateBinding Property=Background}" 
                                 BorderBrush="{TemplateBinding Property=BorderBrush}" 
                                 BorderThickness="{TemplateBinding Property=BorderThickness}">
                             <Grid>
@@ -94,7 +96,6 @@
                                 <TextBox Grid.Row="1"
                                          Grid.ColumnSpan="2"
                                          BorderThickness="0,0,0,3"
-                                         x:Name="FilterRow"
                                          TextChanged="FilterRow_TextChanged" />
                             </Grid>
                         </Border>
@@ -144,7 +145,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridCell}">
-                        <Border Padding="3" 
+                        <Border Padding="3"
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{TemplateBinding Background}" 
@@ -181,26 +182,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <Menu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <DockPanel HorizontalAlignment="Stretch"/>
-                </ItemsPanelTemplate>
-            </Menu.ItemsPanel>
             <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Margin="0,0,20,0"/>
             <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click"/>
-            <MenuItem Header="Закрыть" HorizontalAlignment="Right" Click="MenuItemClose_Click"/>
         </Menu>
-        <ListView Grid.Row="1" 
+        <ListBox Grid.Row="1" 
                  BorderThickness="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                  ItemsSource="{Binding Path=OpenedFiles}" 
                  SelectedItem="{Binding Path=CurrentFile}">
-            <ListView.ItemsPanel>
+            <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" Background="DimGray" />
                 </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-            <ListView.Resources>
-                <Style TargetType="ListViewItem">
+            </ListBox.ItemsPanel>
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate>
@@ -209,13 +205,20 @@
                                             CornerRadius="5,5,0,0"
                                             BorderThickness="0" 
                                             BorderBrush="LightGray"
-                                            Padding="10,5,20,5">
+                                            Padding="10,0,5,5">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock Text="{Binding}" VerticalAlignment="Center" />
-                                        </StackPanel>
+                                        <Button Content="×"
+                                                VerticalAlignment="Top"
+                                                FontSize="15"
+                                                Margin="10,0,0,5"
+                                                Padding="0"
+                                                Click="MenuItemClose_Click"
+                                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
+                                    </StackPanel>
                                     </Border>
                                 <ControlTemplate.Triggers>
-                                    <Trigger Property="ListViewItem.IsSelected" Value="True">
+                                    <Trigger Property="ListBoxItem.IsSelected" Value="True">
                                         <Setter TargetName="tab1" Property="Background">
                                             <Setter.Value>
                                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
@@ -235,8 +238,8 @@
                     <Style.Triggers>
                     </Style.Triggers>
                 </Style>
-            </ListView.Resources>
-        </ListView>
+            </ListBox.Resources>
+        </ListBox>
         <DataGrid Grid.Row="2"
                   Background="Silver"
                   AutoGenerateColumns="True"
