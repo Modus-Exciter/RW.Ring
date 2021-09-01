@@ -51,7 +51,7 @@ namespace LogAnalyzer
     {
       using (var dlg = new FolderBrowserDialog())
       {
-        dlg.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        dlg.SelectedPath = ((TablePresenter)this.DataContext).GetDirectoryPath();
 
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
           ((TablePresenter)this.DataContext).OpenDirectory(dlg.SelectedPath);

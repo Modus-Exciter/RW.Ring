@@ -47,58 +47,6 @@ namespace LogAnalyzer
       }
     }
 
-    public DataTable LoadedTable
-    {
-      get
-      {
-        var file = this.CurrentFile;
-
-        if (file != null)
-          return file.Table;
-        else
-          return null;
-      }
-      set
-      {
-        var file = this.CurrentFile;
-
-        if (file != null)
-        {
-          file.Table = value;
-          this.OnPropertyChanged("LoadedTable");
-        }
-      }
-    }
-
-    public string FileName
-    {
-      get
-      {
-        var file = this.CurrentFile;
-
-        if (file != null)
-          return file.FileName;
-        else
-          return null;
-      }
-      set
-      {
-        var file = this.CurrentFile;
-
-        if (file != null)
-        {
-          file.FileName = value;
-          this.OnPropertyChanged("FileName");
-        }
-      }
-    }
-
-    private void OnPropertyChanged(string property)
-    {
-      if (this.PropertyChanged != null)
-        this.PropertyChanged(this, new PropertyChangedEventArgs(property));
-    }
-
     public string Separator
     {
       get { return m_separator; }
@@ -207,6 +155,21 @@ namespace LogAnalyzer
       }
     }
 
+    public string GetDirectoryPath()
+    {
+      var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+      if (Directory.Exists(Path.Combine(path, "ARI")))
+        return Path.Combine(path, "ARI");
+
+      var dirs = Directory.GetDirectories(path);
+
+      if (dirs.Length > 0)
+        return dirs[0];
+      else
+        return path;
+    }
+
     public void ClosePage(FileEntry page)
     {
       if (page == null)
@@ -262,6 +225,12 @@ namespace LogAnalyzer
 
         CurrentFile.Table.DefaultView.RowFilter = sb.ToString();
       }
+    }
+
+    private void OnPropertyChanged(string property)
+    {
+      if (this.PropertyChanged != null)
+        this.PropertyChanged(this, new PropertyChangedEventArgs(property));
     }
 
     private DataTable LoadLogTable(string fileName)
@@ -332,8 +301,6 @@ namespace LogAnalyzer
       m_filters.Clear();
 
       this.OnPropertyChanged("CurrentFile");
-      this.OnPropertyChanged("LoadedTable");
-      this.OnPropertyChanged("FileName");
     }
   }
 

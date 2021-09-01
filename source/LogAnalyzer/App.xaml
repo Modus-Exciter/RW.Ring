@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        
         <Style TargetType="Menu">
             <Setter Property="Background" Value="DimGray"/>
             <Setter Property="Foreground" Value="White"/>
@@ -25,6 +26,24 @@
             </Style.Triggers>
         </Style>
         
+        <!-- Grid styles ====================================================================== -->
+
+        <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Color="Silver" Offset="0"/>
+                        <GradientStop Color="WhiteSmoke" Offset="0.3"/>
+                        <GradientStop Color="Gray" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+
         <Style TargetType="DataGridCell">
             <Setter Property="Background">
                 <Setter.Value>
