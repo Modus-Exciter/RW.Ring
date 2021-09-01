@@ -29,6 +29,149 @@
         
         <!-- Grid styles ====================================================================== -->
 
+        <Style TargetType="RepeatButton" x:Key="scrollRepeat">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border Background="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <RadialGradientBrush RadiusX="2" x:Key="scrollerFill">
+            <GradientStop Color="Gainsboro" Offset="0"/>
+            <GradientStop Color="DarkGray" Offset="0.8"/>
+        </RadialGradientBrush>
+
+        <RadialGradientBrush RadiusX="2" x:Key="scrollerMouseOver">
+            <GradientStop Color="SeaShell" Offset="0"/>
+            <GradientStop Color="Silver" Offset="0.8"/>
+        </RadialGradientBrush>
+
+        <RadialGradientBrush RadiusX="2" x:Key="scrollerMousePressed">
+            <GradientStop Color="SeaShell" Offset="0"/>
+            <GradientStop Color="DarkGray" Offset="0.8"/>
+        </RadialGradientBrush>
+        
+        <Style TargetType="RepeatButton" x:Key="scrollUpDown">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border x:Name="scrollThumbBorder"
+                                CornerRadius="2" 
+                                BorderThickness="1.5" 
+                                BorderBrush="DimGray" 
+                                Background="{StaticResource scrollerFill}">
+                            <ContentPresenter x:Name="cont"  VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="scrollThumbBorder" 
+                                        Property="Background" 
+                                        Value="{StaticResource scrollerMouseOver}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="scrollThumbBorder" 
+                                        Property="Background"
+                                        Value="{StaticResource scrollerMousePressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Thumb" x:Key="scrollThumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border x:Name="scrollThumbBorder"
+                                CornerRadius="3" 
+                                Margin="1,0"
+                                BorderThickness="1.5" 
+                                BorderBrush="Silver" 
+                                Background="{StaticResource scrollerFill}">
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="scrollThumbBorder" 
+                                        Property="Background" 
+                                        Value="{StaticResource scrollerMouseOver}"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="scrollThumbBorder" 
+                                        Property="Background"
+                                        Value="{StaticResource scrollerMousePressed}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style TargetType="ScrollBar">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid x:Name="GridRoot" Background="DimGray">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <RepeatButton x:Name="LineUp"
+                                          Grid.Row="0"
+                                          Style="{StaticResource scrollUpDown}"
+                                          Command="ScrollBar.LineUpCommand">▲</RepeatButton>
+                            <Track Name="PART_Track" Grid.Row="1" 
+                               IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp"
+                                                  Style="{StaticResource scrollRepeat}" 
+                                                  Command="ScrollBar.PageUpCommand">
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource scrollThumb}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown"
+                                                  Style="{StaticResource scrollRepeat}" 
+                                                  Command="ScrollBar.PageDownCommand">
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                            <RepeatButton x:Name="LineDown"
+                                          Command="ScrollBar.LineDownCommand"
+                                          Style="{StaticResource scrollUpDown}"
+                                          Grid.Row="2">▼</RepeatButton>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageRightCommand" />
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                <Setter TargetName="LineDown" Property="Command" Value="ScrollBar.LineRightCommand" />
+                                <Setter TargetName="LineUp" Property="Command" Value="ScrollBar.LineLeftCommand" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- Grid styles ====================================================================== -->
+        
         <Style TargetType="DataGrid">
             <Style.Setters>
                 <Setter Property="Background">
