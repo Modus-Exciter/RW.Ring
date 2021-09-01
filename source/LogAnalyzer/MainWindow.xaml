@@ -204,7 +204,6 @@
             </Border.Background>
         </Border>
         <DataGrid Grid.Row="3"
-                  Background="Silver"
                   BorderBrush="Transparent"
                   AutoGenerateColumns="True"
                   IsReadOnly="True"

@@ -28,6 +28,18 @@
         
         <!-- Grid styles ====================================================================== -->
 
+        <Style TargetType="DataGrid">
+            <Style.Setters>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush ColorInterpolationMode="ScRgbLinearInterpolation" StartPoint="0.53,-0.4" EndPoint="0.6,1">
+                            <GradientStop Color="Silver" Offset="0.5"/>
+                            <GradientStop Color="LightSlateGray" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
         <Style x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}" TargetType="{x:Type Button}">
             <Setter Property="Background">
                 <Setter.Value>

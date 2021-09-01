@@ -76,7 +76,7 @@ namespace LogAnalyzer
     private void FilterRow_TextChanged(object sender, TextChangedEventArgs e)
     {
       var ctrl = sender as TextBox;
-      var obj= ctrl.TemplatedParent as DataGridColumnHeader;
+      var obj = ctrl.TemplatedParent as DataGridColumnHeader;
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
       this.Presenter.SetFilter(name, ctrl.Text);
