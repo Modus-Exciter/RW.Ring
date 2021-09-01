@@ -14,115 +14,6 @@
         <local:TablePresenter ExceptionOccured="TablePresenter_ExceptionOccured" />
     </Window.DataContext>
     <Window.Resources>
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="4"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Background">
-                <Setter.Value>
-                    <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
-                        <GradientStop Color="Gainsboro" Offset="0"/>
-                        <GradientStop Color="Gray" Offset="0.8"/>
-                    </RadialGradientBrush>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="DataGridColumnHeader">
-                        <Border  x:Name="FilterRow"
-                                Background="{TemplateBinding Property=Background}" 
-                                BorderBrush="{TemplateBinding Property=BorderBrush}" 
-                                BorderThickness="0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="0"
-                                           Text="{Binding}"
-                                           Margin="{TemplateBinding Property=Padding}"/>
-                                <Path x:Name="SortArrow" 
-                                        Visibility="Collapsed" 
-                                        Data="M 0,0 L 1,0 0.5,1 z" 
-                                        Stretch="Fill"
-                                        Stroke="DarkSlateGray"
-                                        Fill="Silver"
-                                        Grid.Column="1"
-                                        Width="9"
-                                        Height="7" 
-                                        Margin="0,0,8,0"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        RenderTransformOrigin="0.5, 0.4">
-                                </Path>
-                                <TextBox Grid.Row="1"
-                                         Grid.ColumnSpan="3"
-                                         BorderThickness="0,0,1,0"
-                                         BorderBrush="Gray"
-                                         Padding="2"
-                                         FontWeight="Regular"
-                                         TextChanged="FilterRow_TextChanged" />
-                                <Thumb x:Name="PART_RightHeaderGripper"
-                                       Grid.Column="2"
-                                       HorizontalAlignment="Right"
-                                       Width="4" 
-                                       BorderThickness="2"
-                                       BorderBrush="Transparent"
-                                       Cursor="SizeWE"/>
-                                <Border Grid.Row="2" 
-                                        Grid.ColumnSpan="3"
-                                        Height="5">
-                                    <Border.Background>
-                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                            <GradientStop Color="Silver" Offset="0"/>
-                                            <GradientStop Color="Gainsboro" Offset="0.4"/>
-                                            <GradientStop Color="Gray" Offset="0.8"/>
-                                        </LinearGradientBrush>
-                                    </Border.Background>
-                                </Border>
-                            </Grid>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
-                                            <GradientStop Color="SeaShell" Offset="0"/>
-                                            <GradientStop Color="Silver" Offset="0.3"/>
-                                            <GradientStop Color="Gray" Offset="0.8"/>
-                                        </RadialGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="SortDirection" Value="Ascending">
-                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="SortArrow" Property="RenderTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="180"/>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="SortDirection" Value="Descending">
-                                <Setter TargetName="SortArrow" Property="Visibility" Value="Visible"/>
-                            </Trigger>
-                            <Trigger Property="HasContent" Value="False">
-                                <Setter TargetName="FilterRow" Property="Visibility" Value="Collapsed"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
     <Grid Background="Silver">
         <Grid.RowDefinitions>
@@ -209,7 +100,7 @@
                   IsReadOnly="True"
                   GridLinesVisibility="Vertical"
                   VerticalGridLinesBrush="Gray"
-                  AutoGeneratedColumns="DataGrid_AutoGeneratedColumns"
+                  AutoGeneratedColumns="{x:Static local:GridColumnWidthHelper.SetColumnWidth}"
                   ItemsSource="{Binding Path=CurrentFile.Table}">
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">

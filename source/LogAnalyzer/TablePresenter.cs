@@ -18,7 +18,6 @@ namespace LogAnalyzer
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
     private int m_current_file = -1;
     private ObservableCollection<FileEntry> m_file_entries = new ObservableCollection<FileEntry>();
-    private readonly Dictionary<string, string> m_filters = new Dictionary<string, string>();
 
     public event PropertyChangedEventHandler PropertyChanged;
     public event EventHandler<ExceptionEventArgs> ExceptionOccured;
@@ -200,38 +199,6 @@ namespace LogAnalyzer
         m_file_entries.RemoveAt(index);
     }
 
-    public void SetFilter(string column, string value)
-    {
-      if (string.IsNullOrEmpty(column))
-        return;
-
-      if (string.IsNullOrEmpty(value))
-        m_filters.Remove(column);
-      else
-        m_filters[column] = value;
-
-      if (this.CurrentFile != null)
-      {
-        StringBuilder sb = new StringBuilder();
-        bool first = true;
-
-        foreach (var kv in m_filters)
-        {
-          if (!this.CurrentFile.Table.Columns.Contains(kv.Key))
-            continue;
-
-          if (first)
-            first = false;
-          else
-            sb.Append(" AND ");
-
-          sb.AppendFormat("Convert({0}, System.String) LIKE '{1}%'", kv.Key, kv.Value.Replace("'", "''"));
-        }
-
-        CurrentFile.Table.DefaultView.RowFilter = sb.ToString();
-      }
-    }
-
     private void OnPropertyChanged(string property)
     {
       if (this.PropertyChanged != null)
@@ -303,7 +270,8 @@ namespace LogAnalyzer
       
       m_current_file = index;
 
-      m_filters.Clear();
+      if (m_current_file >= 0 && m_file_entries[m_current_file].Table.DefaultView.RowFilter != string.Empty)
+        m_file_entries[m_current_file].Table.DefaultView.RowFilter = string.Empty;
 
       this.OnPropertyChanged("CurrentFile");
     }
