@@ -106,7 +106,7 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Background">
                 <Setter.Value>
-                    <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
+                    <RadialGradientBrush Center="0.3,0.25" RadiusX="1.6" GradientOrigin="0.4,0.12">
                         <GradientStop Color="Gainsboro" Offset="0"/>
                         <GradientStop Color="Gray" Offset="0.8"/>
                     </RadialGradientBrush>
@@ -118,7 +118,7 @@
                         <Border  x:Name="FilterRow"
                                 Background="{TemplateBinding Property=Background}" 
                                 BorderBrush="{TemplateBinding Property=BorderBrush}" 
-                                BorderThickness="0">
+                                BorderThickness="0,1,1,0">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -149,7 +149,7 @@
                                 </Path>
                                 <TextBox Grid.Row="1"
                                          Grid.ColumnSpan="3"
-                                         BorderThickness="0,0,1,0"
+                                         BorderThickness="0"
                                          BorderBrush="Gray"
                                          Padding="2"
                                          FontWeight="Regular"
@@ -178,7 +178,7 @@
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background">
                                     <Setter.Value>
-                                        <RadialGradientBrush Center="0.3,0.4" RadiusX="1.6" GradientOrigin="0.4,0.15">
+                                        <RadialGradientBrush Center="0.3,0.25" RadiusX="1.6" GradientOrigin="0.4,0.12">
                                             <GradientStop Color="SeaShell" Offset="0"/>
                                             <GradientStop Color="Silver" Offset="0.3"/>
                                             <GradientStop Color="Gray" Offset="0.8"/>
