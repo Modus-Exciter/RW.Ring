@@ -16,15 +16,20 @@ namespace LogAnalyzer
   {
     private readonly WindowInteropHelper m_helper;
 
+    public MainWindow()
+    {
+      InitializeComponent();
+      m_helper = new WindowInteropHelper(this);
+    }
+
     public IntPtr Handle
     {
       get { return m_helper.Handle; }
     }
 
-    public MainWindow()
+    private TablePresenter Presenter
     {
-      InitializeComponent();
-      m_helper = new WindowInteropHelper(this);
+      get { return ((TablePresenter)this.DataContext); }
     }
 
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
@@ -34,7 +39,7 @@ namespace LogAnalyzer
       dialog.Filter = "Configuration files|*.config";
 
       if (dialog.ShowDialog(this) == true)
-        ((TablePresenter)this.DataContext).OpenConfig(dialog.FileName);
+        this.Presenter.OpenConfig(dialog.FileName);
     }
 
     private void OpenFile_Click(object sender, RoutedEventArgs e)
@@ -44,17 +49,17 @@ namespace LogAnalyzer
       dialog.Filter = "Log files|*.log";
 
       if (dialog.ShowDialog(this) == true)
-        ((TablePresenter)this.DataContext).OpenLog(dialog.FileName);
+        this.Presenter.OpenLog(dialog.FileName);
     }
 
     private void OpenDirectory_Click(object sender, RoutedEventArgs e)
     {
       using (var dlg = new FolderBrowserDialog())
       {
-        dlg.SelectedPath = ((TablePresenter)this.DataContext).GetDirectoryPath();
+        dlg.SelectedPath = this.Presenter.GetDirectoryPath();
 
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-          ((TablePresenter)this.DataContext).OpenDirectory(dlg.SelectedPath);
+          this.Presenter.OpenDirectory(dlg.SelectedPath);
       }
     }
 
@@ -74,7 +79,7 @@ namespace LogAnalyzer
       var obj= ctrl.TemplatedParent as DataGridColumnHeader;
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
-      ((TablePresenter)this.DataContext).SetFilter(name, ctrl.Text);
+      this.Presenter.SetFilter(name, ctrl.Text);
     }
 
     private void MenuItemClose_Click(object sender, RoutedEventArgs e)
@@ -82,12 +87,12 @@ namespace LogAnalyzer
       var button = sender as Button;
       var obj = button.TemplatedParent as ListBoxItem;
 
-      ((TablePresenter)this.DataContext).ClosePage(obj.Content as FileEntry);
+      this.Presenter.ClosePage(obj.Content as FileEntry);
     }
 
     private void TablePresenter_ExceptionOccured(object sender, ExceptionEventArgs e)
     {
-      MessageBox.Show(e.Error.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+      MessageBox.Show(e.Error, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
     }
   }
 }

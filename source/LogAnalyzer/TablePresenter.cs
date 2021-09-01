@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -80,7 +79,7 @@ namespace LogAnalyzer
 
     public void OpenConfig(string fileName)
     {
-      ConfigXmlDocument doc = new ConfigXmlDocument();
+      XmlDocument doc = new XmlDocument();
       doc.Load(fileName);
 
       var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
@@ -119,7 +118,7 @@ namespace LogAnalyzer
       catch (Exception ex)
       {
         if (this.ExceptionOccured != null)
-          this.ExceptionOccured(this, new ExceptionEventArgs(ex));
+          this.ExceptionOccured(this, new ExceptionEventArgs(ex.Message));
       }
     }
 
@@ -140,18 +139,24 @@ namespace LogAnalyzer
 
       try
       {
-        m_file_entries.Add(new FileEntry
+        var entry = new FileEntry
         {
           FileName = selectedPath,
           Table = this.LoadLogDirectory(selectedPath)
-        });
+        };
 
-        ChangeCurrentFile(m_file_entries.Count - 1);
+        if (entry.Table.Columns.Count > 0)
+        {
+          m_file_entries.Add(entry);
+          ChangeCurrentFile(m_file_entries.Count - 1);
+        }
+        else if (this.ExceptionOccured != null)
+          this.ExceptionOccured(this, new ExceptionEventArgs("В указанной папке протоколы не найдены"));
       }
       catch (Exception ex)
       {
         if (this.ExceptionOccured != null)
-          this.ExceptionOccured(this, new ExceptionEventArgs(ex));
+          this.ExceptionOccured(this, new ExceptionEventArgs(ex.Message));
       }
     }
 
@@ -332,11 +337,11 @@ namespace LogAnalyzer
 
   public class ExceptionEventArgs : EventArgs
   {
-    public ExceptionEventArgs(Exception error)
+    public ExceptionEventArgs(string error)
     {
       this.Error = error;
     }
 
-    public Exception Error { get; private set; }
+    public string Error { get; private set; }
   }
 }
