@@ -53,8 +53,8 @@ namespace LogAnalyzer
       var obj = ctrl.TemplatedParent as DataGridColumnHeader;
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
-      var grid = (DataGrid)(obj.Column.GetType().GetProperty("DataGridOwner", 
-        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).GetValue(obj.Column, null));
+      var grid = (DataGrid)obj.Column.GetType().GetProperty("DataGridOwner", 
+        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).GetValue(obj.Column, null);
 
       var view = grid.ItemsSource as IBindingListView;
 
