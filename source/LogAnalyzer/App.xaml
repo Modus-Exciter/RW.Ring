@@ -27,7 +27,7 @@
             </Style.Triggers>
         </Style>
         
-        <!-- Grid styles ====================================================================== -->
+        <!-- Scroller styles ================================================================== -->
 
         <Style TargetType="RepeatButton" x:Key="scrollRepeat">
             <Setter Property="Template">
@@ -88,7 +88,7 @@
                     <ControlTemplate TargetType="Thumb">
                         <Border x:Name="scrollThumbBorder"
                                 CornerRadius="3" 
-                                Margin="1,0"
+                                Margin="1"
                                 BorderThickness="1.5" 
                                 BorderBrush="Silver" 
                                 Background="{StaticResource scrollerFill}">
@@ -176,10 +176,10 @@
             <Style.Setters>
                 <Setter Property="Background">
                     <Setter.Value>
-                        <LinearGradientBrush ColorInterpolationMode="ScRgbLinearInterpolation" StartPoint="0.53,-0.4" EndPoint="0.6,1">
-                            <GradientStop Color="Silver" Offset="0.5"/>
-                            <GradientStop Color="LightSlateGray" Offset="1"/>
-                        </LinearGradientBrush>
+                        <RadialGradientBrush RadiusX="1.5" RadiusY="1" Center="1,1" GradientOrigin="1,1">
+                            <GradientStop Color="LightSlateGray" Offset="0"/>
+                            <GradientStop Color="Silver" Offset="1"/>
+                        </RadialGradientBrush>
                     </Setter.Value>
                 </Setter>
             </Style.Setters>
