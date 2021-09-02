@@ -11,7 +11,9 @@
         Icon="text_find.ico"
         TextOptions.TextFormattingMode="Display">
     <Window.DataContext>
-        <local:TablePresenter ExceptionOccured="TablePresenter_ExceptionOccured" />
+        <local:TablePresenter x:Name="Presenter" 
+                              x:FieldModifier="private" 
+                              ExceptionOccured="TablePresenter_ExceptionOccured" />
     </Window.DataContext>
     <Grid Background="Silver">
         <Grid.RowDefinitions>

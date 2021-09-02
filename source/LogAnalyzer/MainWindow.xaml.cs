@@ -30,11 +30,6 @@ namespace LogAnalyzer
       get { return m_helper.Handle; }
     }
 
-    private TablePresenter Presenter
-    {
-      get { return ((TablePresenter)this.DataContext); }
-    }
-
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
     {
       OpenFileDialog dialog = new OpenFileDialog();

@@ -281,7 +281,7 @@
                                         Data="M 0,0 L 1,0 0.5,1 z" 
                                         Stretch="Fill"
                                         Stroke="DarkSlateGray"
-                                        Fill="Silver"
+                                        Fill="Transparent"
                                         Grid.Column="1"
                                         Width="9"
                                         Height="7" 
