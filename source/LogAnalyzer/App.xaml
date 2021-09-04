@@ -111,17 +111,10 @@
         </Style>
         
         <Style TargetType="ScrollBar">
-            <Style.Resources>
-                <local:GridConverter x:Key="gridConverter"/>
-            </Style.Resources>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
-                        <Grid x:Name="GridRoot" 
-                              Background="DimGray" 
-                              Margin="{Binding RelativeSource=
-                                    {RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type DataGrid}},
-                                    Converter={StaticResource gridConverter}}">
+                        <Grid x:Name="GridRoot" Background="DimGray">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -156,7 +149,6 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="Orientation" Value="Horizontal">
-                               <Setter TargetName="GridRoot" Property="Margin" Value="0"/>
                                <Setter TargetName="GridRoot" Property="LayoutTransform">
                                     <Setter.Value>
                                         <RotateTransform Angle="-90" />
@@ -185,6 +177,15 @@
         <!-- Grid styles ====================================================================== -->
         
         <Style TargetType="DataGrid">
+            <Style.Resources>
+                <Style TargetType="ScrollBar" BasedOn="{StaticResource ResourceKey={x:Type ScrollBar}}">
+                    <Style.Triggers>
+                        <Trigger Property="Orientation" Value="Vertical">
+                            <Setter Property="Margin" Value="0,-50,0,0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
             <Style.Setters>
                 <Setter Property="Background">
                     <Setter.Value>
@@ -359,8 +360,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>
