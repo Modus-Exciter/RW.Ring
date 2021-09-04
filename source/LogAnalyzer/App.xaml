@@ -111,10 +111,17 @@
         </Style>
         
         <Style TargetType="ScrollBar">
+            <Style.Resources>
+                <local:GridConverter x:Key="gridConverter"/>
+            </Style.Resources>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ScrollBar">
-                        <Grid x:Name="GridRoot" Background="DimGray" Margin="0,-50,0,0">
+                        <Grid x:Name="GridRoot" 
+                              Background="DimGray" 
+                              Margin="{Binding RelativeSource=
+                                    {RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type DataGrid}},
+                                    Converter={StaticResource gridConverter}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
