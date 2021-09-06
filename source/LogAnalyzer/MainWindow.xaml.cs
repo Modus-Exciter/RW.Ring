@@ -1,13 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Globalization;
-using System.Linq;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
+using Microsoft.Win32;
+using Notung.Feuerzauber;
+using Notung.Feuerzauber.Controls;
 using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
 namespace LogAnalyzer
@@ -25,9 +22,19 @@ namespace LogAnalyzer
       m_helper = new WindowInteropHelper(this);
     }
 
-    public IntPtr Handle
+    IntPtr System.Windows.Forms.IWin32Window.Handle
     {
       get { return m_helper.Handle; }
+    }
+
+    private void buttonClose_Click(object sender, RoutedEventArgs e)
+    {
+      this.Close();
+    }
+
+    private void WindowHeader_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+      WindowHelper.HeaderMouseDown(e, true);
     }
 
     private void OpenConfig_Click(object sender, RoutedEventArgs e)
@@ -37,41 +44,48 @@ namespace LogAnalyzer
       dialog.Filter = "Configuration files|*.config";
 
       if (dialog.ShowDialog(this) == true)
-        this.Presenter.OpenConfig(dialog.FileName);
-    }
-
-    private void OpenFile_Click(object sender, RoutedEventArgs e)
-    {
-      OpenFileDialog dialog = new OpenFileDialog();
-
-      dialog.Filter = "Log files|*.log";
-
-      if (dialog.ShowDialog(this) == true)
-        this.Presenter.OpenLog(dialog.FileName);
+        m_context.OpenConfig(dialog.FileName);
     }
 
     private void OpenDirectory_Click(object sender, RoutedEventArgs e)
     {
       using (var dlg = new FolderBrowserDialog())
       {
-        dlg.SelectedPath = this.Presenter.GetDirectoryPath();
+        dlg.SelectedPath = m_context.GetDirectoryPath();
 
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-          this.Presenter.OpenDirectory(dlg.SelectedPath);
+          this.DisplayLog(m_context.OpenDirectory(dlg.SelectedPath));
       }
     }
 
-    private void MenuItemClose_Click(object sender, RoutedEventArgs e)
+    private void DisplayLog(FileEntry entry)
     {
-      var button = sender as Button;
-      var obj = button.TemplatedParent as ListBoxItem;
+      if (entry == null)
+        return;
 
-      this.Presenter.ClosePage(obj.Content as FileEntry);
+      m_mdi_manager.Presenter.ActivateWindow(() =>
+        new MdiChild
+        (
+          new LogDisplay { DataContext = entry },
+          entry.ToString(),
+          Properties.Resources.document_gear
+        ) { Tag = entry.FileName },
+        item => object.Equals(item.Tag, entry.FileName));
     }
 
-    private void TablePresenter_ExceptionOccured(object sender, ExceptionEventArgs e)
+    private void Context_ExceptionOccured(object sender, ExceptionEventArgs e)
     {
       MessageBox.Show(e.Error, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    private void OpenSingleLog_Click(object sender, RoutedEventArgs e)
+    {
+      OpenFileDialog dialog = new OpenFileDialog();
+
+      dialog.Filter = "Log files|*.log";
+
+      if (dialog.ShowDialog(this) == true)
+        this.DisplayLog(m_context.OpenLog(dialog.FileName));
     }
   }
 }

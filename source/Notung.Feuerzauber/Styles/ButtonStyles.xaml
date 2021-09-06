@@ -1,0 +1,77 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <LinearGradientBrush x:Key="buttonBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="Yellow" Offset="0.1" />
+        <GradientStop Color="Sienna" Offset="0.5" />
+        <GradientStop Color="Goldenrod" Offset="0.8" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="buttonBrush2" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="Gold" Offset="0.1" />
+        <GradientStop Color="SaddleBrown" Offset="0.5" />
+        <GradientStop Color="Goldenrod" Offset="0.8" />
+    </LinearGradientBrush>
+    <Style x:Key="commandButton" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent"></Setter>
+        </Style.Setters>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource ResourceKey=buttonBrush}"></Setter>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource ResourceKey=buttonBrush2}"></Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <ControlTemplate x:Key="button" TargetType="Button">
+        <Border CornerRadius="12"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{TemplateBinding Background}"
+                Height="{TemplateBinding Height}"
+                Width="{TemplateBinding Width}" >
+            <ContentControl Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}" />
+        </Border>
+    </ControlTemplate>
+    <Style TargetType="Menu">
+        <Setter Property="Background" Value="DimGray"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="5,0,0,0"/>
+    </Style>
+    <Style TargetType="MenuItem">
+        <Setter Property="Background">
+            <Setter.Value>
+                <RadialGradientBrush RadiusX="1.5" GradientOrigin="0.4,0.5">
+                    <GradientStop Color="DimGray" Offset="0"/>
+                    <GradientStop Color="DimGray" Offset="1"/>
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard TargetProperty="Background.GradientStops[0].Color">
+                            <ColorAnimation Duration="0:0:0.1" From="DimGray" To="Goldenrod" AutoReverse="False"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard TargetProperty="Background.GradientStops[0].Color">
+                            <ColorAnimation Duration="0:0:0.5" From="Goldenrod" To="DimGray" AutoReverse="False"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

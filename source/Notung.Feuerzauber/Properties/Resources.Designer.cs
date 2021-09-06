@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LogAnalyzer.Properties {
+namespace Notung.Feuerzauber.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace LogAnalyzer.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LogAnalyzer.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Notung.Feuerzauber.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,13 +57,6 @@ namespace LogAnalyzer.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        internal static System.Drawing.Bitmap document_gear {
-            get {
-                object obj = ResourceManager.GetObject("document_gear", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

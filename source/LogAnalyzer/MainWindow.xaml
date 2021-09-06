@@ -1,158 +1,142 @@
 ﻿<Window x:Class="LogAnalyzer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System.Windows;assembly=PresentationFramework"
+        xmlns:fz="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:local="clr-namespace:LogAnalyzer"
-        Title="Анализатор протоколов"
+        x:Name="mainWindow"
+        MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height}"
+        TextOptions.TextFormattingMode="Display" 
+        ResizeMode="CanResizeWithGrip"
+        WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        WindowState="Maximized"
-        WindowStyle="ThreeDBorderWindow"
-        Height="346"
-        Width="727.4"
-        Icon="text_find.ico"
-        TextOptions.TextFormattingMode="Display">
+        BorderThickness="0"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Title="Анализатор протоколов"
+        Icon="/LogAnalyzer;component/text_find.png" 
+        Height="{Binding Source={x:Static sys:SystemParameters.FullPrimaryScreenHeight}, 
+            Converter={StaticResource goldenRatio}, ConverterParameter=0.8}" 
+        Width="{Binding Source={x:Static sys:SystemParameters.FullPrimaryScreenWidth}, 
+            Converter={StaticResource goldenRatio}, ConverterParameter=0.9}" >
+    <Window.Resources>
+        <LinearGradientBrush x:Key="headerBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF9A9898" Offset="0" />
+            <GradientStop Color="#FFBEBEBE" Offset="0.213" />
+            <GradientStop Color="#FF7A7878" Offset="0.418" />
+            <GradientStop Color="#FF363535" Offset="0.77" />
+            <GradientStop Color="#FF242424" Offset="1" />
+        </LinearGradientBrush>
+    </Window.Resources>
     <Window.DataContext>
-        <local:TablePresenter x:Name="Presenter" 
-                              x:FieldModifier="private" 
-                              ExceptionOccured="TablePresenter_ExceptionOccured" />
+        <local:MainWindowContext x:Name="m_context" 
+                                 x:FieldModifier="private"
+                                 ExceptionOccured="Context_ExceptionOccured"/>
     </Window.DataContext>
-    <Grid Background="Silver">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click" Padding="10,5"/>
-            <MenuItem Header="Открыть файл протокола" Click="OpenFile_Click" Padding="10,5"/>
-            <MenuItem Header="Открыть папку с протоколом" Click="OpenDirectory_Click" Padding="10,5"/>
-        </Menu>
-        <ListBox Grid.Row="1"
-                 Padding="-1"
-                 BorderThickness="0"
-                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                 x:Name="MdiPanel"
-                 ItemsSource="{Binding Path=OpenedFiles}" 
-                 SelectedItem="{Binding Path=CurrentFile}">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" Background="DimGray" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate>
-                                <Border x:Name="tab1"
-                                        TextBlock.Foreground="White"
-                                        CornerRadius="5,5,0,0"
-                                        BorderThickness="0" 
-                                        BorderBrush="LightGray"
-                                        Margin="5,0,0,0">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding}"
-                                                   VerticalAlignment="Center"
-                                                   Padding="10,5,5,5"/>
-                                        <Button Content="×"
-                                                VerticalAlignment="Top"
-                                                FontSize="15"
-                                                Margin="10,0,5,10"
-                                                Padding="0"
-                                                Click="MenuItemClose_Click"
-                                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"/>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="ListBoxItem.IsSelected" Value="True">
-                                        <Setter TargetName="tab1" Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                                    <GradientStop Color="White" Offset="0"/>
-                                                    <GradientStop Color="Silver" Offset="0.4"/>
-                                                    <GradientStop Color="LightGray" Offset="1"/>
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter TargetName="tab1" Property="BorderThickness" Value="1,1,1,0"/>
-                                        <Setter TargetName="tab1" Property="TextBlock.Foreground" Value="Black"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-        <Border Grid.Row="2" HorizontalAlignment="Stretch" Height="3" CornerRadius="3">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Color="LightGray" Offset="0"/>
-                    <GradientStop Color="Silver" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
-        <DataGrid Grid.Row="3"
-                  BorderBrush="Transparent"
-                  AutoGenerateColumns="True"
-                  IsReadOnly="True"
-                  GridLinesVisibility="Vertical"
-                  VerticalGridLinesBrush="Gray"
-                  AutoGeneratedColumns="{x:Static local:GridColumnWidthHelper.SetColumnWidth}"
-                  ItemsSource="{Binding Path=CurrentFile.Table}">
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell" BasedOn="{StaticResource {x:Type DataGridCell}}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=Level}" Value="Fatal">
-                            <Setter Property="Foreground" Value="Crimson"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Level}" Value="Error">
-                            <Setter Property="Foreground" Value="Red"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Level}" Value="Warning">
-                            <Setter Property="Foreground" Value="Coral"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Level}" Value="Info">
-                            <Setter Property="Foreground" Value="Blue"/>
-                        </DataTrigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="White"/>
-                        </Trigger>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="Foreground" Value="RoyalBlue"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.CellStyle>
-        </DataGrid>
-        <Border Grid.Row="4" HorizontalAlignment="Stretch" Height="5" CornerRadius="3">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Color="Gray" Offset="0"/>
-                    <GradientStop Color="Gainsboro" Offset="0.4"/>
-                    <GradientStop Color="#444444" Offset="0.8"/>
-                </LinearGradientBrush>
-            </Border.Background>
-        </Border>
-        <Grid Grid.Row="5" Background="DimGray" TextBlock.Foreground="White">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Margin="10,10,0,10" Orientation="Vertical" Grid.Column="0">
-                <TextBlock Margin="0,0,0,5" FontWeight="Bold">Шаблон сообщения:</TextBlock>
-                <TextBlock Text="{Binding Path=MessageTemplate}"/>
-                <TextBlock Text="{Binding Path=Separator}"/>
-            </StackPanel>
-            <Rectangle />
-            <StackPanel Orientation="Vertical" Grid.Column="2" Margin="0,0,10,0">
-                <TextBlock Margin="0,10,0,5" FontWeight="Bold">Файл протокола:</TextBlock>
-                <TextBlock Text="{Binding Path=CurrentFile.FileName}"/>
-            </StackPanel>
+    <Border x:Name="RootContainer" 
+            CornerRadius="12"
+            BorderBrush="#FFDEDEDE"
+            BorderThickness="2">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <Rectangle HorizontalAlignment="Stretch" Margin="0,15,0,0" Height="15" Fill="DimGray"/>
+            
+            <Border x:Name="WindowHeader"
+                    Grid.Row="0"
+                    Panel.ZIndex="2"
+                    HorizontalAlignment="Stretch"
+                    CornerRadius="10,10,10,5"
+                    Background="{StaticResource headerBrush}"
+                    MouseDown="WindowHeader_MouseDown">
+                <Border.Effect>
+                    <DropShadowEffect Color="Gray" ShadowDepth="5" Direction="-90"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Icon}"
+                           HorizontalAlignment="Left"
+                           Height="24"
+                           Width="24"
+                           SnapsToDevicePixels="True"
+                           RenderOptions.BitmapScalingMode="NearestNeighbor"
+                           Margin="10,0"/>
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=Title}"
+                               Grid.Column="1"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               FontFamily="Impact"
+                               FontSize="17"/>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <Button x:Name="buttonClose"
+                                Content="X" 
+                                Grid.ColumnSpan="2"
+                                Height="24"
+                                Width="24"
+                                Margin="0,2,1,2"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                FontWeight="Bold" 
+                                FontFamily="Verdana"
+                                Foreground="White"
+                                Click="buttonClose_Click"
+                                Template="{StaticResource ResourceKey=button}" 
+                                Style="{StaticResource ResourceKey=commandButton}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Menu Grid.Row="1" Padding="0,5,0,0">
+                <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click"/>
+                <MenuItem Header="Открыть папку с протоколами" Click="OpenDirectory_Click"/>
+                <MenuItem Header="Открыть отдельный протокол" Click="OpenSingleLog_Click"/>
+            </Menu>
+            <fz:MdiManager x:Name="m_mdi_manager" 
+                           x:FieldModifier="private" 
+                           Grid.Row="2" 
+                           Background="{StaticResource backgroundBrush}"/>
+            <Border Grid.Row="4" HorizontalAlignment="Stretch" Height="5">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Color="Gray" Offset="0"/>
+                        <GradientStop Color="Gainsboro" Offset="0.4"/>
+                        <GradientStop Color="#444444" Offset="0.8"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+            <Grid Grid.Row="5" Background="DimGray" TextBlock.Foreground="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="10,10,0,5" Orientation="Vertical" Grid.Column="0">
+                    <TextBlock Margin="0,0,0,5" FontWeight="Bold">Шаблон сообщения:</TextBlock>
+                    <TextBlock Text="{Binding Path=MessageTemplate}"/>
+                    <TextBlock Text="{Binding Path=Separator}"/>
+                </StackPanel>
+                <Rectangle />
+                <StackPanel Orientation="Vertical" Grid.Column="2" Margin="0,0,10,0">
+                    <TextBlock Margin="0,10,0,5" FontWeight="Bold">Файл протокола:</TextBlock>
+                    <TextBlock Text="{Binding ElementName=m_mdi_manager, Path=DataContext.ActiveMdiChild.Tag}"/>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Row="6" 
+                    Background="DimGray"
+                    Height="10" 
+                    CornerRadius="0,0,10,10"/>
         </Grid>
-    </Grid>
+    </Border>
 </Window>
