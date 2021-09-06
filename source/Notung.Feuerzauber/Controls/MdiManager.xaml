@@ -234,7 +234,7 @@
                                 x:Name="leftButton"
                                 CommandTarget="{x:Reference Name=innerPart }"
                                 Command="ScrollBar.LineLeftCommand" />
-                        <ScrollViewer x:Name="innerPart" 
+                        <ScrollViewer x:Name="innerPart"
                                       Grid.Column="1"
                                       HorizontalScrollBarVisibility="Hidden">
                             <ItemsPresenter/>
@@ -247,8 +247,9 @@
                                 Command="ScrollBar.LineRightCommand"/>
                         <Border Grid.Row="1" 
                                 Grid.ColumnSpan="3" 
-                                HorizontalAlignment="Stretch" 
-                                Height="3">
+                                Margin="0,-1,0,0"
+                                HorizontalAlignment="Stretch"
+                                Height="4">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                     <GradientStop Color="LightGray" Offset="0"/>
