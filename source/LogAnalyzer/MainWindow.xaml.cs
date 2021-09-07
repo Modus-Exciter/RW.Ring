@@ -76,5 +76,15 @@ namespace LogAnalyzer
       if (dialog.ShowDialog(this) == true)
         this.DisplayLog(m_context.OpenLog(dialog.FileName));
     }
+
+    private void buttonMinimize_Click(object sender, RoutedEventArgs e)
+    {
+      this.WindowState = WindowState.Minimized;
+    }
+
+    private void buttonMaximize_Click(object sender, RoutedEventArgs e)
+    {
+      this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    }
   }
 }
