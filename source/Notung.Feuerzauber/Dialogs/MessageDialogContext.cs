@@ -8,7 +8,7 @@ namespace Notung.Feuerzauber.Dialogs
   sealed class MessageDialogContext : ObservableObject
   {
     private string m_message;
-    private string m_title;
+    private string m_title = string.Empty;
     private MessageBoxImage m_image;
     private MessageBoxButton m_buttons;
     private Bitmap m_bitmap;

@@ -56,20 +56,24 @@
                     MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height, 
                         Converter={StaticResource goldenRatio}}"
                     HorizontalAlignment="Stretch">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch">
-                        <Image Margin="10"
-                               VerticalAlignment="Top"
-                               Source="{Binding Path=ExplicitBitmap, Converter={StaticResource imageConverter}}"
-                               Height="{Binding Path=ExplicitBitmap.Height}"
-                               Width="{Binding Path=ExplicitBitmap.Width}"
-                               SnapsToDevicePixels="True"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Margin="10"
+                           VerticalAlignment="Top"
+                           Source="{Binding Path=ExplicitBitmap, Converter={StaticResource imageConverter}}"
+                           Height="{Binding Path=ExplicitBitmap.Height}"
+                           Width="{Binding Path=ExplicitBitmap.Width}"
+                           SnapsToDevicePixels="True"/>
+                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding Path=Message}" 
                                    TextWrapping="Wrap" 
                                    Padding="5" 
                                    VerticalAlignment="Center" />
-                    </StackPanel>
-                </ScrollViewer>
+                    </ScrollViewer>
+                </Grid>
             </Border>
             <Border Grid.Row="2"
                     Background="WhiteSmoke"
