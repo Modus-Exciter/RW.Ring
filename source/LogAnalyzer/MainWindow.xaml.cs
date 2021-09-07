@@ -5,26 +5,18 @@ using System.Windows.Interop;
 using Microsoft.Win32;
 using Notung.Feuerzauber;
 using Notung.Feuerzauber.Controls;
-using FolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
+using Notung.Feuerzauber.Dialogs;
 
 namespace LogAnalyzer
 {
   /// <summary>
   /// Interaction logic for MainWindow.xaml
   /// </summary>
-  public partial class MainWindow : Window, System.Windows.Forms.IWin32Window
+  public partial class MainWindow : Window
   {
-    private readonly WindowInteropHelper m_helper;
-
     public MainWindow()
     {
       InitializeComponent();
-      m_helper = new WindowInteropHelper(this);
-    }
-
-    IntPtr System.Windows.Forms.IWin32Window.Handle
-    {
-      get { return m_helper.Handle; }
     }
 
     private void buttonClose_Click(object sender, RoutedEventArgs e)
@@ -49,13 +41,10 @@ namespace LogAnalyzer
 
     private void OpenDirectory_Click(object sender, RoutedEventArgs e)
     {
-      using (var dlg = new FolderBrowserDialog())
-      {
-        dlg.SelectedPath = m_context.GetDirectoryPath();
+      SelectFolderDialog dlg = new SelectFolderDialog() { Owner = this };
 
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-          this.DisplayLog(m_context.OpenDirectory(dlg.SelectedPath));
-      }
+      if (dlg.ShowDialog() == true)
+        this.DisplayLog(m_context.OpenDirectory(dlg.Tree.SelectedValue.ToString()));
     }
 
     private void DisplayLog(FileEntry entry)
@@ -68,14 +57,14 @@ namespace LogAnalyzer
         (
           new LogDisplay { DataContext = entry },
           entry.ToString(),
-          Properties.Resources.document_gear
+          Properties.Resources.Document
         ) { Tag = entry.FileName },
         item => object.Equals(item.Tag, entry.FileName));
     }
 
     private void Context_ExceptionOccured(object sender, ExceptionEventArgs e)
     {
-      MessageBox.Show(e.Error, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
+      MessageDialog.Show(e.Error, this.Title, MessageBoxImage.Error, MessageBoxButton.OK, this);
     }
 
     private void OpenSingleLog_Click(object sender, RoutedEventArgs e)

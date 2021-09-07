@@ -43,21 +43,6 @@ namespace LogAnalyzer
       }
     }
 
-    public string GetDirectoryPath()
-    {
-      var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-      if (Directory.Exists(Path.Combine(path, "ARI")))
-        return Path.Combine(path, "ARI");
-
-      var dirs = Directory.GetDirectories(path);
-
-      if (dirs.Length > 0)
-        return dirs[0];
-      else
-        return path;
-    }
-
     public void OpenConfig(string fileName)
     {
       XmlDocument doc = new XmlDocument();
@@ -97,7 +82,7 @@ namespace LogAnalyzer
 
     public FileEntry OpenDirectory(string selectedPath)
     {
-      if (Directory.GetFiles(selectedPath, "*.log").Length == 0 &&
+      if (!Directory.EnumerateFiles(selectedPath, "*.log").Any() &&
         Directory.Exists(Path.Combine(selectedPath, "Logs")))
         selectedPath = Path.Combine(selectedPath, "Logs");
 
@@ -110,9 +95,7 @@ namespace LogAnalyzer
         };
 
         if (entry.Table.Columns.Count > 0)
-        {
           return entry;
-        }
         else if (this.ExceptionOccured != null)
           this.ExceptionOccured(this, new ExceptionEventArgs("В указанной папке протоколы не найдены"));
       }
@@ -128,6 +111,7 @@ namespace LogAnalyzer
     private DataTable LoadLogDirectory(string path)
     {
       var table = new DataTable();
+
       table.BeginLoadData();
 
       foreach (var fileName in Directory.GetFiles(path, "*.log"))
@@ -141,6 +125,7 @@ namespace LogAnalyzer
     private DataTable LoadLogTable(string fileName)
     {
       var table = new DataTable();
+
       table.BeginLoadData();
 
       this.FillTable(fileName, table);
@@ -169,12 +154,14 @@ namespace LogAnalyzer
             if (table.Columns.Contains("Message"))
             {
               var message = table.Rows[table.Rows.Count - 1]["Message"].ToString();
-              var message_lines = message.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+              var message_lines = message.Split(new string[] { Environment.NewLine }, 
+                StringSplitOptions.RemoveEmptyEntries);
 
               table.Rows[table.Rows.Count - 1]["Message"] = message_lines[0];
 
               if (message_lines.Length > 1)
-                table.Rows[table.Rows.Count - 1]["Details"] = string.Join(Environment.NewLine, message_lines.Skip(1));
+                table.Rows[table.Rows.Count - 1]["Details"] = string.Join(
+                  Environment.NewLine, message_lines.Skip(1));
             }
           }
           else
@@ -186,7 +173,8 @@ namespace LogAnalyzer
 
   public class FileEntry
   {
-    private static readonly string _user_directory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    private static readonly string _user_directory = Environment.GetFolderPath(
+      Environment.SpecialFolder.LocalApplicationData);
 
     public string FileName { get; set; }
 

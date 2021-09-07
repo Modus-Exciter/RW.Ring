@@ -34,7 +34,7 @@
                                  ExceptionOccured="Context_ExceptionOccured"/>
     </Window.DataContext>
     <Border x:Name="RootContainer" 
-            CornerRadius="12"
+            CornerRadius="12,12,0,12"
             BorderBrush="#FFDEDEDE"
             BorderThickness="2">
         <Grid>
@@ -83,7 +83,6 @@
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button x:Name="buttonClose"
                                 Content="X" 
-                                Grid.ColumnSpan="2"
                                 Height="24"
                                 Width="24"
                                 Margin="0,2,1,2"
@@ -93,7 +92,6 @@
                                 FontFamily="Verdana"
                                 Foreground="White"
                                 Click="buttonClose_Click"
-                                Template="{StaticResource ResourceKey=button}" 
                                 Style="{StaticResource ResourceKey=commandButton}"/>
                     </StackPanel>
                 </Grid>
@@ -136,7 +134,7 @@
             <Border Grid.Row="6" 
                     Background="DimGray"
                     Height="10" 
-                    CornerRadius="0,0,10,10"/>
+                    CornerRadius="0,0,0,10"/>
         </Grid>
     </Border>
 </Window>

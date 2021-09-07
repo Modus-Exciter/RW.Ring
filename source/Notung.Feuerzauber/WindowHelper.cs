@@ -21,20 +21,15 @@ namespace Notung.Feuerzauber
       if (e.ChangedButton != MouseButton.Left)
         return;
 
-      if (checkDoubleClick)
+      if (e.ClickCount == 1 || !checkDoubleClick)
       {
-        if (e.ClickCount == 1)
-        {
-          if (window.WindowState == WindowState.Normal)
-            window.DragMove();
-        }
-        else if (window.WindowState == WindowState.Normal)
-          window.WindowState = WindowState.Maximized;
-        else
-          window.WindowState = WindowState.Normal;
+        if (window.WindowState == WindowState.Normal)
+          window.DragMove();
       }
       else if (window.WindowState == WindowState.Normal)
-        window.DragMove(); 
+        window.WindowState = WindowState.Maximized;
+      else
+        window.WindowState = WindowState.Normal;
     }
   }
 }
