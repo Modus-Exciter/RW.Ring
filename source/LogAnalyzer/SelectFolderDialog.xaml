@@ -45,7 +45,12 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=Title}" FontSize="15" Padding="15,5" Foreground="White" />
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=Title}"
+                               FontWeight="SemiBold"
+                               FontFamily="Calibri"
+                               FontSize="15"
+                               Padding="15,5"
+                               Foreground="White" />
                     <Button Grid.Column="1" 
                             IsCancel="True"
                             Padding="1,-1,0,0"

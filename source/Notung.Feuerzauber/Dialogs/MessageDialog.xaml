@@ -46,7 +46,12 @@
                     Background="{StaticResource dialogHeaderBrush}" 
                     CornerRadius="5,5,0,0"
                     MouseDown="Header_MouseDown">
-                <TextBlock Text="{Binding Path=Title}" FontSize="15" Padding="15,3" Foreground="White" />
+                <TextBlock Text="{Binding Path=Title}" 
+                           FontSize="15" 
+                           FontFamily="Calibri"
+                           FontWeight="SemiBold"
+                           Padding="15,3"
+                           Foreground="White" />
             </Border>
             
             <Border Grid.Row="1" 
@@ -111,7 +116,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    <Button Content="OK" Click="PositiveButton_Click">
+                    <Button Content="OK" Padding="20,0" Click="PositiveButton_Click">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
                                 <Style.Triggers>

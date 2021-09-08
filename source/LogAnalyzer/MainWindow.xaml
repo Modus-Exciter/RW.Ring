@@ -118,7 +118,7 @@
                     </StackPanel>
                 </Grid>
             </Border>
-            <Menu Grid.Row="1" Padding="0,5,0,0">
+            <Menu Grid.Row="1" Padding="0,5,0,0" FontFamily="Trebuchet MS">
                 <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click"/>
                 <MenuItem Header="Открыть папку с протоколами" Click="OpenDirectory_Click"/>
                 <MenuItem Header="Открыть отдельный протокол" Click="OpenSingleLog_Click"/>
