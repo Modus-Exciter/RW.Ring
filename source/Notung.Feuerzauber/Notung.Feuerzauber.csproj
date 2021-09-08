@@ -48,6 +48,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ARILogo.xaml.cs">
+      <DependentUpon>ARILogo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MdiChildrenPresenter.cs" />
     <Compile Include="Controls\MdiManager.xaml.cs">
       <DependentUpon>MdiManager.xaml</DependentUpon>
@@ -56,6 +59,9 @@
     <Compile Include="Converters\GridConverter.cs" />
     <Compile Include="Converters\ImageToBitmapSourceConverter.cs" />
     <Compile Include="Converters\MathOpertorConverter.cs" />
+    <Compile Include="Dialogs\AboutBox.xaml.cs">
+      <DependentUpon>AboutBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
@@ -90,7 +96,15 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ARILogo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MdiManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AboutBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

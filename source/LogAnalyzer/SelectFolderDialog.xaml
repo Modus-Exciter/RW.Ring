@@ -12,7 +12,7 @@
         ShowInTaskbar="False"
         mc:Ignorable="d"
         TextOptions.TextFormattingMode="Display"
-        Title="Выбор директории"
+        Title="Выбор папки"
         Height="400"
         Width="400"
         MinHeight="200"
@@ -40,13 +40,25 @@
                     Background="{StaticResource dialogHeaderBrush}" 
                     CornerRadius="5,5,0,0"
                     MouseDown="Header_MouseDown">
-                <TextBlock Text="Выбор директории" FontSize="15" Padding="15,5" Foreground="White" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=Title}" FontSize="15" Padding="15,5" Foreground="White" />
+                    <Button Grid.Column="1" 
+                            IsCancel="True"
+                            Padding="1,-1,0,0"
+                            Style="{StaticResource commandButton}" 
+                            Content="×"/>
+                </Grid>
             </Border>
             <TreeView x:Name="Tree" 
                       Grid.Row="1"
                       Padding="5"
+                      Background="WhiteSmoke"
                       ItemsSource="{Binding Path=Children}" 
-                      SelectedValuePath="FullPath">
+                      SelectedValuePath="FullPath" TabIndex="0">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Path=Children, IsAsync=True}">
                         <StackPanel Orientation="Horizontal">
@@ -65,10 +77,9 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
-            <Border  Grid.Row="2" Background="WhiteSmoke" CornerRadius="0,0,2,2">
-            <WrapPanel HorizontalAlignment="Right">
-                    <Button Content="OK" Click="Button_Click" Margin="15,7,5,7" Padding="10,0"/>
-                <Button Content="Отмена" IsCancel="True" Margin="15,7" Padding="10,0"/>
+            <Border  Grid.Row="2" Background="Gainsboro" CornerRadius="0,0,2,2">
+            <WrapPanel HorizontalAlignment="Center">
+                <Button Content="OK" Click="Button_Click" Margin="7" Padding="20,0"/>
             </WrapPanel>
             </Border>
         </Grid>

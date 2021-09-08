@@ -86,5 +86,10 @@ namespace LogAnalyzer
     {
       this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     }
+
+    private void About_Click(object sender, RoutedEventArgs e)
+    {
+      new AboutBox { Owner = this }.ShowDialog();
+    }
   }
 }

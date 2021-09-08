@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Notung.Feuerzauber.Controls.ARILogo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Image>
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="#FF189800"
+                                Geometry="F1 M0,90 L0,90 L50,3 L100,90 L83,90 L50,32 L17,90 M50,90 A18,21,0,0,1,31,66 A20,25,0,0,1,50,86 A20,25,0,0,1,69,66 A18,21,0,0,1,50,90"></GeometryDrawing>
+                        <GeometryDrawing Brush="Red">
+                            <GeometryDrawing.Geometry>
+                                <EllipseGeometry Center="50,63" RadiusX="8" RadiusY="8"/>
+                            </GeometryDrawing.Geometry>
+                        </GeometryDrawing>
+
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
+</UserControl>

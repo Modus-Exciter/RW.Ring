@@ -22,7 +22,6 @@ namespace Notung.Feuerzauber.Dialogs
           return;
 
         m_message = value;
-
         this.OnPropertyChanged("Message");
       }
     }
@@ -36,7 +35,6 @@ namespace Notung.Feuerzauber.Dialogs
           return;
 
         m_title = value;
-
         this.OnPropertyChanged("Title");
       }
     }
@@ -67,7 +65,6 @@ namespace Notung.Feuerzauber.Dialogs
           return;
 
         m_buttons = value;
-
         this.OnPropertyChanged("Buttons");
       }
     }
@@ -81,7 +78,6 @@ namespace Notung.Feuerzauber.Dialogs
           return;
 
         m_bitmap = value;
-
         this.OnPropertyChanged("ExplicitBitmap");
       }
     }
@@ -100,11 +96,10 @@ namespace Notung.Feuerzauber.Dialogs
           return Resources.Info_48;
 
         case MessageBoxImage.Question:
-          return Resources.Warning_48;
+          return Resources.Question_48;
 
         default:
           return null;
-
       }
     }
   }

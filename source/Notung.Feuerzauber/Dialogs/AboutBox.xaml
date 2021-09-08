@@ -1,0 +1,94 @@
+﻿<Window x:Class="Notung.Feuerzauber.Dialogs.AboutBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Notung.Feuerzauber.Controls"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="False"
+        SizeToContent="WidthAndHeight"
+        TextOptions.TextFormattingMode="Display"
+        Title="О программе">
+    <Window.Resources>
+        <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="DimGray" Offset="0"/>
+            <GradientStop Color="#504555" Offset="1"/>
+        </LinearGradientBrush>
+        <Style TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Padding" Value="0,5,20,5"/>
+                <Setter Property="MaxWidth" Value="200"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="FontFamily" Value="Kolibri"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+    <Border x:Name="RootContainer" 
+            CornerRadius="6,6,3,3"
+            BorderBrush="Gray"
+            BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="0"
+                    Background="{StaticResource dialogHeaderBrush}" 
+                    CornerRadius="5,5,0,0"
+                    MouseDown="Header_MouseDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=Title}"
+                               FontSize="15"
+                               HorizontalAlignment="Left"
+                               Padding="20,5"
+                               Foreground="White" />
+                    <Button Grid.Column="1" 
+                            IsCancel="True" 
+                            Style="{StaticResource commandButton}" 
+                            Content="×"/>
+                </Grid>
+            </Border>
+            <Border  Grid.Row="1" Background="Gainsboro" CornerRadius="0,0,2,2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <controls:ARILogo Grid.RowSpan="5" Width="100" Height="100" Margin="20">
+                    <UserControl.Effect>
+                        <DropShadowEffect Color="SlateGray" BlurRadius="10" ShadowDepth="10" Direction="-60"/>
+                    </UserControl.Effect>
+                </controls:ARILogo>
+                
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Продукт:" Margin="0,15,0,0"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Компания:"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Описание:"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Версия:"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="Авторские права:"/>
+
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Product}" Margin="0,15,0,0"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=Company}"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Description}"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Version}"/>
+                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Path=Copyright}"/>
+                <Rectangle Grid.Row="5" Height="15" Grid.Column="1"/>
+            </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

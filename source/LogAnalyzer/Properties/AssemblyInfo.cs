@@ -8,10 +8,10 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("LogAnalyzer")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Агрофизический научно-исследовательский институт")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ARI")]
-[assembly: AssemblyProduct("LogAnalyzer")]
+[assembly: AssemblyProduct("Анализатор протоколов")]
 [assembly: AssemblyCopyright("Copyright © ARI 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

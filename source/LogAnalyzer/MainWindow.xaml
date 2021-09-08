@@ -4,6 +4,7 @@
         xmlns:sys="clr-namespace:System.Windows;assembly=PresentationFramework"
         xmlns:fz="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:local="clr-namespace:LogAnalyzer"
+        xmlns:properties="clr-namespace:LogAnalyzer.Properties"
         x:Name="mainWindow"
         MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height}"
         TextOptions.TextFormattingMode="Display" 
@@ -82,44 +83,38 @@
                                FontSize="17"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                         <Button x:Name="buttonMinimize"
-                                Content="_" 
-                                Height="24"
-                                Width="24"
-                                Margin="0,2,3,2"
-                                VerticalAlignment="Center"
-                                FontSize="12"
-                                FontWeight="Bold" 
-                                FontFamily="Verdana"
-                                Foreground="White"
+                                Margin="3,2"
                                 BorderBrush="Gray"
                                 Click="buttonMinimize_Click"
-                                Style="{StaticResource ResourceKey=commandButton}"/>
+                                Style="{StaticResource ResourceKey=commandButton}">
+                            <Rectangle HorizontalAlignment="Center"
+                                       Margin="0,10,0,0"
+                                       Width="12"
+                                       Height="2"
+                                       Fill="White"/>
+                        </Button>
                         <Button x:Name="buttonMaximize"
-                                Content="□" 
-                                Height="24"
-                                Width="24"
-                                Margin="0,2,3,2"
-                                VerticalAlignment="Center"
-                                FontSize="14"
-                                FontWeight="Bold" 
-                                FontFamily="Verdana"
-                                Foreground="White"
+                                Margin="3,2"
                                 BorderBrush="Gray"
                                 Click="buttonMaximize_Click"
-                                Style="{StaticResource ResourceKey=commandButton}"/>
+                                Style="{StaticResource ResourceKey=commandButton}">
+                            <Rectangle HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center" 
+                                       Margin="3"
+                                       Fill="Transparent"
+                                       Stroke="White"
+                                       Width="10"
+                                       Height="10"
+                                       StrokeThickness="1.5"/>
+                        </Button>
                         <Button x:Name="buttonClose"
-                                Content="×" 
-                                Height="24"
-                                Width="24"
-                                Margin="0,2,3,2"
-                                VerticalAlignment="Center"
+                                Margin="3,2"
                                 FontSize="15"
-                                FontWeight="Bold" 
-                                FontFamily="Verdana"
-                                Foreground="White"
                                 BorderBrush="Gray"
                                 Click="buttonClose_Click"
-                                Style="{StaticResource ResourceKey=commandButton}"/>
+                                Style="{StaticResource ResourceKey=commandButton}">
+                            <TextBlock Margin="0.5,-2,0,0" Text="×" VerticalAlignment="Top" />
+                        </Button>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -127,6 +122,19 @@
                 <MenuItem Header="Открыть конфигурационный файл" Click="OpenConfig_Click"/>
                 <MenuItem Header="Открыть папку с протоколами" Click="OpenDirectory_Click"/>
                 <MenuItem Header="Открыть отдельный протокол" Click="OpenSingleLog_Click"/>
+                <MenuItem HorizontalAlignment="Right" Padding="0" ToolTip="О программе" Click="About_Click">
+                    <MenuItem.Icon>
+                        <Image Source="about.png" 
+                               SnapsToDevicePixels="True"
+                               Height="20"
+                               Width="20"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
             </Menu>
             <fz:MdiManager x:Name="m_mdi_manager" 
                            x:FieldModifier="private" 

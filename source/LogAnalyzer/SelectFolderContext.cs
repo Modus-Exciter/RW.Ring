@@ -76,6 +76,14 @@ namespace LogAnalyzer
 
       return null;
     }
+
+    private string GetLongTestString(int size)
+    {
+      byte[] bytes = new byte[size];
+      char[] chars = "abcdefghijklmnoprstuvwxyz12345678990?<> \n\t".ToCharArray();
+      var rnd = new Random();
+      return new string(bytes.Select(b => chars[rnd.Next(chars.Length)]).ToArray());
+    }
   }
 
   public class DirectoryEntry : ObservableObject, IDirectoryEntry
@@ -177,10 +185,13 @@ namespace LogAnalyzer
           if (string.IsNullOrEmpty(m_path))
           {
             var drives = Environment.GetLogicalDrives();
-            var entries = new DirectoryEntry[drives.Length];
+            var entries = new List<DirectoryEntry>(drives.Length);
 
             for (int i = 0; i < drives.Length; i++)
-              entries[i] = new DirectoryEntry(drives[i], this);
+            {
+              if (Directory.Exists(drives[i]))
+                entries.Add(new DirectoryEntry(drives[i], this));
+            }
 
             ret = new ReadOnlyCollection<DirectoryEntry>(entries);
           }
@@ -191,6 +202,9 @@ namespace LogAnalyzer
 
             foreach (var folder in directories)
             {
+              if (string.IsNullOrEmpty(m_name) && Path.GetFileName(folder) == "$RECYCLE.BIN")
+                continue;
+
               if (CheckAccess(folder))
                 list.Add(new DirectoryEntry(folder, this));
             }

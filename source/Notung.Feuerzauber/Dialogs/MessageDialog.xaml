@@ -12,11 +12,11 @@
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
-        SizeToContent="Height"
+        SizeToContent="WidthAndHeight"
         TextOptions.TextFormattingMode="Display"
-        Title="{Binding Path=Title, Converter={StaticResource imageConverter}}"
-        Width="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Width, 
-                Converter={StaticResource goldenRatio}, ConverterParameter=0.35}">
+        Title="{Binding Path=Title}"
+        MaxWidth="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Width, 
+                Converter={StaticResource goldenRatio}}">
     <Window.Resources>
         <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Color="DimGray" Offset="0"/>
@@ -61,7 +61,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Margin="10"
+                    <Image Margin="20,10,10,10"
                            VerticalAlignment="Top"
                            Source="{Binding Path=ExplicitBitmap, Converter={StaticResource imageConverter}}"
                            Height="{Binding Path=ExplicitBitmap.Height}"
@@ -70,13 +70,14 @@
                     <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                         <TextBlock Text="{Binding Path=Message}" 
                                    TextWrapping="Wrap" 
-                                   Padding="5" 
+                                   Padding="5"
+                                   Margin="10,10,40,10"
                                    VerticalAlignment="Center" />
                     </ScrollViewer>
                 </Grid>
             </Border>
             <Border Grid.Row="2"
-                    Background="WhiteSmoke"
+                    Background="Gainsboro"
                     BorderBrush="Silver"
                     BorderThickness="0,1,0,0"
                     CornerRadius="0,0,2,2"
