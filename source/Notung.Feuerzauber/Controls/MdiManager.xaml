@@ -152,9 +152,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ListBox Grid.Row="0"
+        <ListBox x:Name="listBox"
+                 x:FieldModifier="private"
+                 Grid.Row="0"
                  ItemsSource="{Binding Path=MdiChildren}"
                  SelectedItem="{Binding Path=ActiveMdiChild}"
+                 SelectionChanged="ListBox_SelectionChanged"
                  Template="{DynamicResource listTemplate}">
             <ListBox.Resources>
 

@@ -67,6 +67,9 @@ namespace LogAnalyzer
 
       var selectedPath = this.SelectedEntry.FullPath;
 
+      if (string.IsNullOrEmpty(selectedPath))
+        return "Выберите папку";
+
       if (!Directory.EnumerateFiles(selectedPath, "*.log").Any() &&
           Directory.Exists(Path.Combine(selectedPath, "Logs")))
         selectedPath = Path.Combine(selectedPath, "Logs");
