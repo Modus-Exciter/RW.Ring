@@ -6,10 +6,18 @@
              xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="Button" x:Key="dialogButton" BasedOn="{StaticResource ResourceKey={x:Type Button}}">
-            <Setter Property="Margin" Value="5,7"/>
-            <Setter Property="Padding" Value="10,0"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Notung.Feuerzauber;component/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary>
+                    <Style TargetType="Button" x:Key="dialogButton" BasedOn="{StaticResource ResourceKey={x:Type Button}}">
+                        <Setter Property="Margin" Value="5,7"/>
+                        <Setter Property="Padding" Value="10,0"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
     </UserControl.Resources>
     <Border Background="Gainsboro"
             BorderBrush="Silver"

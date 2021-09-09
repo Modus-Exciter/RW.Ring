@@ -11,8 +11,6 @@ namespace Notung.Feuerzauber.Dialogs
     public AboutBox()
     {
       InitializeComponent();
-
-      this.DataContext = ApplicationInfo.Instance;
     }
   }
 }

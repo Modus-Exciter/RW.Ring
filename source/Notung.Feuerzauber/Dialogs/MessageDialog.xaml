@@ -5,17 +5,13 @@
         xmlns:controls="clr-namespace:Notung.Feuerzauber.Controls"
         xmlns:sys="clr-namespace:System.Windows;assembly=PresentationFramework"
         xmlns:conv="clr-namespace:Notung.Feuerzauber.Converters"
-        Style="{StaticResource dialogWindow}"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
+        Style="{StaticResource dialogWindow}"
         Title="{Binding Path=Title}"
         MaxWidth="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Width, 
                 Converter={StaticResource goldenRatio}}">
     <Window.Resources>
-        <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="DimGray" Offset="0"/>
-            <GradientStop Color="#504555" Offset="1"/>
-        </LinearGradientBrush>
         <conv:ImageToBitmapSourceConverter x:Key="imageConverter"/>
         <conv:GoldenRatioConverter x:Key="goldenRatio"/>
     </Window.Resources>

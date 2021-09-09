@@ -19,17 +19,12 @@ namespace LogAnalyzer
       InitializeComponent();
     }
 
-    private void buttonClose_Click(object sender, RoutedEventArgs e)
-    {
-      this.Close();
-    }
-
     private void WindowHeader_MouseDown(object sender, MouseButtonEventArgs e)
     {
       WindowHelper.HeaderMouseDown(e, true);
     }
 
-    private void OpenConfig_Click(object sender, RoutedEventArgs e)
+    private void OpenConfig(object sender, ExecutedRoutedEventArgs e)
     {
       OpenFileDialog dialog = new OpenFileDialog();
 
@@ -39,12 +34,22 @@ namespace LogAnalyzer
         m_context.OpenConfig(dialog.FileName);
     }
 
-    private void OpenDirectory_Click(object sender, RoutedEventArgs e)
+    private void OpenFolder(object sender, ExecutedRoutedEventArgs e)
     {
       SelectFolderDialog dlg = new SelectFolderDialog() { Owner = this };
 
       if (dlg.ShowDialog() == true)
         this.DisplayLog(m_context.OpenDirectory(dlg.Tree.SelectedValue.ToString()));
+    }
+
+    private void OpenLogFile(object sender, ExecutedRoutedEventArgs e)
+    {
+      OpenFileDialog dialog = new OpenFileDialog();
+
+      dialog.Filter = "Log files|*.log";
+
+      if (dialog.ShowDialog(this) == true)
+        this.DisplayLog(m_context.OpenLog(dialog.FileName));
     }
 
     private void DisplayLog(FileEntry entry)
@@ -66,30 +71,12 @@ namespace LogAnalyzer
     {
       MessageDialog.Show(e.Error, this.Title, MessageBoxImage.Error, MessageBoxButton.OK, this);
     }
+  }
 
-    private void OpenSingleLog_Click(object sender, RoutedEventArgs e)
-    {
-      OpenFileDialog dialog = new OpenFileDialog();
-
-      dialog.Filter = "Log files|*.log";
-
-      if (dialog.ShowDialog(this) == true)
-        this.DisplayLog(m_context.OpenLog(dialog.FileName));
-    }
-
-    private void buttonMinimize_Click(object sender, RoutedEventArgs e)
-    {
-      this.WindowState = WindowState.Minimized;
-    }
-
-    private void buttonMaximize_Click(object sender, RoutedEventArgs e)
-    {
-      this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-    }
-
-    private void About_Click(object sender, RoutedEventArgs e)
-    {
-      new AboutBox { Owner = this }.ShowDialog();
-    }
+  public class MainWindowCommands
+  {
+    public static readonly RoutedCommand OpenConfig = new RoutedCommand();
+    public static readonly RoutedCommand OpenFolder = new RoutedCommand();
+    public static readonly RoutedCommand OpenLogFile = new RoutedCommand();
   }
 }

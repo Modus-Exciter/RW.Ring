@@ -91,6 +91,8 @@ namespace LogAnalyzer
 
   public class DirectoryEntry : ObservableObject, IDirectoryEntry
   {
+    #region Fields --------------------------------------------------------------------------------
+
     private readonly string m_path;
     private readonly string m_name;
     private readonly IDirectoryEntry m_parent;
@@ -103,6 +105,11 @@ namespace LogAnalyzer
     private static readonly Bitmap _folder = Resources.Folder;
     private static readonly Bitmap _folder_open = Resources.FolderOpen;
 
+    private readonly Func<string, DirectoryEntry> m_child_factory;
+    private static readonly Func<string, bool> _check_access = CheckAccess;
+
+    #endregion
+
     internal DirectoryEntry(string path, IDirectoryEntry parent)
     {
       if (!string.IsNullOrEmpty(path) && (!Directory.Exists(path) || !Path.IsPathRooted(path)))
@@ -114,7 +121,11 @@ namespace LogAnalyzer
       m_parent = parent;
       m_path = path;
       m_name = Path.GetFileName(path);
+
+      m_child_factory = s => new DirectoryEntry(s, this);
     }
+
+    #region Properties ----------------------------------------------------------------------------
 
     public string FullPath
     {
@@ -183,43 +194,19 @@ namespace LogAnalyzer
       {
         if (m_children == null)
         {
-          ReadOnlyCollection<DirectoryEntry> ret = null;
-
           if (string.IsNullOrEmpty(m_path))
-          {
-            var drives = Environment.GetLogicalDrives();
-            var entries = new List<DirectoryEntry>(drives.Length);
-
-            for (int i = 0; i < drives.Length; i++)
-            {
-              if (Directory.Exists(drives[i]))
-                entries.Add(new DirectoryEntry(drives[i], this));
-            }
-
-            ret = new ReadOnlyCollection<DirectoryEntry>(entries);
-          }
+            m_children = GetLogicalDrives();
           else
-          {
-            var directories = Directory.GetDirectories(m_path);
-            var list = new List<DirectoryEntry>(directories.Length);
-
-            foreach (var folder in directories)
-            {
-              if (string.IsNullOrEmpty(m_name) && Path.GetFileName(folder) == "$RECYCLE.BIN")
-                continue;
-
-              if (CheckAccess(folder))
-                list.Add(new DirectoryEntry(folder, this));
-            }
-
-            ret = new ReadOnlyCollection<DirectoryEntry>(list);
-          }
-          m_children = ret;
+            m_children = GetChildDirectories();
         }
 
         return m_children;
       }
     }
+
+    #endregion
+
+    #region Public methods ------------------------------------------------------------------------
 
     public bool Contains(string name)
     {
@@ -227,6 +214,52 @@ namespace LogAnalyzer
         return m_children.Any(c => c.ToString().Equals(name));
       else
         return Directory.Exists(Path.Combine(m_path, name));
+    }
+
+    public override string ToString()
+    {
+      if (string.IsNullOrEmpty(m_path))
+        return "Мой компьютер";
+
+      if (string.IsNullOrEmpty(m_name))
+        return m_path;
+
+      return m_name;
+    }
+
+    #endregion
+
+    #region Implementation ------------------------------------------------------------------------
+
+    private ReadOnlyCollection<DirectoryEntry> GetChildDirectories()
+    {
+      var directories = Directory.GetDirectories(m_path);
+      var list = new List<DirectoryEntry>(directories.Length);
+
+      foreach (var folder in directories)
+      {
+        if (string.IsNullOrEmpty(m_name) && Path.GetFileName(folder) == "$RECYCLE.BIN")
+          continue;
+
+        if (CheckAccess(folder))
+          list.Add(new DirectoryEntry(folder, this));
+      }
+
+      return new ReadOnlyCollection<DirectoryEntry>(list);
+    }
+
+    private ReadOnlyCollection<DirectoryEntry> GetLogicalDrives()
+    {
+      var drives = Environment.GetLogicalDrives();
+      var entries = new List<DirectoryEntry>(drives.Length);
+
+      for (int i = 0; i < drives.Length; i++)
+      {
+        if (Directory.Exists(drives[i]))
+          entries.Add(new DirectoryEntry(drives[i], this));
+      }
+
+      return new ReadOnlyCollection<DirectoryEntry>(entries);
     }
 
     private static bool CheckAccess(string path)
@@ -262,15 +295,6 @@ namespace LogAnalyzer
       }
     }
 
-    public override string ToString()
-    {
-      if (string.IsNullOrEmpty(m_path))
-        return "Мой компьютер";
-
-      if (string.IsNullOrEmpty(m_name))
-        return m_path;
-
-      return m_name;
-    }
+    #endregion
   }
 }

@@ -2,16 +2,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:Notung.Feuerzauber.Controls"
+        xmlns:notung="clr-namespace:Notung;assembly=Notung"
         Style="{StaticResource dialogWindow}"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
-        TextOptions.TextFormattingMode="Display"
-        Title="О программе">
+        Title="О программе"
+        DataContext="{Binding Source={x:Static notung:ApplicationInfo.Instance}}">
     <Window.Resources>
-        <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="DimGray" Offset="0"/>
-            <GradientStop Color="#504555" Offset="1"/>
-        </LinearGradientBrush>
         <Style TargetType="TextBlock">
             <Style.Setters>
                 <Setter Property="Padding" Value="0,5,20,5"/>

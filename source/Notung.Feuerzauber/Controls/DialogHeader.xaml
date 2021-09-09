@@ -7,10 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="800">
     <UserControl.Resources>
-        <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="DimGray" Offset="0"/>
-            <GradientStop Color="#504555" Offset="1"/>
-        </LinearGradientBrush>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Notung.Feuerzauber;component/Styles/ButtonStyles.xaml"/>
+                <ResourceDictionary>
+                    <LinearGradientBrush x:Key="dialogHeaderBrush" StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="DimGray" Offset="0"/>
+                        <GradientStop Color="#504555" Offset="1"/>
+                    </LinearGradientBrush>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderThickness="0"
                     Background="{StaticResource dialogHeaderBrush}" 
@@ -30,7 +37,8 @@
             <Button x:Name="closeButton"
                     x:FieldModifier="private"
                     Grid.Column="1" 
-                    IsCancel="True" 
+                    IsCancel="True"
+                    IsTabStop="False"
                     Style="{StaticResource commandButton}" 
                     Content="×"/>
         </Grid>

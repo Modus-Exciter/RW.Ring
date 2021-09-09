@@ -191,6 +191,7 @@
                                    Height="{Binding Path=Icon.Height}" 
                                    Width="{Binding Path=Icon.Width}"/>
                             <TextBlock Text="{Binding Path=Caption}"
+                                       FontFamily="Verdana"
                                        Grid.Column="1"
                                        Margin="8"
                                        VerticalAlignment="Center"/>
