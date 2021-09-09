@@ -8,14 +8,18 @@ namespace Notung.Feuerzauber.Controls
   /// </summary>
   public partial class MdiManager : UserControl
   {
+    private readonly Action<object> m_scroll;
+
     public MdiManager()
     {
       InitializeComponent();
+
+      m_scroll = listBox.ScrollIntoView;
     }
 
     private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      Dispatcher.BeginInvoke(new Action<object>(listBox.ScrollIntoView), listBox.SelectedItem);
+      Dispatcher.BeginInvoke(m_scroll, listBox.SelectedItem);
     }
   }
 }

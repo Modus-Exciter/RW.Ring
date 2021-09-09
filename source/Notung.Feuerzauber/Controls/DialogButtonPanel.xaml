@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Notung.Feuerzauber.Controls.DialogButtonPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="Button" x:Key="dialogButton" BasedOn="{StaticResource ResourceKey={x:Type Button}}">
+            <Setter Property="Margin" Value="5,7"/>
+            <Setter Property="Padding" Value="10,0"/>
+        </Style>
+    </UserControl.Resources>
+    <Border Background="Gainsboro"
+            BorderBrush="Silver"
+            BorderThickness="0,1,0,0"
+            CornerRadius="0,0,2,2"
+            Padding="10,0">
+        <WrapPanel HorizontalAlignment="Right">
+            <Button Content="Да" Click="PositiveButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="OK">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}" Value="OKCancel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Нет" Click="NegativeButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="OK">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}" Value="OKCancel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="OK" Padding="20,0" Click="PositiveButton_Click">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="YesNoCancel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}" Value="YesNo">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Content="Отмена" IsCancel="True">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="YesNo">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding}" Value="OK">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </WrapPanel>
+    </Border>
+</UserControl>

@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+
 namespace Notung.Feuerzauber.Controls
 {
   public class MdiChildrenPresenter : INotifyPropertyChanged

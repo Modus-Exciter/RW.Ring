@@ -1,6 +1,6 @@
-﻿using Notung.Feuerzauber.Dialogs;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using Notung.Feuerzauber.Dialogs;
 
 namespace LogAnalyzer
 {
@@ -12,11 +12,6 @@ namespace LogAnalyzer
     public SelectFolderDialog()
     {
       InitializeComponent();
-    }
-
-    private void Header_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-      this.DragMove();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

@@ -4,14 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogAnalyzer"
-        WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
-        ResizeMode="CanResizeWithGrip"
+        xmlns:controls="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
+        Style="{StaticResource dialogWindow}"
         WindowStartupLocation="CenterScreen"
-        ShowInTaskbar="False"
-        mc:Ignorable="d"
-        TextOptions.TextFormattingMode="Display"
+        ResizeMode="CanResizeWithGrip"
         Title="Выбор папки"
         Height="400"
         Width="400"
@@ -36,28 +32,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Border BorderThickness="0"
-                    Background="{StaticResource dialogHeaderBrush}" 
-                    CornerRadius="5,5,0,0"
-                    MouseDown="Header_MouseDown">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=Title}"
-                               FontWeight="SemiBold"
-                               FontFamily="Calibri"
-                               FontSize="15"
-                               Padding="15,5"
-                               Foreground="White" />
-                    <Button Grid.Column="1" 
-                            IsCancel="True"
-                            Padding="1,-1,0,0"
-                            Style="{StaticResource commandButton}" 
-                            Content="×"/>
-                </Grid>
-            </Border>
+            <controls:DialogHeader />
             <TreeView x:Name="Tree" 
                       Grid.Row="1"
                       Padding="5"

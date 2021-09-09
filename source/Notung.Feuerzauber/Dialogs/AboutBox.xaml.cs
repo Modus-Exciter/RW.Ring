@@ -14,10 +14,5 @@ namespace Notung.Feuerzauber.Dialogs
 
       this.DataContext = ApplicationInfo.Instance;
     }
-
-    private void Header_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-      this.DragMove();
-    }
   }
 }

@@ -51,6 +51,12 @@
     <Compile Include="Controls\ARILogo.xaml.cs">
       <DependentUpon>ARILogo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DialogButtonPanel.xaml.cs">
+      <DependentUpon>DialogButtonPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DialogHeader.xaml.cs">
+      <DependentUpon>DialogHeader.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MdiChildrenPresenter.cs" />
     <Compile Include="Controls\MdiManager.xaml.cs">
       <DependentUpon>MdiManager.xaml</DependentUpon>
@@ -100,6 +106,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DialogButtonPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DialogHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MdiManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,6 +131,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\GridStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\WindowStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

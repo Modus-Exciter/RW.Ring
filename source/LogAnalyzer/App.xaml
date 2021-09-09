@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/Notung.Feuerzauber;component/Styles/ButtonStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/Notung.Feuerzauber;component/Styles/GridStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/Notung.Feuerzauber;component/Styles/WindowStyles.xaml"/>
                 <ResourceDictionary>
                     <conv:GoldenRatioConverter x:Key="goldenRatio"/>
                     <conv:ImageToBitmapSourceConverter x:Key="imageConverter"/>
