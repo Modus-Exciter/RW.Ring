@@ -5,7 +5,6 @@
         xmlns:fzc="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:fz="clr-namespace:Notung.Feuerzauber;assembly=Notung.Feuerzauber"
         xmlns:local="clr-namespace:LogAnalyzer"
-        xmlns:properties="clr-namespace:LogAnalyzer.Properties"
         x:Name="mainWindow"
         MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height}"
         TextOptions.TextFormattingMode="Display" 
@@ -97,6 +96,7 @@
                         <Button x:Name="buttonMinimize"
                                 Margin="3,2"
                                 BorderBrush="Gray"
+                                BorderThickness="1"
                                 Command="{x:Static fz:WindowHelper.Minimize}"
                                 CommandParameter="{Binding ElementName=mainWindow}"
                                 Style="{StaticResource ResourceKey=commandButton}">
@@ -109,6 +109,7 @@
                         <Button x:Name="buttonMaximize"
                                 Margin="3,2"
                                 BorderBrush="Gray"
+                                BorderThickness="1"
                                 Command="{x:Static fz:WindowHelper.Maximize}"
                                 CommandParameter="{Binding ElementName=mainWindow}"
                                 Style="{StaticResource ResourceKey=commandButton}">
@@ -125,6 +126,7 @@
                                 Margin="3,2"
                                 FontSize="15"
                                 BorderBrush="Gray"
+                                BorderThickness="1"
                                 Command="{x:Static fz:WindowHelper.Close}"
                                 CommandParameter="{Binding ElementName=mainWindow}"
                                 Style="{StaticResource ResourceKey=commandButton}">
