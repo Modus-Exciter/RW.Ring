@@ -71,7 +71,7 @@
                     <Border x:Name="scrollThumbBorder"
                             CornerRadius="3" 
                             Margin="1"
-                            BorderThickness="1.5" 
+                            BorderThickness="1.5"
                             BorderBrush="Silver" 
                             Background="{StaticResource scrollerFill}">
                     </Border>
@@ -104,6 +104,7 @@
                         </Grid.RowDefinitions>
                         <RepeatButton x:Name="LineUp"
                                       Grid.Row="0"
+                                      FontFamily="Courier New"
                                       Style="{StaticResource scrollUpDown}"
                                       Command="ScrollBar.LineUpCommand">▲</RepeatButton>
                         <Track Name="PART_Track" Grid.Row="1" 
@@ -126,6 +127,7 @@
                         </Track>
                         <RepeatButton x:Name="LineDown"
                                       Command="ScrollBar.LineDownCommand"
+                                      FontFamily="Courier New"
                                       Style="{StaticResource scrollUpDown}"
                                       Grid.Row="2">▼</RepeatButton>
                     </Grid>
