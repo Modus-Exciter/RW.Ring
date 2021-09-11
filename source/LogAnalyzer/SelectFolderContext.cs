@@ -129,7 +129,7 @@ namespace LogAnalyzer
 
     public string FullPath
     {
-      get { return m_path; }
+      get { return string.IsNullOrEmpty(m_path) ? null : m_path; }
     }
 
     public SelectFolderContext Root

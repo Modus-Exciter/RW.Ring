@@ -41,7 +41,7 @@
                       SelectedValuePath="FullPath" TabIndex="0">
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Path=Children, IsAsync=True}">
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal" ToolTip="{Binding Path=FullPath}">
                             <Image Source="{Binding Path=Image, Converter={StaticResource imageConverter}}"
                                    SnapsToDevicePixels="True"
                                    Width="{Binding Path=Image.Width}"
