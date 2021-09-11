@@ -1,28 +1,27 @@
 ﻿<Window x:Class="LogAnalyzer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:fzc="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:fz="clr-namespace:Notung.Feuerzauber;assembly=Notung.Feuerzauber"
+        xmlns:fzc="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:local="clr-namespace:LogAnalyzer"
         x:Name="mainWindow"
-        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
-        TextOptions.TextFormattingMode="Display" 
-        ResizeMode="CanResizeWithGrip"
-        WindowStyle="None"
-        WindowStartupLocation="CenterScreen"
-        BorderThickness="0"
         AllowsTransparency="True"
         Background="Transparent"
-        Title="Анализатор протоколов"
         Icon="/LogAnalyzer;component/text_find.png"
+        TextOptions.TextFormattingMode="Display" 
+        Title="Анализатор протоколов"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         MinHeight="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}, 
-            Converter={StaticResource goldenRatio}}"
+                    Converter={StaticResource goldenRatio}}"
         MinWidth="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}, 
-            Converter={StaticResource goldenRatio}}"
+                   Converter={StaticResource goldenRatio}}"
         Height="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}, 
-            Converter={StaticResource goldenRatio}, ConverterParameter=0.8}" 
+                 Converter={StaticResource goldenRatio}, ConverterParameter=0.8}" 
         Width="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}, 
-            Converter={StaticResource goldenRatio}, ConverterParameter=0.9}" >
+                Converter={StaticResource goldenRatio}, ConverterParameter=0.9}" >
     <Window.Resources>
         <LinearGradientBrush x:Key="headerBrush" EndPoint="0.5,1" StartPoint="0.5,0">
             <GradientStop Color="#FF9A9898" Offset="0" />
@@ -35,7 +34,7 @@
     <Window.DataContext>
         <local:MainWindowContext x:Name="m_context" 
                                  x:FieldModifier="private"
-                                 ExceptionOccured="Context_ExceptionOccured"/>
+                                 MessageRecieved="Context_MessageRecieved"/>
     </Window.DataContext>
     <Window.CommandBindings>
         <CommandBinding Command="local:MainWindowCommands.OpenConfig" Executed="OpenConfig"/>
@@ -43,9 +42,6 @@
         <CommandBinding Command="local:MainWindowCommands.OpenLogFile" Executed="OpenLogFile"/>
     </Window.CommandBindings>
     <Window.InputBindings>
-        <KeyBinding Key="F" Modifiers="Control" Command="local:MainWindowCommands.OpenConfig"/>
-        <KeyBinding Key="D" Modifiers="Control" Command="local:MainWindowCommands.OpenFolder"/>
-        <KeyBinding Key="L" Modifiers="Control" Command="local:MainWindowCommands.OpenLogFile"/>
         <KeyBinding Key="F1" Modifiers="Control" Command="fz:WindowHelper.About"/>
     </Window.InputBindings>
     <Border CornerRadius="12,12,0,12"
@@ -100,8 +96,7 @@
                                FontFamily="Impact"
                                FontSize="17"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
-                        <Button x:Name="buttonMinimize"
-                                Margin="3,2"
+                        <Button Margin="3,2"
                                 BorderBrush="Gray"
                                 BorderThickness="1"
                                 Command="{x:Static fz:WindowHelper.Minimize}"
@@ -113,8 +108,7 @@
                                        Height="2"
                                        Fill="White"/>
                         </Button>
-                        <Button x:Name="buttonMaximize"
-                                Margin="3,2"
+                        <Button Margin="3,2"
                                 BorderBrush="Gray"
                                 BorderThickness="1"
                                 Command="{x:Static fz:WindowHelper.Maximize}"
@@ -129,8 +123,7 @@
                                        Height="10"
                                        StrokeThickness="1.5"/>
                         </Button>
-                        <Button x:Name="buttonClose"
-                                Margin="3,2"
+                        <Button Margin="3,2"
                                 FontSize="15"
                                 BorderBrush="Gray"
                                 BorderThickness="1"
@@ -143,15 +136,21 @@
                 </Grid>
             </Border>
             <Menu Grid.Row="1" Padding="0,5,0,0" FontFamily="Verdana">
-                <MenuItem Header="Открыть конфигурационный файл" ToolTip="Ctrl + F"  Command="local:MainWindowCommands.OpenConfig"/>
-                <MenuItem Header="Открыть папку с протоколами" ToolTip="Ctrl + D" Command="local:MainWindowCommands.OpenFolder"/>
-                <MenuItem Header="Открыть отдельный протокол" ToolTip="Ctrl + L" Command="local:MainWindowCommands.OpenLogFile"/>
-                <MenuItem ToolTip="О программе Ctrl + F1" 
+                <Menu.Resources>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <Setter Property="ToolTip"
+                                Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=InputGestureText}"/>
+                    </Style>
+                </Menu.Resources>
+                <MenuItem Command="local:MainWindowCommands.OpenConfig"/>
+                <MenuItem Command="local:MainWindowCommands.OpenFolder"/>
+                <MenuItem Command="local:MainWindowCommands.OpenLogFile"/>
+                <MenuItem ToolTip="О программе Ctrl+F1"
                           HorizontalAlignment="Right" 
                           Padding="5,0"
                           Margin="0"
                           Command="{x:Static fz:WindowHelper.About}"
-                          CommandParameter="{Binding ElementName=mainWindow}">
+                          CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                     <MenuItem.Icon>
                         <Image Source="about.png" 
                                SnapsToDevicePixels="True"

@@ -1,9 +1,6 @@
 ﻿using Microsoft.Win32;
-using System;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
-using Notung.Feuerzauber;
 using Notung.Feuerzauber.Controls;
 using Notung.Feuerzauber.Dialogs;
 
@@ -24,6 +21,7 @@ namespace LogAnalyzer
       OpenFileDialog dialog = new OpenFileDialog();
 
       dialog.Filter = "Configuration files|*.config";
+      dialog.Title =((RoutedUICommand) e.Command).Text;
 
       if (dialog.ShowDialog(this) == true)
         m_context.OpenConfig(dialog.FileName);
@@ -42,6 +40,7 @@ namespace LogAnalyzer
       OpenFileDialog dialog = new OpenFileDialog();
 
       dialog.Filter = "Log files|*.log";
+      dialog.Title = ((RoutedUICommand)e.Command).Text;
 
       if (dialog.ShowDialog(this) == true)
         this.DisplayLog(m_context.OpenLog(dialog.FileName));
@@ -58,20 +57,14 @@ namespace LogAnalyzer
           new LogDisplay { DataContext = entry },
           entry.ToString(),
           Properties.Resources.Document
-        ) { Tag = entry.FileName },
+        )
+        { Tag = entry.FileName },
         item => object.Equals(item.Tag, entry.FileName));
     }
 
-    private void Context_ExceptionOccured(object sender, ExceptionEventArgs e)
+    private void Context_MessageRecieved(object sender, MessageEventArgs e)
     {
-      MessageDialog.Show(e.Error, this.Title, MessageBoxImage.Error, MessageBoxButton.OK, this);
+      MessageDialog.Show(e.Message, image: e.IsError ? MessageBoxImage.Error : MessageBoxImage.Information);
     }
-  }
-
-  public class MainWindowCommands
-  {
-    public static readonly RoutedCommand OpenConfig = new RoutedCommand();
-    public static readonly RoutedCommand OpenFolder = new RoutedCommand();
-    public static readonly RoutedCommand OpenLogFile = new RoutedCommand();
   }
 }

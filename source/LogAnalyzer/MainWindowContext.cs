@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 using System.Xml;
 using Notung.ComponentModel;
 using Notung.Logging;
@@ -15,7 +16,7 @@ namespace LogAnalyzer
     private string m_separator = "===============================================";
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
 
-    public event EventHandler<ExceptionEventArgs> ExceptionOccured;
+    public event EventHandler<MessageEventArgs> MessageRecieved;
 
     public string Separator
     {
@@ -46,7 +47,6 @@ namespace LogAnalyzer
     public void OpenConfig(string fileName)
     {
       XmlDocument doc = new XmlDocument();
-
       doc.Load(fileName);
 
       var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
@@ -59,6 +59,9 @@ namespace LogAnalyzer
         if (element.GetAttribute("name") == "MessageTemplate")
           this.MessageTemplate = element.SelectSingleNode("value").InnerText;
       }
+
+      if (this.MessageRecieved != null)
+        this.MessageRecieved(this, new MessageEventArgs("Конфигурационный файл загружен", false));
     }
 
     public FileEntry OpenLog(string fileName)
@@ -73,8 +76,8 @@ namespace LogAnalyzer
       }
       catch (Exception ex)
       {
-        if (this.ExceptionOccured != null)
-          this.ExceptionOccured(this, new ExceptionEventArgs(ex.Message));
+        if (this.MessageRecieved != null)
+          this.MessageRecieved(this, new MessageEventArgs(ex.Message));
       }
 
       return null;
@@ -95,14 +98,18 @@ namespace LogAnalyzer
         };
 
         if (entry.Table.Columns.Count > 0)
+        {
           return entry;
-        else if (this.ExceptionOccured != null)
-          this.ExceptionOccured(this, new ExceptionEventArgs("В указанной папке протоколы не найдены"));
+        }
+        else if (this.MessageRecieved != null)
+        {
+          this.MessageRecieved(this, new MessageEventArgs("В указанной папке протоколы не найдены"));
+        }
       }
       catch (Exception ex)
       {
-        if (this.ExceptionOccured != null)
-          this.ExceptionOccured(this, new ExceptionEventArgs(ex.Message));
+        if (this.MessageRecieved != null)
+          this.MessageRecieved(this, new MessageEventArgs(ex.Message));
       }
 
       return null;
@@ -137,7 +144,7 @@ namespace LogAnalyzer
 
     private void FillTable(string fileName, DataTable table)
     {
-      List<string> lines = new List<string>();
+      var lines = new List<string>();
       var builder = new LogStringBuilder(this.MessageTemplate);
 
       using (var reader = new StreamReader(fileName))
@@ -146,7 +153,7 @@ namespace LogAnalyzer
 
         while ((line = reader.ReadLine()) != null)
         {
-          if (line.StartsWith("==============================="))
+          if (line.StartsWith(m_separator))
           {
             builder.FillRow(string.Join(Environment.NewLine, lines), table, true);
             lines.Clear();
@@ -198,13 +205,46 @@ namespace LogAnalyzer
     }
   }
 
-  public class ExceptionEventArgs : EventArgs
+  public class MessageEventArgs : EventArgs
   {
-    public ExceptionEventArgs(string error)
+    public MessageEventArgs(string error, bool isError = true)
     {
-      this.Error = error;
+      this.Message = error;
+      this.IsError = isError;
     }
 
-    public string Error { get; private set; }
+    public bool IsError { get; private set; }
+
+    public string Message { get; private set; }
+  }
+
+  public class MainWindowCommands
+  {
+    public static readonly ICommand OpenConfig = new RoutedUICommand
+    {
+      Text = "Открыть конфигурационный файл",
+      InputGestures =
+      {
+        new KeyGesture(Key.F, ModifierKeys.Control)
+      }
+    };
+
+    public static readonly ICommand OpenFolder = new RoutedUICommand
+    {
+      Text = "Открыть папку с протоколами",
+      InputGestures =
+      {
+        new KeyGesture(Key.D, ModifierKeys.Control)
+      }
+    };
+
+    public static readonly ICommand OpenLogFile = new RoutedUICommand
+    {
+      Text = "Открыть отдельный протокол",
+      InputGestures =
+      {
+        new KeyGesture(Key.L, ModifierKeys.Control)
+      }
+    };
   }
 }

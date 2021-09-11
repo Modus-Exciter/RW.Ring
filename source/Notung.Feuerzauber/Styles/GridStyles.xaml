@@ -146,10 +146,6 @@
                             <Setter TargetName="LineDown" Property="Command" Value="ScrollBar.LineRightCommand" />
                             <Setter TargetName="LineUp" Property="Command" Value="ScrollBar.LineLeftCommand" />
                         </Trigger>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type DataGrid}}}"
-                                         Value="{x:Null}">
-                            <Setter TargetName="GridRoot" Property="Margin" Value="0"/>
-                        </DataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
