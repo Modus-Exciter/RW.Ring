@@ -13,8 +13,6 @@ namespace LogAnalyzer
 {
   internal interface IDirectoryEntry
   {
-    ReadOnlyCollection<DirectoryEntry> Children { get; }
-
     SelectFolderContext Root { get; }
   }
 
@@ -31,6 +29,18 @@ namespace LogAnalyzer
         new DirectoryEntry(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), this),
         new DirectoryEntry(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), this)
       });
+
+      var company = ApplicationInfo.Instance.Company;
+
+      for (int i = 1; i < m_children.Count; i++)
+      {
+        if (m_children[i].Contains(company))
+        {
+          m_children[i].IsExpanded = true;
+          m_children[i].Children.Single(c => c.ToString().Equals(company)).IsExpanded = true;
+          break;
+        }
+      }
     }
 
     SelectFolderContext IDirectoryEntry.Root
@@ -42,22 +52,7 @@ namespace LogAnalyzer
 
     public ReadOnlyCollection<DirectoryEntry> Children
     {
-      get
-      {
-        var company = ApplicationInfo.Instance.Company;
-
-        for (int i = 1; i < m_children.Count; i++)
-        {
-          if (m_children[i].Contains(company))
-          {
-            m_children[i].IsExpanded = true;
-            m_children[i].Children.Single(c => c.ToString().Equals(company)).IsExpanded = true;
-            break;
-          }
-        }
-
-        return m_children;
-      }
+      get { return m_children; }
     }
 
     public string GetErrorText()
@@ -82,9 +77,10 @@ namespace LogAnalyzer
 
     private string GetLongTestString(int size)
     {
-      byte[] bytes = new byte[size];
-      char[] chars = "abcdefghijklmnoprstuvwxyz12345678990?<> \n\t".ToCharArray();
+      var bytes = new byte[size];
+      var chars = "abcdefghijklmnoprstuvwxyz12345678990?<> \n\t".ToCharArray();
       var rnd = new Random();
+
       return new string(bytes.Select(b => chars[rnd.Next(chars.Length)]).ToArray());
     }
   }
@@ -110,6 +106,8 @@ namespace LogAnalyzer
 
     #endregion
 
+    #region Constructors --------------------------------------------------------------------------
+
     internal DirectoryEntry(string path, IDirectoryEntry parent)
     {
       if (!string.IsNullOrEmpty(path) && (!Directory.Exists(path) || !Path.IsPathRooted(path)))
@@ -124,6 +122,8 @@ namespace LogAnalyzer
 
       m_child_factory = s => new DirectoryEntry(s, this);
     }
+
+    #endregion
 
     #region Properties ----------------------------------------------------------------------------
 
