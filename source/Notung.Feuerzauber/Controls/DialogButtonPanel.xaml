@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
+             xmlns:fz="clr-namespace:Notung.Feuerzauber"
              mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -25,7 +26,9 @@
             CornerRadius="0,0,2,2"
             Padding="10,0">
         <WrapPanel HorizontalAlignment="Right">
-            <Button Content="Да" Click="PositiveButton_Click">
+            <Button Content="Да"
+                    Command="{x:Static fz:WindowHelper.CloseYes}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
                         <Style.Triggers>
@@ -39,7 +42,9 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Content="Нет" Click="NegativeButton_Click">
+            <Button Content="Нет" 
+                    Command="{x:Static fz:WindowHelper.CloseNo}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
                         <Style.Triggers>
@@ -53,7 +58,10 @@
                     </Style>
                 </Button.Style>
             </Button>
-            <Button Content="OK" Padding="20,0" Click="PositiveButton_Click">
+            <Button Content="OK" 
+                    Padding="20,0"
+                    Command="{x:Static fz:WindowHelper.CloseYes}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource ResourceKey=dialogButton}">
                         <Style.Triggers>

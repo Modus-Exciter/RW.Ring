@@ -1,12 +1,11 @@
 ﻿<Window x:Class="LogAnalyzer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:sys="clr-namespace:System.Windows;assembly=PresentationFramework"
         xmlns:fzc="clr-namespace:Notung.Feuerzauber.Controls;assembly=Notung.Feuerzauber"
         xmlns:fz="clr-namespace:Notung.Feuerzauber;assembly=Notung.Feuerzauber"
         xmlns:local="clr-namespace:LogAnalyzer"
         x:Name="mainWindow"
-        MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height}"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         TextOptions.TextFormattingMode="Display" 
         ResizeMode="CanResizeWithGrip"
         WindowStyle="None"
@@ -15,10 +14,14 @@
         AllowsTransparency="True"
         Background="Transparent"
         Title="Анализатор протоколов"
-        Icon="/LogAnalyzer;component/text_find.png" 
-        Height="{Binding Source={x:Static sys:SystemParameters.FullPrimaryScreenHeight}, 
+        Icon="/LogAnalyzer;component/text_find.png"
+        MinHeight="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}, 
+            Converter={StaticResource goldenRatio}}"
+        MinWidth="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}, 
+            Converter={StaticResource goldenRatio}}"
+        Height="{Binding Source={x:Static SystemParameters.FullPrimaryScreenHeight}, 
             Converter={StaticResource goldenRatio}, ConverterParameter=0.8}" 
-        Width="{Binding Source={x:Static sys:SystemParameters.FullPrimaryScreenWidth}, 
+        Width="{Binding Source={x:Static SystemParameters.FullPrimaryScreenWidth}, 
             Converter={StaticResource goldenRatio}, ConverterParameter=0.9}" >
     <Window.Resources>
         <LinearGradientBrush x:Key="headerBrush" EndPoint="0.5,1" StartPoint="0.5,0">
@@ -45,8 +48,7 @@
         <KeyBinding Key="L" Modifiers="Control" Command="local:MainWindowCommands.OpenLogFile"/>
         <KeyBinding Key="F1" Modifiers="Control" Command="fz:WindowHelper.About"/>
     </Window.InputBindings>
-    <Border x:Name="RootContainer" 
-            CornerRadius="12,12,0,12"
+    <Border CornerRadius="12,12,0,12"
             BorderBrush="#FFDEDEDE"
             BorderThickness="2">
         <Grid>
@@ -59,19 +61,24 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            
+
             <Rectangle HorizontalAlignment="Stretch" Margin="0,15,0,0" Height="15" Fill="DimGray"/>
-            
+
             <Border x:Name="WindowHeader"
                     Grid.Row="0"
                     Panel.ZIndex="2"
                     HorizontalAlignment="Stretch"
                     CornerRadius="10,10,10,5"
-                    Background="{StaticResource headerBrush}"
-                    MouseDown="WindowHeader_MouseDown">
+                    Background="{StaticResource headerBrush}">
                 <Border.Effect>
                     <DropShadowEffect Color="Gray" ShadowDepth="5" Direction="-90"/>
                 </Border.Effect>
+                <Border.InputBindings>
+                    <MouseBinding Gesture="LeftClick"  Command="{x:Static fz:WindowHelper.DragMove}" 
+                                  CommandParameter="{Binding ElementName=WindowHeader}"/>
+                    <MouseBinding Gesture="LeftDoubleClick"  Command="{x:Static fz:WindowHelper.Maximize}" 
+                                  CommandParameter="{Binding ElementName=WindowHeader}"/>
+                </Border.InputBindings>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -141,7 +148,8 @@
                 <MenuItem Header="Открыть отдельный протокол" ToolTip="Ctrl + L" Command="local:MainWindowCommands.OpenLogFile"/>
                 <MenuItem ToolTip="О программе Ctrl + F1" 
                           HorizontalAlignment="Right" 
-                          Padding="0"
+                          Padding="5,0"
+                          Margin="0"
                           Command="{x:Static fz:WindowHelper.About}"
                           CommandParameter="{Binding ElementName=mainWindow}">
                     <MenuItem.Icon>

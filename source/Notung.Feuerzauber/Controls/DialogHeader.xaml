@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
+             xmlns:fz="clr-namespace:Notung.Feuerzauber"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="800">
     <UserControl.Resources>
@@ -20,9 +21,13 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border BorderThickness="0"
-                    Background="{StaticResource dialogHeaderBrush}" 
-                    CornerRadius="5,5,0,0"
-                    MouseDown="Header_MouseDown">
+            Background="{StaticResource dialogHeaderBrush}" 
+            CornerRadius="5,5,0,0">
+        <Border.InputBindings>
+            <MouseBinding Gesture="LeftClick" 
+                          Command="{x:Static fz:WindowHelper.DragMove}"
+                          CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+        </Border.InputBindings>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

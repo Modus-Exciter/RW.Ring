@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using Microsoft.Win32;
 using Notung.Feuerzauber;
 using Notung.Feuerzauber.Controls;
 using Notung.Feuerzauber.Dialogs;
@@ -10,18 +10,13 @@ using Notung.Feuerzauber.Dialogs;
 namespace LogAnalyzer
 {
   /// <summary>
-  /// Interaction logic for MainWindow.xaml
+  /// Main window of the log analyzer
   /// </summary>
   public partial class MainWindow : Window
   {
     public MainWindow()
     {
       InitializeComponent();
-    }
-
-    private void WindowHeader_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-      WindowHelper.HeaderMouseDown(e, true);
     }
 
     private void OpenConfig(object sender, ExecutedRoutedEventArgs e)

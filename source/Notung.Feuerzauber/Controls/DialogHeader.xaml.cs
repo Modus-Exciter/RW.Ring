@@ -14,11 +14,6 @@ namespace Notung.Feuerzauber.Controls
       InitializeComponent();
     }
 
-    private void Header_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-      Window.GetWindow(this).DragMove();
-    }
-
     public bool ShowCloseButton
     {
       get { return closeButton.Visibility == Visibility.Visible; }

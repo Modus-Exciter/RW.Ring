@@ -1,42 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
 using System.Windows;
-using System.Windows.Navigation;
+using System.Windows.Input;
 using Notung.Feuerzauber.Dialogs;
 
 namespace Notung.Feuerzauber
 {
-  public class WindowHelper
+  public static class WindowHelper
   {
-    public static void HeaderMouseDown(MouseButtonEventArgs e, bool checkDoubleClick)
-    {
-      DependencyObject dob = e.Source as DependencyObject;
-
-      if (dob == null)
-        return;
-
-      var window = Window.GetWindow(dob);
-
-      if (e.ChangedButton != MouseButton.Left)
-        return;
-
-      if (e.ClickCount == 1 || !checkDoubleClick)
-      {
-        if (window.WindowState == WindowState.Normal)
-          window.DragMove();
-      }
-      else if (window.WindowState == WindowState.Normal)
-        window.WindowState = WindowState.Maximized;
-      else
-        window.WindowState = WindowState.Normal;
-    }
-
     public static readonly ICommand Minimize = new MinimizeWindowCommand();
     public static readonly ICommand Maximize = new MaximizeWindowCommand();
+    public static readonly ICommand DragMove = new DragMoveCommand();
     public static readonly ICommand Close = new CloseWindowCommand();
+    public static readonly ICommand CloseYes = new CloseDialogCommand(true);
+    public static readonly ICommand CloseNo = new CloseDialogCommand(false);
     public static readonly ICommand About = new ShowAboutCommand();
 
     private class WindowCommandBase 
@@ -49,13 +25,22 @@ namespace Notung.Feuerzauber
 
       public virtual bool CanExecute(object parameter)
       {
-        return parameter is Window;
+        return parameter is DependencyObject && 
+          Window.GetWindow((DependencyObject)parameter) != null;
       }
 
       public override string ToString()
       {
-        var ret = this.GetType().Name;
-        return ret.Substring(0, ret.IndexOf("WindowCommand"));
+        var name = this.GetType().Name;
+        return name.Substring(0, name.IndexOf("Command"));
+      }
+    }
+
+    private class DragMoveCommand : WindowCommandBase, ICommand
+    {
+      public void Execute(object parameter)
+      {
+        Window.GetWindow((DependencyObject)parameter).DragMove();
       }
     }
 
@@ -63,7 +48,7 @@ namespace Notung.Feuerzauber
     {
       public void Execute(object parameter)
       {
-        ((Window)parameter).WindowState = WindowState.Minimized;
+        Window.GetWindow((DependencyObject)parameter).WindowState = WindowState.Minimized;
       }
     }
 
@@ -71,7 +56,7 @@ namespace Notung.Feuerzauber
     {
       public void Execute(object parameter)
       {
-        var window = ((Window)parameter);
+        var window = Window.GetWindow((DependencyObject)parameter);
 
         window.WindowState = window.WindowState == WindowState.Maximized ? 
           WindowState.Normal : WindowState.Maximized;
@@ -82,7 +67,22 @@ namespace Notung.Feuerzauber
     {
       public void Execute(object parameter)
       {
-        ((Window)parameter).Close();
+        Window.GetWindow((DependencyObject)parameter).Close();
+      }
+    }
+
+    private class CloseDialogCommand : WindowCommandBase, ICommand
+    {
+      private readonly bool m_result;
+
+      public CloseDialogCommand(bool dialogResult)
+      {
+        m_result = dialogResult;
+      }
+
+      public void Execute(object parameter)
+      {
+        Window.GetWindow((DependencyObject)parameter).DialogResult = m_result;
       }
     }
 
@@ -95,7 +95,13 @@ namespace Notung.Feuerzauber
 
       public void Execute(object parameter)
       {
-        var window = parameter as Window ?? Application.Current.MainWindow;
+        Window window = null;
+
+        if (parameter is DependencyObject)
+          window = Window.GetWindow((DependencyObject)parameter);
+
+        if (window == null)
+          window = Application.Current.MainWindow;
 
         new AboutBox { Owner = window }.ShowDialog();
       }
