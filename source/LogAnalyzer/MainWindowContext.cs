@@ -15,6 +15,7 @@ namespace LogAnalyzer
     private string m_file_name = string.Empty;
     private string m_separator = "===============================================";
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
+    private readonly Dictionary<string, WeakReference> m_tables = new Dictionary<string, WeakReference>();
 
     public event EventHandler<MessageEventArgs> MessageRecieved;
 
@@ -71,7 +72,7 @@ namespace LogAnalyzer
         return new FileEntry
         {
           FileName = fileName,
-          Table = this.LoadLogTable(fileName)
+          Table = GetDataTable(fileName, this.LoadLogTable)
         };
       }
       catch (Exception ex)
@@ -94,16 +95,19 @@ namespace LogAnalyzer
         var entry = new FileEntry
         {
           FileName = selectedPath,
-          Table = this.LoadLogDirectory(selectedPath)
+          Table = GetDataTable(selectedPath, this.LoadLogDirectory)
         };
 
         if (entry.Table.Columns.Count > 0)
         {
           return entry;
         }
-        else if (this.MessageRecieved != null)
+        else
         {
-          this.MessageRecieved(this, new MessageEventArgs("В указанной папке протоколы не найдены"));
+          m_tables.Remove(selectedPath);
+
+          if (this.MessageRecieved != null)
+            this.MessageRecieved(this, new MessageEventArgs("В указанной папке протоколы не найдены"));
         }
       }
       catch (Exception ex)
@@ -140,6 +144,32 @@ namespace LogAnalyzer
       table.EndLoadData();
 
       return table;
+    }
+
+    private DataTable GetDataTable(string path, Func<string, DataTable> createCallback)
+    {
+      WeakReference reference;
+
+      if (m_tables.TryGetValue(path, out reference))
+      {
+        var table = reference.Target as DataTable;
+
+        if (table != null)
+          return table;
+      }
+
+      foreach (var kv in m_tables.ToArray())
+      {
+        if (!kv.Value.IsAlive)
+          m_tables.Remove(kv.Key);
+      }
+
+      var ret = createCallback(path);
+
+      reference = new WeakReference(ret);
+      m_tables[path] = reference;
+
+      return ret;
     }
 
     private void FillTable(string fileName, DataTable table)
