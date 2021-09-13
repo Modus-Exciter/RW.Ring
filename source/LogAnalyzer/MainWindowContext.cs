@@ -22,27 +22,13 @@ namespace LogAnalyzer
     public string Separator
     {
       get { return m_separator; }
-      set
-      {
-        if (object.Equals(m_separator, value))
-          return;
-
-        m_separator = value;
-        this.OnPropertyChanged("Separator");
-      }
+      set { this.ChangeValue(ref m_separator, value, "Separator"); }
     }
 
     public string MessageTemplate
     {
       get { return m_template; }
-      set
-      {
-        if (object.Equals(m_template, value))
-          return;
-
-        m_template = value;
-        this.OnPropertyChanged("MessageTemplate");
-      }
+      set { this.ChangeValue(ref m_template, value, "MessageTemplate"); }
     }
 
     public void OpenConfig(string fileName)
@@ -118,6 +104,8 @@ namespace LogAnalyzer
 
       return null;
     }
+
+    #region Implementation ------------------------------------------------------------------------
 
     private DataTable LoadLogDirectory(string path)
     {
@@ -206,6 +194,8 @@ namespace LogAnalyzer
         }
       }
     }
+
+    #endregion
   }
 
   public class FileEntry

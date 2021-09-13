@@ -16,5 +16,19 @@ namespace Notung.ComponentModel
       if (handler != null)
         handler(this, new PropertyChangedEventArgs(propertyName));
     }
+
+    protected void ChangeValue<T>(ref T field, T value, string propertyName)
+    {
+      if (typeof(T).IsValueType)
+      {
+        if (field.Equals(value))
+          return;
+      }
+      else if (object.Equals(field, value))
+        return;
+
+      field = value;
+      this.OnPropertyChanged(propertyName);
+    }
   }
 }
