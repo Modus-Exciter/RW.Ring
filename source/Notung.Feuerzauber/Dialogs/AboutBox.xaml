@@ -6,19 +6,8 @@
         Style="{StaticResource dialogWindow}"
         WindowStartupLocation="CenterScreen"
         SizeToContent="WidthAndHeight"
-        Title="О программе"
+        Title="{Binding Path=Product, StringFormat='О программе «{0}»'}"
         DataContext="{Binding Source={x:Static notung:ApplicationInfo.Instance}}">
-    <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Style.Setters>
-                <Setter Property="Padding" Value="0,5,20,5"/>
-                <Setter Property="MaxWidth" Value="200"/>
-                <Setter Property="TextWrapping" Value="Wrap"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="FontFamily" Value="Trebuchet MS"/>
-            </Style.Setters>
-        </Style>
-    </Window.Resources>
     <Border x:Name="RootContainer" 
             CornerRadius="6,6,3,3"
             BorderBrush="Gray"
@@ -31,7 +20,18 @@
             <controls:DialogHeader />
             <Border  Grid.Row="1" Background="Gainsboro" CornerRadius="0,0,2,2">
             <Grid>
-                <Grid.ColumnDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Style.Setters>
+                                <Setter Property="Padding" Value="0,5,20,5"/>
+                                <Setter Property="MaxWidth" Value="200"/>
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="FontFamily" Value="Trebuchet MS"/>
+                            </Style.Setters>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -51,15 +51,15 @@
                 </controls:ARILogo>
                 
                 <TextBlock Grid.Row="0" Grid.Column="1" Text="Продукт:" Margin="0,15,0,0"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="Компания:"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="Описание:"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="Версия:"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Версия:"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Компания:"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Описание:"/>
                 <TextBlock Grid.Row="4" Grid.Column="1" Text="Авторские права:"/>
 
                 <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Path=Product}" Margin="0,15,0,0"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=Company}"/>
-                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Description}"/>
-                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Version}"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Path=Version}"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Path=Company}"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Path=Description}"/>
                 <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding Path=Copyright}"/>
                 <Rectangle Grid.Row="5" Height="15" Grid.Column="1"/>
             </Grid>
