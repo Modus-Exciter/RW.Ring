@@ -18,7 +18,7 @@ namespace LogAnalyzer
 
   public class SelectFolderContext : IDirectoryEntry
   {
-    private readonly ReadOnlyCollection<DirectoryEntry> m_children;
+    private readonly ReadOnlyCollection<DirectoryEntry> m_children; 
 
     public SelectFolderContext()
     {
