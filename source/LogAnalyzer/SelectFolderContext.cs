@@ -195,9 +195,9 @@ namespace LogAnalyzer
         if (m_children == null)
         {
           if (string.IsNullOrEmpty(m_path))
-            m_children = GetLogicalDrives();
+            m_children = this.GetLogicalDrives();
           else
-            m_children = GetChildDirectories();
+            m_children = this.GetChildDirectories();
         }
 
         return m_children;

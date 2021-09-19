@@ -13,7 +13,7 @@ namespace LogAnalyzer
   {
     public MainWindow()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     private void OpenConfig(object sender, ExecutedRoutedEventArgs e)

@@ -82,8 +82,8 @@ namespace Notung
     /// </summary>
     public object Details
     {
-      get 
-      { 
+      get
+      {
         return m_details ?? m_details_string;
       }
       set
@@ -123,7 +123,7 @@ namespace Notung
     [DisplayNameRes("FATAL", typeof(CoreResources))]
     Fatal = 4
   }
-  
+
   /// <summary>
   /// Буфер сообщений
   /// </summary>

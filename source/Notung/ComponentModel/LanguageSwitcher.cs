@@ -16,10 +16,10 @@ namespace Notung.ComponentModel
   public sealed class LanguageSwitcher : Component, ISupportInitialize
   {
     private static readonly WeakSet<LanguageSwitcher> _instances = new WeakSet<LanguageSwitcher>();
-    private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
-    private static object _changed_event_key = new object();
+    private static readonly ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
+    private static readonly object _changed_event_key = new object();
 
-    private static ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
+    private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
 
     static LanguageSwitcher() 
     {
@@ -163,7 +163,7 @@ namespace Notung.ComponentModel
 
     void ISupportInitialize.EndInit()
     {
-      OnLanguageChanged(new LanguageEventArgs(_current_culture));
+      this.OnLanguageChanged(new LanguageEventArgs(_current_culture));
     }
 
     #endregion

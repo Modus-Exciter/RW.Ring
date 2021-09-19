@@ -58,7 +58,7 @@ namespace LogAnalyzer
         return new FileEntry
         {
           FileName = fileName,
-          Table = GetDataTable(fileName, this.LoadLogTable)
+          Table = this.GetDataTable(fileName, this.LoadLogTable)
         };
       }
       catch (Exception ex)
@@ -81,7 +81,7 @@ namespace LogAnalyzer
         var entry = new FileEntry
         {
           FileName = selectedPath,
-          Table = GetDataTable(selectedPath, this.LoadLogDirectory)
+          Table = this.GetDataTable(selectedPath, this.LoadLogDirectory)
         };
 
         if (entry.Table.Columns.Count > 0)

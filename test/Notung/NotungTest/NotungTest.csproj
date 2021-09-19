@@ -70,7 +70,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\source\Schicksal\Schicksal.csproj">
       <Project>{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}</Project>
-      <Name>Schicksal %28Schicksal\Schicksal%29</Name>
+      <Name>Schicksal</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

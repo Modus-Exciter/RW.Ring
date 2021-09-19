@@ -1,0 +1,7 @@
+﻿[*.cs]
+
+# IDE1005: Вызов делегата можно упростить.
+dotnet_diagnostic.IDE1005.severity = none
+
+# IDE0025: Использовать тело выражения для свойств
+dotnet_diagnostic.IDE0025.severity = none

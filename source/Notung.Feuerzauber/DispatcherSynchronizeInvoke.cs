@@ -55,7 +55,7 @@ namespace Notung.Feuerzauber
       public DispatcherAsyncResult(DispatcherOperation operation)
       {
         m_operation = operation;
-        m_operation.Completed += HandleCompleted;
+        m_operation.Completed += this.HandleCompleted;
 
         lock (m_lock)
           m_completed = m_operation.Status == DispatcherOperationStatus.Completed;
@@ -65,7 +65,7 @@ namespace Notung.Feuerzauber
 
       private void HandleCompleted(object sender, EventArgs args)
       {
-        m_operation.Completed -= HandleCompleted;
+        m_operation.Completed -= this.HandleCompleted;
 
         lock (m_lock)
         {
