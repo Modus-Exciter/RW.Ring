@@ -55,26 +55,26 @@ namespace Notung.Net
         {
           var reader = new BinaryReader(stream);
 
-          ClientInfo.ThreadInfo = ParseClientInfo(reader.ReadString());
+          ClientInfo.ThreadInfo = this.ParseClientInfo(reader.ReadString());
 
           var command = reader.ReadString();
 
-          LogCommand(command);
+          this.LogCommand(command);
 
           try
           {
             switch (command.Substring(0, 2))
             {
               case "c:":
-                ProcessCall(command.Substring(2), stream, socket);
+                this.ProcessCall(command.Substring(2), stream);
                 break;
 
               case "s:":
-                StreamExchange(command.Substring(2), stream, stream);
+                this.StreamExchange(command.Substring(2), stream, stream);
                 break;
 
               case "b:":
-                BinaryExchange(command.Substring(2), stream, stream);
+                this.BinaryExchange(command.Substring(2), stream, stream);
                 break;
             }
           }
@@ -133,12 +133,12 @@ namespace Notung.Net
       _log.Info(command);
     }
 
-    private void ProcessCall(string command, NetworkStream stream, Socket socket)
+    private void ProcessCall(string command, NetworkStream stream)
     {
       var bits = command.Split('/');
       var info = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
 
-      var result = GetCaller(bits[0]).Call(info,
+      var result = this.GetCaller(bits[0]).Call(info,
         (IParametersList)this.GetSerializer(info.RequestType).Deserialize(stream));
 
       if (result != null)

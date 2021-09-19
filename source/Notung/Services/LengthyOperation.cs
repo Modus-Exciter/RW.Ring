@@ -105,7 +105,7 @@ namespace Notung.Services
         if (m_operation != null)
           throw new InvalidOperationException();
 
-        m_operation = new Action(this.Run).BeginInvoke(CloseHandle, this);
+        m_operation = new Action(this.Run).BeginInvoke(this.CloseHandle, this);
       }
     }
 
@@ -206,16 +206,16 @@ namespace Notung.Services
     private void Run()
     {
       ThreadTracker.RegisterThread(Thread.CurrentThread);
-      m_run_base.ProgressChanged += HandleProgressChanged;
+      m_run_base.ProgressChanged += this.HandleProgressChanged;
 
       if (m_run_base is ICancelableRunBase)
-        ((ICancelableRunBase)m_run_base).CanCancelChanged += HandleCanCancelChanged;
+        ((ICancelableRunBase)m_run_base).CanCancelChanged += this.HandleCanCancelChanged;
 
       try
       {
         this.Status = TaskStatus.Running;
         m_run_base.Run();
-        this.Status = IsCanceled ? TaskStatus.Canceled : TaskStatus.RanToCompletion;
+        this.Status = this.IsCanceled ? TaskStatus.Canceled : TaskStatus.RanToCompletion;
       }
       catch (OperationCanceledException)
       {
@@ -229,10 +229,10 @@ namespace Notung.Services
       }
       finally
       {
-        m_run_base.ProgressChanged -= HandleProgressChanged;
+        m_run_base.ProgressChanged -= this.HandleProgressChanged;
 
         if (m_run_base is ICancelableRunBase)
-          ((ICancelableRunBase)m_run_base).CanCancelChanged -= HandleCanCancelChanged;
+          ((ICancelableRunBase)m_run_base).CanCancelChanged -= this.HandleCanCancelChanged;
 
         ThreadTracker.RemoveThread(Thread.CurrentThread);
 
@@ -266,7 +266,7 @@ namespace Notung.Services
       var current = m_current_args;
       var handler = this.ProgressChanged;
 
-      if (e.ProgressPercentage != current.ProgressPercentage 
+      if (e.ProgressPercentage != current.ProgressPercentage
         || !object.Equals(e.UserState, current.UserState))
         m_current_args = e;
 

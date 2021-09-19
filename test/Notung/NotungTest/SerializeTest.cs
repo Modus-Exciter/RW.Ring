@@ -18,7 +18,7 @@ namespace NotungTest
 
       public override string ToString()
       {
-        return Text ?? base.ToString();
+        return this.Text ?? base.ToString();
       }
     }
 

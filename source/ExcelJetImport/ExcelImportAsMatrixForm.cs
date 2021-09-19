@@ -9,7 +9,7 @@ namespace JetExcelOleDbImport
   {
     public ExcelImportAsMatrixForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public string ExcelFileName
@@ -70,7 +70,7 @@ namespace JetExcelOleDbImport
       }
     }
 
-    private void m_button_open_excel_Click(object sender, EventArgs e)
+    private void Button_open_excel_Click(object sender, EventArgs e)
     {
       using (var dlg = new OpenFileDialog())
       {

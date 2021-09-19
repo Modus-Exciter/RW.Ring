@@ -16,7 +16,7 @@ namespace Schicksal.Regression
     /// Количество пар значений при вычислении корреляции
     /// </summary>
     public int N { get; internal set; }
-    
+
     /// <summary>
     /// Коэффициент корреляции
     /// </summary>
@@ -39,7 +39,7 @@ namespace Schicksal.Regression
     /// </summary>
     [DisplayName("R 5%")]
     public double R005 { get; internal set; }
-    
+
     /// <summary>
     /// Критическое значение коэффициента корреляции для уровня значимости 0,01
     /// </summary>

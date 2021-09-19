@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Data;
 using Notung.Loader;
-using System.ComponentModel;
 
 namespace NotungTest
 {

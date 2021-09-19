@@ -79,7 +79,7 @@ namespace Notung.Helm.Controls
       if (control == null)
         return false;
 
-      m_op_wrapper.Invoke(() => ReplaceControls(control));
+      m_op_wrapper.Invoke(() => this.ReplaceControls(control));
 
       var ctrl_loader = control as IApplicationLoader;
 
@@ -297,7 +297,7 @@ namespace Notung.Helm.Controls
       }
     }
 
-  #endregion
+    #endregion
   }
 
   /// <summary>

@@ -24,7 +24,7 @@ namespace Notung.Net
 
       return caller.Call(this);
     }
-    
+
     RemotableResult IRemotableCommand.Execute(IServiceProvider service)
     {
       var res = this.CreateEmptyResult(service);
@@ -55,9 +55,9 @@ namespace Notung.Net
     /// <param name="service">Сервис, выполняющий команду</param>
     protected abstract void Fill(TResult result, IServiceProvider service);
 
-    Type IRemotableCommand.ResultType 
-    { 
-      get { return typeof(TResult); } 
+    Type IRemotableCommand.ResultType
+    {
+      get { return typeof(TResult); }
     }
   }
 
@@ -76,7 +76,7 @@ namespace Notung.Net
   {
     private bool m_ok;
     private ClientServerException m_err;
-    
+
     /// <summary>
     /// Исключение, возникшее при выполнении команды
     /// </summary>

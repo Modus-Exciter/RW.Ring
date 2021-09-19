@@ -8,7 +8,7 @@ namespace Schicksal.Helm.Dialogs
   {
     public ComparisonFilterDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public bool OnlySignificat

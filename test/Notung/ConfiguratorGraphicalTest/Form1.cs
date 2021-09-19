@@ -93,7 +93,7 @@ namespace ConfiguratorGraphicalTest
 
     public Form1()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     protected override void OnLoad(EventArgs e)
@@ -157,7 +157,7 @@ namespace ConfiguratorGraphicalTest
     private void buttonOpenFolder_Click(object sender, System.EventArgs e)
     {
 #if APPLICATION_INFO
-      System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath()); 
+      System.Diagnostics.Process.Start(ApplicationInfo.Instance.GetWorkingPath());
 #endif
     }
 
@@ -187,8 +187,8 @@ namespace ConfiguratorGraphicalTest
     {
       public void Run()
       {
-        AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters 
-        { 
+        AppManager.OperationLauncher.Run(new TestWork(), new LaunchParameters
+        {
           Bitmap = Resources.DOS_TRACK,
           CloseOnFinish = false
         });
@@ -198,8 +198,8 @@ namespace ConfiguratorGraphicalTest
     [DisplayName("Tesovo worka")]
     private class TestWork : CancelableRunBase, IServiceProvider
     {
-       private bool m_ok = false;
-       private bool m_before = true;
+      private bool m_ok = false;
+      private bool m_before = true;
 
       private static readonly ILog _log = LogManager.GetLogger(typeof(TestWork));
 

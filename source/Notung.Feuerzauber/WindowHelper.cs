@@ -15,7 +15,7 @@ namespace Notung.Feuerzauber
     public static readonly ICommand CloseNo = new CloseDialogCommand(false);
     public static readonly ICommand About = new ShowAboutCommand();
 
-    private class WindowCommandBase 
+    private class WindowCommandBase
     {
       public virtual event EventHandler CanExecuteChanged
       {
@@ -25,7 +25,7 @@ namespace Notung.Feuerzauber
 
       public virtual bool CanExecute(object parameter)
       {
-        return parameter is DependencyObject && 
+        return parameter is DependencyObject &&
           Window.GetWindow((DependencyObject)parameter) != null;
       }
 
@@ -58,7 +58,7 @@ namespace Notung.Feuerzauber
       {
         var window = Window.GetWindow((DependencyObject)parameter);
 
-        window.WindowState = window.WindowState == WindowState.Maximized ? 
+        window.WindowState = window.WindowState == WindowState.Maximized ?
           WindowState.Normal : WindowState.Maximized;
       }
     }

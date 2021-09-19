@@ -3,7 +3,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using Notung;
 using Notung.Services;
 using Schicksal.Anova;
 using System.Threading.Tasks;
@@ -12,11 +11,11 @@ namespace Schicksal.Helm
 {
   public partial class AnovaResultsForm : Form
   {
-    private Color m_significat_color;
+    private readonly Color m_significat_color;
 
     public AnovaResultsForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
     }
 
@@ -43,7 +42,7 @@ namespace Schicksal.Helm
       m_grid.AutoResizeColumns();
     }
 
-    private void m_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -59,7 +58,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+    private void Grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -72,7 +71,7 @@ namespace Schicksal.Helm
         e.CellStyle.ForeColor = m_significat_color;
     }
 
-    private void m_cmd_export_Click(object sender, EventArgs e)
+    private void Cmd_export_Click(object sender, EventArgs e)
     {
       using (var dlg = new SaveFileDialog())
       {
@@ -80,7 +79,7 @@ namespace Schicksal.Helm
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
           var saver = new AnovaHtmlSaver(
-            dlg.FileName, 
+            dlg.FileName,
             this.SourceTable,
             this.DataSource,
             this.Probability,

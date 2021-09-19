@@ -14,7 +14,7 @@ namespace Notung.Services
   /// <summary>
   /// Текущий экземпляр приложения
   /// </summary>
-  public interface IAppInstance 
+  public interface IAppInstance
   {
     /// <summary>
     /// Аргументы командной строки
@@ -114,7 +114,7 @@ namespace Notung.Services
 
     public bool IsAlive
     {
-      get { return MainThread.IsAlive; }
+      get { return this.MainThread.IsAlive; }
     }
 
     public bool ReliableThreading
@@ -153,7 +153,7 @@ namespace Notung.Services
       if (m_mutex_thread != null)
         return;
 
-      m_mutex_thread = new Thread(CreateBlockingMutex);
+      m_mutex_thread = new Thread(this.CreateBlockingMutex);
       m_mutex_thread.SetApartmentState(ApartmentState.STA);
       m_mutex_thread.Start();
     }
@@ -198,11 +198,11 @@ namespace Notung.Services
 
       bool new_instance;
 
-      using (var mutex = new Mutex(true, GetMutexName(), out new_instance))
+      using (var mutex = new Mutex(true, this.GetMutexName(), out new_instance))
       {
         if (new_instance)
         {
-          while (!m_terminating && MainThread.IsAlive)
+          while (!m_terminating && this.MainThread.IsAlive)
             Thread.Sleep(200);
 
           mutex.ReleaseMutex();
@@ -275,7 +275,7 @@ namespace Notung.Services
   {
     private static string CreatePathArgs(IList<string> args)
     {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       bool first = true;
 
       foreach (var arg in args)

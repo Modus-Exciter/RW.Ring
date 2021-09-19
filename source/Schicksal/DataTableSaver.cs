@@ -365,7 +365,7 @@ namespace Schicksal
         case TypeCode.Decimal: return new DecimalDataRunner();
         case TypeCode.DateTime: return new DateTimeDataRunner();
         case TypeCode.String: return new StringDataRunner();
-        
+
         default: throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
       }
     }
@@ -607,7 +607,7 @@ namespace Schicksal
     {
       private Dictionary<object, int> m_values;
       private List<string> m_strings;
-      private object last;
+      private object m_last;
 
       private const byte FULL_TEXT = 0;
       private const byte STRING_NUMBER = 1;
@@ -615,7 +615,7 @@ namespace Schicksal
 
       public void Write(BinaryWriter writer, object value)
       {
-        if (!Equals(value, last))
+        if (!Equals(value, m_last))
         {
           if (m_values == null)
             m_values = new Dictionary<object, int>();
@@ -637,7 +637,7 @@ namespace Schicksal
         else
           writer.Write(REPEAT);
 
-        last = value;
+        m_last = value;
       }
 
       public object Read(BinaryReader reader)
@@ -651,17 +651,17 @@ namespace Schicksal
         {
           var ret = reader.ReadString();
           m_strings.Add(ret);
-          last = ret;
+          m_last = ret;
           return ret;
         }
         else if (status == STRING_NUMBER)
         {
           var ret = m_strings[reader.ReadInt32()];
-          last = ret;
+          m_last = ret;
           return ret;
         }
         else
-          return last;
+          return m_last;
       }
     }
 

@@ -69,8 +69,8 @@ namespace Notung.Loader
     {
       public static readonly IFactory<T> Instance = new EmptyFactory<T>();
 
-      public T Create() 
-      { 
+      public T Create()
+      {
         return null;
       }
     }
@@ -119,7 +119,7 @@ namespace Notung.Loader
       m_assembly = assembly;
       m_type = type;
     }
-    
+
     public T Create()
     {
       Assembly asm = Assembly.Load(m_assembly);

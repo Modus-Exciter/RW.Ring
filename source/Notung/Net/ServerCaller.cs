@@ -34,7 +34,7 @@ namespace Notung.Net
         if (operation.Method.ReturnType == typeof(void))
           return ParametersList.Create(operation.Method, values);
 
-        IRefReturnResult res = (IRefReturnResult)Activator.CreateInstance(operation.ResultType);
+        var res = (IRefReturnResult)Activator.CreateInstance(operation.ResultType);
         res.References = ParametersList.Create(operation.Method, values);
         res.Return = result;
 
@@ -50,7 +50,7 @@ namespace Notung.Net
 
       try
       {
-        ret.Value = Invoke(request, operation);
+        ret.Value = this.Invoke(request, operation);
       }
       catch (TargetInvocationException ex)
       {

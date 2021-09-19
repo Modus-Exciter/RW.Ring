@@ -51,7 +51,7 @@ namespace Notung.Helm.Configuration
       return item.GetType().GetGenericArguments()[0];
     }
 
-    public SettingsBindingSource<TSection> Get<TSection>()  where TSection : ConfigurationSection, new()
+    public SettingsBindingSource<TSection> Get<TSection>() where TSection : ConfigurationSection, new()
     {
       return this[typeof(TSection)] as SettingsBindingSource<TSection>;
     }
@@ -165,7 +165,7 @@ namespace Notung.Helm.Configuration
     public override void RestoreDefaults()
     {
       this.EditingSection.RestoreDefaults();
-      this.m_binding_source.ResetBindings(false);
+      m_binding_source.ResetBindings(false);
     }
 
     private void HandleDataSourceChanged(object sender, EventArgs e)

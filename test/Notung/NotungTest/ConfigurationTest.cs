@@ -23,7 +23,7 @@ namespace NotungTest
       //
     }
 
-    private TestContext testContextInstance;
+    private TestContext m_test_context_instance;
 
     /// <summary>
     ///Gets or sets the test context which provides
@@ -33,11 +33,11 @@ namespace NotungTest
     {
       get
       {
-        return testContextInstance;
+        return m_test_context_instance;
       }
       set
       {
-        testContextInstance = value;
+        m_test_context_instance = value;
       }
     }
 

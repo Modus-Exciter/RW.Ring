@@ -15,7 +15,7 @@ namespace Notung.Net
     private readonly HttpListener m_listener;
 
     private static readonly ILog _log = LogManager.GetLogger(typeof(HttpServiceHost));
-    
+
     public HttpServiceHost(ISerializationFactory serializationFactory, HttpListener listener)
       : base(serializationFactory)
     {
@@ -58,7 +58,7 @@ namespace Notung.Net
 
     protected override void ProcessRequest(object state)
     {
-      HttpListenerContext context = (HttpListenerContext)state;
+      var context = (HttpListenerContext)state;
       ClientInfo.ThreadInfo = GetClientInfo(context);
 
       LogRequest(context);
@@ -78,7 +78,7 @@ namespace Notung.Net
           if (bits.Length == 2)
           {
             var info = RpcServiceInfo.GetByName(bits[0]).GetOperationInfo(bits[1]);
-            var result = GetCaller(bits[0]).Call(info, ReadParameters(context, info));
+            var result = this.GetCaller(bits[0]).Call(info, this.ReadParameters(context, info));
 
             if (result != null)
             {
@@ -123,7 +123,7 @@ namespace Notung.Net
           return true;
 
         case "BinaryExchange":
-          return BinaryExchange(context.Request.Url.Query,
+          return this.BinaryExchange(context.Request.Url.Query,
             context.Request.InputStream, context.Response.OutputStream);
 
         case "StreamExchange":
@@ -242,7 +242,7 @@ namespace Notung.Net
       if (raw.EndsWith("/"))
         raw = raw.Substring(0, raw.Length - 1);
 
-      return raw.Split('/');;
+      return raw.Split('/'); ;
     }
 
     #endregion

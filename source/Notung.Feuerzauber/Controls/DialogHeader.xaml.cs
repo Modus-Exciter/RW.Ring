@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Notung.Feuerzauber.Controls
 {
@@ -11,7 +10,7 @@ namespace Notung.Feuerzauber.Controls
   {
     public DialogHeader()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public bool ShowCloseButton

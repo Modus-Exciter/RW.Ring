@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Notung.Helm.Configuration;
 
@@ -16,7 +11,7 @@ namespace ConfiguratorGraphicalTest
 
     public TestPage2()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       m_sections.Add(new SettingsBindingSource<OuterSectionDataContractName>(m_contract_source));
       m_sections.Add(new SettingsBindingSource<OuterSectionXmlName>(m_xml_source));
     }

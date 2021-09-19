@@ -5,7 +5,6 @@ using System.Resources;
 using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
-using Notung.Data;
 using Notung.Helm.Dialogs;
 using Notung.Helm.Properties;
 using Notung.Loader;
@@ -41,7 +40,7 @@ namespace Notung.Helm
         throw new ArgumentNullException("loadingQueueFactory");
 
       m_form_factory = mainFormFactory;
-      m_queue_factory = loadingQueueFactory; 
+      m_queue_factory = loadingQueueFactory;
     }
 
     /// <summary>
@@ -84,7 +83,7 @@ namespace Notung.Helm
     public int RunApplication()
     {
       Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-      Application.ThreadException += UIExceptionHandler;
+      Application.ThreadException += this.UIExceptionHandler;
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
 

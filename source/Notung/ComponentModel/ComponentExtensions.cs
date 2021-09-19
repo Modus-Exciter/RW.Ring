@@ -20,7 +20,7 @@ namespace Notung.ComponentModel
     /// </summary>
     /// <typeparam name="TService">Тип, который требуется получить</typeparam>
     /// <returns>Значение указанного типа, если IServiceProvider поддерживает этот тип</returns>
-    public static TService GetService<TService>(this IServiceProvider provider) where TService: class
+    public static TService GetService<TService>(this IServiceProvider provider) where TService : class
     {
       return provider.GetService(typeof(TService)) as TService;
     }

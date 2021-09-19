@@ -14,7 +14,7 @@ namespace Notung.Net
     {
       if (serializationFactory == null)
         throw new ArgumentNullException("serializationFactory");
-      
+
       m_base_url = baseUrl.Trim();
       m_factory = serializationFactory;
 
@@ -41,7 +41,7 @@ namespace Notung.Net
           builder.AppendFormat("&{0}={1}", parameters[i].Name, converter.ConvertToString(args[i], i));
       }
 
-      var web_request = CreateWebRequest(builder.ToString());
+      var web_request = this.CreateWebRequest(builder.ToString());
 
       if (request.GetTypes().Length > 0 && !HttpTypeHelper.CanConvert(request.GetType()))
       {
@@ -73,7 +73,7 @@ namespace Notung.Net
       if (processResponse == null)
         throw new ArgumentNullException("processResponse");
 
-      var web_request = CreateWebRequest(string.Format("{0}/StreamExchange/?{1}",
+      var web_request = this.CreateWebRequest(string.Format("{0}/StreamExchange/?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
       web_request.Method = "POST";
@@ -88,7 +88,7 @@ namespace Notung.Net
 
     public byte[] BinaryExchange(string command, byte[] data)
     {
-      var web_request = CreateWebRequest(string.Format("{0}/BinaryExchange?{1}",
+      var web_request = this.CreateWebRequest(string.Format("{0}/BinaryExchange?{1}",
         m_base_url, Uri.EscapeDataString(command)));
 
       web_request.Method = "POST";

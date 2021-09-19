@@ -81,7 +81,7 @@ namespace Schicksal.Basic
     {
       get { return m_factors; }
     }
-    
+
     public override void Run()
     {
       using (var group = new TableMultyDataGroup(m_table, m_factors, m_result, m_filter))
@@ -133,7 +133,7 @@ namespace Schicksal.Basic
 
     [Browsable(false)]
     public string Factor { get; internal set; }
-    
+
     public string Description { get; internal set; }
 
     public double Mean { get; internal set; }

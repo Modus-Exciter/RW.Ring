@@ -8,7 +8,7 @@ namespace Notung.Data
   /// Невзвешенный граф, хранимый в виде списка смежных вершин.
   /// Вершины пронумерованы начиная с нуля, дуги связывают верщины по номерам
   /// </summary>
-  [Serializable] 
+  [Serializable]
   public sealed class UnweightedListGraph : IUnweightedGraph
   {
     private readonly HashSet<int>[] m_forward;

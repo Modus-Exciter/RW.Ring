@@ -26,7 +26,7 @@ namespace Notung.Net
 
     [ThreadStatic]
     private static ClientInfo _thread;
-    
+
     /// <summary>
     /// Имя пользователя, запустившего команду
     /// </summary>

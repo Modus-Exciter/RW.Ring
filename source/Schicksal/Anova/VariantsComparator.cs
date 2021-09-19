@@ -125,7 +125,7 @@ namespace Schicksal.Anova
     public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
     {
       int df;
-      double error = GetError(row1, row2, out df);
+      double error = this.GetError(row1, row2, out df);
       DifferenceInfo result = new DifferenceInfo();
 
       result.Factor1 = row1["Factor"].ToString();
@@ -231,11 +231,11 @@ namespace Schicksal.Anova
       {
         Factor1 = m_factor1_max,
         Factor2 = m_factor2_max,
-        Mean1 = Results.Select(m => m.Mean1).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
-        Mean2 = Results.Select(m => m.Mean2).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
-        MinimalDifference = Results.Select(m => m.MinimalDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
-        ActualDifference = Results.Select(m => m.ActualDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
-        Probability = Results.Select(m => m.Probability).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m))
+        Mean1 = this.Results.Select(m => m.Mean1).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        Mean2 = this.Results.Select(m => m.Mean2).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        MinimalDifference = this.Results.Select(m => m.MinimalDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        ActualDifference = this.Results.Select(m => m.ActualDifference).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m)),
+        Probability = this.Results.Select(m => m.Probability).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m))
       };
     }
 

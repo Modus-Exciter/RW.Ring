@@ -113,7 +113,7 @@ namespace Notung.Configuration
         throw new ArgumentNullException("section");
 
       if (section.GetType() != typeof(TSection))
-        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE, 
+        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE,
           typeof(TSection), section.GetType()));
 
       using (m_lock.WriteLock())
@@ -164,11 +164,11 @@ namespace Notung.Configuration
 
       using (var sw = new StringWriter(sb))
       {
-        var writer = new XmlTextWriter(sw) 
-        { 
-          Formatting = Formatting.Indented, 
-          IndentChar = '\t', 
-          Indentation = 1, 
+        var writer = new XmlTextWriter(sw)
+        {
+          Formatting = Formatting.Indented,
+          IndentChar = '\t',
+          Indentation = 1,
         };
 
         if (data_contract)
@@ -222,7 +222,7 @@ namespace Notung.Configuration
       _log.DebugFormat("ReadSection(): {0}", sectionType.FullName);
 
       section_name = this.GetSectionName(sectionType, out data_contract);
-      string section_xml = null;
+      string section_xml;
 
       if (m_file.TryGetSection(section_name, out section_xml))
       {

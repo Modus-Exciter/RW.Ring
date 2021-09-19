@@ -17,7 +17,7 @@ namespace Notung.Data
         throw new SerializationException(string.Format(
           "Type '{0}' in Assembly '{1}' is not marked as serializable.", typeof(T), typeof(T).Assembly));
     }
-    
+
     public SerializeCondition(T value) : this()
     {
       this.Value = value;
@@ -30,9 +30,7 @@ namespace Notung.Data
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
-      T value = this.Value;
-
-      if (!CanSerialize)
+      if (!this.CanSerialize)
         info.AddValue("Value", default(T), typeof(T));
       else
         info.AddValue("Value", this.Value);
@@ -70,7 +68,7 @@ namespace Notung.Data
 
     public bool CanSerialize
     {
-      get { return Value != null && Value.GetType().IsDefined(typeof(SerializableAttribute), false); }
+      get { return this.Value != null && this.Value.GetType().IsDefined(typeof(SerializableAttribute), false); }
     }
 
     public T Value { get; set; }

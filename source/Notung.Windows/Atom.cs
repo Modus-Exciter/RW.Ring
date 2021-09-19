@@ -52,13 +52,13 @@ namespace Notung.Helm.Windows
     {
       if (bufferSize < 1)
         throw new ArgumentOutOfRangeException("bufferSize");
-      
+
       m_handle = (ushort)handle;
       m_buffer_size = bufferSize;
-      var m_buffer = new StringBuilder(m_buffer_size);
+      var buffer = new StringBuilder(m_buffer_size);
 
-      if (GlobalGetAtomName(m_handle, m_buffer, m_buffer_size) != 0)
-        m_text = m_buffer.ToString();
+      if (GlobalGetAtomName(m_handle, buffer, m_buffer_size) != 0)
+        m_text = buffer.ToString();
       else
         m_handle = 0;
     }
@@ -105,7 +105,7 @@ namespace Notung.Helm.Windows
     {
       return WinAPIHelper.SendMessage(destination, messageCode, new IntPtr(m_buffer_size), this.Handle);
     }
-    
+
     public override bool Equals(object obj)
     {
       var other = obj as Atom;
@@ -130,7 +130,7 @@ namespace Notung.Helm.Windows
     {
       this.Dispose(false);
     }
-    
+
     public void Dispose()
     {
       this.Dispose(true);

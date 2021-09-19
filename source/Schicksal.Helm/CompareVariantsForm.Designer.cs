@@ -128,7 +128,7 @@
       // 
       resources.ApplyResources(this.m_cmd_copy_chart, "m_cmd_copy_chart");
       this.m_cmd_copy_chart.Name = "m_cmd_copy_chart";
-      this.m_cmd_copy_chart.Click += new System.EventHandler(this.m_cmd_copy_chart_Click);
+      this.m_cmd_copy_chart.Click += new System.EventHandler(this.Cmd_copy_chart_Click);
       // 
       // m_tab_control
       // 
@@ -195,8 +195,8 @@
       dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
       this.m_nsr_grid.DefaultCellStyle = dataGridViewCellStyle2;
       this.m_nsr_grid.Name = "m_nsr_grid";
-      this.m_nsr_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_nsr_grid_CellDoubleClick);
-      this.m_nsr_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_nsr_grid_CellPainting);
+      this.m_nsr_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Nsr_grid_CellDoubleClick);
+      this.m_nsr_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.Nsr_grid_CellPainting);
       // 
       // factor1DataGridViewTextBoxColumn
       // 
@@ -258,7 +258,7 @@
       // 
       resources.ApplyResources(this.m_cmd_filter, "m_cmd_filter");
       this.m_cmd_filter.Name = "m_cmd_filter";
-      this.m_cmd_filter.Click += new System.EventHandler(this.m_cmd_filter_Click);
+      this.m_cmd_filter.Click += new System.EventHandler(this.Cmd_filter_Click);
       // 
       // m_binding_source
       // 

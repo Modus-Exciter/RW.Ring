@@ -50,9 +50,9 @@ namespace Schicksal.Anova
 
       using (var writer = new HtmlWriter(m_file, Encoding.UTF8, Resources.REPORT))
       {
-        WriteStartTable(writer);
+        this.WriteStartTable(writer);
 
-        WriteCommonTestDescription(writer);
+        this.WriteCommonTestDescription(writer);
         writer.WriteHeader(Resources.SIGNIFICAT_FACTORS, 1);
 
         var significant = m_results.Where(r => r.P <= m_probability).ToList();
@@ -75,7 +75,7 @@ namespace Schicksal.Anova
         {
           this.ReportProgress(i * 100 / significant.Count, significant[i].Factor);
 
-          WriteFactorResults(writer, significant[i], descriptions, i);
+          this.WriteFactorResults(writer, significant[i], descriptions, i);
         }
 
         using (writer.CreateParagraph())
@@ -123,7 +123,7 @@ namespace Schicksal.Anova
 
         var max_dif = comparator.Results[0];
         var sig_dif = comparator.Results[0];
-        var max_val = new Tuple<string, double>(comparator.Results[0].Factor1,comparator.Results[0].Mean1);  //comparator.Results[0];
+        var max_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1);  //comparator.Results[0];
         var min_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1);//comparator.Results[0];
 
         for (int i = 0; i < comparator.Results.Length; i++)
@@ -220,10 +220,10 @@ namespace Schicksal.Anova
               max = m_results[i];
           }
 
-          writer.WriteText(string.Format(Resources.MAX_INFLUENCE, 
+          writer.WriteText(string.Format(Resources.MAX_INFLUENCE,
             max.Factor, HtmlWriter.FormatValue(max.P * 100)));
 
-          writer.WriteText(string.Format(Resources.MIN_INFLUENCE, 
+          writer.WriteText(string.Format(Resources.MIN_INFLUENCE,
             min.Factor, HtmlWriter.FormatValue(min.P * 100)));
         }
       }

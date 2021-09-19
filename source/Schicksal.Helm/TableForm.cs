@@ -14,7 +14,7 @@ namespace Schicksal.Helm
   {
     public TableForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public DataTable DataSource
@@ -24,7 +24,7 @@ namespace Schicksal.Helm
       {
         if (ReferenceEquals(value, m_grid.DataSource))
           return;
-        
+
         m_grid.DataSource = value;
 
         if (value != null)
@@ -64,7 +64,7 @@ namespace Schicksal.Helm
         m_grid.AutoResizeColumns();
     }
 
-    private void m_grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+    private void Grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -141,17 +141,17 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
+    private void Grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
     {
       AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
     }
 
-    private void m_switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
     {
       m_cmd_remove.Text = Resources.REMOVE;
     }
 
-    private void m_cmd_remove_Click(object sender, EventArgs e)
+    private void Cmd_remove_Click(object sender, EventArgs e)
     {
       if (m_grid.Rows.Count > 0 && m_grid.AllowUserToDeleteRows && m_grid.SelectedRows.Count > 0)
         m_grid.Rows.Remove(m_grid.SelectedRows[0]);

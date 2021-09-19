@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace ConfiguratorGraphicalTest
 {
@@ -13,7 +6,7 @@ namespace ConfiguratorGraphicalTest
   {
     public SelectFunctionDialog(string[] items)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       m_list_box.Items.AddRange(items);
     }

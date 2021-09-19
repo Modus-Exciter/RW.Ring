@@ -12,7 +12,6 @@ namespace LogAnalyzer
 {
   class MainWindowContext : ObservableObject
   {
-    private string m_file_name = string.Empty;
     private string m_separator = "===============================================";
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
     private readonly Dictionary<string, WeakReference> m_tables = new Dictionary<string, WeakReference>();
@@ -33,7 +32,8 @@ namespace LogAnalyzer
 
     public void OpenConfig(string fileName)
     {
-      XmlDocument doc = new XmlDocument();
+      var doc = new XmlDocument();
+
       doc.Load(fileName);
 
       var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
@@ -74,7 +74,9 @@ namespace LogAnalyzer
     {
       if (!Directory.EnumerateFiles(selectedPath, "*.log").Any() &&
         Directory.Exists(Path.Combine(selectedPath, "Logs")))
+      {
         selectedPath = Path.Combine(selectedPath, "Logs");
+      }
 
       try
       {
@@ -84,18 +86,16 @@ namespace LogAnalyzer
           Table = this.GetDataTable(selectedPath, this.LoadLogDirectory)
         };
 
-        if (entry.Table.Columns.Count > 0)
-        {
-          return entry;
-        }
-        else
+        if (entry.Table.Columns.Count == 0)
         {
           m_tables.Remove(selectedPath);
 
           if (this.MessageRecieved != null)
             this.MessageRecieved(this, new MessageEventArgs("В указанной папке протоколы не найдены"));
         }
-      }
+        else
+          return entry;
+     }
       catch (Exception ex)
       {
         if (this.MessageRecieved != null)
@@ -179,7 +179,7 @@ namespace LogAnalyzer
             if (table.Columns.Contains("Message"))
             {
               var message = table.Rows[table.Rows.Count - 1]["Message"].ToString();
-              var message_lines = message.Split(new string[] { Environment.NewLine }, 
+              var message_lines = message.Split(new string[] { Environment.NewLine },
                 StringSplitOptions.RemoveEmptyEntries);
 
               table.Rows[table.Rows.Count - 1]["Message"] = message_lines[0];

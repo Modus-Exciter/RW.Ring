@@ -27,7 +27,8 @@ namespace ConfiguratorGraphicalTest
 
       ApplicationStarter starter = new ApplicationStarter(
         new DeferredFactory<Form>("ConfiguratorGraphicalTest", "ConfiguratorGraphicalTest.Form1"),
-        Factory.Default<ILoadingQueue, TestLoadingQueue>()) { AllowOnlyOneInstance = true };
+        Factory.Default<ILoadingQueue, TestLoadingQueue>())
+      { AllowOnlyOneInstance = true };
 
       return starter.RunApplication();
     }
@@ -70,34 +71,34 @@ namespace ConfiguratorGraphicalTest
 
       public bool Load(LoadingContext context)
       {
-        Report(context, 0, "Form1.InnerSectionDefault");
+        this.Report(context, 0, "Form1.InnerSectionDefault");
         AppManager.Configurator.GetSection<Form1.InnerSectionDefault>();
 
-        Report(context, 10, "Form1.InnerSectionDataContract");
+        this.Report(context, 10, "Form1.InnerSectionDataContract");
         AppManager.Configurator.GetSection<Form1.InnerSectionDataContract>();
 
-        Report(context, 20, "Form1.InnerSectionDataContractName");
+        this.Report(context, 20, "Form1.InnerSectionDataContractName");
         AppManager.Configurator.GetSection<Form1.InnerSectionDataContractName>();
 
-        Report(context, 30, "Form1.InnerSectionXml");
+        this.Report(context, 30, "Form1.InnerSectionXml");
         AppManager.Configurator.GetSection<Form1.InnerSectionXml>();
 
-        Report(context, 40, "Form1.InnerSectionXmlName");
+        this.Report(context, 40, "Form1.InnerSectionXmlName");
         AppManager.Configurator.GetSection<Form1.InnerSectionXmlName>();
 
-        Report(context, 50, "OuterSectionDefault");
+        this.Report(context, 50, "OuterSectionDefault");
         AppManager.Configurator.GetSection<OuterSectionDefault>();
 
-        Report(context, 60, "OuterSectionDataContract");
+        this.Report(context, 60, "OuterSectionDataContract");
         AppManager.Configurator.GetSection<OuterSectionDataContract>();
-        
-        Report(context, 70, "OuterSectionDataContractName");
+
+        this.Report(context, 70, "OuterSectionDataContractName");
         AppManager.Configurator.GetSection<OuterSectionDataContractName>();
-        
-        Report(context, 80, "OuterSectionXml");
+
+        this.Report(context, 80, "OuterSectionXml");
         AppManager.Configurator.GetSection<OuterSectionXml>();
-        
-        Report(context, 90, "OuterSectionXmlName");
+
+        this.Report(context, 90, "OuterSectionXmlName");
         AppManager.Configurator.GetSection<OuterSectionXmlName>();
 
         context.Container.AddService(new HelpItem());
@@ -111,7 +112,7 @@ namespace ConfiguratorGraphicalTest
       {
         if (start == 0)
           m_current = DateTime.Now;
-        
+
         context.Indicator.ReportProgress(start, string.Format("Loading section {0}...", section));
         System.Threading.Thread.Sleep(DateTime.Now - m_current);
         context.Indicator.ReportProgress(start + 5, string.Format("Loading section {0}...", section));
@@ -133,8 +134,8 @@ namespace ConfiguratorGraphicalTest
 
   public class OuterSectionDefault : ConfigurationSection
   {
-    public string[] Lines{get; set;}
-        
+    public string[] Lines { get; set; }
+
     [XmlAttribute]
     public int Number { get; set; }
 
@@ -163,7 +164,7 @@ namespace ConfiguratorGraphicalTest
     {
       get { return m_items; }
     }
-    
+
     [DataMember]
     [DefaultValue(42)]
     public int Number { get; set; }
@@ -177,7 +178,7 @@ namespace ConfiguratorGraphicalTest
     public override bool Validate(InfoBuffer buffer)
     {
       System.Threading.Thread.Sleep(700);
-      
+
       if (this.Number < 1)
       {
         buffer.Add("Number must be more than 1", InfoLevel.Warning);
@@ -191,7 +192,7 @@ namespace ConfiguratorGraphicalTest
   [DataContract(Name = "Outer_CONTRACT")]
   public class OuterSectionDataContractName : ConfigurationSection
   {
-    [DataMember(Name="Items")]
+    [DataMember(Name = "Items")]
     private readonly List<HelpItem> m_items = new List<HelpItem>();
     [DataMember(Name = "Map")]
     private readonly Dictionary<string, int> m_dic = new Dictionary<string, int>();
@@ -225,7 +226,7 @@ namespace ConfiguratorGraphicalTest
     {
       get { return m_items; }
     }
-    
+
     public int Number { get; set; }
 
     [DefaultValue("Valhalla")]
@@ -243,12 +244,12 @@ namespace ConfiguratorGraphicalTest
     {
       get { return m_items; }
     }
-    
+
     public int Number { get; set; }
 
     [DefaultValue("Valhalla")]
     public string Text { get; set; }
 
     public OuterEnum Nom { get; set; }
-  }    
+  }
 }

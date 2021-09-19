@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 
 namespace Notung.Feuerzauber.Dialogs
 {
@@ -10,7 +9,7 @@ namespace Notung.Feuerzauber.Dialogs
   {
     public AboutBox()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
   }
 }

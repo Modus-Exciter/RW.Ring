@@ -9,10 +9,10 @@ namespace Schicksal.Helm
 {
   public partial class AncovaResultsForm : Form
   {
-    private Color m_significat_color;
+    private readonly Color m_significat_color;
     public AncovaResultsForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
     }
 
@@ -51,7 +51,7 @@ namespace Schicksal.Helm
       m_grid.AutoResizeColumns();
     }
 
-    private void m_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -71,7 +71,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+    private void Grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
     {
       if (e.RowIndex < 0)
         return;

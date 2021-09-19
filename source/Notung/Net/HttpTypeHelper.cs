@@ -10,7 +10,7 @@ namespace Notung.Net
   {
     private static readonly SharedLock _lock = new SharedLock(false);
     private static readonly Dictionary<Type, bool> _can_convert = new Dictionary<Type, bool>();
-    private static readonly Dictionary<Type, HttpConversionHelper> _converters 
+    private static readonly Dictionary<Type, HttpConversionHelper> _converters
       = new Dictionary<Type, HttpConversionHelper>();
 
     public static bool CanConvert(Type parametersType)
@@ -46,8 +46,8 @@ namespace Notung.Net
 
             if (type.IsByRef)
               type = type.GetElementType();
-            
-            converters[i] = TypeDescriptor.GetConverter(agruments[i]);
+
+            converters[i] = TypeDescriptor.GetConverter(type);
 
             if (!converters[i].CanConvertFrom(typeof(string)))
             {

@@ -27,7 +27,7 @@ namespace Schicksal.Helm
 
     public MainForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       var size = Screen.PrimaryScreen.WorkingArea.Size;
       this.Size = new System.Drawing.Size(size.Width * 3 / 4, size.Height * 3 / 4);
@@ -72,7 +72,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_lang_LanguageChanged(object sender, LanguageEventArgs e)
+    private void Lang_LanguageChanged(object sender, LanguageEventArgs e)
     {
       m_menu_file.Text = Resources.FILE;
       m_menu_last_files.Text = Resources.LAST_FILES;
@@ -98,12 +98,12 @@ namespace Schicksal.Helm
         item.Text = item.Tag.ToString();
     }
 
-    private void m_menu_last_files_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    private void Menu_last_files_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
     {
-      OpenFile(e.ClickedItem.Text);
+      this.OpenFile(e.ClickedItem.Text);
     }
 
-    private void m_cmd_new_Click(object sender, EventArgs e)
+    private void Cmd_new_Click(object sender, EventArgs e)
     {
       using (var dlg = new EditColumnsDialog())
       {
@@ -121,7 +121,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_cmd_open_Click(object sender, EventArgs e)
+    private void Cmd_open_Click(object sender, EventArgs e)
     {
       using (var dlg = new OpenFileDialog())
       {
@@ -171,12 +171,12 @@ namespace Schicksal.Helm
       var table_form = this.MdiChildren.OfType<TableForm>().FirstOrDefault(f => f.FileName == fileName);
 
       if (table_form == null)
-        this.OpenTableForm(fileName, ReadFile(fileName));
+        this.OpenTableForm(fileName, this.ReadFile(fileName));
       else
         table_form.Activate();
     }
 
-    private void m_cmd_save_Click(object sender, EventArgs e)
+    private void Cmd_save_Click(object sender, EventArgs e)
     {
       var table_form = this.ActiveMdiChild as TableForm;
 
@@ -187,7 +187,7 @@ namespace Schicksal.Helm
       this.FillLastFilesMenu();
     }
 
-    private void m_cmd_save_as_Click(object sender, EventArgs e)
+    private void Cmd_save_as_Click(object sender, EventArgs e)
     {
       var table_form = this.ActiveMdiChild as TableForm;
 
@@ -198,9 +198,9 @@ namespace Schicksal.Helm
       this.FillLastFilesMenu();
     }
 
-    private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+    private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      using (var settings = new SettingsDialog { DefaultPage = typeof(MainPropertyPage)})
+      using (var settings = new SettingsDialog { DefaultPage = typeof(MainPropertyPage) })
         settings.ShowDialog(this);
     }
 
@@ -231,27 +231,27 @@ namespace Schicksal.Helm
         table_form.Activate();
     }
 
-    private void studentToolStripMenuItem_Click(object sender, EventArgs e)
+    private void StudentToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<Student>", Resources.STUDENT, StatisticsTables.GetStudentTable);
+      this.OpenReadOnlyTable("<Student>", Resources.STUDENT, StatisticsTables.GetStudentTable);
     }
 
-    private void fisher5ToolStripMenuItem_Click(object sender, EventArgs e)
+    private void Fisher5ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<Fisher005>", string.Format("{0} (5%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.05));
+      this.OpenReadOnlyTable("<Fisher005>", string.Format("{0} (5%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.05));
     }
 
-    private void fisher1ToolStripMenuItem_Click(object sender, EventArgs e)
+    private void Fisher1ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<Fisher001>", string.Format("{0} (1%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.01));
+      this.OpenReadOnlyTable("<Fisher001>", string.Format("{0} (1%)", Resources.FISHER), () => StatisticsTables.GetFTable(0.01));
     }
 
-    private void x2ToolStripMenuItem_Click(object sender, EventArgs e)
+    private void X2ToolStripMenuItem_Click(object sender, EventArgs e)
     {
-      OpenReadOnlyTable("<X^2>", string.Format("X^2 {0}", Resources.DISTRIBUTION), StatisticsTables.GetChiSquare);
+      this.OpenReadOnlyTable("<X^2>", string.Format("X^2 {0}", Resources.DISTRIBUTION), StatisticsTables.GetChiSquare);
     }
 
-    private void m_cmd_anova_Click(object sender, EventArgs e)
+    private void Cmd_anova_Click(object sender, EventArgs e)
     {
       var table_form = this.ActiveMdiChild as TableForm;
 
@@ -276,7 +276,7 @@ namespace Schicksal.Helm
 
           processor.RunInParrallel = true;
 
-          if (AppManager.OperationLauncher.Run(processor, 
+          if (AppManager.OperationLauncher.Run(processor,
             new LaunchParameters
             {
               Caption = Resources.ANOVA,
@@ -285,7 +285,7 @@ namespace Schicksal.Helm
           {
             dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
             var results_form = new AnovaResultsForm();
-            results_form.Text = string.Format("{0}: {1}, p={2}", 
+            results_form.Text = string.Format("{0}: {1}, p={2}",
               Resources.ANOVA, table_form.Text, dlg.DataSource.Probability);
             results_form.DataSource = processor.Result;
             results_form.SourceTable = table;
@@ -311,9 +311,9 @@ namespace Schicksal.Helm
       if (this.InvokeRequired)
         this.Invoke(new Action<IList<ITableImport>>(this.CreateImportMenu), imports);
       else
-        CreateImportMenu(imports);
+        this.CreateImportMenu(imports);
 
-      LoadFilesFromCommandArgs();
+      this.LoadFilesFromCommandArgs();
 
       return true;
     }
@@ -327,9 +327,9 @@ namespace Schicksal.Helm
           AppManager.Configurator.GetSection<Program.Preferences>().LastFiles[arg] = DateTime.Now;
 
           if (this.InvokeRequired)
-            this.Invoke(new Action<string, DataTable>(this.OpenTableForm), arg, ReadFile(arg));
+            this.Invoke(new Action<string, DataTable>(this.OpenTableForm), arg, this.ReadFile(arg));
           else
-            this.OpenTableForm(arg, ReadFile(arg));
+            this.OpenTableForm(arg, this.ReadFile(arg));
         }
       }
 
@@ -342,7 +342,7 @@ namespace Schicksal.Helm
     private void CreateImportMenu(IList<ITableImport> imports)
     {
       m_menu_import.DropDownItems.Clear();
-      
+
       foreach (var import in imports)
         m_menu_import.DropDownItems.Add(import.ToString()).Tag = import;
 
@@ -362,7 +362,7 @@ namespace Schicksal.Helm
       get { return new[] { typeof(IList<ITableImport>) }; }
     }
 
-    private void m_menu_import_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+    private void Menu_import_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
     {
       var import = e.ClickedItem.Tag as ITableImport;
 
@@ -391,13 +391,13 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_cmd_about_Click(object sender, EventArgs e)
+    private void Cmd_about_Click(object sender, EventArgs e)
     {
       using (var box = new AboutBox())
         box.ShowDialog(this);
     }
 
-    private void m_cmd_basic_Click(object sender, EventArgs e)
+    private void Cmd_basic_Click(object sender, EventArgs e)
     {
       var table_form = this.ActiveMdiChild as TableForm;
 
@@ -413,10 +413,10 @@ namespace Schicksal.Helm
       {
         dlg.Text = Resources.BASIC_STATISTICS;
         dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
-        
+
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          var processor = new DescriptionStatisticsCalculator(table, dlg.DataSource.Predictors.ToArray(), 
+          var processor = new DescriptionStatisticsCalculator(table, dlg.DataSource.Predictors.ToArray(),
             dlg.DataSource.Result, dlg.DataSource.Filter, dlg.DataSource.Probability);
 
           if (AppManager.OperationLauncher.Run(processor,
@@ -439,7 +439,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void ancovaToolStripMenuItem_Click(object sender, EventArgs e)
+    private void AncovaToolStripMenuItem_Click(object sender, EventArgs e)
     {
       var table_form = this.ActiveMdiChild as TableForm;
 
@@ -480,10 +480,6 @@ namespace Schicksal.Helm
             results_form.SourceTable = table;
             results_form.Show(this);
           }
-          //{
-          //  results_form.Factors = processor.Factors;
-          //  results_form.ResultColumn = dlg.DataSource.Result;
-          //}
         }
       }
     }

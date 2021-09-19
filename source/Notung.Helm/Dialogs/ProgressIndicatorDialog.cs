@@ -7,7 +7,7 @@ namespace Notung.Helm.Dialogs
   {
     public ProgressIndicatorDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.MinimumSize = new System.Drawing.Size(this.Width, m_button.Bottom + 2
         + (this.Size.Height - this.ClientSize.Height));
@@ -77,7 +77,7 @@ namespace Notung.Helm.Dialogs
 
     string IProcessIndicatorView.StateText
     {
-      get { return m_state_label.Text ; }
+      get { return m_state_label.Text; }
       set { m_state_label.Text = value; }
     }
 

@@ -25,7 +25,7 @@ namespace Notung.Data
       else
         m_matrix = new TriangleBitMatrix(peakCount);
     }
-    
+
     public int PeakCount
     {
       get { return m_matrix.RowCount; }

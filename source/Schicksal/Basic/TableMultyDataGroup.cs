@@ -50,7 +50,7 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], this.GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!string.IsNullOrEmpty(filter))
@@ -136,7 +136,7 @@ namespace Schicksal.Basic
 
     public string GetKey(int index)
     {
-      return ((DataViewGroup)m_views[index]).View.RowFilter;
+      return m_views[index].View.RowFilter;
     }
 
     public int GetIndex(string rowFilter)
@@ -151,7 +151,7 @@ namespace Schicksal.Basic
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return GetEnumerator();
+      return this.GetEnumerator();
     }
 
     private class DataViewGroup : IDataGroup
@@ -188,7 +188,7 @@ namespace Schicksal.Basic
 
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
       {
-        return GetEnumerator();
+        return this.GetEnumerator();
       }
 
       public override string ToString()

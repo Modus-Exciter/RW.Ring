@@ -29,8 +29,6 @@ namespace Notung.Net
   [Serializable, DataContract(Name = "PL", Namespace = "")]
   public sealed class ParametersList : IParametersList
   {
-    private static readonly ParametersList _instance = new ParametersList();
-
     /// <summary>
     /// Преобразование метода и значений его параметров в объект упаковки
     /// </summary>
@@ -130,7 +128,7 @@ namespace Notung.Net
 
       public sealed override string ToString()
       {
-        return string.Join(", ", GetValues());
+        return string.Join(", ", this.GetValues());
       }
     }
 
@@ -218,7 +216,7 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4> : ParametersListBase
     {
-      private static readonly Type[] _types 
+      private static readonly Type[] _types
         = new Type[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
 
       [DataMember(Name = "A", EmitDefaultValue = false)]
@@ -252,8 +250,8 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4, T5> : ParametersListBase
     {
-      private static readonly Type[] _types = new Type[] 
-      { 
+      private static readonly Type[] _types = new Type[]
+      {
         typeof(T1),
         typeof(T2),
         typeof(T3),
@@ -295,8 +293,8 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4, T5, T6> : ParametersListBase
     {
-      private static readonly Type[] _types = new Type[] 
-      { 
+      private static readonly Type[] _types = new Type[]
+      {
         typeof(T1),
         typeof(T2),
         typeof(T3),
@@ -342,8 +340,8 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4, T5, T6, T7> : ParametersListBase
     {
-      private static readonly Type[] _types = new Type[] 
-      { 
+      private static readonly Type[] _types = new Type[]
+      {
         typeof(T1),
         typeof(T2),
         typeof(T3),
@@ -393,8 +391,8 @@ namespace Notung.Net
     [Serializable, DataContract(Name = "PL", Namespace = "")]
     private sealed class ParamList<T1, T2, T3, T4, T5, T6, T7, T8> : ParametersListBase
     {
-      private static readonly Type[] _types = new Type[] 
-      { 
+      private static readonly Type[] _types = new Type[]
+      {
         typeof(T1),
         typeof(T2),
         typeof(T3),

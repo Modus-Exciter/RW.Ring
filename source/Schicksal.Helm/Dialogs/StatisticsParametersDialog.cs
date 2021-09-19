@@ -13,7 +13,7 @@ namespace Schicksal.Helm.Dialogs
   {
     public StatisticsParametersDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
       m_probability_edit.Items.AddRange(new object[] { 0.05, 0.01, 0.001 });
     }
 
@@ -23,12 +23,12 @@ namespace Schicksal.Helm.Dialogs
       set { m_binding_source.DataSource = (object)value ?? typeof(AnovaDialogData); }
     }
 
-    private void m_button_left_Click(object sender, EventArgs e)
+    private void Button_left_Click(object sender, EventArgs e)
     {
       this.DataSource.AddPredictor(m_list_total.Text);
     }
 
-    private void m_button_right_Click(object sender, EventArgs e)
+    private void Button_right_Click(object sender, EventArgs e)
     {
       this.DataSource.RemovePredictor(m_list_selected.Text);
     }
@@ -46,7 +46,7 @@ namespace Schicksal.Helm.Dialogs
     {
       if (table == null)
         throw new ArgumentNullException("table");
-      
+
       foreach (DataColumn column in table.Columns)
       {
         m_total_columns.Add(column.ColumnName);

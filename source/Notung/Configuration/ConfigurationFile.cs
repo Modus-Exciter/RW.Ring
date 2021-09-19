@@ -35,15 +35,15 @@ namespace Notung.Configuration
     {
       get
       {
-        if (section == null) 
-          throw new ArgumentNullException("section"); 
+        if (section == null)
+          throw new ArgumentNullException("section");
 
         return this.Sections[section];
       }
       set
       {
-        if (section == null) 
-          throw new ArgumentNullException("section"); 
+        if (section == null)
+          throw new ArgumentNullException("section");
 
         this.Sections[section] = value;
       }
@@ -51,7 +51,7 @@ namespace Notung.Configuration
 
     public bool TryGetSection(string sectionName, out string sectionXml)
     {
-      if (sectionName == null) 
+      if (sectionName == null)
         throw new ArgumentNullException("sectionName");
 
       return this.Sections.TryGetValue(sectionName, out sectionXml);
@@ -128,9 +128,9 @@ namespace Notung.Configuration
 
       try
       {
-        using (FileStream fs = new FileStream(file_name, FileMode.Open, FileAccess.Read))
+        using (var fs = new FileStream(file_name, FileMode.Open, FileAccess.Read))
         {
-          XmlTextReader reader = new XmlTextReader(fs);
+          var reader = new XmlTextReader(fs);
 
           while (reader.Read())
           {

@@ -60,7 +60,7 @@
       // 
       // m_lang
       // 
-      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_lang_LanguageChanged);
+      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Lang_LanguageChanged);
       // 
       // m_main_menu
       // 
@@ -101,7 +101,7 @@
       this.m_cmd_new.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
       this.m_cmd_new.Size = new System.Drawing.Size(151, 22);
       this.m_cmd_new.Text = "New";
-      this.m_cmd_new.Click += new System.EventHandler(this.m_cmd_new_Click);
+      this.m_cmd_new.Click += new System.EventHandler(this.Cmd_new_Click);
       // 
       // m_cmd_open
       // 
@@ -110,7 +110,7 @@
       this.m_cmd_open.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
       this.m_cmd_open.Size = new System.Drawing.Size(151, 22);
       this.m_cmd_open.Text = "Open";
-      this.m_cmd_open.Click += new System.EventHandler(this.m_cmd_open_Click);
+      this.m_cmd_open.Click += new System.EventHandler(this.Cmd_open_Click);
       // 
       // m_cmd_save
       // 
@@ -120,7 +120,7 @@
       this.m_cmd_save.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
       this.m_cmd_save.Size = new System.Drawing.Size(151, 22);
       this.m_cmd_save.Text = "Save";
-      this.m_cmd_save.Click += new System.EventHandler(this.m_cmd_save_Click);
+      this.m_cmd_save.Click += new System.EventHandler(this.Cmd_save_Click);
       // 
       // m_cmd_save_as
       // 
@@ -129,7 +129,7 @@
       this.m_cmd_save_as.Name = "m_cmd_save_as";
       this.m_cmd_save_as.Size = new System.Drawing.Size(151, 22);
       this.m_cmd_save_as.Text = "Save As";
-      this.m_cmd_save_as.Click += new System.EventHandler(this.m_cmd_save_as_Click);
+      this.m_cmd_save_as.Click += new System.EventHandler(this.Cmd_save_as_Click);
       // 
       // m_last_files_separator
       // 
@@ -141,7 +141,7 @@
       this.m_menu_last_files.Name = "m_menu_last_files";
       this.m_menu_last_files.Size = new System.Drawing.Size(151, 22);
       this.m_menu_last_files.Text = "Last files";
-      this.m_menu_last_files.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_menu_last_files_DropDownItemClicked);
+      this.m_menu_last_files.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Menu_last_files_DropDownItemClicked);
       // 
       // toolStripSeparator2
       // 
@@ -154,14 +154,14 @@
       this.m_cmd_settings.Name = "m_cmd_settings";
       this.m_cmd_settings.Size = new System.Drawing.Size(151, 22);
       this.m_cmd_settings.Text = "Settings";
-      this.m_cmd_settings.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+      this.m_cmd_settings.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
       // 
       // m_menu_import
       // 
       this.m_menu_import.Name = "m_menu_import";
       this.m_menu_import.Size = new System.Drawing.Size(51, 20);
       this.m_menu_import.Text = "Import";
-      this.m_menu_import.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_menu_import_DropDownItemClicked);
+      this.m_menu_import.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Menu_import_DropDownItemClicked);
       // 
       // m_menu_analyze
       // 
@@ -180,7 +180,7 @@
       this.m_cmd_basic.Name = "m_cmd_basic";
       this.m_cmd_basic.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_basic.Text = "Basic statistics";
-      this.m_cmd_basic.Click += new System.EventHandler(this.m_cmd_basic_Click);
+      this.m_cmd_basic.Click += new System.EventHandler(this.Cmd_basic_Click);
       // 
       // m_cmd_anova
       // 
@@ -188,7 +188,7 @@
       this.m_cmd_anova.Name = "m_cmd_anova";
       this.m_cmd_anova.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_anova.Text = "ANOVA";
-      this.m_cmd_anova.Click += new System.EventHandler(this.m_cmd_anova_Click);
+      this.m_cmd_anova.Click += new System.EventHandler(this.Cmd_anova_Click);
       // 
       // m_cmd_ancova
       // 
@@ -196,7 +196,7 @@
       this.m_cmd_ancova.Name = "m_cmd_ancova";
       this.m_cmd_ancova.Size = new System.Drawing.Size(154, 22);
       this.m_cmd_ancova.Text = "ANCOVA";
-      this.m_cmd_ancova.Click += new System.EventHandler(this.ancovaToolStripMenuItem_Click);
+      this.m_cmd_ancova.Click += new System.EventHandler(this.AncovaToolStripMenuItem_Click);
       // 
       // m_menu_standard_tables
       // 
@@ -214,28 +214,28 @@
       this.m_cmd_student.Name = "m_cmd_student";
       this.m_cmd_student.Size = new System.Drawing.Size(138, 22);
       this.m_cmd_student.Text = "Student";
-      this.m_cmd_student.Click += new System.EventHandler(this.studentToolStripMenuItem_Click);
+      this.m_cmd_student.Click += new System.EventHandler(this.StudentToolStripMenuItem_Click);
       // 
       // m_cmd_fisher_5
       // 
       this.m_cmd_fisher_5.Name = "m_cmd_fisher_5";
       this.m_cmd_fisher_5.Size = new System.Drawing.Size(138, 22);
       this.m_cmd_fisher_5.Text = "Fisher, 5%";
-      this.m_cmd_fisher_5.Click += new System.EventHandler(this.fisher5ToolStripMenuItem_Click);
+      this.m_cmd_fisher_5.Click += new System.EventHandler(this.Fisher5ToolStripMenuItem_Click);
       // 
       // m_cmd_fisher_1
       // 
       this.m_cmd_fisher_1.Name = "m_cmd_fisher_1";
       this.m_cmd_fisher_1.Size = new System.Drawing.Size(138, 22);
       this.m_cmd_fisher_1.Text = "Fisher, 1%";
-      this.m_cmd_fisher_1.Click += new System.EventHandler(this.fisher1ToolStripMenuItem_Click);
+      this.m_cmd_fisher_1.Click += new System.EventHandler(this.Fisher1ToolStripMenuItem_Click);
       // 
       // m_cmd_chi2
       // 
       this.m_cmd_chi2.Name = "m_cmd_chi2";
       this.m_cmd_chi2.Size = new System.Drawing.Size(138, 22);
       this.m_cmd_chi2.Text = "X^2";
-      this.m_cmd_chi2.Click += new System.EventHandler(this.x2ToolStripMenuItem_Click);
+      this.m_cmd_chi2.Click += new System.EventHandler(this.X2ToolStripMenuItem_Click);
       // 
       // m_menu_windows
       // 
@@ -259,7 +259,7 @@
       this.m_cmd_about.Name = "m_cmd_about";
       this.m_cmd_about.Size = new System.Drawing.Size(114, 22);
       this.m_cmd_about.Text = "About";
-      this.m_cmd_about.Click += new System.EventHandler(this.m_cmd_about_Click);
+      this.m_cmd_about.Click += new System.EventHandler(this.Cmd_about_Click);
       // 
       // MainForm
       // 

@@ -21,7 +21,7 @@ namespace Notung.ComponentModel
 
     private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
 
-    static LanguageSwitcher() 
+    static LanguageSwitcher()
     {
       ThreadTracker.AddThreadHandlers(OnThreadRegistered, null, OnThreadError);
     }
@@ -124,7 +124,7 @@ namespace Notung.ComponentModel
           else
             expired_threads.Add(thread);
         }
-        catch(Exception error)
+        catch (Exception error)
         {
           OnThreadError(thread, error);
         }
@@ -176,7 +176,7 @@ namespace Notung.ComponentModel
   public class LanguageEventArgs : EventArgs
   {
     private readonly CultureInfo m_culture_info;
-    
+
     /// <summary>
     /// Инициализирует новый экземпляр события
     /// </summary>

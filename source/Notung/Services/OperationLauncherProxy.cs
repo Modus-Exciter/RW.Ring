@@ -82,7 +82,7 @@ namespace Notung.Services
 
       m_run_base = runBase;
     }
-    
+
     public IProgressIndicatorWithCancel ProgressIndicator { get; set; }
 
     public string GetCaption()
@@ -140,10 +140,10 @@ namespace Notung.Services
       return source;
     }
 
-    event ProgressChangedEventHandler IRunBase.ProgressChanged 
-    { 
-      add { } 
-      remove { } 
+    event ProgressChangedEventHandler IRunBase.ProgressChanged
+    {
+      add { }
+      remove { }
     }
   }
 
@@ -154,7 +154,7 @@ namespace Notung.Services
   {
     private CancellationTokenSource m_token_source;
 
-    public CancelableRunBaseCallerWrapper(ICancelableRunBase runBase) : base(runBase) { }     
+    public CancelableRunBaseCallerWrapper(ICancelableRunBase runBase) : base(runBase) { }
 
     public bool CanCancel
     {
@@ -272,7 +272,7 @@ namespace Notung.Services
     private CancellationToken m_token;
 
     public CancelableRunBaseProxyWrapper(CancelableRunBaseCallerWrapper caller) : base(caller) { }
-      
+
     public override void RaiseCanCancelChanged(EventArgs e)
     {
       this.CanCancelChanged.InvokeIfSubscribed(this, e);

@@ -33,7 +33,7 @@ namespace Notung.Loader
     {
       protected override Type GetKeyForItem(IApplicationLoader item)
       {
-        if (item == null) 
+        if (item == null)
           throw new ArgumentNullException("item");
 
         return item.Key;

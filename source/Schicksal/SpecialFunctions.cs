@@ -10,13 +10,13 @@ namespace Schicksal
   {
     #region Helper --------------------------------------------------------------------------------
 
-    const double machineepsilon = 5E-16;
-    const double maxrealnumber = 1E300;
-    const double minrealnumber = 1E-300;
+    const double MACHINE_EPSILON = 5E-16;
+    const double MAX_REAL_NUMBER = 1E300;
+    const double MIN_REAL_NUMBER = 1E-300;
 
     private static bool isfinite(double d)
     {
-      return !System.Double.IsNaN(d) && !System.Double.IsInfinity(d);
+      return !double.IsNaN(d) && !double.IsInfinity(d);
     }
 
     private static double sqr(double X)
@@ -31,7 +31,7 @@ namespace Schicksal
       double result = 0;
       double w = 0;
 
-      Debug.Assert((a >= 1 && b >= 1) && (double)(x) >= (double)(0), "Domain error in FDistribution");
+      Debug.Assert((a >= 1 && b >= 1) && (double)(x) >= 0, "Domain error in FDistribution");
       w = a * x;
       w = w / (b + w);
       result = incompletebeta(0.5 * a, 0.5 * b, w);
@@ -43,7 +43,7 @@ namespace Schicksal
       double result = 0;
       double w = 0;
 
-      Debug.Assert((a >= 1 && b >= 1) && (double)(x) >= (double)(0), "Domain error in FCDistribution");
+      Debug.Assert((a >= 1 && b >= 1) && (double)(x) >= 0, "Domain error in FCDistribution");
       w = b / (b + a * x);
       result = incompletebeta(0.5 * b, 0.5 * a, w);
       return result;
@@ -54,7 +54,7 @@ namespace Schicksal
       double result = 0;
       double w = 0;
 
-      Debug.Assert(((a >= 1 && b >= 1) && (double)(y) > (double)(0)) && (double)(y) <= (double)(1), "Domain error in InvFDistribution");
+      Debug.Assert(((a >= 1 && b >= 1) && (double)(y) > 0) && (double)(y) <= 1, "Domain error in InvFDistribution");
 
       //
       // Compute probability for x = 0.5
@@ -132,7 +132,7 @@ namespace Schicksal
       int j = 0;
 
       Debug.Assert(k > 0, "Domain error in StudentTDistribution");
-      if ((double)(t) == (double)(0))
+      if ((double)(t) == 0)
       {
         result = 0.5;
         return result;
@@ -144,7 +144,7 @@ namespace Schicksal
         result = 0.5 * incompletebeta(0.5 * rk, 0.5, z);
         return result;
       }
-      if ((double)(t) < (double)(0))
+      if ((double)(t) < 0)
       {
         x = -t;
       }
@@ -163,7 +163,7 @@ namespace Schicksal
           f = 1.0;
           tz = 1.0;
           j = 3;
-          while (j <= k - 2 && (double)(tz / f) > (double)(machineepsilon))
+          while (j <= k - 2 && (double)(tz / f) > MACHINE_EPSILON)
           {
             tz = tz * ((j - 1) / (z * j));
             f = f + tz;
@@ -178,7 +178,7 @@ namespace Schicksal
         f = 1.0;
         tz = 1.0;
         j = 2;
-        while (j <= k - 2 && (double)(tz / f) > (double)(machineepsilon))
+        while (j <= k - 2 && (double)(tz / f) > MACHINE_EPSILON)
         {
           tz = tz * ((j - 1) / (z * j));
           f = f + tz;
@@ -186,7 +186,7 @@ namespace Schicksal
         }
         p = f * x / Math.Sqrt(z * rk);
       }
-      if ((double)(t) < (double)(0))
+      if ((double)(t) < 0)
       {
         p = -p;
       }
@@ -219,7 +219,7 @@ namespace Schicksal
       double z = 0;
       int rflg = 0;
 
-      Debug.Assert((k > 0 && (double)(p) > (double)(0)) && (double)(p) < (double)(1), "Domain error in InvStudentTDistribution");
+      Debug.Assert((k > 0 && (double)(p) > 0) && (double)(p) < 1, "Domain error in InvStudentTDistribution");
       rk = k;
       if ((double)(p) > (double)(0.25) && (double)(p) < (double)(0.75))
       {
@@ -245,9 +245,9 @@ namespace Schicksal
         rflg = 1;
       }
       z = invincompletebeta(0.5 * rk, 0.5, 2.0 * p);
-      if ((double)(maxrealnumber * z) < (double)(rk))
+      if ((double)(MAX_REAL_NUMBER * z) < (double)(rk))
       {
-        result = rflg * maxrealnumber;
+        result = rflg * MAX_REAL_NUMBER;
         return result;
       }
       t = Math.Sqrt(rk / z - rk);
@@ -293,7 +293,7 @@ namespace Schicksal
     {
       double result = 0;
 
-      Debug.Assert((double)(x) >= (double)(0) && (double)(v) >= (double)(1), "Domain error in ChiSquareDistribution");
+      Debug.Assert((double)(x) >= 0 && (double)(v) >= 1, "Domain error in ChiSquareDistribution");
       result = incompletegamma(v / 2.0, x / 2.0);
       return result;
     }
@@ -335,7 +335,7 @@ namespace Schicksal
     {
       double result = 0;
 
-      Debug.Assert((double)(x) >= (double)(0) && (double)(v) >= (double)(1), "Domain error in ChiSquareDistributionC");
+      Debug.Assert((double)(x) >= 0 && (double)(v) >= 1, "Domain error in ChiSquareDistributionC");
       result = incompletegammac(v / 2.0, x / 2.0);
       return result;
     }
@@ -365,7 +365,7 @@ namespace Schicksal
     {
       double result = 0;
 
-      Debug.Assert(((double)(y) >= (double)(0) && (double)(y) <= (double)(1)) && (double)(v) >= (double)(1), "Domain error in InvChiSquareDistribution");
+      Debug.Assert(((double)(y) >= 0 && (double)(y) <= 1) && (double)(v) >= 1, "Domain error in InvChiSquareDistribution");
       result = 2 * invincompletegammac(0.5 * v, y);
       return result;
     }
@@ -430,16 +430,16 @@ namespace Schicksal
       big = 4.503599627370496e15;
       biginv = 2.22044604925031308085e-16;
       maxgam = 171.624376956302725;
-      minlog = Math.Log(minrealnumber);
-      maxlog = Math.Log(maxrealnumber);
-      Debug.Assert((double)(a) > (double)(0) && (double)(b) > (double)(0), "Domain error in IncompleteBeta");
-      Debug.Assert((double)(x) >= (double)(0) && (double)(x) <= (double)(1), "Domain error in IncompleteBeta");
-      if ((double)(x) == (double)(0))
+      minlog = Math.Log(MIN_REAL_NUMBER);
+      maxlog = Math.Log(MAX_REAL_NUMBER);
+      Debug.Assert((double)(a) > 0 && (double)(b) > 0, "Domain error in IncompleteBeta");
+      Debug.Assert((double)(x) >= 0 && (double)(x) <= 1, "Domain error in IncompleteBeta");
+      if ((double)(x) == 0)
       {
         result = 0;
         return result;
       }
-      if ((double)(x) == (double)(1))
+      if ((double)(x) == 1)
       {
         result = 1;
         return result;
@@ -467,9 +467,9 @@ namespace Schicksal
       if ((flag == 1 && (double)(b * x) <= (double)(1.0)) && (double)(x) <= (double)(0.95))
       {
         t = incompletebetaps(a, b, x, maxgam);
-        if ((double)(t) <= (double)(machineepsilon))
+        if ((double)(t) <= MACHINE_EPSILON)
         {
-          result = 1.0 - machineepsilon;
+          result = 1.0 - MACHINE_EPSILON;
         }
         else
         {
@@ -497,9 +497,9 @@ namespace Schicksal
         t = t * (gammafunction(a + b) / (gammafunction(a) * gammafunction(b)));
         if (flag == 1)
         {
-          if ((double)(t) <= (double)(machineepsilon))
+          if ((double)(t) <= MACHINE_EPSILON)
           {
-            result = 1.0 - machineepsilon;
+            result = 1.0 - MACHINE_EPSILON;
           }
           else
           {
@@ -524,9 +524,9 @@ namespace Schicksal
       }
       if (flag == 1)
       {
-        if ((double)(t) <= (double)(machineepsilon))
+        if ((double)(t) <= MACHINE_EPSILON)
         {
-          t = 1.0 - machineepsilon;
+          t = 1.0 - MACHINE_EPSILON;
         }
         else
         {
@@ -597,12 +597,12 @@ namespace Schicksal
       int breakihalvecycle = 0;
 
       i = 0;
-      Debug.Assert((double)(y) >= (double)(0) && (double)(y) <= (double)(1), "Domain error in InvIncompleteBeta");
+      Debug.Assert((double)(y) >= 0 && (double)(y) <= 1, "Domain error in InvIncompleteBeta");
 
       //
       // special cases
       //
-      if ((double)(y) == (double)(0))
+      if ((double)(y) == 0)
       {
         result = 0;
         return result;
@@ -691,7 +691,7 @@ namespace Schicksal
           x = 2.0 / (1.0 / (2.0 * aaa - 1.0) + 1.0 / (2.0 * bbb - 1.0));
           d = yp * Math.Sqrt(x + lgm) / x - (1.0 / (2.0 * bbb - 1.0) - 1.0 / (2.0 * aaa - 1.0)) * (lgm + 5.0 / 6.0 - 2.0 / (3.0 * x));
           d = 2.0 * d;
-          if ((double)(d) < (double)(Math.Log(minrealnumber)))
+          if ((double)(d) < (double)(Math.Log(MIN_REAL_NUMBER)))
           {
             x = 0;
             break;
@@ -732,7 +732,7 @@ namespace Schicksal
               x = x0 + di * (x1 - x0);
               if ((double)(x) == (double)(1.0))
               {
-                x = 1.0 - machineepsilon;
+                x = 1.0 - MACHINE_EPSILON;
               }
               if ((double)(x) == (double)(0.0))
               {
@@ -814,7 +814,7 @@ namespace Schicksal
             else
             {
               x1 = x;
-              if (rflg == 1 && (double)(x1) < (double)(machineepsilon))
+              if (rflg == 1 && (double)(x1) < MACHINE_EPSILON)
               {
                 x = 0.0;
                 break;
@@ -863,7 +863,7 @@ namespace Schicksal
         {
           if ((double)(x0) >= (double)(1.0))
           {
-            x = 1.0 - machineepsilon;
+            x = 1.0 - MACHINE_EPSILON;
             break;
           }
           if ((double)(x) <= (double)(0.0))
@@ -934,11 +934,11 @@ namespace Schicksal
               continue;
             }
             d = (aaa - 1.0) * Math.Log(x) + (bbb - 1.0) * Math.Log(1.0 - x) + lgm;
-            if ((double)(d) < (double)(Math.Log(minrealnumber)))
+            if ((double)(d) < (double)(Math.Log(MIN_REAL_NUMBER)))
             {
               break;
             }
-            if ((double)(d) > (double)(Math.Log(maxrealnumber)))
+            if ((double)(d) > (double)(Math.Log(MAX_REAL_NUMBER)))
             {
               mainlooppos = breaknewtcycle;
               continue;
@@ -967,7 +967,7 @@ namespace Schicksal
               }
             }
             x = xt;
-            if ((double)(Math.Abs(d / x)) < (double)(128.0 * machineepsilon))
+            if ((double)(Math.Abs(d / x)) < (double)(128.0 * MACHINE_EPSILON))
             {
               break;
             }
@@ -987,7 +987,7 @@ namespace Schicksal
         //
         if (mainlooppos == breaknewtcycle)
         {
-          dithresh = 256.0 * machineepsilon;
+          dithresh = 256.0 * MACHINE_EPSILON;
           mainlooppos = ihalve;
           continue;
         }
@@ -998,9 +998,9 @@ namespace Schicksal
       //
       if (rflg != 0)
       {
-        if ((double)(x) <= (double)(machineepsilon))
+        if ((double)(x) <= MACHINE_EPSILON)
         {
-          x = 1.0 - machineepsilon;
+          x = 1.0 - MACHINE_EPSILON;
         }
         else
         {
@@ -1061,7 +1061,7 @@ namespace Schicksal
       ans = 1.0;
       r = 1.0;
       n = 0;
-      thresh = 3.0 * machineepsilon;
+      thresh = 3.0 * MACHINE_EPSILON;
       do
       {
         xk = -(x * k1 * k2 / (k3 * k4));
@@ -1078,11 +1078,11 @@ namespace Schicksal
         pkm1 = pk;
         qkm2 = qkm1;
         qkm1 = qk;
-        if ((double)(qk) != (double)(0))
+        if ((double)(qk) != 0)
         {
           r = pk / qk;
         }
-        if ((double)(r) != (double)(0))
+        if ((double)(r) != 0)
         {
           t = Math.Abs((ans - r) / r);
           ans = r;
@@ -1177,7 +1177,7 @@ namespace Schicksal
       ans = 1.0;
       r = 1.0;
       n = 0;
-      thresh = 3.0 * machineepsilon;
+      thresh = 3.0 * MACHINE_EPSILON;
       do
       {
         xk = -(z * k1 * k2 / (k3 * k4));
@@ -1194,11 +1194,11 @@ namespace Schicksal
         pkm1 = pk;
         qkm2 = qkm1;
         qkm1 = qk;
-        if ((double)(qk) != (double)(0))
+        if ((double)(qk) != 0)
         {
           r = pk / qk;
         }
-        if ((double)(r) != (double)(0))
+        if ((double)(r) != 0)
         {
           t = Math.Abs((ans - r) / r);
           ans = r;
@@ -1271,7 +1271,7 @@ namespace Schicksal
       t = u;
       n = 2.0;
       s = 0.0;
-      z = machineepsilon * ai;
+      z = MACHINE_EPSILON * ai;
       while ((double)(Math.Abs(v)) > (double)(z))
       {
         u = (n - b) * x / n;
@@ -1283,7 +1283,7 @@ namespace Schicksal
       s = s + t1;
       s = s + ai;
       u = a * Math.Log(x);
-      if ((double)(a + b) < (double)(maxgam) && (double)(Math.Abs(u)) < (double)(Math.Log(maxrealnumber)))
+      if ((double)(a + b) < (double)(maxgam) && (double)(Math.Abs(u)) < (double)(Math.Log(MAX_REAL_NUMBER)))
       {
         t = gammafunction(a + b) / (gammafunction(a) * gammafunction(b));
         s = s * t * Math.Pow(x, a);
@@ -1291,7 +1291,7 @@ namespace Schicksal
       else
       {
         t = lngamma(a + b, ref sg) - lngamma(a, ref sg) - lngamma(b, ref sg) + u + Math.Log(s);
-        if ((double)(t) < (double)(Math.Log(minrealnumber)))
+        if ((double)(t) < (double)(Math.Log(MIN_REAL_NUMBER)))
         {
           s = 0.0;
         }
@@ -1365,12 +1365,12 @@ namespace Schicksal
         return result;
       }
       z = 1;
-      while ((double)(x) >= (double)(3))
+      while ((double)(x) >= 3)
       {
         x = x - 1;
         z = z * x;
       }
-      while ((double)(x) < (double)(0))
+      while ((double)(x) < 0)
       {
         if ((double)(x) > (double)(-0.000000001))
         {
@@ -1380,7 +1380,7 @@ namespace Schicksal
         z = z / x;
         x = x + 1;
       }
-      while ((double)(x) < (double)(2))
+      while ((double)(x) < 2)
       {
         if ((double)(x) < (double)(0.000000001))
         {
@@ -1390,7 +1390,7 @@ namespace Schicksal
         z = z / x;
         x = x + 1.0;
       }
-      if ((double)(x) == (double)(2))
+      if ((double)(x) == 2)
       {
         result = z;
         return result;
@@ -1491,24 +1491,24 @@ namespace Schicksal
         result = logpi - Math.Log(z) - w;
         return result;
       }
-      if ((double)(x) < (double)(13))
+      if ((double)(x) < 13)
       {
         z = 1;
         p = 0;
         u = x;
-        while ((double)(u) >= (double)(3))
+        while ((double)(u) >= 3)
         {
           p = p - 1;
           u = x + p;
           z = z * u;
         }
-        while ((double)(u) < (double)(2))
+        while ((double)(u) < 2)
         {
           z = z / u;
           p = p + 1;
           u = x + p;
         }
-        if ((double)(z) < (double)(0))
+        if ((double)(z) < 0)
         {
           sgngam = -1;
           z = -z;
@@ -1517,7 +1517,7 @@ namespace Schicksal
         {
           sgngam = 1;
         }
-        if ((double)(u) == (double)(2))
+        if ((double)(u) == 2)
         {
           result = Math.Log(z);
           return result;
@@ -1542,7 +1542,7 @@ namespace Schicksal
         return result;
       }
       q = (x - 0.5) * Math.Log(x) - x + ls2pi;
-      if ((double)(x) > (double)(100000000))
+      if ((double)(x) > 100000000)
       {
         result = q;
         return result;
@@ -1636,12 +1636,12 @@ namespace Schicksal
       double tmp = 0;
 
       igammaepsilon = 0.000000000000001;
-      if ((double)(x) <= (double)(0) || (double)(a) <= (double)(0))
+      if ((double)(x) <= 0 || (double)(a) <= 0)
       {
         result = 0;
         return result;
       }
-      if ((double)(x) > (double)(1) && (double)(x) > (double)(a))
+      if ((double)(x) > 1 && (double)(x) > (double)(a))
       {
         result = 1 - incompletegammac(a, x);
         return result;
@@ -1726,12 +1726,12 @@ namespace Schicksal
       igammaepsilon = 0.000000000000001;
       igammabignumber = 4503599627370496.0;
       igammabignumberinv = 2.22044604925031308085 * 0.0000000000000001;
-      if ((double)(x) <= (double)(0) || (double)(a) <= (double)(0))
+      if ((double)(x) <= 0 || (double)(a) <= 0)
       {
         result = 1;
         return result;
       }
-      if ((double)(x) < (double)(1) || (double)(x) < (double)(a))
+      if ((double)(x) < 1 || (double)(x) < (double)(a))
       {
         result = 1 - incompletegamma(a, x);
         return result;
@@ -1759,7 +1759,7 @@ namespace Schicksal
         yc = y * c;
         pk = pkm1 * z - pkm2 * yc;
         qk = qkm1 * z - qkm2 * yc;
-        if ((double)(qk) != (double)(0))
+        if ((double)(qk) != 0)
         {
           r = pk / qk;
           t = Math.Abs((ans - r) / r);
@@ -1894,7 +1894,7 @@ namespace Schicksal
       }
       if ((double)(x0) == (double)(iinvgammabignumber))
       {
-        if ((double)(x) <= (double)(0))
+        if ((double)(x) <= 0)
         {
           x = 1;
         }
@@ -2039,7 +2039,7 @@ namespace Schicksal
         result = s * 1.1283791670955125738961589031 * x * p / q;
         return result;
       }
-      if ((double)(x) >= (double)(10))
+      if ((double)(x) >= 10)
       {
         result = s;
         return result;
@@ -2082,7 +2082,7 @@ namespace Schicksal
       double p = 0;
       double q = 0;
 
-      if ((double)(x) < (double)(0))
+      if ((double)(x) < 0)
       {
         result = 2 - errorfunctionc(-x);
         return result;
@@ -2092,7 +2092,7 @@ namespace Schicksal
         result = 1.0 - errorfunction(x);
         return result;
       }
-      if ((double)(x) >= (double)(10))
+      if ((double)(x) >= 10)
       {
         result = 0;
         return result;
@@ -2254,14 +2254,14 @@ namespace Schicksal
 
       expm2 = 0.13533528323661269189;
       s2pi = 2.50662827463100050242;
-      if ((double)(y0) <= (double)(0))
+      if ((double)(y0) <= 0)
       {
-        result = -maxrealnumber;
+        result = -MAX_REAL_NUMBER;
         return result;
       }
-      if ((double)(y0) >= (double)(1))
+      if ((double)(y0) >= 1)
       {
-        result = maxrealnumber;
+        result = MAX_REAL_NUMBER;
         return result;
       }
       code = 1;
@@ -2377,7 +2377,7 @@ namespace Schicksal
       Debug.Assert(isfinite(x), "BivariateNormalCDF: X is infinite");
       Debug.Assert(isfinite(y), "BivariateNormalCDF: Y is infinite");
       Debug.Assert(isfinite(rho), "BivariateNormalCDF: Rho is infinite");
-      Debug.Assert((double)(-1) < (double)(rho) && (double)(rho) < (double)(1), "BivariateNormalCDF: Rho is not in (-1,+1) range");
+      Debug.Assert(-1 < (double)(rho) && (double)(rho) < 1, "BivariateNormalCDF: Rho is not in (-1,+1) range");
       onerho2 = (1 - rho) * (1 + rho);
       result = Math.Exp(-((x * x + y * y - 2 * rho * x * y) / (2 * onerho2))) / (2 * Math.PI * Math.Sqrt(onerho2));
       return result;
@@ -2436,8 +2436,8 @@ namespace Schicksal
       Debug.Assert(isfinite(x), "BivariateNormalCDF: X is infinite");
       Debug.Assert(isfinite(y), "BivariateNormalCDF: Y is infinite");
       Debug.Assert(isfinite(rho), "BivariateNormalCDF: Rho is infinite");
-      Debug.Assert((double)(-1) < (double)(rho) && (double)(rho) < (double)(1), "BivariateNormalCDF: Rho is not in (-1,+1) range");
-      if ((double)(rho) == (double)(0))
+      Debug.Assert(-1 < (double)(rho) && (double)(rho) < 1, "BivariateNormalCDF: Rho is not in (-1,+1) range");
+      if ((double)(rho) == 0)
       {
         result = normalcdf(x) * normalcdf(y);
         return result;
@@ -2477,7 +2477,7 @@ namespace Schicksal
         x = -x;
         y = -y;
         s = Math.Sign(rho);
-        if ((double)(s) > (double)(0))
+        if ((double)(s) > 0)
         {
           fxys = normalcdf(-Math.Max(x, y));
         }

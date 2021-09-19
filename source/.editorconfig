@@ -8,3 +8,21 @@ dotnet_diagnostic.IDE0025.severity = none
 
 # IDE0011: Добавить фигурные скобки
 csharp_prefer_braces = when_multiline
+
+# IDE0018: Объявление встроенной переменной
+csharp_style_inlined_variable_declaration = false
+
+# IDE0016: Использовать выражение "throw"
+csharp_style_throw_expression = false
+
+# IDE0019: Используйте сопоставление шаблонов
+csharp_style_pattern_matching_over_as_with_null_check = false
+
+# IDE0029: Используйте выражение объединения
+dotnet_style_coalesce_expression = false
+
+# IDE0031: Используйте распространение значения NULL
+dotnet_style_null_propagation = false
+
+# IDE0039: Использовать локальную функцию
+csharp_style_pattern_local_over_anonymous_function = false

@@ -68,7 +68,7 @@ namespace Notung
       {
         if (handler != null)
           handler(ex);
-        
+
         return Array.FindAll(ex.Types, t => t != null);
       }
     }
@@ -111,8 +111,8 @@ namespace Notung
       for (int i = 0; i < parametes.Length; i++)
         types[i] = parametes[i].ParameterType;
 
-      var method = objectType.GetMethod(methodName, 
-        BindingFlags.Public | (instance ? BindingFlags.Instance : BindingFlags.Static), 
+      var method = objectType.GetMethod(methodName,
+        BindingFlags.Public | (instance ? BindingFlags.Instance : BindingFlags.Static),
         Type.DefaultBinder, types, null);
 
       return method;

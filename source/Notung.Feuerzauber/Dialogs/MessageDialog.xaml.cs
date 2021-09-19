@@ -9,10 +9,10 @@ namespace Notung.Feuerzauber.Dialogs
   {
     private MessageDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
-    public static bool? Show(string message, 
+    public static bool? Show(string message,
       string title = null,
       MessageBoxImage image = MessageBoxImage.None,
       MessageBoxButton button = MessageBoxButton.OK,

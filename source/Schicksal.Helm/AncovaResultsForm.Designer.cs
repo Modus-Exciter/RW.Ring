@@ -62,8 +62,8 @@
       this.m_grid.Name = "m_grid";
       this.m_grid.Size = new System.Drawing.Size(759, 483);
       this.m_grid.TabIndex = 0;
-      this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellDoubleClick);
-      this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_grid_CellPainting);
+      this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
+      this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.Grid_CellPainting);
       // 
       // factorDataGridViewTextBoxColumn
       // 

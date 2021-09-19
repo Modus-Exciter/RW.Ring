@@ -9,14 +9,14 @@ namespace Schicksal.Helm.Dialogs
   {
     public AboutBox()
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
-      this.Text = String.Format("{0} {1}", Resources.ABOUT, ApplicationInfo.Instance.Product);
-      this.labelProductName.Text = ApplicationInfo.Instance.Product;
-      this.labelVersion.Text = String.Format("Version {0}", ApplicationInfo.Instance.Version);
-      this.labelCopyright.Text = ApplicationInfo.Instance.Copyright;
-      this.labelCompanyName.Text = ApplicationInfo.Instance.Company;
-      this.textBoxDescription.Text = ApplicationInfo.Instance.Description;
+      this.Text = string.Format("{0} {1}", Resources.ABOUT, ApplicationInfo.Instance.Product);
+      labelProductName.Text = ApplicationInfo.Instance.Product;
+      labelVersion.Text = string.Format("Version {0}", ApplicationInfo.Instance.Version);
+      labelCopyright.Text = ApplicationInfo.Instance.Copyright;
+      labelCompanyName.Text = ApplicationInfo.Instance.Company;
+      textBoxDescription.Text = ApplicationInfo.Instance.Description;
     }
   }
 }

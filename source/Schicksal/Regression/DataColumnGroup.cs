@@ -19,14 +19,14 @@ namespace Schicksal.Regression
       if (column.Table == null)
         throw new ArgumentNullException("column.Table");
 
-      if (!column.DataType.IsPrimitive 
+      if (!column.DataType.IsPrimitive
         || column.DataType == typeof(bool)
         && column.DataType != typeof(decimal))
         throw new ArgumentException(Resources.INVALID_COLUMN_TYPE);
 
       m_column = column;
     }
-    
+
     public int Count
     {
       get { return m_column.Table.Rows.Count; }
@@ -44,7 +44,7 @@ namespace Schicksal.Regression
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return GetEnumerator();
+      return this.GetEnumerator();
     }
   }
 }

@@ -12,9 +12,8 @@ namespace Notung.Helm.Windows
   {
     private readonly Action m_function;
     private readonly string m_file_name;
-    private readonly string m_function_name;
     private Exception m_exception;
-    
+
     public ExternalCallWork(NativeDll dll, string function)
     {
       if (dll == null)
@@ -24,7 +23,6 @@ namespace Notung.Helm.Windows
         throw new ArgumentException(Resources.DLL_NO_FUNCTION);
 
       m_file_name = dll.Path;
-      m_function_name = function;
       m_function = dll.GetFunction<Action>(function);
 
       if (m_function == null)
@@ -32,7 +30,7 @@ namespace Notung.Helm.Windows
     }
 
     public bool OnlySTAThread { get; set; }
-    
+
     public override void Run()
     {
       string last_dir = Environment.CurrentDirectory;

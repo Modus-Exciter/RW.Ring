@@ -129,7 +129,7 @@ namespace Notung.Helm.Windows
 
     private void Dispose(bool disposing)
     {
-      if (Handle != IntPtr.Zero)
+      if (this.Handle != IntPtr.Zero)
         FreeLibrary(m_handle);
 
       if (disposing)
@@ -167,7 +167,7 @@ namespace Notung.Helm.Windows
     private static bool LoadSymbolImpl(string name, IntPtr symbolAddress, uint size, IntPtr context)
     {
       var strings = (List<string>)((GCHandle)context).Target;
-      
+
       if (strings != null)
         strings.Add(name);
 
@@ -219,7 +219,7 @@ namespace Notung.Helm.Windows
     private static extern IntPtr LoadLibrary(string libname);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern IntPtr LoadLibraryExW([MarshalAs(UnmanagedType.LPWStr)]string libname, IntPtr handle, LoadLibraryFlags flags);
+    private static extern IntPtr LoadLibraryExW([MarshalAs(UnmanagedType.LPWStr)] string libname, IntPtr handle, LoadLibraryFlags flags);
 
     [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
     private static extern bool FreeLibrary(HandleRef hModule);

@@ -181,7 +181,7 @@ namespace Notung.Loader
     #endregion
 
     #region Implementation ------------------------------------------------------------------------
-    
+
     private sealed class TypeComparer : IEqualityComparer<Type>
     {
       public bool Equals(Type x, Type y)

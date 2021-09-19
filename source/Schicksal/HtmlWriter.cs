@@ -22,10 +22,10 @@ namespace Schicksal
         throw new ArgumentNullException("writer");
 
       m_writer = writer;
-      WriteStartDocument(caption);
+      this.WriteStartDocument(caption);
     }
 
-    public HtmlWriter(string fileName, Encoding encoding, string caption) 
+    public HtmlWriter(string fileName, Encoding encoding, string caption)
       : this(new StreamWriter(fileName, false, encoding), caption) { }
 
     private void WriteStartDocument(string caption)
@@ -80,7 +80,7 @@ namespace Schicksal
 
       m_writer.WriteLine("\t\t</tr>");
 
-     foreach (var line in dataSource)
+      foreach (var line in dataSource)
       {
         m_writer.WriteLine("\t\t<tr>");
 
@@ -254,7 +254,7 @@ namespace Schicksal
     {
       if (m_closed)
         return;
-      
+
       if (disposing)
       {
         this.WriteEndDocument();
@@ -262,7 +262,7 @@ namespace Schicksal
         m_closed = true;
       }
     }
-    
+
     public void Dispose()
     {
       this.Dispose(true);

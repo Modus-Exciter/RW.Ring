@@ -126,7 +126,7 @@ namespace Notung.Data
     {
       public Entry(T data)
       {
-        this.Data = data;
+        Data = data;
       }
 
       public readonly T Data;
@@ -137,7 +137,7 @@ namespace Notung.Data
     private class PoolItemStub : IPoolItem<T>
     {
       public static readonly PoolItemStub Instance = new PoolItemStub();
-      
+
       private PoolItemStub() { }
 
       public T Data
@@ -181,7 +181,7 @@ namespace Notung.Data
       {
         if (m_thread != Thread.CurrentThread)
           throw new InvalidOperationException(Resources.WRONG_THREAD);
-        
+
         m_pool.Release(m_entry);
       }
 

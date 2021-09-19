@@ -18,10 +18,10 @@ namespace LogAnalyzer
 
     private void OpenConfig(object sender, ExecutedRoutedEventArgs e)
     {
-      OpenFileDialog dialog = new OpenFileDialog();
+      var dialog = new OpenFileDialog();
 
       dialog.Filter = "Configuration files|*.config";
-      dialog.Title =((RoutedUICommand) e.Command).Text;
+      dialog.Title = ((RoutedUICommand)e.Command).Text;
 
       if (dialog.ShowDialog(this) == true)
         m_context.OpenConfig(dialog.FileName);
@@ -29,7 +29,7 @@ namespace LogAnalyzer
 
     private void OpenFolder(object sender, ExecutedRoutedEventArgs e)
     {
-      SelectFolderDialog dlg = new SelectFolderDialog() { Owner = this };
+      var dlg = new SelectFolderDialog() { Owner = this };
 
       if (dlg.ShowDialog() == true)
         this.DisplayLog(m_context.OpenDirectory(dlg.Tree.SelectedValue.ToString()));
@@ -37,7 +37,7 @@ namespace LogAnalyzer
 
     private void OpenLogFile(object sender, ExecutedRoutedEventArgs e)
     {
-      OpenFileDialog dialog = new OpenFileDialog();
+      var dialog = new OpenFileDialog();
 
       dialog.Filter = "Log files|*.log";
       dialog.Title = ((RoutedUICommand)e.Command).Text;

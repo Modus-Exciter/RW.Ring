@@ -127,8 +127,8 @@ namespace Notung.Logging
 
           if (m_size > 0)
           {
-            if (m_current_data == null 
-              || m_current_data.Length < m_size 
+            if (m_current_data == null
+              || m_current_data.Length < m_size
               || m_current_data.Length / m_size > 0x100)
               m_current_data = new LoggingEvent[m_data.Count];
 

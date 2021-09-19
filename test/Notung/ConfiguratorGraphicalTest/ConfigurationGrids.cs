@@ -9,7 +9,7 @@ namespace ConfiguratorGraphicalTest
   {
     public ConfigurationGrids(HelpItem item)
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public void HandleFormShown()

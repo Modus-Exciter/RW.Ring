@@ -108,7 +108,7 @@ namespace NotungTest
       matrix[3, 4] = 14;
       matrix[4, 4] = 15;
 
-      var row = GetRowData(matrix,3).ToArray();
+      var row = this.GetRowData(matrix, 3).ToArray();
 
       Assert.AreEqual(5, row.Length);
 
@@ -135,7 +135,7 @@ namespace NotungTest
       matrix[2, 4] = 12;
       matrix[3, 4] = 14;
 
-      var row = GetRowData(matrix, 3).ToArray();
+      var row = this.GetRowData(matrix, 3).ToArray();
 
       Assert.AreEqual(5, row.Length);
       Assert.AreEqual(4, row[0]);

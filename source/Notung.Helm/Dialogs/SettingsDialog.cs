@@ -9,10 +9,10 @@ namespace Notung.Helm.Dialogs
   public partial class SettingsDialog : Form
   {
     private readonly Dictionary<Type, TreeNode> m_nodes = new Dictionary<Type, TreeNode>();
-    
+
     public SettingsDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public Type DefaultPage { get; set; }
@@ -23,7 +23,7 @@ namespace Notung.Helm.Dialogs
         e.Cancel = !m_settings_controller.SaveAllSections();
     }
 
-    private void m_errors_view_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    private void Errors_view_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex < 0 || e.RowIndex >= m_settings_controller.Errors.Count)
         return;
@@ -31,7 +31,7 @@ namespace Notung.Helm.Dialogs
       m_sections_tree.SelectedNode = m_nodes[m_settings_controller.Errors[e.RowIndex].SectionType];
     }
 
-    private void m_sections_list_AfterSelect(object sender, TreeViewEventArgs e)
+    private void Sections_list_AfterSelect(object sender, TreeViewEventArgs e)
     {
       m_settings_controller.SelectPage(e.Node.Tag.GetType());
     }
@@ -54,23 +54,23 @@ namespace Notung.Helm.Dialogs
         m_nodes[section.GetType()] = node;
       }
 
-      if (this.DefaultPage != null && 
+      if (this.DefaultPage != null &&
         m_settings_controller.Pages.Any(p => p.GetType() == this.DefaultPage))
         m_settings_controller.SelectPage(this.DefaultPage);
     }
 
-    private void m_button_apply_Click(object sender, EventArgs e)
+    private void Button_apply_Click(object sender, EventArgs e)
     {
       m_settings_controller.SaveAllSections(true);
     }
 
-    private void m_settings_controller_PageChanged(object sender, PageEventArgs e)
+    private void Settings_controller_PageChanged(object sender, PageEventArgs e)
     {
       if (!m_nodes[e.Page.GetType()].Text.EndsWith("*"))
         m_nodes[e.Page.GetType()].Text += "*";
     }
 
-    private void m_language_switch_LanguageChanged(object sender, ComponentModel.LanguageEventArgs e)
+    private void Language_switch_LanguageChanged(object sender, ComponentModel.LanguageEventArgs e)
     {
       m_button_apply.Text = WinResources.APPLY;
       m_button_cancel.Text = WinResources.CANCEL;

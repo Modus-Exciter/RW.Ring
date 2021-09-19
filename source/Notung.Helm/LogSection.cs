@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
-using System.IO;
 using System.Runtime.Serialization;
 using Notung.ComponentModel;
 using Notung.Configuration;
