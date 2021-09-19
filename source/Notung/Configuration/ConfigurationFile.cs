@@ -14,7 +14,7 @@ namespace Notung.Configuration
     private readonly SharedLock m_lock = new SharedLock();
     private Dictionary<string, string> m_file_cache;
 
-    private readonly ILog _log = LogManager.GetLogger(typeof(ConfigurationFile));
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ConfigurationFile));
 
     public ConfigurationFile(IConfigFileFinder fileFinder)
     {
