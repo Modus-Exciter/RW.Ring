@@ -98,7 +98,7 @@ namespace Notung.Configuration
       {
         if (!m_sections.TryGetValue(typeof(TSection), out ret))
         {
-          ret = ReadSection(typeof(TSection));
+          ret = this.ReadSection(typeof(TSection));
           m_sections.Add(typeof(TSection), ret);
         }
       }
@@ -119,7 +119,7 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         m_sections[typeof(TSection)] = section;
-        WriteSection(section);
+        this.WriteSection(section);
       }
     }
 
@@ -146,7 +146,7 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         foreach (var kv in m_sections)
-          WriteSection(kv.Value);
+          this.WriteSection(kv.Value);
 
         m_file.Save();
       }
@@ -240,7 +240,7 @@ namespace Notung.Configuration
             {
               _log.Error("ReadSection(): exception", ex);
               ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-              WriteSection(ret);
+              this.WriteSection(ret);
             }
           }
           else
@@ -254,7 +254,7 @@ namespace Notung.Configuration
             {
               _log.Error("ReadSection(): exception", ex);
               ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-              WriteSection(ret);
+              this.WriteSection(ret);
             }
           }
         }
@@ -262,7 +262,7 @@ namespace Notung.Configuration
       else
       {
         ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-        WriteSection(ret);
+        this.WriteSection(ret);
       }
 
       return ret;
