@@ -47,7 +47,13 @@ namespace CertGenerator
         else
         {
           if (!withPrivateKey)
+          {
+            var name = certificate.FriendlyName;
             certificate = new X509Certificate2(certificate.Export(X509ContentType.Cert));
+
+            if (!string.IsNullOrEmpty(name))
+              certificate.FriendlyName = name;
+          }
 
           store.Add(certificate);
         }
