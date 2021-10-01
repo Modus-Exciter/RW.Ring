@@ -45,7 +45,12 @@ namespace CertGenerator
           }
         }
         else
+        {
+          if (!withPrivateKey)
+            certificate = new X509Certificate2(certificate.Export(X509ContentType.Cert));
+
           store.Add(certificate);
+        }
       }
     }
 

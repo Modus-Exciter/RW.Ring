@@ -25,6 +25,8 @@ namespace CertGenerator
           CertificateHelper.Remove(old_root, CertificateHelper.ROOT);
           CertificateHelper.Add(root, CertificateHelper.ROOT, false);
         }
+        else if (old_root == null)
+          CertificateHelper.Add(root, CertificateHelper.ROOT, false);
 
         server = CertificateHelper.CreateServerCertificate(root, hostName);
         CertificateHelper.Add(server, CertificateHelper.MY, true);
