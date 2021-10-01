@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Net;
 
 namespace CertGenerator
 {
@@ -9,6 +11,38 @@ namespace CertGenerator
   {
     public static readonly IList<CommandResult> Log = new BindingList<CommandResult>();
     
+    public static string GetLocalHost()
+    {
+      var dir = Environment.GetFolderPath(Environment.SpecialFolder.System);
+      var file = Path.Combine(dir, "drivers\\etc\\hosts");
+
+      using (var reader = File.OpenText(file))
+      {
+        while (!reader.EndOfStream)
+        {
+          var line = reader.ReadLine().Trim();
+
+          if (line.StartsWith("#"))
+            continue;
+
+          var end = line.IndexOf('#');
+
+          if (end > 0)
+            line = line.Substring(0, end);
+
+          var words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+
+          if (words.Length == 2 && IPAddress.TryParse(words[0], out IPAddress address))
+          {
+            if (IPAddress.IsLoopback(address))
+              return words[1];
+          }
+        }
+      }
+
+      return "localhost";
+    }
+
     public static bool HasCertificate(ushort port)
     {
       return RunCommand(string.Format("http show sslcert ipport=0.0.0.0:{0}", port));
@@ -32,8 +66,7 @@ namespace CertGenerator
 
       startInfo.UseShellExecute = false;
       startInfo.RedirectStandardOutput = true;
-
-      Console.WriteLine("netsh {0}", command);
+      startInfo.CreateNoWindow = true;
 
       using (var proc = Process.Start(startInfo))
       {
