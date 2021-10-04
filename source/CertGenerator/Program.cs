@@ -1,14 +1,67 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace CertGenerator
 {
   class Program
   {
+    [STAThread]
     static void Main(string[] args)
     {
       Application.EnableVisualStyles();
       Application.Run(new MainForm(args));
+    }
+
+    public static bool SetupCertificate(string fileName, string password, string hostName, ushort port)
+    {
+      try
+      {
+        var cert = new X509Certificate2(fileName, password, 
+          X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.PersistKeySet);
+
+        if (!cert.HasPrivateKey)
+        {
+          NetshHepler.Log.Add(
+            new CommandResult
+            {
+              Text = "В сертификате отсутствует закрытый ключ",
+              IsError = true
+            });
+          return false;
+        }
+
+        if (!cert.Subject.Contains("=" + hostName))
+        {
+          NetshHepler.Log.Add(
+           new CommandResult
+           {
+             Text = "Сертификат предназначен для другого хоста",
+             IsError = true
+           });
+          return false;
+        }
+
+        var old_cert = CertificateHelper.Find(hostName, CertificateHelper.MY);
+
+        if (old_cert == null || old_cert.Thumbprint != cert.Thumbprint)
+          CertificateHelper.Add(cert, CertificateHelper.MY, true);
+
+        if (NetshHepler.HasCertificate(port))
+          NetshHepler.RemoveCertificate(port);
+
+        return NetshHepler.AddCertificate(port, cert.Thumbprint, "39e1e6db-d351-411a-83e4-b84e1144afad");
+      }
+      catch (Exception ex)
+      {
+        NetshHepler.Log.Add(
+          new CommandResult
+          {
+            Text = ex.Message,
+            IsError = true
+          });
+        return false;
+      }
     }
 
     public static bool CreateAndSetupCertificates(string hostName, ushort port)

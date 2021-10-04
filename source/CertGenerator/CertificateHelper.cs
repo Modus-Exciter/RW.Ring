@@ -33,7 +33,7 @@ namespace CertGenerator
       {
         store.Open(OpenFlags.ReadWrite);
 
-        if (withPrivateKey && certificate.HasPrivateKey)
+        if (withPrivateKey && certificate.HasPrivateKey && CanGetPrivateKey(certificate))
         {
           var password = GetLongTestString(new Random().Next(10, 21));
 
@@ -166,6 +166,21 @@ namespace CertGenerator
         subjectAlternativeNameBuilder.AddDnsName(hostName);
 
       return subjectAlternativeNameBuilder;
+    }
+
+    private static bool CanGetPrivateKey(X509Certificate2 certificate)
+    {
+      try
+      {
+        if (certificate.PrivateKey != null)
+          certificate.PrivateKey.ToString();
+
+        return certificate.PrivateKey != null;
+      }
+      catch
+      {
+        return false;
+      }
     }
 
     private static string GetLongTestString(int size)

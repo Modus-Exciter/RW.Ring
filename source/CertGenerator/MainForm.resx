@@ -117,7 +117,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_button_run.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAAILSURBVDhPtZLdS1NhHMePZ+vsnG3txOYkurOyu1JmFCa9
+        CGpkEIQhlTEtFtZFr2ib8w1tm2665boolkRXWTL8J6JQiB4vPL3gS2qcQsRq0Nvlt+d3GAy8sO2i3825
+        OHzfPjzCf7mSMYVVTu6BJ12Giold2DdeCnVUmsr+/ve5UzaW/pPEkx99SGXuoG/pLNR7BRi4Ugp7/juO
+        5LcriK15cftDPRyJAgycD2U2/msYia8+DK2ex633dbDHNjFwPZaZ65HCnCmZkdj9wPr96c8ohtdaEfrS
+        xBvUQR2R1rdGJWYPS8wWMjO538SyckHwTJaBNlNtSibxWCaIyOo59OuNCC41IKI3Y+RzGyIrXnTPN2JH
+        XEVWLggV6d0cWK+xmWpTMokH9DPoWTkF/2I92udq+ZQaXNeO4OrMIZRE7TmD8omdBm0CRpupNiWTOPDx
+        ODrma/mMGtx4exTXZg+j7U0V3IO2nMHeZ6UY1FvRuXgSgYUG+BdOILjMvzyZxDffHeOialx+XYVL0wfg
+        fVkJV8iaM1Dvy9q2pKypoxbNEbdoakLODHxqMmpTso8LObR1S6/IpC6RmYMiMwWKchA3np3Tjuk+YzPV
+        vjh9EFKPmP87UCJmFlq+YACjzS2v9mNLdwEGctjEuuZOG7QJWPMLD0ydRfkbWO6KbHvCAXfMhuIhK5xh
+        BaJfyN8g/xOEv5xnKHJIzevtAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="uploadToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAK
+        8AAACvABQqw0mAAAAAd0SU1FB9MDBgsSOGYWxoEAAAKMSURBVDhPtZFdSJNhGIafadLKmSRCpUmKR/Zj
+        QdKBJ0KSJxqFB2ahRKYUpJkzHYl/m07BkqYtHJWhaShz5b/bpGwmGaKQzog0c+bPRuLnZun8aXj3al8w
+        ic7qhocXvvu9Lni+l/5ZdkqJ88xztYtyBAuiLMEslVElaciNr2mgnDr1RQRtIaFdRqgTs35Lyih6f8Vu
+        NCIT7ZDAr9gDVE9CvqWu22Rfs3P4neZcAl+xyMl3e6GLNXUmEvJv51GDZPgUusPYelrVq6CO7hIaMCi8
+        HTy7mS0CtzRqjeg9isTxcGRz0cg0n8Gegh0wj1TBbh2Ew2FmyAKbjXOczXc0ZjsLJC4LJweCce5DKA5U
+        eOGwIhDC/G2wWRpgfi+F6e01mHqT8On1RQYPs7FAc8tJ4JUhQMibQOy7uwvd1XFY4noQXuEP65QcK7Zy
+        YO0RsKKExZiE1UU1E4xCLXEShKYL1rwrPRCQ67tZAGNsqoEfDFxVAst3ALscWMqFqT+edUOou+kk0DfG
+        f3FPEcKnwBMbT9UwpsDjj7EYnhMzUAYsZrG10wFbMqb6ophAjadiJ0FnMT0ofZ6w7pUv2nxng1mJl5ZE
+        lPaEYZW7CsxdBmbjgK+xWJ+OATeaiCepTgKdnGL0MldO1ZeDNilBN14Mg+UC2ifOor7nBDAdCUyeAibY
+        TEbA9i4MVSlOgo3oioRNQy0JaMkjvDJKodIfgvLFQdzTBjAwhIHHMT94BJ+b/dFRJEL1dZrm0V9h4BVd
+        yV5HUw77iVYFg44xKAjz/X4w1npCK3db10hovj6NtDzyZ7ruBzueZRGWR6JgrBGxdVwdmgyaUYup2SCj
+        IP7a39OvCrnEdrPWppGp9gY95D//zxD9BE82u0Qq/GAOAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="createToolStripMenuItem.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        EgAACxIB0t1+/AAAAAd0SU1FB9MJHhYJNuN7d+4AAAIPSURBVDhPtZLLaxNRGMWnnWQmM5M20SRF3FWt
+        u2pJRanio9BWrCBIpaiVWCVSXfhETRzTFmOcNIkZjYISq7iyWkL/iaJYKF4Xjg/6sK2MUkrVgK/l8d4h
+        EHCh04XfZhbD+Z0Hl/svV3NfJo0jaxEs1KFheDXWDdXCmxOfl37/+wL3FFL4lcPDb/3IFy+if2Y/PDeW
+        APDnZfLkZxa5L8eRXgjh3Ls2VOuCfYDvrkSGfmSgfw5jYP4gzr5tRVXmLwD/A4n4B2Xiy0uEiQN3lK+P
+        vqeQWehG4lMnTdAKT1ZcrEoJxK0JREk4iRR3kJKc44IjdWCdWWzmzMSDRRXa/AFcMTugzrRDM7tw/WMP
+        tLkQYpMdWJn1oCTnuIbCGjpYn9WZxWbOTBw396F3bg8i0204P9FCqzTjlLENJ15uRk3KXQasH15lrc0G
+        Y51ZbObMxNH3O3FhsoXWaMbp19tx8tVW9LxoQiCplAH1j2uRNLtxaXo3olPtiEztgjpLv9SZic+82UFF
+        W3BsvAlHxzYi9LQRvoRcBnhvu4xlt1yG96ZoeHTR8OquYvxDpxWbOYepUIrzi2IfT4QYT5xqJXFEK8oj
+        /nluunbaDFudWewjY5sg9Fbafwdy0kkSs4eswVjnw882wBlbAkDSHOTyxF5rbTZY12gQDrXCPkC8ypMV
+        ejUCaQX+ARnLr0ngI5x9gP3juN8RSCip10hYVwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>Выберите хост и порт, на которых будет размещён сервер. Если у вас нет уже полученного сертификата для работы по протоколу https, выберите пункт "Создать". В противном случае выберите пункт "Загрузить" и откройте полученный сертификат.</value>
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAgAEBAAAAEACABoBQAAhgAAABAQAAABACAAaAQAAO4FAAAYGAAAAQAIAMgGAABWCgAAGBgAAAEA
