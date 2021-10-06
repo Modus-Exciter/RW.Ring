@@ -108,7 +108,7 @@ namespace CertGenerator
 
       using (var rsaKey = RSA.Create(2048))
       {
-        SubjectAlternativeNameBuilder subjectAlternativeNameBuilder = CreateAlternativeName(hostName);
+        var subjectAlternativeNameBuilder = CreateAlternativeName(hostName);
 
         var request = new CertificateRequest(
             string.Format("CN={0}", hostName),
