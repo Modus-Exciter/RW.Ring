@@ -95,7 +95,7 @@ namespace LogAnalyzer
         }
         else
           return entry;
-     }
+      }
       catch (Exception ex)
       {
         if (this.MessageRecieved != null)
