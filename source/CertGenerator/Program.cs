@@ -7,11 +7,15 @@ namespace CertGenerator
   class Program
   {
     [STAThread]
-    static void Main(string[] args)
+    static int Main(string[] args)
     {
       Application.EnableVisualStyles();
       Application.Run(new MainForm(args));
+
+      return _success ? 0 : -1;
     }
+
+    private static bool _success;
 
     public static bool SetupCertificate(string fileName, string password, string hostName, ushort port)
     {
@@ -50,7 +54,7 @@ namespace CertGenerator
         if (NetshHepler.HasCertificate(port))
           NetshHepler.RemoveCertificate(port);
 
-        return NetshHepler.AddCertificate(port, cert.Thumbprint, "39e1e6db-d351-411a-83e4-b84e1144afad");
+        return _success = NetshHepler.AddCertificate(port, cert.Thumbprint, "39e1e6db-d351-411a-83e4-b84e1144afad");
       }
       catch (Exception ex)
       {
@@ -88,7 +92,7 @@ namespace CertGenerator
       if (NetshHepler.HasCertificate(port))
         NetshHepler.RemoveCertificate(port);
 
-      return NetshHepler.AddCertificate(port, server.Thumbprint, "39e1e6db-d351-411a-83e4-b84e1144afad");
+      return _success = NetshHepler.AddCertificate(port, server.Thumbprint, "39e1e6db-d351-411a-83e4-b84e1144afad");
     }
   }
 }
