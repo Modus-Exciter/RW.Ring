@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Reflection;
 using Notung.Loader;
+using Notung.Logging;
 
 namespace Notung.Net
 {
   public class ServerCaller
   {
     private readonly IFactory<object> m_factory;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ServerCaller));
 
     public ServerCaller(IFactory<object> objectFactory)
     {
@@ -55,10 +58,12 @@ namespace Notung.Net
       catch (TargetInvocationException ex)
       {
         ret.Error = new ClientServerException(ex.InnerException.Message, ex.InnerException.StackTrace);
+        _log.Error("Call(): TargetInvocationException", ex.InnerException ?? ex);
       }
       catch (Exception ex)
       {
         ret.Error = new ClientServerException(ex.Message, ex.StackTrace);
+        _log.Error("Call(): Exception", ex);
       }
 
       return ret;
