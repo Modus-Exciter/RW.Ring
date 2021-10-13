@@ -20,10 +20,10 @@ namespace Notung.Data
         throw new ArgumentNullException("source");
 
       m_source = new MultiplierEntry[source.Count];
-
       m_count = 1;
 
       int i = 0;
+
       foreach (var kv in source)
       {
         m_source[i++] = new MultiplierEntry
