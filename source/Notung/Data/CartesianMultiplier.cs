@@ -42,9 +42,11 @@ namespace Notung.Data
     /// <returns>Итератор, с помощью которого можно обойти кортежи произведения множеств</returns>
     public IEnumerator<Dictionary<TKey, TValue>> GetEnumerator()
     {
+      var result = new Dictionary<TKey, TValue>(m_source.Length);
+
       for (ulong i = 0; i < m_count; i++)
       {
-        var result = new Dictionary<TKey, TValue>();
+        result.Clear();
 
         foreach (var item in m_source)
         {
