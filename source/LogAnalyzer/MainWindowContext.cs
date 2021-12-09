@@ -53,6 +53,22 @@ namespace LogAnalyzer
         this.MessageRecieved(this, new MessageEventArgs("Конфигурационный файл загружен", false));
     }
 
+    public FileEntry Refresh(string path)
+    {
+      if (File.Exists(path))
+        return this.OpenLog(path);
+      else if (Directory.Exists(path))
+        return this.OpenDirectory(path);
+      else
+      {
+        return new FileEntry
+        {
+          FileName = path,
+          Table = m_tables.ContainsKey(path) ? m_tables[path].Target as DataTable : null
+        };
+      }
+    }
+
     public FileEntry OpenLog(string fileName)
     {
       try
@@ -115,7 +131,7 @@ namespace LogAnalyzer
 
       table.BeginLoadData();
 
-      foreach (var fileName in Directory.GetFiles(path, "*.log"))
+      foreach (var fileName in Directory.EnumerateFiles(path, "*.log"))
         this.FillTable(fileName, table);
 
       table.EndLoadData();
@@ -173,7 +189,7 @@ namespace LogAnalyzer
       if (File.Exists(path))
         return File.GetLastWriteTime(path);
       else if (Directory.Exists(path))
-        return Directory.GetFiles(path, "*.log").Max(File.GetLastWriteTime);
+        return Directory.EnumerateFiles(path, "*.log").Max(File.GetLastWriteTime);
       else
         return DateTime.Now.Date;
     }
@@ -282,6 +298,15 @@ namespace LogAnalyzer
       InputGestures =
       {
         new KeyGesture(Key.L, ModifierKeys.Control)
+      }
+    };
+
+    public static readonly ICommand RefreshTable = new RoutedUICommand
+    {
+      Text = "Обновить протокол",
+      InputGestures =
+      {
+        new KeyGesture(Key.F5, ModifierKeys.None)
       }
     };
   }

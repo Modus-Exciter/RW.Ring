@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
 using Notung.Feuerzauber.Controls;
 using Notung.Feuerzauber.Dialogs;
 
@@ -57,14 +57,24 @@ namespace LogAnalyzer
           new LogDisplay { DataContext = entry },
           entry.ToString(),
           Properties.Resources.Document
-        )
-        { Tag = entry.FileName },
+        ) { Tag = entry.FileName },
         item => object.Equals(item.Tag, entry.FileName));
     }
 
     private void Context_MessageRecieved(object sender, MessageEventArgs e)
     {
       MessageDialog.Show(e.Message, image: e.IsError ? MessageBoxImage.Error : MessageBoxImage.Information);
+    }
+
+    private void RefreshLog(object sender, ExecutedRoutedEventArgs e)
+    {
+      m_mdi_manager.Presenter.ActiveMdiChild.Control.DataContext
+        = m_context.Refresh(m_mdi_manager.Presenter.ActiveMdiChild.Tag.ToString());
+    }
+
+    private void CanRefreshLog(object sender, CanExecuteRoutedEventArgs e)
+    {
+      e.CanExecute = m_mdi_manager != null && m_mdi_manager.Presenter.ActiveMdiChild != null;
     }
   }
 }
