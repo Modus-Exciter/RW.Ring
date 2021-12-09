@@ -16,6 +16,8 @@ namespace LogAnalyzer
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
     private readonly Dictionary<string, WeakReference> m_tables = new Dictionary<string, WeakReference>();
 
+    private static readonly object _last_access_key = new object();
+
     public event EventHandler<MessageEventArgs> MessageRecieved;
 
     public string Separator
@@ -38,7 +40,7 @@ namespace LogAnalyzer
 
       var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
 
-      foreach (var element in nodeList.OfType<XmlElement>())
+      foreach (XmlElement element in nodeList)
       {
         if (element.GetAttribute("name") == "Separator")
           this.Separator = element.SelectSingleNode("value").InnerText;
@@ -143,7 +145,12 @@ namespace LogAnalyzer
         var table = reference.Target as DataTable;
 
         if (table != null)
-          return table;
+        {
+          if (GetLastWriteTime(path).Equals(table.ExtendedProperties[_last_access_key]))
+            return table;
+          else
+            m_tables.Remove(path);
+        }
       }
 
       foreach (var kv in m_tables.ToArray())
@@ -156,8 +163,19 @@ namespace LogAnalyzer
 
       reference = new WeakReference(ret);
       m_tables[path] = reference;
+      ret.ExtendedProperties.Add(_last_access_key, GetLastWriteTime(path));
 
       return ret;
+    }
+
+    private static DateTime GetLastWriteTime(string path)
+    {
+      if (File.Exists(path))
+        return File.GetLastWriteTime(path);
+      else if (Directory.Exists(path))
+        return Directory.GetFiles(path, "*.log").Max(File.GetLastWriteTime);
+      else
+        return DateTime.Now.Date;
     }
 
     private void FillTable(string fileName, DataTable table)
