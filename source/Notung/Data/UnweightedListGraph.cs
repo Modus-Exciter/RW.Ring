@@ -14,6 +14,8 @@ namespace Notung.Data
     private readonly SetWrapper[] m_forward;
     private readonly SetWrapper[] m_reverse;
 
+    private static readonly Func<SetWrapper> _create_set = () => new SetWrapper();
+
     /// <summary>
     /// Создание нового графа, хранимого в виде списка смежных вершин
     /// </summary>
@@ -21,10 +23,10 @@ namespace Notung.Data
     /// <param name="isOriented">Будет ли граф ориентированным</param>
     public UnweightedListGraph(int peakCount, bool isOriented)
     {
-      m_forward = ArrayExtensions.CreateAndFill(peakCount, () => new SetWrapper());
+      m_forward = ArrayExtensions.CreateAndFill(peakCount, _create_set);
 
       if (isOriented)
-        m_reverse = ArrayExtensions.CreateAndFill(peakCount, () => new SetWrapper());
+        m_reverse = ArrayExtensions.CreateAndFill(peakCount, _create_set);
     }
 
     public int PeakCount
@@ -39,11 +41,11 @@ namespace Notung.Data
 
     public bool HasArc(int from, int to)
     {
-      if ((uint)to >= (uint)m_forward.Length)
-        throw new IndexOutOfRangeException();
-
       if (from == to)
         throw new ArgumentException("from == to");
+
+      if ((uint)to >= (uint)m_forward.Length)
+        throw new IndexOutOfRangeException();
 
       return m_forward[from].m_set.Contains(to);
     }
@@ -90,9 +92,6 @@ namespace Notung.Data
       return m_forward[peak];
     }
 
-    /// <summary>
-    /// Вспомогательный класс, чтобы итераторы дуг были только для чтения
-    /// </summary>
     private class SetWrapper : IEnumerable<int>
     {
       public readonly HashSet<int> m_set = new HashSet<int>();
