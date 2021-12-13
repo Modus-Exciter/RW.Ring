@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Notung.Data
 {
@@ -11,10 +11,8 @@ namespace Notung.Data
   [Serializable]
   public sealed class UnweightedListGraph : IUnweightedGraph
   {
-    private readonly HashSet<int>[] m_forward;
-    private readonly HashSet<int>[] m_reverse;
-
-    private static readonly Func<int, int> _peak_selector = EmptySelector;
+    private readonly SetWrapper[] m_forward;
+    private readonly SetWrapper[] m_reverse;
 
     /// <summary>
     /// Создание нового графа, хранимого в виде списка смежных вершин
@@ -23,10 +21,10 @@ namespace Notung.Data
     /// <param name="isOriented">Будет ли граф ориентированным</param>
     public UnweightedListGraph(int peakCount, bool isOriented)
     {
-      m_forward = ArrayExtensions.CreateAndFill(peakCount, () => new HashSet<int>());
+      m_forward = ArrayExtensions.CreateAndFill(peakCount, () => new SetWrapper());
 
       if (isOriented)
-        m_reverse = ArrayExtensions.CreateAndFill(peakCount, () => new HashSet<int>());
+        m_reverse = ArrayExtensions.CreateAndFill(peakCount, () => new SetWrapper());
     }
 
     public int PeakCount
@@ -47,7 +45,7 @@ namespace Notung.Data
       if (from == to)
         throw new ArgumentException("from == to");
 
-      return m_forward[from].Contains(to);
+      return m_forward[from].m_set.Contains(to);
     }
 
     public bool AddArc(int from, int to)
@@ -55,8 +53,8 @@ namespace Notung.Data
       if (this.HasArc(from, to))
         return false;
 
-      m_forward[from].Add(to);
-      (m_reverse ?? m_forward)[to].Add(from);
+      m_forward[from].m_set.Add(to);
+      (m_reverse ?? m_forward)[to].m_set.Add(from);
 
       return true;
     }
@@ -66,35 +64,48 @@ namespace Notung.Data
       if (!this.HasArc(from, to))
         return false;
 
-      m_forward[from].Remove(to);
-      (m_reverse ?? m_forward)[to].Remove(from);
+      m_forward[from].m_set.Remove(to);
+      (m_reverse ?? m_forward)[to].m_set.Remove(from);
 
       return true;
     }
 
     public int IncomingCount(int peak)
     {
-      return (m_reverse ?? m_forward)[peak].Count;
+      return (m_reverse ?? m_forward)[peak].m_set.Count;
     }
 
     public int OutgoingCount(int peak)
     {
-      return m_forward[peak].Count;
+      return m_forward[peak].m_set.Count;
     }
 
     public IEnumerable<int> IncomingArcs(int peak)
     {
-      return (m_reverse ?? m_forward)[peak].Select(_peak_selector);
+      return (m_reverse ?? m_forward)[peak];
     }
 
     public IEnumerable<int> OutgoingArcs(int peak)
     {
-      return m_forward[peak].Select(_peak_selector);
+      return m_forward[peak];
     }
 
-    private static int EmptySelector(int peak)
+    /// <summary>
+    /// Вспомогательный класс, чтобы итераторы дуг были только для чтения
+    /// </summary>
+    private class SetWrapper : IEnumerable<int>
     {
-      return peak;
+      public readonly HashSet<int> m_set = new HashSet<int>();
+
+      public IEnumerator<int> GetEnumerator()
+      {
+        return m_set.GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+        return m_set.GetEnumerator();
+      }
     }
   }
 }

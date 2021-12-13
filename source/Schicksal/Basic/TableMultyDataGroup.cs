@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -76,7 +77,8 @@ namespace Schicksal.Basic
 
     private string GetInvariant(object value)
     {
-      IFormattable formattable = value as IFormattable;
+      var formattable = value as IFormattable;
+
       if (value is string)
         return string.Format("'{0}'", value);
       else if (value is DateTime)
@@ -149,9 +151,15 @@ namespace Schicksal.Basic
       return m_views.Select(v => v).GetEnumerator();
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()
     {
       return this.GetEnumerator();
+    }
+
+    public void Dispose()
+    {
+      foreach (DataViewGroup group in m_views)
+        group.View.Dispose();
     }
 
     private class DataViewGroup : IDataGroup
@@ -205,12 +213,6 @@ namespace Schicksal.Basic
 
         return m_string;
       }
-    }
-
-    public void Dispose()
-    {
-      foreach (DataViewGroup group in m_views)
-        group.View.Dispose();
     }
   }
 }

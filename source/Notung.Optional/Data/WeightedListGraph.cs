@@ -9,7 +9,7 @@ namespace Notung.Data
   /// </summary>
   /// <typeparam name="T">Тип веса вершины</typeparam>
   [Serializable]
-  public class WeightedNestedList<T> : IWeightedGraph<T> where T : IConvertible
+  public class WeightedNestedList<T> : IWeightedGraph<T> where T : IComparable<T>
   {
     private readonly Dictionary<int, T>[] m_forward;
     private readonly Dictionary<int, T>[] m_reverse;

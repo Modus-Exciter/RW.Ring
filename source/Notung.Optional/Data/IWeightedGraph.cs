@@ -8,7 +8,7 @@ namespace Notung.Data
   /// Базовый интерфейс для работы с взвешенными графами
   /// </summary>
   /// <typeparam name="T">Тип веса дуги</typeparam>
-  public interface IWeightedGraph<T> : IGraph where T : IConvertible
+  public interface IWeightedGraph<T> : IGraph where T : IComparable<T>
   {
     /// <summary>
     /// Добавление дуги
@@ -46,9 +46,11 @@ namespace Notung.Data
   /// ним алгоритмов, предназначенных для невзвешенного графа
   /// </summary>
   /// <typeparam name="T">Тип веса дуги во взвешенном графе</typeparam>
-  public sealed class UnweightedWrapper<T> : IUnweightedGraph where T : IConvertible
+  public sealed class UnweightedWrapper<T> : IUnweightedGraph where T : IComparable<T>
   {
     private readonly IWeightedGraph<T> m_graph;
+
+    private static readonly Func<Tuple<int, T>, int> _selector = t => t.Item1;
 
     public UnweightedWrapper(IWeightedGraph<T> graph)
     {
@@ -70,12 +72,12 @@ namespace Notung.Data
 
     public IEnumerable<int> IncomingArcs(int peak)
     {
-      return m_graph.IncomingArcs(peak).Select(t => t.Item1);
+      return m_graph.IncomingArcs(peak).Select(_selector);
     }
 
     public IEnumerable<int> OutgoingArcs(int peak)
     {
-      return m_graph.OutgoingArcs(peak).Select(t => t.Item1);
+      return m_graph.OutgoingArcs(peak).Select(_selector);
     }
 
     public int PeakCount

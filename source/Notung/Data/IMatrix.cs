@@ -134,7 +134,7 @@ namespace Notung.Data
   }
 
   /// <summary>
-  /// Обыкновенная квадратная матрица
+  /// Обыкновенная прямоугольная матрица
   /// </summary>
   /// <typeparam name="T">Тип элемента матрицы</typeparam>
   [Serializable]
