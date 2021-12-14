@@ -159,7 +159,7 @@ namespace Notung.Data
     {
       using (this.ReadLock())
       {
-        for (int i = 0; i < m_count; i++)
+        for (int i = 0; i < m_last_index; i++)
         {
           var tg = m_slots[i].Target;
 
