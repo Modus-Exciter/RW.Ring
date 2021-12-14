@@ -459,7 +459,7 @@ namespace Schicksal.Helm
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
           var processor = new CorrelationTestProcessor(table,
-            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result);
+            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result, dlg.DataSource.Filter);
 
           if (AppManager.OperationLauncher.Run(processor,
             new LaunchParameters
