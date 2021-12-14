@@ -65,7 +65,9 @@ namespace JetExcelOleDbImport
 
       if (messages.Count > 0)
       {
-        MessageBox.Show(string.Join(Environment.NewLine, messages), this.Text);
+        MessageBox.Show(string.Join(Environment.NewLine, messages),
+          this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
         e.Cancel = true;
       }
     }
