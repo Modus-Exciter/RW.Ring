@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary x:Class="Notung.Feuerzauber.Styles.GridStyles"
                     xmlns:local="clr-namespace:Notung.Feuerzauber.Converters"
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
     <Style TargetType="RepeatButton" x:Key="scrollRepeat">
         <Setter Property="Template">
             <Setter.Value>
@@ -93,6 +94,14 @@
     </Style>
 
     <Style TargetType="ScrollBar">
+        <Style.Resources>
+            <Style TargetType="{x:Type Track}">
+                <Style.Resources>
+                    <System:Double x:Key="{x:Static SystemParameters.VerticalScrollBarButtonHeightKey}">48</System:Double>
+                    <System:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">48</System:Double>
+                </Style.Resources>
+            </Style>
+        </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollBar">
@@ -107,8 +116,7 @@
                                       FontFamily="Courier New"
                                       Style="{StaticResource scrollUpDown}"
                                       Command="ScrollBar.LineUpCommand">▲</RepeatButton>
-                        <Track Name="PART_Track" Grid.Row="1" 
-                               IsDirectionReversed="True">
+                        <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="True">
                             <Track.DecreaseRepeatButton>
                                 <RepeatButton x:Name="PageUp"
                                               Style="{StaticResource scrollRepeat}" 
