@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using Notung;
 using Schicksal.Basic;
 using Schicksal.Properties;
-using System.Data;
-using Notung;
-using System.Text;
 
 namespace Schicksal.Regression
 {
