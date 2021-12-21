@@ -28,8 +28,9 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-      System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+      System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+      System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+      System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).BeginInit();
@@ -37,17 +38,25 @@
       // 
       // m_chart
       // 
-      chartArea2.Name = "ChartArea1";
-      this.m_chart.ChartAreas.Add(chartArea2);
+      chartArea1.Name = "ChartArea1";
+      this.m_chart.ChartAreas.Add(chartArea1);
       this.m_chart.Dock = System.Windows.Forms.DockStyle.Fill;
-      legend2.Name = "Legend1";
-      this.m_chart.Legends.Add(legend2);
+      legend1.Name = "Legend1";
+      this.m_chart.Legends.Add(legend1);
       this.m_chart.Location = new System.Drawing.Point(0, 0);
       this.m_chart.Name = "m_chart";
+      series1.ChartArea = "ChartArea1";
+      series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+      series1.Legend = "Legend1";
+      series1.Name = "Series1";
+      series2.BorderWidth = 2;
       series2.ChartArea = "ChartArea1";
-      series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+      series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+      series2.Color = System.Drawing.Color.Red;
       series2.Legend = "Legend1";
-      series2.Name = "Series1";
+      series2.Name = "Series2";
+      series2.ShadowOffset = 1;
+      this.m_chart.Series.Add(series1);
       this.m_chart.Series.Add(series2);
       this.m_chart.Size = new System.Drawing.Size(709, 562);
       this.m_chart.TabIndex = 0;
