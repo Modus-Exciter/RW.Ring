@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 using Schicksal.Regression;
 
@@ -23,14 +22,10 @@ namespace Schicksal.Helm
     {
       base.OnLoad(e);
 
-      var series = m_chart.Series[0];
+      var results = new CorrelationResults(this.Table, this.Factor, this.Effect);
+      var data = results.Run((x, y) => m_chart.Series[0].Points.AddXY(x, y));
 
-      series.Name = this.Factor;
-
-      CorrelationResults results = new CorrelationResults(this.Table, this.Factor, this.Effect);
-
-      CorrelationFormula data = results.Run((x, y) => series.Points.AddXY(x, y));
-
+      m_chart.Series[0].Name = this.Factor;
       m_chart.Series[1].Name = data.ToString();
       m_chart.Series[1].Points.AddXY(data.MinX, data.MinY);
       m_chart.Series[1].Points.AddXY(data.MaxX, data.MaxY);
