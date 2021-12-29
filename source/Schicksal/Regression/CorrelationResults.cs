@@ -26,7 +26,7 @@ namespace Schicksal.Regression
 
     public string Effect { get; private set; }
 
-    public CorrelationFormula Run(Action<double, double> addXY)
+    public CorrelationFormula Run(Action<double, double> addXY = null)
     {
       double min_x = double.MaxValue;
       double max_x = double.MinValue;
@@ -45,7 +45,9 @@ namespace Schicksal.Regression
       {
         double x = Convert.ToDouble(row[this.Factor]);
         double y = Convert.ToDouble(row[this.Effect]);
-        addXY(x, y);
+
+        if (addXY != null)
+          addXY(x, y);
 
         sum_up += (x - avg_x) * (y - avg_y);
         sum_dn += (x - avg_x) * (x - avg_x);

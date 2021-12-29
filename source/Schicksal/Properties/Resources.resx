@@ -214,4 +214,13 @@
   <data name="DATA_GROUP_SIZE_MISMATCH" xml:space="preserve">
     <value>Both groups must be equal for regression analysis</value>
   </data>
+  <data name="REGRESSION_DEPENDENCY" xml:space="preserve">
+    <value>Regression dependency forumla</value>
+  </data>
+  <data name="REGRESSION_DETAILS" xml:space="preserve">
+    <value>Regression analysis details</value>
+  </data>
+  <data name="REGRESSION_RESULTS" xml:space="preserve">
+    <value>Regression analysis results</value>
+  </data>
 </root>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Regression;
@@ -16,7 +18,7 @@ namespace Schicksal.Helm
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
     }
 
-    public object DataSorce
+    public object DataSource
     {
       get { return m_binding_source.DataSource; }
       set
@@ -82,6 +84,33 @@ namespace Schicksal.Helm
 
       if (row.P <= this.Probability)
         e.CellStyle.ForeColor = m_significat_color;
+    }
+
+    private void m_cmd_export_Click(object sender, EventArgs e)
+    {
+      using (var dlg = new SaveFileDialog())
+      {
+        dlg.Filter = "Html files|*.html";
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+          var saver = new RegressionHtmlSaver(
+           dlg.FileName,
+           this.SourceTable,
+           this.DataSource as CorrelationMetrics[],
+           this.Probability,
+           string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
+          {
+            Factors = this.Factors,
+            Result = this.ResultColumn,
+            Filter = this.Filter
+          };
+
+          if (AppManager.OperationLauncher.Run(saver) == TaskStatus.RanToCompletion)
+          {
+            Process.Start(dlg.FileName);
+          }
+        }
+      }
     }
   }
 }

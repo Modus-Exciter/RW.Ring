@@ -472,7 +472,7 @@ namespace Schicksal.Helm
             var results_form = new AncovaResultsForm();
             results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
               Resources.ANCOVA, table_form.Text, dlg.DataSource.Probability, dlg.DataSource.Result);
-            results_form.DataSorce = processor.Results;
+            results_form.DataSource = processor.Results;
             results_form.Factors = dlg.DataSource.Predictors.ToArray();
             results_form.ResultColumn = dlg.DataSource.Result;
             results_form.Filter = dlg.DataSource.Filter;

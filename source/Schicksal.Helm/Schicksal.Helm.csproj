@@ -161,6 +161,9 @@
     <EmbeddedResource Include="AncovaResultsForm.resx">
       <DependentUpon>AncovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AncovaResultsForm.ru.resx">
+      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnovaResultsForm.RU.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>

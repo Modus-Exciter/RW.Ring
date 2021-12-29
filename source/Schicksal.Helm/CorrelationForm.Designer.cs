@@ -29,11 +29,11 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
+      System.Windows.Forms.DataVisualization.Charting.TextAnnotation textAnnotation1 = new System.Windows.Forms.DataVisualization.Charting.TextAnnotation();
       System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-      System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
       System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_copy = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,22 +43,32 @@
       // 
       // m_chart
       // 
-      resources.ApplyResources(this.m_chart, "m_chart");
+      textAnnotation1.Alignment = System.Drawing.ContentAlignment.TopLeft;
+      textAnnotation1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+      textAnnotation1.IsSizeAlwaysRelative = false;
+      textAnnotation1.Name = "TextAnnotation1";
+      textAnnotation1.Text = "Урожай = -5,541e-2 * Площадь + 2861,304 ";
+      textAnnotation1.Width = 100D;
+      textAnnotation1.X = 5D;
+      textAnnotation1.Y = 2D;
+      this.m_chart.Annotations.Add(textAnnotation1);
       chartArea1.Name = "ChartArea1";
+      chartArea1.Position.Auto = false;
+      chartArea1.Position.Height = 90F;
+      chartArea1.Position.Width = 90F;
+      chartArea1.Position.X = 3F;
+      chartArea1.Position.Y = 6F;
       this.m_chart.ChartAreas.Add(chartArea1);
       this.m_chart.ContextMenuStrip = this.m_context_menu;
-      legend1.Name = "Legend1";
-      this.m_chart.Legends.Add(legend1);
+      resources.ApplyResources(this.m_chart, "m_chart");
       this.m_chart.Name = "m_chart";
       series1.ChartArea = "ChartArea1";
       series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
-      series1.Legend = "Legend1";
       series1.Name = "Series1";
       series2.BorderWidth = 2;
       series2.ChartArea = "ChartArea1";
       series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
       series2.Color = System.Drawing.Color.Red;
-      series2.Legend = "Legend1";
       series2.Name = "Series2";
       series2.ShadowOffset = 1;
       this.m_chart.Series.Add(series1);
@@ -66,16 +76,16 @@
       // 
       // m_context_menu
       // 
-      resources.ApplyResources(this.m_context_menu, "m_context_menu");
       this.m_context_menu.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_cmd_copy});
       this.m_context_menu.Name = "m_context_menu";
+      resources.ApplyResources(this.m_context_menu, "m_context_menu");
       // 
       // m_cmd_copy
       // 
-      resources.ApplyResources(this.m_cmd_copy, "m_cmd_copy");
       this.m_cmd_copy.Name = "m_cmd_copy";
+      resources.ApplyResources(this.m_cmd_copy, "m_cmd_copy");
       this.m_cmd_copy.Click += new System.EventHandler(this.m_cmd_copy_Click);
       // 
       // CorrelationForm

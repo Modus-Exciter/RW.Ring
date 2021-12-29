@@ -30,8 +30,12 @@ namespace Schicksal.Helm
       this.Text = string.Format("{0}({1}) [{2}]", result, factor.Replace("+", ", "), filter);
 
       Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
-      if (resolution.height != 0) this.Height = resolution.height;
-      if (resolution.width != 0) this.Width = resolution.width;
+
+      if (resolution.height != 0) 
+        this.Height = resolution.height;
+
+      if (resolution.width != 0) 
+        this.Width = resolution.width;
 
       m_comparator = new VariantsComparator(table, factor, result, filter);
       m_probability = p;
