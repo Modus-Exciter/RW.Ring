@@ -179,6 +179,9 @@
     <EmbeddedResource Include="CorrelationForm.resx">
       <DependentUpon>CorrelationForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CorrelationForm.ru.resx">
+      <DependentUpon>CorrelationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </EmbeddedResource>

@@ -95,8 +95,17 @@ namespace Schicksal.Regression
 
     public override string ToString()
     {
-      return string.Format("{0} = {1:0.00} * {2} {3} {4:0.00}",
-        (this.Effect ?? "y"), A, (this.Factor ?? "x"), B >= 0 ? '+' : '-', Math.Abs(B));
+      return string.Format("{0} = {1} * {2} {3} {4}",
+        (this.Effect ?? "y"), ConvertNumber(this.A), (this.Factor ?? "x"), 
+        this.B >= 0 ? '+' : '-', ConvertNumber(Math.Abs(this.B)));
+    }
+
+    private static string ConvertNumber(double number)
+    {
+      if (Math.Abs(number) < 0.1 || Math.Abs(number) > 999999)
+        return number.ToString("0.000e+0");
+      else
+        return number.ToString("0.000");
     }
   }
 }
