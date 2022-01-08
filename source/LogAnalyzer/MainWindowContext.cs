@@ -189,7 +189,7 @@ namespace LogAnalyzer
       if (File.Exists(path))
         return File.GetLastWriteTime(path);
       else if (Directory.Exists(path))
-        return Directory.EnumerateFiles(path, "*.log").Max(File.GetLastWriteTime);
+        return Directory.EnumerateFiles(path, "*.log").Max<string, DateTime>(File.GetLastWriteTime);
       else
         return DateTime.Now.Date;
     }

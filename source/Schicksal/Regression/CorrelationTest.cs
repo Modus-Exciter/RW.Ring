@@ -24,11 +24,11 @@ namespace Schicksal.Regression
       if (factor.Count < 3)
         throw new ArgumentOutOfRangeException("factor.Count");
 
-      double x_average = factor.Average();
-      double y_average = result.Average();
       double up_sum = 0;
       double x_sum = 0;
       double y_sum = 0;
+      double x_average = factor.Average();
+      double y_average = result.Average();
 
       for (int i = 0; i < factor.Count; i++)
       {
