@@ -20,18 +20,18 @@
             <controls:DialogHeader />
             <Border  Grid.Row="1" Background="Gainsboro" CornerRadius="0,0,2,2">
             <Grid>
-                    <Grid.Resources>
-                        <Style TargetType="TextBlock">
-                            <Style.Setters>
-                                <Setter Property="Padding" Value="0,5,20,5"/>
-                                <Setter Property="MaxWidth" Value="200"/>
-                                <Setter Property="TextWrapping" Value="Wrap"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="FontFamily" Value="Trebuchet MS"/>
-                            </Style.Setters>
-                        </Style>
-                    </Grid.Resources>
-                    <Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock">
+                        <Style.Setters>
+                            <Setter Property="Padding" Value="0,5,20,5"/>
+                            <Setter Property="MaxWidth" Value="200"/>
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="FontFamily" Value="Trebuchet MS"/>
+                        </Style.Setters>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
