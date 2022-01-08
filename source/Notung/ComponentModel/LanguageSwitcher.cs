@@ -16,12 +16,12 @@ namespace Notung.ComponentModel
   public sealed class LanguageSwitcher : Component, ISupportInitialize
   {
     private static readonly WeakSet<LanguageSwitcher> _instances = new WeakSet<LanguageSwitcher>();
+    private static readonly ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
+    private static readonly object _changed_event_key = new object();
+
     private static CultureInfo _current_culture = Thread.CurrentThread.CurrentUICulture;
-    private static object _changed_event_key = new object();
 
-    private static ILog _log = LogManager.GetLogger(typeof(LanguageSwitcher));
-
-    static LanguageSwitcher() 
+    static LanguageSwitcher()
     {
       ThreadTracker.AddThreadHandlers(OnThreadRegistered, null, OnThreadError);
     }
@@ -124,7 +124,7 @@ namespace Notung.ComponentModel
           else
             expired_threads.Add(thread);
         }
-        catch(Exception error)
+        catch (Exception error)
         {
           OnThreadError(thread, error);
         }
@@ -163,7 +163,7 @@ namespace Notung.ComponentModel
 
     void ISupportInitialize.EndInit()
     {
-      OnLanguageChanged(new LanguageEventArgs(_current_culture));
+      this.OnLanguageChanged(new LanguageEventArgs(_current_culture));
     }
 
     #endregion
@@ -176,7 +176,7 @@ namespace Notung.ComponentModel
   public class LanguageEventArgs : EventArgs
   {
     private readonly CultureInfo m_culture_info;
-    
+
     /// <summary>
     /// Инициализирует новый экземпляр события
     /// </summary>

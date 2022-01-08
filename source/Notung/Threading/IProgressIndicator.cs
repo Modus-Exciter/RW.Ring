@@ -27,7 +27,7 @@ namespace Notung.Threading
 
       m_worker = worker;
     }
-    
+
     public void ReportProgress(int percentage, string state)
     {
       if (m_worker.WorkerReportsProgress)

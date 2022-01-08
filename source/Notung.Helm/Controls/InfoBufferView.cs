@@ -6,17 +6,17 @@ namespace Notung.Helm.Controls
   {
     public InfoBufferView()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public void SetInfoBuffer(InfoBuffer buffer)
     {
-      SetInfoBuffer(buffer, m_tree.Nodes);
+      this.SetInfoBuffer(buffer, m_tree.Nodes);
     }
 
     private void SetInfoBuffer(InfoBuffer buffer, TreeNodeCollection nodes)
     {
-      foreach (var info in buffer)      
+      foreach (var info in buffer)
       {
         var node = nodes.Add(info.Message);
         node.ImageKey = info.Level.ToString();
@@ -24,7 +24,7 @@ namespace Notung.Helm.Controls
 
         node.Tag = info.Details;
 
-        SetInfoBuffer(info.InnerMessages, node.Nodes);
+        this.SetInfoBuffer(info.InnerMessages, node.Nodes);
 
         node.Expand();
       }

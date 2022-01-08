@@ -49,7 +49,7 @@ namespace Notung.Logging
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
     {
-      return GetEnumerator();
+      return this.GetEnumerator();
     }
   }
 
@@ -65,16 +65,16 @@ namespace Notung.Logging
     public LoggingEvent(string source, string message, InfoLevel level, object data) : this()
     {
       if (string.IsNullOrEmpty(source))
-        throw new ArgumentNullException("source"); 
+        throw new ArgumentNullException("source");
 
       if (string.IsNullOrEmpty(message))
         throw new ArgumentNullException("message");
 
-      this.Source = source;
-      this.Message = message;
-      this.Level = level;
+      Source = source;
+      Message = message;
+      Level = level;
       this.Data = data;
-      this.LoggingDate = DateTime.Now;
+      LoggingDate = DateTime.Now;
 
       m_thread_context = LoggingContext.Thread;
     }
@@ -85,7 +85,7 @@ namespace Notung.Logging
       if (this.Data != null && !this.Data.GetType().IsDefined(typeof(SerializableAttribute), false))
         this.Data = this.Data.ToString();
     }
-    
+
     public readonly string Message;
 
     public readonly InfoLevel Level;

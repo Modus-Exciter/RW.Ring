@@ -39,7 +39,7 @@ namespace Notung.Data
       foreach (var prefix in prefixes)
       {
         if (!string.IsNullOrEmpty(prefix))
-          AddPrefix(prefix);
+          this.AddPrefix(prefix);
       }
     }
 
@@ -52,7 +52,7 @@ namespace Notung.Data
     {
       if (string.IsNullOrEmpty(fullString))
         throw new ArgumentNullException("fullString");
-      
+
       var item = m_root;
 
       for (int i = 0; i < fullString.Length; i++)
@@ -81,8 +81,8 @@ namespace Notung.Data
     /// <returns>Все префиксы, ранее добавленные методом Add</returns>
     public string[] GetAllPrefixes()
     {
-      LinkedList<PrefixTreeItem> list = new LinkedList<PrefixTreeItem>();
-      Collect(m_root, list);
+      var list = new LinkedList<PrefixTreeItem>();
+      this.Collect(m_root, list);
 
       var ret = new string[list.Count];
 
@@ -111,14 +111,14 @@ namespace Notung.Data
         if (child.IsLeaf)
           list.AddLast(child);
         else
-          Collect(child, list);
+          this.Collect(child, list);
       }
     }
 
     private class PrefixTreeItem
     {
       private readonly char m_symbol;
-      private readonly Dictionary<char, PrefixTreeItem> m_next_symbols = new Dictionary<char,PrefixTreeItem>();
+      private readonly Dictionary<char, PrefixTreeItem> m_next_symbols = new Dictionary<char, PrefixTreeItem>();
       private PrefixTreeItem m_parent;
 
       public PrefixTreeItem(char symbol)
@@ -132,8 +132,8 @@ namespace Notung.Data
 
         if (!m_next_symbols.TryGetValue(symbol, out child))
         {
-          child = new PrefixTreeItem(symbol);
-          child.m_parent = this;
+          child = new PrefixTreeItem(symbol) { m_parent = this };
+
           m_next_symbols.Add(symbol, child);
 
           addedNew = true;

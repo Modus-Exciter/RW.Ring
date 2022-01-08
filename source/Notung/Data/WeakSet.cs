@@ -55,7 +55,7 @@ namespace Notung.Data
         if (slot_index >= 0)
           return false;
 
-        this.AddSlot(item, bucket_index, slot_index);
+        this.AddSlot(item, bucket_index);
 
         return true;
       }
@@ -159,7 +159,7 @@ namespace Notung.Data
     {
       using (this.ReadLock())
       {
-        for (int i = 0; i < m_count; i++)
+        for (int i = 0; i < m_last_index; i++)
         {
           var tg = m_slots[i].Target;
 
@@ -194,9 +194,9 @@ namespace Notung.Data
 
     private void IncreaseCapacity()
     {
-      int min = this.m_count * 2 + 1;
+      int min = m_count * 2 + 1;
       int prime = PrimeHelper.GetPrime(min < 0 ? m_count : min);
-      Slot[] tmp_slots = new Slot[prime];
+      var tmp_slots = new Slot[prime];
 
       if (m_slots != null)
         Array.Copy(m_slots, 0, tmp_slots, 0, m_last_index);
@@ -245,9 +245,10 @@ namespace Notung.Data
       return -1;
     }
 
-    private void AddSlot(T item, int bucketIndex, int slotIndex)
+    private void AddSlot(T item, int bucketIndex)
     {
       var hash_code = item.GetHashCode();
+      int slotIndex;
 
       if (m_free_index >= 0)
       {
@@ -364,7 +365,7 @@ namespace Notung.Data
         {
           if (value > int.MaxValue - 6)
             return int.MaxValue;
-          
+
           value += even ? 4 : 2;
           even = !even;
         }

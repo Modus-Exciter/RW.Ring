@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Reflection;
 using Notung.Loader;
+using Notung.Logging;
 
 namespace Notung.Net
 {
   public class ServerCaller
   {
     private readonly IFactory<object> m_factory;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(ServerCaller));
 
     public ServerCaller(IFactory<object> objectFactory)
     {
@@ -34,7 +37,7 @@ namespace Notung.Net
         if (operation.Method.ReturnType == typeof(void))
           return ParametersList.Create(operation.Method, values);
 
-        IRefReturnResult res = (IRefReturnResult)Activator.CreateInstance(operation.ResultType);
+        var res = (IRefReturnResult)Activator.CreateInstance(operation.ResultType);
         res.References = ParametersList.Create(operation.Method, values);
         res.Return = result;
 
@@ -50,15 +53,17 @@ namespace Notung.Net
 
       try
       {
-        ret.Value = Invoke(request, operation);
+        ret.Value = this.Invoke(request, operation);
       }
       catch (TargetInvocationException ex)
       {
         ret.Error = new ClientServerException(ex.InnerException.Message, ex.InnerException.StackTrace);
+        _log.Error("Call(): TargetInvocationException", ex.InnerException ?? ex);
       }
       catch (Exception ex)
       {
         ret.Error = new ClientServerException(ex.Message, ex.StackTrace);
+        _log.Error("Call(): Exception", ex);
       }
 
       return ret;

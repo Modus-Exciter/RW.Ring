@@ -38,6 +38,7 @@ namespace LogAnalyzer
         {
           m_children[i].IsExpanded = true;
           m_children[i].Children.Single(c => c.ToString().Equals(company)).IsExpanded = true;
+
           break;
         }
       }
@@ -66,7 +67,7 @@ namespace LogAnalyzer
         return "Выберите папку";
 
       if (!Directory.EnumerateFiles(selectedPath, "*.log").Any() &&
-          Directory.Exists(Path.Combine(selectedPath, "Logs")))
+           Directory.Exists(Path.Combine(selectedPath, "Logs")))
         selectedPath = Path.Combine(selectedPath, "Logs");
 
       if (!Directory.EnumerateFiles(selectedPath, "*.log").Any())
@@ -74,6 +75,8 @@ namespace LogAnalyzer
 
       return null;
     }
+
+    #region Test Hepler ---------------------------------------------------------------------------
 
     private string GetLongTestString(int size)
     {
@@ -83,6 +86,8 @@ namespace LogAnalyzer
 
       return new string(bytes.Select(b => chars[rnd.Next(chars.Length)]).ToArray());
     }
+
+    #endregion
   }
 
   public class DirectoryEntry : ObservableObject, IDirectoryEntry
@@ -101,9 +106,6 @@ namespace LogAnalyzer
     private static readonly Bitmap _folder = Resources.Folder;
     private static readonly Bitmap _folder_open = Resources.FolderOpen;
 
-    private readonly Func<string, DirectoryEntry> m_child_factory;
-    private static readonly Func<string, bool> _check_access = CheckAccess;
-
     #endregion
 
     #region Constructors --------------------------------------------------------------------------
@@ -119,8 +121,6 @@ namespace LogAnalyzer
       m_parent = parent;
       m_path = path;
       m_name = Path.GetFileName(path);
-
-      m_child_factory = s => new DirectoryEntry(s, this);
     }
 
     #endregion
@@ -195,9 +195,9 @@ namespace LogAnalyzer
         if (m_children == null)
         {
           if (string.IsNullOrEmpty(m_path))
-            m_children = GetLogicalDrives();
+            m_children = this.GetLogicalDrives();
           else
-            m_children = GetChildDirectories();
+            m_children = this.GetChildDirectories();
         }
 
         return m_children;

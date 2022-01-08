@@ -114,7 +114,7 @@ namespace Notung.Services
       m_prefix_tree.AddRange(m_exclude_prefixes);
 
       m_domain = domain;
-      m_domain.AssemblyLoad += HandleAssemblyLoad;
+      m_domain.AssemblyLoad += this.HandleAssemblyLoad;
 
       lock (m_assemblies)
       {
@@ -122,7 +122,7 @@ namespace Notung.Services
           this.HandleAssemblyLoad(this, new AssemblyLoadEventArgs(asm));
       }
 
-      m_exclude_prefixes.ListChanged += HandleListChanged;
+      m_exclude_prefixes.ListChanged += this.HandleListChanged;
       m_exclude_wrapper = new Collection<string>(m_exclude_prefixes);
       m_tracking_wrapper = new ReadOnlyCollection<Assembly>(m_tracking_assemblies);
       m_plugins_wrapper = new ReadOnlyCollection<PluginInfo>(m_plugins);
@@ -159,19 +159,19 @@ namespace Notung.Services
       if (string.IsNullOrEmpty(searchPattern))
         throw new ArgumentNullException("searchPattern");
 
-      var search_path = GetPluginsSearchPath();
+      var search_path = this.GetPluginsSearchPath();
       var old_count = m_plugins.Count;
 
       AppDomain separate_domain = mode == LoadPluginsMode.SeparateDomain ?
-        CreateDomain(string.Format("Plugins ({0})", searchPattern)) : null;
+        this.CreateDomain(string.Format("Plugins ({0})", searchPattern)) : null;
 
       try
       {
         foreach (var plugin_file in Directory.GetFiles(search_path, searchPattern))
         {
-          var plugin_info = GetPluginInfo(plugin_file);
+          var plugin_info = this.GetPluginInfo(plugin_file);
 
-          if (!CheckPlugin(plugin_info, plugin_file))
+          if (!this.CheckPlugin(plugin_info, plugin_file))
             continue;
 
           plugin_info.SearchPattern = searchPattern;
@@ -179,15 +179,15 @@ namespace Notung.Services
           switch (mode)
           {
             case LoadPluginsMode.CurrentDomain:
-              LoadPluginToCurrentDomain(plugin_info);
+              this.LoadPluginToCurrentDomain(plugin_info);
               break;
 
             case LoadPluginsMode.DomainPerPlugin:
-              LoadPluginToAnotherDomain(plugin_info, CreateDomain(plugin_info.Name), true);
+              this.LoadPluginToAnotherDomain(plugin_info, this.CreateDomain(plugin_info.Name), true);
               break;
 
             case LoadPluginsMode.SeparateDomain:
-              LoadPluginToAnotherDomain(plugin_info, separate_domain, false);
+              this.LoadPluginToAnotherDomain(plugin_info, separate_domain, false);
               break;
           }
         }
@@ -264,7 +264,7 @@ namespace Notung.Services
     {
       if (disposing)
       {
-        m_domain.AssemblyLoad -= HandleAssemblyLoad;
+        m_domain.AssemblyLoad -= this.HandleAssemblyLoad;
         m_plugin_loader.Dispose();
       }
     }
@@ -481,7 +481,7 @@ namespace Notung.Services
       public PluginLoader(HashSet<string> unmanagedAsemblies)
       {
         m_unmanaged_asms = unmanagedAsemblies;
-        AppDomain.CurrentDomain.AssemblyResolve += HandleAssemblyResolve;
+        AppDomain.CurrentDomain.AssemblyResolve += this.HandleAssemblyResolve;
       }
 
       public PluginLoader() : this(new HashSet<string>()) { }
@@ -526,7 +526,7 @@ namespace Notung.Services
 
       public void Dispose()
       {
-        AppDomain.CurrentDomain.AssemblyResolve -= HandleAssemblyResolve;
+        AppDomain.CurrentDomain.AssemblyResolve -= this.HandleAssemblyResolve;
       }
     }
 

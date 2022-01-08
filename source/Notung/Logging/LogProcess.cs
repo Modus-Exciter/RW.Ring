@@ -68,7 +68,6 @@ namespace Notung.Logging
       private readonly object m_close_lock = new object();
       private volatile int m_size = 0;
       private volatile bool m_shutdown;
-
       private LoggingEvent[] m_current_data; // Чтобы не создавать лишних объектов
 
       public AsyncLogProcess(IMainThreadInfo info, HashSet<ILogAppender> acceptors) : base(acceptors)
@@ -101,7 +100,7 @@ namespace Notung.Logging
       {
         using (m_signal = new EventWaitHandle(false, EventResetMode.AutoReset))
         {
-          using (var timer = new Timer(Watch, m_work_thread, 256, 128))
+          using (var timer = new Timer(this.Watch, m_work_thread, 256, 128))
           {
             while (m_signal.WaitOne(Timeout.Infinite))
             {
@@ -125,10 +124,11 @@ namespace Notung.Logging
         lock (m_data)
         {
           m_size = m_data.Count;
+
           if (m_size > 0)
           {
-            if (m_current_data == null 
-              || m_current_data.Length < m_size 
+            if (m_current_data == null
+              || m_current_data.Length < m_size
               || m_current_data.Length / m_size > 0x100)
               m_current_data = new LoggingEvent[m_data.Count];
 

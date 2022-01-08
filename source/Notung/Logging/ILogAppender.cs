@@ -31,7 +31,7 @@ namespace Notung.Logging
       if (!Directory.Exists(m_working_path))
         Directory.CreateDirectory(m_working_path);
 
-      InitializeCounter();
+      this.InitializeCounter();
     }
 
     public FileLogAppender() : this(LogSettings.Default.MessageTemplate) { }
@@ -40,7 +40,7 @@ namespace Notung.Logging
     {
       if (!File.Exists(Path.Combine(m_working_path, COUNTER)))
       {
-        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
+        using (var sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
         {
           sw.WriteLine(0);
         }
@@ -67,18 +67,18 @@ namespace Notung.Logging
 
     public void WriteLog(LoggingData data)
     {
-      FileInfo fi = GetFileInfo();
+      FileInfo fi = this.GetFileInfo();
 
       if (fi.Exists && fi.Length > LogSettings.Default.LogFileSize)
       {
         m_file_count++;
 
-        using (StreamWriter sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
+        using (var sw = new StreamWriter(Path.Combine(m_working_path, COUNTER)))
         {
           sw.WriteLine(m_file_count);
         }
 
-        fi = GetFileInfo();
+        fi = this.GetFileInfo();
       }
 
       using (var fs = fi.Open(FileMode.Append, FileAccess.Write, FileShare.Write))

@@ -25,7 +25,7 @@ namespace Notung.Threading
     /// <param name="reenterable">Будет ли блокировка реентерабельной</param>
     public SharedLock(bool reenterable = true)
     {
-      m_lock = new ReaderWriterLockSlim(reenterable ? 
+      m_lock = new ReaderWriterLockSlim(reenterable ?
         LockRecursionPolicy.SupportsRecursion : LockRecursionPolicy.NoRecursion);
 
       m_reader = new ReadLockHandle(m_lock);
@@ -70,7 +70,7 @@ namespace Notung.Threading
     /// <param name="millisecondsTimeout">Время, по истечении которого если не удалось захватить блокировку операция выполняться не будет</param>
     public void RunInReadLock(Action action, int millisecondsTimeout)
     {
-      if (action == null) 
+      if (action == null)
         throw new ArgumentNullException("action");
 
       if (!m_closed && m_lock.TryEnterReadLock(millisecondsTimeout))

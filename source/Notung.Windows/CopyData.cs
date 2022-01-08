@@ -14,7 +14,7 @@ namespace Notung.Helm.Windows
     private readonly byte[] m_data;
     private readonly uint m_type_code;
     private readonly bool m_can_send;
-    
+
     /// <summary>
     /// Создание объекта передачи данных на передающей стороне
     /// </summary>
@@ -24,7 +24,7 @@ namespace Notung.Helm.Windows
     {
       if (data == null)
         throw new ArgumentNullException("data");
-      
+
       m_data = data;
       m_type_code = typeCode.Code;
       m_can_send = true;

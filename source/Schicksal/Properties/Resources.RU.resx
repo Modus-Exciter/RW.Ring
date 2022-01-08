@@ -177,6 +177,15 @@
   <data name="PAIRED_COMPARISON" xml:space="preserve">
     <value>Попарное сравнение</value>
   </data>
+  <data name="REGRESSION_DEPENDENCY" xml:space="preserve">
+    <value>Формула регрессионной зависимости</value>
+  </data>
+  <data name="REGRESSION_DETAILS" xml:space="preserve">
+    <value>Детальные результаты регрессионного анализа</value>
+  </data>
+  <data name="REGRESSION_RESULTS" xml:space="preserve">
+    <value>Результаты регрессионного анализа</value>
+  </data>
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
   </data>

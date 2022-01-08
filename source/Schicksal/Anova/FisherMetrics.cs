@@ -32,7 +32,7 @@ namespace Schicksal.Anova
     /// </summary>
     public double F
     {
-      get { return MSb / MSw; }
+      get { return this.MSb / this.MSw; }
     }
   }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -50,7 +51,7 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], this.GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!string.IsNullOrEmpty(filter))
@@ -76,7 +77,8 @@ namespace Schicksal.Basic
 
     private string GetInvariant(object value)
     {
-      IFormattable formattable = value as IFormattable;
+      var formattable = value as IFormattable;
+
       if (value is string)
         return string.Format("'{0}'", value);
       else if (value is DateTime)
@@ -136,7 +138,7 @@ namespace Schicksal.Basic
 
     public string GetKey(int index)
     {
-      return ((DataViewGroup)m_views[index]).View.RowFilter;
+      return m_views[index].View.RowFilter;
     }
 
     public int GetIndex(string rowFilter)
@@ -149,9 +151,15 @@ namespace Schicksal.Basic
       return m_views.Select(v => v).GetEnumerator();
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()
     {
-      return GetEnumerator();
+      return this.GetEnumerator();
+    }
+
+    public void Dispose()
+    {
+      foreach (DataViewGroup group in m_views)
+        group.View.Dispose();
     }
 
     private class DataViewGroup : IDataGroup
@@ -188,7 +196,7 @@ namespace Schicksal.Basic
 
       System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
       {
-        return GetEnumerator();
+        return this.GetEnumerator();
       }
 
       public override string ToString()
@@ -205,12 +213,6 @@ namespace Schicksal.Basic
 
         return m_string;
       }
-    }
-
-    public void Dispose()
-    {
-      foreach (DataViewGroup group in m_views)
-        group.View.Dispose();
     }
   }
 }

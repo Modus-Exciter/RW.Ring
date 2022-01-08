@@ -91,7 +91,7 @@ namespace Notung.Services
       if (runBase == null)
         throw new ArgumentNullException("runBase");
 
-      return this.Run(WrapIfRemote(runBase), true);
+      return this.Run(this.WrapIfRemote(runBase), true);
     }
 
     public TaskStatus Run(IRunBase runBase, LaunchParameters parameters)
@@ -100,9 +100,9 @@ namespace Notung.Services
         throw new ArgumentNullException("runBase");
 
       if (parameters == null)
-        return this.Run(WrapIfRemote(runBase), true);
+        return this.Run(this.WrapIfRemote(runBase), true);
 
-      using (var wrapper = parameters.Wrap(WrapIfRemote(runBase)))
+      using (var wrapper = parameters.Wrap(this.WrapIfRemote(runBase)))
         return this.Run(wrapper, parameters.CloseOnFinish);
     }
 
@@ -124,7 +124,7 @@ namespace Notung.Services
       {
         operation.Start();
 
-        var ret = Complete(operation, closeOnFinish);
+        var ret = this.Complete(operation, closeOnFinish);
 
         if (operation.Error != null)
           m_view.ShowError(operation.Error);

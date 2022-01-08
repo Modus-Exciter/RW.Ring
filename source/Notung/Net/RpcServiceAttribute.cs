@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 
 namespace Notung.Net
 {
@@ -22,7 +21,7 @@ namespace Notung.Net
     {
       this.Name = RpcAttributeHelper.Check(name);
     }
-    
+
     /// <summary>
     /// Имя сервиса, если задано
     /// </summary>

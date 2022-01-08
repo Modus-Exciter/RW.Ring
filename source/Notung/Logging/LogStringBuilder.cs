@@ -31,7 +31,7 @@ namespace Notung.Logging
       if (template == null)
         throw new ArgumentNullException("template");
 
-      m_blocks = StateMachine(template).ToArray();
+      m_blocks = this.StateMachine(template).ToArray();
     }
 
     /// <summary>
@@ -45,8 +45,8 @@ namespace Notung.Logging
       if (writer == null)
         throw new ArgumentNullException("writer");
 #endif
-      InitDateConverter();
-      
+      this.InitDateConverter();
+
       for (int i = 0; i < m_blocks.Length; i++)
         m_blocks[i].Build(writer, data);
 
@@ -84,7 +84,7 @@ namespace Notung.Logging
           switch (field.Type)
           {
             case FieldType.Date:
-              FormatFieldBlock format = field as FormatFieldBlock;
+              var format = field as FormatFieldBlock;
 
               if (format != null && !string.IsNullOrEmpty(format.Format))
                 row[field.m_field] = DateTime.ParseExact(token, format.Format, CultureInfo.InvariantCulture);
@@ -116,8 +116,8 @@ namespace Notung.Logging
 
     private List<IBuildBlock> StateMachine(string template)
     {
-      List<IBuildBlock> blocks = new List<IBuildBlock>(0x10);
-      
+      var blocks = new List<IBuildBlock>(0x10);
+
       State state = State.Start;
       int string_start = 0;
 
@@ -257,7 +257,7 @@ namespace Notung.Logging
             throw new FormatException(string.Format(Resources.ENUM_PARSE_FAIL, typeof(InfoLevel)));
 
         case FieldType.Date:
-          FormatFieldBlock format = block as FormatFieldBlock;
+          var format = block as FormatFieldBlock;
 
           if (format != null && !string.IsNullOrEmpty(format.Format))
             return DateTime.Now.ToString(format.Format).Length;
@@ -369,7 +369,7 @@ namespace Notung.Logging
         return m_token;
       }
     }
- 
+
     private class FieldBlock : IBuildBlock
     {
       public readonly string m_field;
@@ -439,7 +439,7 @@ namespace Notung.Logging
             break;
 
           case FieldType.Date:
-            WriteDate(writer, data.LoggingDate);
+            this.WriteDate(writer, data.LoggingDate);
             break;
 
           case FieldType.Message:
@@ -500,7 +500,7 @@ namespace Notung.Logging
             if (!string.IsNullOrEmpty(Format))
               writer.Write(m_format, data.LoggingDate);
             else
-              WriteDate(writer, data.LoggingDate);
+              this.WriteDate(writer, data.LoggingDate);
             break;
 
           case FieldType.Process:

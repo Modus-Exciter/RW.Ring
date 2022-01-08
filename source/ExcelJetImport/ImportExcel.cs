@@ -3,8 +3,6 @@ using System.IO;
 using System.Windows.Forms;
 using JetExcelOleDbImport.Properties;
 using Schicksal.Exchange;
-using System.Collections.Generic;
-using System.Data;
 
 namespace JetExcelOleDbImport
 {

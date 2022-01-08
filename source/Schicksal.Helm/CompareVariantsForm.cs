@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
-using Notung;
 using Notung.Configuration;
 using Notung.Services;
 using Schicksal.Anova;
@@ -20,21 +17,25 @@ namespace Schicksal.Helm
   {
     private readonly VariantsComparator m_comparator;
     private readonly float m_probability;
+    private readonly Color m_significat_color;
+    private readonly Color m_exclusive_color;
     private DifferenceInfo[] m_all_data;
     private bool m_only_significant;
     private string m_selection = string.Empty;
-    private Color m_significat_color;
-    private Color m_exclusive_color;
 
     public CompareVariantsForm(DataTable table, string factor, string result, string filter, float p)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.Text = string.Format("{0}({1}) [{2}]", result, factor.Replace("+", ", "), filter);
 
       Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
-      if (resolution.height != 0) Height = resolution.height;
-      if (resolution.width != 0) Width = resolution.width;
+
+      if (resolution.height != 0) 
+        this.Height = resolution.height;
+
+      if (resolution.width != 0) 
+        this.Width = resolution.width;
 
       m_comparator = new VariantsComparator(table, factor, result, filter);
       m_probability = p;
@@ -53,8 +54,8 @@ namespace Schicksal.Helm
 
     protected override void OnClosed(EventArgs e)
     {
-      AppManager.Configurator.GetSection<Resolution>().height = Size.Height;
-      AppManager.Configurator.GetSection<Resolution>().width = Size.Width;
+      AppManager.Configurator.GetSection<Resolution>().height = this.Size.Height;
+      AppManager.Configurator.GetSection<Resolution>().width = this.Size.Width;
       AppManager.Configurator.SaveSettings();
     }
 
@@ -95,7 +96,7 @@ namespace Schicksal.Helm
           series_m.Points.AddXY(row["Factor"], mean);
         }
 
-        AutoResizeColumnsByExample(mult.CreateExample());
+        this.AutoResizeColumnsByExample(mult.CreateExample());
         m_binding_source.DataSource = new DifferenceInfoList(m_all_data = mult.Results);
       }
     }
@@ -108,7 +109,7 @@ namespace Schicksal.Helm
         col.Width = col.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, true);
     }
 
-    private void m_nsr_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+    private void Nsr_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -119,7 +120,7 @@ namespace Schicksal.Helm
         e.CellStyle.ForeColor = m_only_significant ? m_exclusive_color : m_significat_color;
     }
 
-    private void m_nsr_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+    private void Nsr_grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
     {
       if (e.RowIndex < 0)
         return;
@@ -132,7 +133,7 @@ namespace Schicksal.Helm
       }
     }
 
-    private void m_cmd_copy_chart_Click(object sender, EventArgs e)
+    private void Cmd_copy_chart_Click(object sender, EventArgs e)
     {
       var image = new Bitmap(m_chart.Width, m_chart.Height);
 
@@ -141,11 +142,11 @@ namespace Schicksal.Helm
       Clipboard.SetImage(image);
     }
 
-    private void m_cmd_filter_Click(object sender, EventArgs e)
+    private void Cmd_filter_Click(object sender, EventArgs e)
     {
       if (m_all_data == null)
         return;
-      
+
       using (var dlg = new ComparisonFilterDialog())
       {
         var set = new HashSet<string>();

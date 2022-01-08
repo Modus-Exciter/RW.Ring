@@ -14,7 +14,8 @@ namespace NotungTest
   public class LoggingTest
   {
     [TestCleanup()]
-    public void MyTestCleanup() {
+    public void MyTestCleanup()
+    {
       LoggingContext.Thread.Clear();
     }
 

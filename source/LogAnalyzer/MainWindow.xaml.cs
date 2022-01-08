@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
 using Notung.Feuerzauber.Controls;
 using Notung.Feuerzauber.Dialogs;
 
@@ -13,15 +13,15 @@ namespace LogAnalyzer
   {
     public MainWindow()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     private void OpenConfig(object sender, ExecutedRoutedEventArgs e)
     {
-      OpenFileDialog dialog = new OpenFileDialog();
+      var dialog = new OpenFileDialog();
 
       dialog.Filter = "Configuration files|*.config";
-      dialog.Title =((RoutedUICommand) e.Command).Text;
+      dialog.Title = ((RoutedUICommand)e.Command).Text;
 
       if (dialog.ShowDialog(this) == true)
         m_context.OpenConfig(dialog.FileName);
@@ -29,7 +29,7 @@ namespace LogAnalyzer
 
     private void OpenFolder(object sender, ExecutedRoutedEventArgs e)
     {
-      SelectFolderDialog dlg = new SelectFolderDialog() { Owner = this };
+      var dlg = new SelectFolderDialog() { Owner = this };
 
       if (dlg.ShowDialog() == true)
         this.DisplayLog(m_context.OpenDirectory(dlg.Tree.SelectedValue.ToString()));
@@ -37,7 +37,7 @@ namespace LogAnalyzer
 
     private void OpenLogFile(object sender, ExecutedRoutedEventArgs e)
     {
-      OpenFileDialog dialog = new OpenFileDialog();
+      var dialog = new OpenFileDialog();
 
       dialog.Filter = "Log files|*.log";
       dialog.Title = ((RoutedUICommand)e.Command).Text;
@@ -57,14 +57,24 @@ namespace LogAnalyzer
           new LogDisplay { DataContext = entry },
           entry.ToString(),
           Properties.Resources.Document
-        )
-        { Tag = entry.FileName },
+        ) { Tag = entry.FileName },
         item => object.Equals(item.Tag, entry.FileName));
     }
 
     private void Context_MessageRecieved(object sender, MessageEventArgs e)
     {
       MessageDialog.Show(e.Message, image: e.IsError ? MessageBoxImage.Error : MessageBoxImage.Information);
+    }
+
+    private void RefreshLog(object sender, ExecutedRoutedEventArgs e)
+    {
+      m_mdi_manager.Presenter.ActiveMdiChild.Control.DataContext
+        = m_context.Refresh(m_mdi_manager.Presenter.ActiveMdiChild.Tag.ToString());
+    }
+
+    private void CanRefreshLog(object sender, CanExecuteRoutedEventArgs e)
+    {
+      e.CanExecute = m_mdi_manager != null && m_mdi_manager.Presenter.ActiveMdiChild != null;
     }
   }
 }

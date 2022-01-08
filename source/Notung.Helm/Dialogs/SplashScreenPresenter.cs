@@ -28,9 +28,9 @@ namespace Notung.Helm.Dialogs
 
       m_worker = m_view.Worker;
       m_worker.WorkerReportsProgress = true;
-      m_worker.DoWork += HandleDoWork;
-      m_worker.ProgressChanged += HandleProgressChanged;
-      m_worker.RunWorkerCompleted += HandleRunWorkerCompleted;
+      m_worker.DoWork += this.HandleDoWork;
+      m_worker.ProgressChanged += this.HandleProgressChanged;
+      m_worker.RunWorkerCompleted += this.HandleRunWorkerCompleted;
     }
 
     public Image Picture

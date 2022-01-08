@@ -17,13 +17,13 @@ namespace Notung.Feuerzauber.Controls
     public event PropertyChangedEventHandler PropertyChanged;
 
     private readonly ObservableCollection<MdiChild> m_children = new ObservableCollection<MdiChild>();
-    private readonly MdiChildCloseComand m_close_command;
+    private readonly MdiChildCloseCommand m_close_command;
     private int m_active_child = -1;
 
     public MdiChildrenPresenter()
     {
       m_children.CollectionChanged += this.HandleCollectionChanged;
-      m_close_command = new MdiChildCloseComand(m_children);
+      m_close_command = new MdiChildCloseCommand(m_children);
     }
 
     public ObservableCollection<MdiChild> MdiChildren
@@ -47,7 +47,7 @@ namespace Notung.Feuerzauber.Controls
         else
           m_active_child = -1;
 
-        OnPropertyChanged("ActiveMdiChild");
+        this.OnPropertyChanged("ActiveMdiChild");
       }
     }
 
@@ -86,7 +86,7 @@ namespace Notung.Feuerzauber.Controls
 
     private void SetActiveChild()
     {
-      OnPropertyChanged("ActiveMdiChild");
+      this.OnPropertyChanged("ActiveMdiChild");
     }
 
     private void HandleCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -103,7 +103,7 @@ namespace Notung.Feuerzauber.Controls
           }, Dispatcher.CurrentDispatcher);
         }
         else
-          SetActiveChild();
+          this.SetActiveChild();
       }
       else if (e.Action == NotifyCollectionChangedAction.Remove)
       {
@@ -115,14 +115,14 @@ namespace Notung.Feuerzauber.Controls
           if (m_active_child < 0 && m_children.Count > 0)
             m_active_child = 0;
 
-          OnPropertyChanged("ActiveMdiChild");
+          this.OnPropertyChanged("ActiveMdiChild");
         }
       }
     }
 
-    private class MdiChildCloseComand : CollectionRemoveCommand<MdiChild>
+    private class MdiChildCloseCommand : CollectionRemoveCommand<MdiChild>
     {
-      public MdiChildCloseComand(ICollection<MdiChild> collection) : base(collection) { }
+      public MdiChildCloseCommand(ICollection<MdiChild> collection) : base(collection) { }
 
       public override bool CanExecute(object parameter)
       {
@@ -141,7 +141,7 @@ namespace Notung.Feuerzauber.Controls
 
   public class MdiChild : INotifyPropertyChanged
   {
-    private Control m_control;
+    private readonly Control m_control;
     private string m_caption;
     private Bitmap m_icon;
     private object m_tag;
@@ -170,7 +170,7 @@ namespace Notung.Feuerzauber.Controls
           return;
 
         m_caption = value;
-        OnPropertyChanged("Caption");
+        this.OnPropertyChanged("Caption");
       }
     }
 
@@ -183,7 +183,7 @@ namespace Notung.Feuerzauber.Controls
           return;
 
         m_icon = value;
-        OnPropertyChanged("Icon");
+        this.OnPropertyChanged("Icon");
       }
     }
 
@@ -196,7 +196,7 @@ namespace Notung.Feuerzauber.Controls
           return;
 
         m_tag = value;
-        OnPropertyChanged("Tag");
+        this.OnPropertyChanged("Tag");
       }
     }
 
@@ -209,7 +209,7 @@ namespace Notung.Feuerzauber.Controls
           return;
 
         m_can_close = value;
-        OnPropertyChanged("CanClose");
+        this.OnPropertyChanged("CanClose");
       }
     }
 

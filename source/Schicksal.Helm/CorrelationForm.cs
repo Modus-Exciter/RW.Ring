@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+using Notung.Configuration;
+using Notung.Services;
+using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
@@ -13,7 +14,25 @@ namespace Schicksal.Helm
   {
     public CorrelationForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
+
+      Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
+
+      if (resolution.height != 0)
+        this.Height = resolution.height;
+
+      if (resolution.width != 0)
+        this.Width = resolution.width;
+
+    }
+
+    [DataContract]
+    public class Resolution : ConfigurationSection
+    {
+      [DataMember(Name = "Height")]
+      public int height;
+      [DataMember(Name = "Width")]
+      public int width;
     }
 
     public DataTable Table { get; set; }
@@ -26,12 +45,29 @@ namespace Schicksal.Helm
     {
       base.OnLoad(e);
 
-      var series = m_chart.Series[0];
+      var results = new CorrelationResults(this.Table, this.Factor, this.Effect);
+      var data = results.Run((x, y) => m_chart.Series[0].Points.AddXY(x, y));
 
-      series.Name = this.Factor;
+      ((TextAnnotation)m_chart.Annotations[0]).Text = data.ToString();
+      m_chart.Series[0].Name = this.Factor;
+      m_chart.Series[1].Points.AddXY(data.MinX, data.MinY);
+      m_chart.Series[1].Points.AddXY(data.MaxX, data.MaxY);
+    }
 
-      foreach (DataRow row in this.Table.Rows)
-        series.Points.AddXY(Convert.ToDouble(row[this.Factor]), Convert.ToDouble(row[this.Effect]));
+    protected override void OnClosed(EventArgs e)
+    {
+      AppManager.Configurator.GetSection<Resolution>().height = this.Size.Height;
+      AppManager.Configurator.GetSection<Resolution>().width = this.Size.Width;
+      AppManager.Configurator.SaveSettings();
+    }
+
+    private void m_cmd_copy_Click(object sender, EventArgs e)
+    {
+      var image = new Bitmap(m_chart.Width, m_chart.Height);
+
+      m_chart.DrawToBitmap(image, m_chart.DisplayRectangle);
+
+      Clipboard.SetImage(image);
     }
   }
 }

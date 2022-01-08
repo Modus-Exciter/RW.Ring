@@ -75,8 +75,8 @@
       this.m_grid.DefaultCellStyle = dataGridViewCellStyle4;
       resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.Name = "m_grid";
-      this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellDoubleClick);
-      this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.m_grid_CellPainting);
+      this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
+      this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.Grid_CellPainting);
       // 
       // m_context_menu
       // 
@@ -90,7 +90,7 @@
       // 
       this.m_cmd_export.Name = "m_cmd_export";
       resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
-      this.m_cmd_export.Click += new System.EventHandler(this.m_cmd_export_Click);
+      this.m_cmd_export.Click += new System.EventHandler(this.Cmd_export_Click);
       // 
       // factorDataGridViewTextBoxColumn
       // 

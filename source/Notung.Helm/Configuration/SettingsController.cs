@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.ComponentModel;
@@ -135,14 +133,14 @@ namespace Notung.Helm.Configuration
       for (int i = 0; i < AppManager.AssemblyClassifier.TrackingAssemblies.Count; i++)
       {
         foreach (var type in AppManager.AssemblyClassifier
-          .TrackingAssemblies[i].GetAvailableTypes(HandleTypeError))
+          .TrackingAssemblies[i].GetAvailableTypes(this.HandleTypeError))
         {
           if (!type.IsAbstract && typeof(IConfigurationPage).IsAssignableFrom(type)
             && type.GetConstructor(Type.EmptyTypes) != null)
           {
             var page = (IConfigurationPage)Activator.CreateInstance(type);
 
-            if (!IsPageSkipped(page))
+            if (!this.IsPageSkipped(page))
             {
               m_pages[type] = page;
 
@@ -169,7 +167,7 @@ namespace Notung.Helm.Configuration
     {
       if (!this.ValidateAllSections())
         return false;
-      
+
       foreach (var page in m_pages)
       {
         foreach (var section in page.Value.Sections)
@@ -251,10 +249,10 @@ namespace Notung.Helm.Configuration
     private bool ValidateAllSections()
     {
       var backgrounds = new Dictionary<ConfigurationSection, Type>();
-      var can_save = ValidateUIThreadSections(backgrounds);
+      var can_save = this.ValidateUIThreadSections(backgrounds);
 
       if (backgrounds.Count > 0)
-        can_save = ValidateBackgroundThreadSections(backgrounds, can_save);
+        can_save = this.ValidateBackgroundThreadSections(backgrounds, can_save);
 
       if (this.ValidationResults != null)
         this.ValidationResults.Visible = m_errors.Count > 0;
@@ -277,7 +275,7 @@ namespace Notung.Helm.Configuration
         if (page.Value.UIThreadValidation)
         {
           var page_valid = true;
-          
+
           foreach (var settings in page.Value.Sections)
           {
             var buffer = new InfoBuffer();
@@ -330,7 +328,7 @@ namespace Notung.Helm.Configuration
 
       foreach (var del in deletee)
         m_errors.Remove(del);
-      
+
       foreach (var info in buffer)
       {
         m_errors.Add(new SettingsError

@@ -40,6 +40,7 @@
         <CommandBinding Command="local:MainWindowCommands.OpenConfig" Executed="OpenConfig"/>
         <CommandBinding Command="local:MainWindowCommands.OpenFolder" Executed="OpenFolder"/>
         <CommandBinding Command="local:MainWindowCommands.OpenLogFile" Executed="OpenLogFile"/>
+        <CommandBinding Command="local:MainWindowCommands.RefreshTable" Executed="RefreshLog" CanExecute="CanRefreshLog"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="F1" Modifiers="Control" Command="fz:WindowHelper.About"/>
@@ -145,6 +146,7 @@
                 <MenuItem Command="local:MainWindowCommands.OpenConfig"/>
                 <MenuItem Command="local:MainWindowCommands.OpenFolder"/>
                 <MenuItem Command="local:MainWindowCommands.OpenLogFile"/>
+                <MenuItem Command="local:MainWindowCommands.RefreshTable"/>
                 <MenuItem ToolTip="О программе Ctrl+F1"
                           HorizontalAlignment="Right" 
                           Padding="5,0"

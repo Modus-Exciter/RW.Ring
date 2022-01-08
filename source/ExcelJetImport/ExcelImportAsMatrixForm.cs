@@ -9,7 +9,7 @@ namespace JetExcelOleDbImport
   {
     public ExcelImportAsMatrixForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public string ExcelFileName
@@ -65,12 +65,14 @@ namespace JetExcelOleDbImport
 
       if (messages.Count > 0)
       {
-        MessageBox.Show(string.Join(Environment.NewLine, messages), this.Text);
+        MessageBox.Show(string.Join(Environment.NewLine, messages),
+          this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
         e.Cancel = true;
       }
     }
 
-    private void m_button_open_excel_Click(object sender, EventArgs e)
+    private void Button_open_excel_Click(object sender, EventArgs e)
     {
       using (var dlg = new OpenFileDialog())
       {

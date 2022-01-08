@@ -160,7 +160,7 @@ namespace Notung.Net
       set { m_ref = (TRef)value; }
     }
   }
-  
+
   /// <summary>
   /// Хранилище информации о методах сервиса, которую можно получить по логическому имени сервиса
   /// </summary>
@@ -180,7 +180,7 @@ namespace Notung.Net
 
       return RpcServiceInfo<T>.Instance;
     }
-    
+
     public static IRpcServiceInfo Register(Type serviceType)
     {
       var info_type = typeof(RpcServiceInfo<>).MakeGenericType(serviceType);
@@ -190,7 +190,7 @@ namespace Notung.Net
       lock (_services)
       {
         if (!_services.Contains(name))
-          _services.Add(inst()); 
+          _services.Add(inst());
       }
 
       return inst();
@@ -216,15 +216,15 @@ namespace Notung.Net
   /// <typeparam name="T">Тип сервиса для поиска сведений</typeparam>
   public class RpcServiceInfo<T> : IRpcServiceInfo where T : class
   {
-    private static string _serviceName = GetServiceName();
-    private static Dictionary<string, RpcOperationInfo> _methods = BuildMethods();
-    private static RpcServiceInfo<T> _instance = new RpcServiceInfo<T>();
+    private static readonly string _service_name = GetServiceName();
+    private static readonly Dictionary<string, RpcOperationInfo> _methods = BuildMethods();
+    private static readonly RpcServiceInfo<T> _instance = new RpcServiceInfo<T>();
 
     private RpcServiceInfo() { }
 
     public static string ServiceName
     {
-      get { return _serviceName; }
+      get { return _service_name; }
     }
 
     public static IRpcServiceInfo Instance
@@ -234,7 +234,7 @@ namespace Notung.Net
 
     string IRpcServiceInfo.ServiceName
     {
-      get { return _serviceName; }
+      get { return _service_name; }
     }
 
     public string GetMethodName(MethodBase method)
@@ -288,7 +288,7 @@ namespace Notung.Net
 
         string name = operation.Name;
 
-        result.Add(string.IsNullOrWhiteSpace(name) ? 
+        result.Add(string.IsNullOrWhiteSpace(name) ?
           method.Name : name, new RpcOperationInfo(method));
       }
 

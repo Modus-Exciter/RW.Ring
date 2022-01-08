@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Schicksal.Anova;
 
@@ -14,7 +8,7 @@ namespace Schicksal.Helm
   {
     public NSRForm(DifferenceInfo difference)
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       this.Text = difference.ToString();
       m_grid.DataSource = difference.ToTuples();

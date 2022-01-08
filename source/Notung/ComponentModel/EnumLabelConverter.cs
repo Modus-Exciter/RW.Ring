@@ -36,7 +36,7 @@ namespace Notung.ComponentModel
     /// <param name="value">Значение</param>
     /// <param name="destinationType"></param>
     /// <returns>Текст метки</returns>
-    public override object ConvertTo(ITypeDescriptorContext context, 
+    public override object ConvertTo(ITypeDescriptorContext context,
       CultureInfo culture, object value, Type destinationType)
     {
       if (value is Enum)
@@ -132,7 +132,7 @@ namespace Notung.ComponentModel
           foreach (var fi in enumType.GetFields(BindingFlags.Public
             | BindingFlags.NonPublic | BindingFlags.Static))
           {
-            EnumLabel item = new EnumLabel();
+            var item = new EnumLabel();
 
             var name = fi.GetCustomAttribute<DisplayNameAttribute>(true);
 

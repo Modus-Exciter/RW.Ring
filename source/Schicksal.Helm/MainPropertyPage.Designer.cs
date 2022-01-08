@@ -128,12 +128,12 @@
       this.m_significat_button.TabIndex = 0;
       this.m_significat_button.Text = "...";
       this.m_significat_button.UseVisualStyleBackColor = true;
-      this.m_significat_button.Click += new System.EventHandler(this.m_significat_button_Click);
+      this.m_significat_button.Click += new System.EventHandler(this.Significat_button_Click);
       // 
       // m_binging_source
       // 
       this.m_binging_source.DataSource = typeof(Schicksal.Helm.Program.Preferences);
-      this.m_binging_source.CurrentItemChanged += new System.EventHandler(this.m_binging_source_CurrentItemChanged);
+      this.m_binging_source.CurrentItemChanged += new System.EventHandler(this.Binging_source_CurrentItemChanged);
       // 
       // m_exclusive_panel
       // 
@@ -156,7 +156,7 @@
       this.m_exclusive_button.TabIndex = 1;
       this.m_exclusive_button.Text = "...";
       this.m_exclusive_button.UseVisualStyleBackColor = true;
-      this.m_exclusive_button.Click += new System.EventHandler(this.m_exclusive_button_Click);
+      this.m_exclusive_button.Click += new System.EventHandler(this.Exclusive_button_Click);
       // 
       // m_language_edit
       // 
@@ -182,11 +182,11 @@
       this.m_buton_open.TabIndex = 6;
       this.m_buton_open.Text = "Open system folder";
       this.m_buton_open.UseVisualStyleBackColor = true;
-      this.m_buton_open.Click += new System.EventHandler(this.m_buton_open_Click);
+      this.m_buton_open.Click += new System.EventHandler(this.Buton_open_Click);
       // 
       // m_switcher
       // 
-      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_switcher_LanguageChanged);
+      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Switcher_LanguageChanged);
       // 
       // MainPropertyPage
       // 

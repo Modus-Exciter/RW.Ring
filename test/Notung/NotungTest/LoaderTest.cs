@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Loader;
-using System;
 
 namespace NotungTest
 {

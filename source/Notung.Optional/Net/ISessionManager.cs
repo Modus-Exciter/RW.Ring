@@ -56,7 +56,7 @@ namespace Notung.Net
       m_renew_time = renewLifeTime;
     }
 
-    public SessionManager(Type serviceType) 
+    public SessionManager(Type serviceType)
       : this(serviceType, TimeSpan.FromMinutes(20), TimeSpan.FromMinutes(5)) { }
 
     private void ClearExpired(object state)
@@ -84,7 +84,7 @@ namespace Notung.Net
         }
       }
     }
-    
+
     public void Init(Guid objectGuid, Type serviceType)
     {
       using (m_lock.WriteLock())
@@ -102,7 +102,7 @@ namespace Notung.Net
       {
         ExpireInfo expire;
 
-        if(!m_expire.TryGetValue(objectGuid, out expire))
+        if (!m_expire.TryGetValue(objectGuid, out expire))
           return false;
 
         DateTime new_expire = DateTime.Now.Add(m_renew_time);

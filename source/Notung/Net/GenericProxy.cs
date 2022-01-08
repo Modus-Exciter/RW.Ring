@@ -35,23 +35,23 @@ namespace Notung.Net
     /// </summary>
     public sealed override IMessage Invoke(IMessage msg)
     {
-      IMethodCallMessage message = (IMethodCallMessage)msg;
+      var message = (IMethodCallMessage)msg;
 
       if (message.MethodBase.DeclaringType == typeof(object))
       {
         switch (message.MethodName)
         {
           case "GetType":
-            return CreateReturnMesage(typeof(T), message);
+            return this.CreateReturnMesage(typeof(T), message);
 
           case "Equals":
-            return CreateReturnMesage(ReferenceEquals(base.GetTransparentProxy(), message.Args[0]), message);
+            return this.CreateReturnMesage(ReferenceEquals(base.GetTransparentProxy(), message.Args[0]), message);
 
           case "GetHashCode":
-            return CreateReturnMesage(this.GetHashCode(), message);
+            return this.CreateReturnMesage(this.GetHashCode(), message);
 
           case "ToString":
-            return CreateReturnMesage(this.GetProxyName(), message);
+            return this.CreateReturnMesage(this.GetProxyName(), message);
         }
       }
 

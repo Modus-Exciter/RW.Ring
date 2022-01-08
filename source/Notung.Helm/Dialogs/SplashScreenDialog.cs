@@ -7,7 +7,7 @@ namespace Notung.Helm.Dialogs
   {
     public SplashScreenDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     BackgroundWorker ISplashScreenView.Worker
@@ -45,7 +45,7 @@ namespace Notung.Helm.Dialogs
     bool ISplashScreenView.IsMarquee
     {
       get { return m_progress_bar.Style == ProgressBarStyle.Marquee; }
-      set { m_progress_bar.Style = value ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous ; }
+      set { m_progress_bar.Style = value ? ProgressBarStyle.Marquee : ProgressBarStyle.Continuous; }
     }
   }
 }

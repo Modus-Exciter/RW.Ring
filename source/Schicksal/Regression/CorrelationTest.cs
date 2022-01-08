@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using Notung;
 using Schicksal.Basic;
 using Schicksal.Properties;
-using System.Data;
-using Notung;
 
 namespace Schicksal.Regression
 {
@@ -49,7 +50,7 @@ namespace Schicksal.Regression
       };
 
       result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
-      result.T = 0.5 * Math.Abs(result.R) * Math.Sqrt((x.Count - 2) / (1 - result.R * result.R));
+      result.T = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
       result.R001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
       result.R005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
       result.P = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.T);
@@ -63,10 +64,14 @@ namespace Schicksal.Regression
     private readonly DataTable m_table;
     private readonly string[] m_factors;
     private readonly string m_result;
+    private readonly string m_filter;
 
-    public string Filter { get; set; }
+    public string Filter
+    {
+      get { return m_filter; }
+    }
 
-    public CorrelationTestProcessor(DataTable table, string[] factors, string result)
+    public CorrelationTestProcessor(DataTable table, string[] factors, string result, string filter)
     {
       if (table == null)
         throw new ArgumentNullException("table");
@@ -80,6 +85,38 @@ namespace Schicksal.Regression
       m_table = table;
       m_factors = factors;
       m_result = result;
+
+      List<string> expressions = GetFilterExpressions(table, factors, result, filter);
+
+      if (expressions.Count > 0)
+        m_filter = string.Join(" and ", expressions);
+    }
+
+    private static List<string> GetFilterExpressions(DataTable table, string[] factors, string result, string filter)
+    {
+      List<string> expressions = new List<string>(factors.Length + 1);
+
+      foreach (var f in factors)
+      {
+        if (!table.Columns[f].DataType.IsPrimitive || table.Columns[f].DataType == typeof(bool))
+          throw new ArgumentException("Factor column must be numeric");
+
+        if (table.Columns[f].AllowDBNull)
+          expressions.Add(string.Format("[{0}] is not null", f));
+      }
+
+      if (!table.Columns[result].DataType.IsPrimitive || table.Columns[result].DataType == typeof(bool))
+        throw new ArgumentException("Result column must be numeric");
+
+      if (table.Columns[result].AllowDBNull)
+        expressions.Add(string.Format("[{0}] is not null", result));
+
+      expressions.RemoveAll((filter ?? string.Empty).Contains);
+
+      if (!string.IsNullOrEmpty(filter))
+        expressions.Add(filter);
+
+      return expressions;
     }
 
     public CorrelationMetrics[] Results { get; private set; }
@@ -88,12 +125,12 @@ namespace Schicksal.Regression
     {
       this.Results = new CorrelationMetrics[m_factors.Length];
 
-      var y_column = new DataColumnGroup(m_table.Columns[m_result]);
+      var y_column = new DataColumnGroup(m_table.Columns[m_result], m_filter);
 
       for (int i = 0; i < m_factors.Length; i++)
       {
         this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i],
-          new DataColumnGroup(m_table.Columns[m_factors[i]]), y_column);
+          new DataColumnGroup(m_table.Columns[m_factors[i]], m_filter), y_column);
       }
     }
   }

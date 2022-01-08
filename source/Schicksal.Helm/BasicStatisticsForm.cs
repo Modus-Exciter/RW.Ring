@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Schicksal.Helm.Properties;
 using System.Diagnostics;
 using Schicksal.Basic;
-using Notung;
 using System.Threading.Tasks;
 using Notung.Services;
 
@@ -19,7 +12,7 @@ namespace Schicksal.Helm
   {
     public BasicStatisticsForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public object DataSorce
@@ -51,7 +44,7 @@ namespace Schicksal.Helm
       m_grid.AutoResizeColumns();
     }
 
-    private void m_lang_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    private void Lang_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
     {
       m_col_description.HeaderText = SchicksalResources.DESCRIPTION;
       m_col_mean.HeaderText = SchicksalResources.MEAN;
@@ -64,7 +57,7 @@ namespace Schicksal.Helm
       m_cmd_export.Text = Resources.EXPORT;
     }
 
-    private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+    private void ExportToolStripMenuItem_Click(object sender, EventArgs e)
     {
       using (var dlg = new SaveFileDialog())
       {

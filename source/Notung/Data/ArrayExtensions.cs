@@ -23,7 +23,7 @@ namespace Notung.Data
     {
       if (filler == null)
         return;
-      
+
       for (int i = 0; i < array.Length; i++)
         array[i] = filler();
     }
@@ -73,7 +73,7 @@ namespace Notung.Data
 
     public static T[] CreateAndFill<T>(int length, Func<T> filler)
     {
-      T[] array = new T[length];
+      var array = new T[length];
 
       if (filler != null)
       {
@@ -86,7 +86,7 @@ namespace Notung.Data
 
     public static T[] CreateAndFill<T>(int length, Func<int, T> filler)
     {
-      T[] array = new T[length];
+      var array = new T[length];
 
       if (filler != null)
       {

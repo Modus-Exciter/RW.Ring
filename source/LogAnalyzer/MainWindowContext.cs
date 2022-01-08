@@ -12,10 +12,11 @@ namespace LogAnalyzer
 {
   class MainWindowContext : ObservableObject
   {
-    private string m_file_name = string.Empty;
     private string m_separator = "===============================================";
     private string m_template = "[{Date}] [{Level}] [{Process}] [{Source}]\r\n{Message}";
     private readonly Dictionary<string, WeakReference> m_tables = new Dictionary<string, WeakReference>();
+
+    private static readonly object _last_access_key = new object();
 
     public event EventHandler<MessageEventArgs> MessageRecieved;
 
@@ -33,12 +34,13 @@ namespace LogAnalyzer
 
     public void OpenConfig(string fileName)
     {
-      XmlDocument doc = new XmlDocument();
+      var doc = new XmlDocument();
+
       doc.Load(fileName);
 
       var nodeList = doc.SelectNodes("/configuration/applicationSettings/Notung.Logging.LogSettings/setting");
 
-      foreach (var element in nodeList.OfType<XmlElement>())
+      foreach (XmlElement element in nodeList)
       {
         if (element.GetAttribute("name") == "Separator")
           this.Separator = element.SelectSingleNode("value").InnerText;
@@ -51,6 +53,22 @@ namespace LogAnalyzer
         this.MessageRecieved(this, new MessageEventArgs("Конфигурационный файл загружен", false));
     }
 
+    public FileEntry Refresh(string path)
+    {
+      if (File.Exists(path))
+        return this.OpenLog(path);
+      else if (Directory.Exists(path))
+        return this.OpenDirectory(path);
+      else
+      {
+        return new FileEntry
+        {
+          FileName = path,
+          Table = m_tables.ContainsKey(path) ? m_tables[path].Target as DataTable : null
+        };
+      }
+    }
+
     public FileEntry OpenLog(string fileName)
     {
       try
@@ -58,7 +76,7 @@ namespace LogAnalyzer
         return new FileEntry
         {
           FileName = fileName,
-          Table = GetDataTable(fileName, this.LoadLogTable)
+          Table = this.GetDataTable(fileName, this.LoadLogTable)
         };
       }
       catch (Exception ex)
@@ -74,27 +92,27 @@ namespace LogAnalyzer
     {
       if (!Directory.EnumerateFiles(selectedPath, "*.log").Any() &&
         Directory.Exists(Path.Combine(selectedPath, "Logs")))
+      {
         selectedPath = Path.Combine(selectedPath, "Logs");
+      }
 
       try
       {
         var entry = new FileEntry
         {
           FileName = selectedPath,
-          Table = GetDataTable(selectedPath, this.LoadLogDirectory)
+          Table = this.GetDataTable(selectedPath, this.LoadLogDirectory)
         };
 
-        if (entry.Table.Columns.Count > 0)
-        {
-          return entry;
-        }
-        else
+        if (entry.Table.Columns.Count == 0)
         {
           m_tables.Remove(selectedPath);
 
           if (this.MessageRecieved != null)
             this.MessageRecieved(this, new MessageEventArgs("В указанной папке протоколы не найдены"));
         }
+        else
+          return entry;
       }
       catch (Exception ex)
       {
@@ -113,7 +131,7 @@ namespace LogAnalyzer
 
       table.BeginLoadData();
 
-      foreach (var fileName in Directory.GetFiles(path, "*.log"))
+      foreach (var fileName in Directory.EnumerateFiles(path, "*.log"))
         this.FillTable(fileName, table);
 
       table.EndLoadData();
@@ -143,7 +161,12 @@ namespace LogAnalyzer
         var table = reference.Target as DataTable;
 
         if (table != null)
-          return table;
+        {
+          if (GetLastWriteTime(path).Equals(table.ExtendedProperties[_last_access_key]))
+            return table;
+          else
+            m_tables.Remove(path);
+        }
       }
 
       foreach (var kv in m_tables.ToArray())
@@ -156,8 +179,19 @@ namespace LogAnalyzer
 
       reference = new WeakReference(ret);
       m_tables[path] = reference;
+      ret.ExtendedProperties.Add(_last_access_key, GetLastWriteTime(path));
 
       return ret;
+    }
+
+    private static DateTime GetLastWriteTime(string path)
+    {
+      if (File.Exists(path))
+        return File.GetLastWriteTime(path);
+      else if (Directory.Exists(path))
+        return Directory.EnumerateFiles(path, "*.log").Max(File.GetLastWriteTime);
+      else
+        return DateTime.Now.Date;
     }
 
     private void FillTable(string fileName, DataTable table)
@@ -179,7 +213,7 @@ namespace LogAnalyzer
             if (table.Columns.Contains("Message"))
             {
               var message = table.Rows[table.Rows.Count - 1]["Message"].ToString();
-              var message_lines = message.Split(new string[] { Environment.NewLine }, 
+              var message_lines = message.Split(new string[] { Environment.NewLine },
                 StringSplitOptions.RemoveEmptyEntries);
 
               table.Rows[table.Rows.Count - 1]["Message"] = message_lines[0];
@@ -264,6 +298,15 @@ namespace LogAnalyzer
       InputGestures =
       {
         new KeyGesture(Key.L, ModifierKeys.Control)
+      }
+    };
+
+    public static readonly ICommand RefreshTable = new RoutedUICommand
+    {
+      Text = "Обновить протокол",
+      InputGestures =
+      {
+        new KeyGesture(Key.F5, ModifierKeys.None)
       }
     };
   }

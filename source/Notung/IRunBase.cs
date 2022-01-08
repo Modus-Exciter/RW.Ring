@@ -172,7 +172,7 @@ namespace Notung
   public abstract class CancelableRunBase : RunBase, ICancelableRunBase
   {
     private volatile bool m_can_cancel = true;
-    
+
     public CancellationToken CancellationToken { get; set; }
 
     /// <summary>
@@ -190,8 +190,8 @@ namespace Notung
 
         var handler = this.CanCancelChanged;
 
-       if (handler != null)
-         handler(this, EventArgs.Empty);
+        if (handler != null)
+          handler(this, EventArgs.Empty);
       }
     }
 

@@ -11,10 +11,10 @@ namespace Notung.Configuration
   public abstract class ConfigurationSection : IValidator
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(ConfigurationSection));
-    
+
     protected ConfigurationSection()
     {
-      LoadDefaults(this);
+      this.LoadDefaults(this);
     }
 
     [OnDeserializing]
@@ -22,7 +22,7 @@ namespace Notung.Configuration
     {
       try
       {
-        LoadDefaults(this);
+        this.LoadDefaults(this);
       }
       catch (Exception ex)
       {
@@ -37,9 +37,9 @@ namespace Notung.Configuration
 
       try
       {
-        ValidateAndRepair(buffer);
+        this.ValidateAndRepair(buffer);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         buffer.Add(ex);
       }
@@ -51,7 +51,7 @@ namespace Notung.Configuration
     [OnSerializing]
     private void OnSerializing(StreamingContext context)
     {
-      BeforeSave();
+      this.BeforeSave();
     }
 
     private void LoadDefaults(object component)
@@ -72,20 +72,20 @@ namespace Notung.Configuration
           var nestedComponent = pd.GetValue(component);
 
           if (nestedComponent != null)
-            LoadDefaults(nestedComponent);
+            this.LoadDefaults(nestedComponent);
         }
       }
     }
 
     private bool ValidateAndRepair(InfoBuffer buffer)
     {
-      bool ret = true;
+      bool ret;
 
       try
       {
-        ret = QuickValidate(buffer);
+        ret = this.QuickValidate(buffer);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         ret = false;
         buffer.Add(ex);
@@ -95,7 +95,7 @@ namespace Notung.Configuration
       if (!ret)
       {
         buffer.Add(Resources.SETTINGS_RESTORE, InfoLevel.Debug);
-        ret = Repair(buffer);
+        ret = this.Repair(buffer);
       }
 
       return ret;
@@ -104,7 +104,7 @@ namespace Notung.Configuration
     public void RestoreDefaults()
     {
       _log.Debug(Resources.SETTINGS_RESTORE);
-      LoadDefaults(this);
+      this.LoadDefaults(this);
     }
 
     public virtual void LoadDefault(string propertyName)
@@ -134,7 +134,7 @@ namespace Notung.Configuration
 
     public virtual bool Validate(InfoBuffer buffer)
     {
-      return QuickValidate(buffer);
+      return this.QuickValidate(buffer);
     }
 
     public virtual void ApplySettings() { }

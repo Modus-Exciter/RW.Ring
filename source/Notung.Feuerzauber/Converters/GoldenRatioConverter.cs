@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using System.Windows.Media;
 using Con = System.Convert;
 
 namespace Notung.Feuerzauber.Converters
@@ -12,7 +8,7 @@ namespace Notung.Feuerzauber.Converters
   public class GoldenRatioConverter : IValueConverter
   {
     public static readonly double Ratio = (Math.Sqrt(5) - 1) / 2;
-    
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
       if (true.Equals(parameter)) // increase

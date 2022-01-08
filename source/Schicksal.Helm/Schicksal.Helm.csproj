@@ -161,6 +161,9 @@
     <EmbeddedResource Include="AncovaResultsForm.resx">
       <DependentUpon>AncovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AncovaResultsForm.ru.resx">
+      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnovaResultsForm.RU.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -177,6 +180,9 @@
       <DependentUpon>CompareVariantsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CorrelationForm.resx">
+      <DependentUpon>CorrelationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CorrelationForm.ru.resx">
       <DependentUpon>CorrelationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
@@ -263,7 +269,7 @@
     </ProjectReference>
     <ProjectReference Include="..\Schicksal\Schicksal.csproj">
       <Project>{A9F7E49A-EDBE-4048-80DC-9EE09D823A0E}</Project>
-      <Name>Schicksal %28Schicksal\Schicksal%29</Name>
+      <Name>Schicksal</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ namespace Notung.Feuerzauber.Controls
   {
     public DialogButtonPanel()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
   }
 }

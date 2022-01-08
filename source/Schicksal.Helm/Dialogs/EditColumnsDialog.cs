@@ -14,14 +14,14 @@ namespace Schicksal.Helm.Dialogs
   {
     public EditColumnsDialog()
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       var table_descriptions = TableColumnInfo.GetTypeDescriptions();
 
       m_type_column.DataSource = TableColumnInfo.GetTypeDescriptions().ToArray();
       m_type_column.ValueMember = "Key";
       m_type_column.DisplayMember = "Value";
-      m_type_column.Width = CalculateDropDownWidth(table_descriptions);
+      m_type_column.Width = this.CalculateDropDownWidth(table_descriptions);
 
       this.MinimumSize = new System.Drawing.Size(m_type_column.Width * 2, m_type_column.Width);
 
@@ -53,7 +53,7 @@ namespace Schicksal.Helm.Dialogs
       if (this.DialogResult != System.Windows.Forms.DialogResult.OK)
         return;
 
-      InfoBuffer buffer = new InfoBuffer();
+      var buffer = new InfoBuffer();
 
       if (!TableColumnInfo.Validate(this.Columns, buffer))
       {
@@ -107,7 +107,7 @@ namespace Schicksal.Helm.Dialogs
         buffer.Add(Resources.NO_COLUMNS, InfoLevel.Warning);
       else
       {
-        HashSet<string> unique = new HashSet<string>();
+        var unique = new HashSet<string>();
 
         foreach (var col in columns)
         {
@@ -129,7 +129,7 @@ namespace Schicksal.Helm.Dialogs
       if (columns == null)
         throw new ArgumentNullException("columns");
 
-      DataTable table = new DataTable();
+      var table = new DataTable();
 
       foreach (var col in columns)
       {

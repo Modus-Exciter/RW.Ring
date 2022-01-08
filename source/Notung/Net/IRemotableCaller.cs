@@ -22,7 +22,7 @@ namespace Notung.Net
   public sealed class RemotableCallerStub : IRemotableCaller
   {
     public IServiceProvider Provider { get; set; }
-    
+
     public TResult Call<TResult>(RemotableCommand<TResult> command) where TResult : RemotableResult
     {
       return (TResult)((IRemotableCommand)command).Execute(this.Provider);
@@ -86,14 +86,14 @@ namespace Notung.Net
 
       public void ProcessRequest(Stream request)
       {
-        var serializer = this.Caller.m_factory.GetSerializer(this.Command.GetType());
-        serializer.Serialize(request, this.Command);
+        var serializer = Caller.m_factory.GetSerializer(Command.GetType());
+        serializer.Serialize(request, Command);
       }
 
       public void ProcessResponse(Stream response)
       {
-        var serializer = this.Caller.m_factory.GetSerializer(ResultType);
-        this.Result = (RemotableResult)serializer.Deserialize(response);
+        var serializer = Caller.m_factory.GetSerializer(ResultType);
+        Result = (RemotableResult)serializer.Deserialize(response);
       }
     }
 

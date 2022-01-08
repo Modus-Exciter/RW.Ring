@@ -44,7 +44,7 @@ namespace Notung.Feuerzauber.Dialogs
       get { return m_image; }
       set
       {
-        if (m_image == value) 
+        if (m_image == value)
           return;
 
         m_image = value;
@@ -52,7 +52,7 @@ namespace Notung.Feuerzauber.Dialogs
         this.OnPropertyChanged("Image");
 
         if (m_bitmap == null)
-          this.ExplicitBitmap = SelectBitmap();
+          this.ExplicitBitmap = this.SelectBitmap();
       }
     }
 

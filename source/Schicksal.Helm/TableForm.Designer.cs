@@ -49,8 +49,8 @@
       this.m_grid.Name = "m_grid";
       this.m_grid.Size = new System.Drawing.Size(596, 464);
       this.m_grid.TabIndex = 0;
-      this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEndEdit);
-      this.m_grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.m_grid_DataError);
+      this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
+      this.m_grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.Grid_DataError);
       // 
       // m_context_menu
       // 
@@ -64,11 +64,11 @@
       this.m_cmd_remove.Name = "m_cmd_remove";
       this.m_cmd_remove.Size = new System.Drawing.Size(152, 22);
       this.m_cmd_remove.Text = "Remove";
-      this.m_cmd_remove.Click += new System.EventHandler(this.m_cmd_remove_Click);
+      this.m_cmd_remove.Click += new System.EventHandler(this.Cmd_remove_Click);
       // 
       // m_switcher
       // 
-      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_switcher_LanguageChanged);
+      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Switcher_LanguageChanged);
       // 
       // TableForm
       // 

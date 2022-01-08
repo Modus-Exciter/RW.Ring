@@ -270,7 +270,7 @@ namespace NotungTest
 
     public void JustSend(string text)
     {
-      this.Value = text;
+      Value = text;
     }
   }
 
@@ -296,7 +296,7 @@ namespace NotungTest
   public class Test : ITest<string>
   {
     public string Text;
-    
+
     public string Get()
     {
       return Text;

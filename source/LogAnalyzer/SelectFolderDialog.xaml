@@ -8,6 +8,7 @@
         Style="{StaticResource dialogWindow}"
         WindowStartupLocation="CenterScreen"
         ResizeMode="CanResizeWithGrip"
+        FocusManager.FocusedElement="{Binding ElementName=Tree}"
         Title="Выбор папки"
         Height="400"
         Width="400"

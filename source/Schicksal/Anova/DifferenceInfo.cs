@@ -29,27 +29,27 @@ namespace Schicksal.Anova
 
     public override string ToString()
     {
-      return string.Format("{0} vs {1}", Factor1, Factor2);
+      return string.Format("{0} vs {1}", this.Factor1, this.Factor2);
     }
 
     public Tuple<string, string>[] ToTuples()
     {
       var list = new Tuple<string, string>[10];
 
-      list[1] = new Tuple<string, string>(string.Format("{0} 1. ", Resources.FACTOR), Factor1.ToString());
-      list[2] = new Tuple<string, string>(Result, Mean1.ToString("0.0000", CultureInfo.InvariantCulture));
+      list[1] = new Tuple<string, string>(string.Format("{0} 1. ", Resources.FACTOR), this.Factor1.ToString());
+      list[2] = new Tuple<string, string>(this.Result, this.Mean1.ToString("0.0000", CultureInfo.InvariantCulture));
 
-      list[4] = new Tuple<string, string>(string.Format("{0} 2. ", Resources.FACTOR), Factor2.ToString());
-      list[5] = new Tuple<string, string>(Result, Mean2.ToString("0.0000", CultureInfo.InvariantCulture));
+      list[4] = new Tuple<string, string>(string.Format("{0} 2. ", Resources.FACTOR), this.Factor2.ToString());
+      list[5] = new Tuple<string, string>(this.Result, this.Mean2.ToString("0.0000", CultureInfo.InvariantCulture));
 
       list[7] = new Tuple<string, string>(Resources.ACTUAL_DIFFERENCE,
-        ActualDifference.ToString("0.0000", CultureInfo.InvariantCulture));
+        this.ActualDifference.ToString("0.0000", CultureInfo.InvariantCulture));
 
       list[8] = new Tuple<string, string>(Resources.CRITICAL_DIFFERENCE,
-        MinimalDifference.ToString("0.0000", CultureInfo.InvariantCulture));
+        this.MinimalDifference.ToString("0.0000", CultureInfo.InvariantCulture));
 
       list[9] = new Tuple<string, string>("P ",
-        Probability.ToString("0.0000", CultureInfo.InvariantCulture));
+        this.Probability.ToString("0.0000", CultureInfo.InvariantCulture));
 
       return list;
     }
@@ -60,7 +60,7 @@ namespace Schicksal.Anova
     private DifferenceInfo[] m_list;
     private readonly DifferenceInfo[] m_source_list;
     private ListSortDescription m_sort;
-    private readonly Dictionary<string, Dictionary<object, int>> m_indexes 
+    private readonly Dictionary<string, Dictionary<object, int>> m_indexes
       = new Dictionary<string, Dictionary<object, int>>();
 
     public DifferenceInfoList(DifferenceInfo[] list)

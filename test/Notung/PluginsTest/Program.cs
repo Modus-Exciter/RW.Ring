@@ -98,13 +98,13 @@ namespace PluginsTest
 
     void IRunBase.Run()
     {
-      
+
     }
 
     event System.ComponentModel.ProgressChangedEventHandler IRunBase.ProgressChanged
     {
-      add {  }
-      remove {  }
+      add { }
+      remove { }
     }
   }
 

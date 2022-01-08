@@ -16,7 +16,7 @@ namespace JetExcelOleDbImport
     public static void FillTableList(string excelFile, IList tableList)
     {
       tableList.Clear();
-      
+
       using (var ole_cn = new OleDbConnection(string.Format(MASK, excelFile)))
       {
         ole_cn.Open();
@@ -30,7 +30,7 @@ namespace JetExcelOleDbImport
     public static void CheckFileIsOpen(string excelFile, IList<string> errors)
     {
       var short_name = Path.GetFileName(excelFile);
-      
+
       using (var excel_process = Process.GetProcessesByName("EXCEL").Where(p =>
        p.MainWindowTitle.Contains(short_name)).FirstOrDefault())
       {

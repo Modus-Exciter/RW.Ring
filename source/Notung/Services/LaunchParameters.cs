@@ -13,12 +13,12 @@ namespace Notung.Services
   /// Настройки отображения задачи с индикатором прогресса
   /// </summary>
   [Serializable]
-  public sealed class LaunchParameters 
+  public sealed class LaunchParameters
   {
     [NonSerialized]
     private Image m_bitmap;
     private byte[] m_image_data;
-    
+
     /// <summary>
     /// Инициализация нового набора настроек отображения задачи с индикатором прогресса
     /// </summary>

@@ -6,7 +6,7 @@ namespace Notung.Helm.Dialogs
   {
     public ErrorBox()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public string Content

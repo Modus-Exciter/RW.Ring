@@ -12,14 +12,14 @@ namespace Notung.Feuerzauber.Controls
 
     public MdiManager()
     {
-      InitializeComponent();
+      this.InitializeComponent();
 
       m_scroll = listBox.ScrollIntoView;
     }
 
     private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      Dispatcher.BeginInvoke(m_scroll, listBox.SelectedItem);
+      this.Dispatcher.BeginInvoke(m_scroll, listBox.SelectedItem);
     }
   }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Notung.Logging
 {
@@ -9,7 +10,7 @@ namespace Notung.Logging
     public static ConsoleColor WarningColor = ConsoleColor.Yellow;
     public static ConsoleColor ErrorColor = ConsoleColor.Red;
     public static ConsoleColor FatalColor = ConsoleColor.Magenta;
-    
+
     public void WriteLog(LoggingData data)
     {
       for (int i = 0; i < data.Length; i++)
@@ -28,6 +29,7 @@ namespace Notung.Logging
 
       public ConsoleColorSetter(InfoLevel level)
       {
+        Monitor.Enter(_lock);
         m_old_color = Console.ForegroundColor;
         try
         {
@@ -63,6 +65,7 @@ namespace Notung.Logging
       public void Dispose()
       {
         Console.ForegroundColor = m_old_color;
+        Monitor.Exit(_lock);
       }
     }
   }

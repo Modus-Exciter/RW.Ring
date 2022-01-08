@@ -67,7 +67,7 @@ namespace Notung.Net
 
       lock (m_lock)
       {
-        m_working_thread = new Thread(ListeningThread);
+        m_working_thread = new Thread(this.ListeningThread);
         m_working_thread.Start();
       }
     }
@@ -119,7 +119,7 @@ namespace Notung.Net
       {
         if (m_binary_service != null)
         {
-          m_binary_service.StreamExchange(PrepareCommand(command), input, output);
+          m_binary_service.StreamExchange(this.PrepareCommand(command), input, output);
 
           return true;
         }
@@ -134,7 +134,7 @@ namespace Notung.Net
       {
         if (m_binary_service != null)
         {
-          var ret = m_binary_service.BinaryExchange(PrepareCommand(command), ReadFromStream(input));
+          var ret = m_binary_service.BinaryExchange(this.PrepareCommand(command), this.ReadFromStream(input));
           output.Write(ret, 0, ret.Length);
 
           return true;
@@ -168,7 +168,7 @@ namespace Notung.Net
     {
       while (m_working_thread != null)
       {
-        ThreadPool.QueueUserWorkItem(ProcessRequest, GetState());
+        ThreadPool.QueueUserWorkItem(this.ProcessRequest, this.GetState());
       }
     }
   }

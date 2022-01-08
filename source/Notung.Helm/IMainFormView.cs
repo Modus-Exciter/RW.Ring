@@ -61,7 +61,7 @@ namespace Notung.Helm
     {
       get
       {
-        return m_main_form.GetType().GetMethod("WndProc", 
+        return m_main_form.GetType().GetMethod("WndProc",
           BindingFlags.Instance | BindingFlags.NonPublic).DeclaringType != typeof(Form);
       }
     }
@@ -131,7 +131,7 @@ namespace Notung.Helm
       this.Alert(new Info(error), ConfirmationRegime.None);
     }
 
-    public void ShowMessages(InfoBuffer messages) 
+    public void ShowMessages(InfoBuffer messages)
     {
       var notificator = this.Notificator;
 
@@ -141,9 +141,9 @@ namespace Notung.Helm
 
     public virtual bool? Alert(Info info, ConfirmationRegime confirm)
     {
-      return PerformAlert(buttons => MessageBox.Show(m_main_form, 
-        info.Message, m_main_form.Text, buttons, 
-        GetIconForLevel(info.Level, confirm != ConfirmationRegime.None)), confirm);
+      return this.PerformAlert(buttons => MessageBox.Show(m_main_form,
+        info.Message, m_main_form.Text, buttons,
+        this.GetIconForLevel(info.Level, confirm != ConfirmationRegime.None)), confirm);
     }
 
     public virtual bool? Alert(string summary, InfoLevel summaryLevel, InfoBuffer buffer, ConfirmationRegime confirm)
@@ -154,7 +154,7 @@ namespace Notung.Helm
         dialog.SetInfoBuffer(buffer);
         dialog.Text = summaryLevel.GetLabel();
 
-        return PerformAlert(delegate(MessageBoxButtons buttons)
+        return this.PerformAlert(delegate (MessageBoxButtons buttons)
         {
           dialog.Buttons = buttons;
           return dialog.ShowDialog(m_main_form);

@@ -35,20 +35,20 @@ namespace Notung.Helm.Dialogs
 
       if (m_cancel_source != null)
       {
-        m_operation.CanCancelChanged += HandleCanCancelChanged;
+        m_operation.CanCancelChanged += this.HandleCanCancelChanged;
         m_view.ButtonText = WinResources.CANCEL;
       }
       else
         m_view.ButtonVisible = false;
 
-      m_operation.ProgressChanged += HandleProgressChanged;
-      m_operation.Completed += HandleOperationCompleted;
+      m_operation.ProgressChanged += this.HandleProgressChanged;
+      m_operation.Completed += this.HandleOperationCompleted;
 
       m_view.ButtonEnabled = m_operation.CanCancel;
       m_view.Text = m_operation.GetWorkCaption();
       m_view.Image = m_operation.GetWorkImage();
       m_view.ButtonClick += this.ButtonClick;
-      m_view.Load += HandleLoad;
+      m_view.Load += this.HandleLoad;
     }
 
     private void HandleLoad(object sender, EventArgs e)
@@ -92,7 +92,7 @@ namespace Notung.Helm.Dialogs
     private void HandleOperationCompleted(object sender, EventArgs e)
     {
       this.Unsubscribe();
-      
+
       m_view.ButtonVisible = true;
       m_view.ButtonEnabled = true;
       m_view.IsMarquee = false;
@@ -117,14 +117,14 @@ namespace Notung.Helm.Dialogs
 
     private void Unsubscribe()
     {
-      m_operation.ProgressChanged -= HandleProgressChanged;
-      m_operation.Completed -= HandleOperationCompleted;
+      m_operation.ProgressChanged -= this.HandleProgressChanged;
+      m_operation.Completed -= this.HandleOperationCompleted;
 
       if (m_cancel_source != null)
-        m_operation.CanCancelChanged -= HandleCanCancelChanged;
+        m_operation.CanCancelChanged -= this.HandleCanCancelChanged;
 
       m_view.ButtonClick -= this.ButtonClick;
-      m_view.Load -= HandleLoad;
+      m_view.Load -= this.HandleLoad;
     }
 
     private void ButtonClick(object sender, EventArgs e)

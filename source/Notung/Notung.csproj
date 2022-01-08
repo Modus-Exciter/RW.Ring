@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationInfo.cs" />
+    <Compile Include="ComponentModel\INodeMoveProvider.cs" />
     <Compile Include="ComponentModel\ObservableObject.cs" />
+    <Compile Include="Data\CartesianMultiplier.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logging\ConsoleAppender.cs" />
     <Compile Include="Net\HttpClientCaller.cs" />

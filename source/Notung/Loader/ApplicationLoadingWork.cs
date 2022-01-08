@@ -43,10 +43,10 @@ namespace Notung.Loader
     /// <returns>Результат загрузки компонент</returns>
     public ApplicationLoadingResult Run(ISynchronizeInvoke invoker, IProgressIndicator worker)
     {
-      if (invoker == null) 
+      if (invoker == null)
         throw new ArgumentNullException("invoker");
 
-      if (worker == null) 
+      if (worker == null)
         throw new ArgumentNullException("worker");
 
       var ret = new ApplicationLoadingResult();
@@ -268,14 +268,14 @@ namespace Notung.Loader
     {
       get
       {
-        if (key == null) 
+        if (key == null)
           throw new ArgumentNullException("key");
 
         return m_loaders[key];
       }
       internal set
       {
-        if (key == null) 
+        if (key == null)
           throw new ArgumentNullException("key");
 
         if (value == null)

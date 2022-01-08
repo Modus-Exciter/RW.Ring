@@ -311,7 +311,7 @@ namespace NotungTest
         t2.Join();
         t3.Join();
       }
-   }
+    }
 
     [TestMethod]
     public void DelegateCreation()

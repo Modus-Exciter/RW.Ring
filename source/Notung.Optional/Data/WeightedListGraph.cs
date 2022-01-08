@@ -9,13 +9,16 @@ namespace Notung.Data
   /// </summary>
   /// <typeparam name="T">Тип веса вершины</typeparam>
   [Serializable]
-  public class WeightedNestedList<T> : IWeightedGraph<T> where T : IConvertible
+  public class WeightedNestedList<T> : IWeightedGraph<T> where T : IComparable<T>
   {
     private readonly Dictionary<int, T>[] m_forward;
     private readonly Dictionary<int, T>[] m_reverse;
 
     private static readonly Func<KeyValuePair<int, T>, Tuple<int, T>> _converter
       = kv => new Tuple<int, T>(kv.Key, kv.Value);
+
+    private static readonly Func<Dictionary<int, T>> _create_dictionary
+      = () => new Dictionary<int, T>();
 
     /// <summary>
     /// Создание нового графа, хранимого в виде списка смежных вершин
@@ -24,10 +27,10 @@ namespace Notung.Data
     /// <param name="isOriented">Будет ли граф ориентированным</param>
     public WeightedNestedList(int peakCount, bool isOriented)
     {
-      m_forward = ArrayExtensions.CreateAndFill(peakCount, () => new Dictionary<int, T>());
+      m_forward = ArrayExtensions.CreateAndFill(peakCount, _create_dictionary);
 
       if (isOriented)
-        m_reverse = ArrayExtensions.CreateAndFill(peakCount, () => new Dictionary<int, T>());
+        m_reverse = ArrayExtensions.CreateAndFill(peakCount, _create_dictionary);
     }
 
     public int PeakCount
@@ -51,11 +54,11 @@ namespace Notung.Data
 
     public bool HasArc(int from, int to)
     {
-      if (to < 0 || to >= m_forward.Length)
-        throw new IndexOutOfRangeException();
-
       if (from == to)
         throw new ArgumentException("from == to");
+
+      if (to < 0 || to >= m_forward.Length)
+        throw new IndexOutOfRangeException();
 
       return m_forward[from].ContainsKey(to);
     }

@@ -71,7 +71,7 @@
       resources.ApplyResources(this.m_button_open_excel, "m_button_open_excel");
       this.m_button_open_excel.Name = "m_button_open_excel";
       this.m_button_open_excel.UseVisualStyleBackColor = true;
-      this.m_button_open_excel.Click += new System.EventHandler(this.m_button_open_excel_Click);
+      this.m_button_open_excel.Click += new System.EventHandler(this.Button_open_excel_Click);
       // 
       // m_table_edit
       // 

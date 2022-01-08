@@ -74,8 +74,8 @@ namespace Notung.Data
 
     public bool this[int row, int column]
     {
-      get { return m_data[GetIndex(row, column)]; }
-      set { m_data[GetIndex(row, column)] = value; }
+      get { return m_data[this.GetIndex(row, column)]; }
+      set { m_data[this.GetIndex(row, column)] = value; }
     }
   }
 
@@ -122,10 +122,10 @@ namespace Notung.Data
 
     public bool this[int row, int column]
     {
-      get { return m_data[GetIndex(row, column)]; }
+      get { return m_data[this.GetIndex(row, column)]; }
       set
       {
-        var index = GetIndex(row, column);
+        var index = this.GetIndex(row, column);
 
         if (index > 0)
           m_data[index] = value;
@@ -134,7 +134,7 @@ namespace Notung.Data
   }
 
   /// <summary>
-  /// Обыкновенная квадратная матрица
+  /// Обыкновенная прямоугольная матрица
   /// </summary>
   /// <typeparam name="T">Тип элемента матрицы</typeparam>
   [Serializable]
@@ -155,7 +155,7 @@ namespace Notung.Data
     {
       m_data = new T[size, size];
     }
-    
+
     public int RowCount
     {
       get { return m_data.GetLength(0); }
@@ -202,7 +202,7 @@ namespace Notung.Data
     {
       get { return m_with_diagonal; }
     }
-    
+
     public int RowCount
     {
       get { return m_size; }
@@ -239,8 +239,8 @@ namespace Notung.Data
 
     public T this[int row, int column]
     {
-      get { return m_data[GetIndex(row, column)]; }
-      set { m_data[GetIndex(row, column)] = value; }
+      get { return m_data[this.GetIndex(row, column)]; }
+      set { m_data[this.GetIndex(row, column)] = value; }
     }
   }
 }

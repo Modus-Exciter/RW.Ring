@@ -26,7 +26,7 @@ namespace Notung.Configuration
 
       m_path = path;
     }
-    
+
     public string InputFilePath
     {
       get { return m_path; }
@@ -98,12 +98,12 @@ namespace Notung.Configuration
         var path = m_product_info.GetWorkingPath();
 
         if (Directory.Exists(path))
-          return FindLastConfigFile(path);
+          return this.FindLastConfigFile(path);
 
         path = m_product_info.GetCommonDataPath();
 
         if (Directory.Exists(path))
-          return FindLastConfigFile(path);
+          return this.FindLastConfigFile(path);
 
         return null;
       }

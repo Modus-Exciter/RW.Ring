@@ -137,7 +137,7 @@
       this.m_cmd_export.Name = "m_cmd_export";
       this.m_cmd_export.Size = new System.Drawing.Size(117, 22);
       this.m_cmd_export.Text = "Export";
-      this.m_cmd_export.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+      this.m_cmd_export.Click += new System.EventHandler(this.ExportToolStripMenuItem_Click);
       // 
       // m_binding_source
       // 
@@ -145,7 +145,7 @@
       // 
       // m_lang
       // 
-      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_lang_LanguageChanged);
+      this.m_lang.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Lang_LanguageChanged);
       // 
       // BasicStatisticsForm
       // 

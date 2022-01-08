@@ -114,7 +114,7 @@
       resources.ApplyResources(this.m_list_total, "m_list_total");
       this.m_list_total.FormattingEnabled = true;
       this.m_list_total.Name = "m_list_total";
-      this.m_list_total.DoubleClick += new System.EventHandler(this.m_button_left_Click);
+      this.m_list_total.DoubleClick += new System.EventHandler(this.Button_left_Click);
       // 
       // totalBindingSource
       // 
@@ -127,7 +127,7 @@
       resources.ApplyResources(this.m_list_selected, "m_list_selected");
       this.m_list_selected.FormattingEnabled = true;
       this.m_list_selected.Name = "m_list_selected";
-      this.m_list_selected.DoubleClick += new System.EventHandler(this.m_button_right_Click);
+      this.m_list_selected.DoubleClick += new System.EventHandler(this.Button_right_Click);
       // 
       // predictorsBindingSource
       // 
@@ -157,7 +157,7 @@
       this.m_button_left.Image = global::Schicksal.Helm.Properties.Resources.arrow_right_blue;
       this.m_button_left.Name = "m_button_left";
       this.m_button_left.UseVisualStyleBackColor = true;
-      this.m_button_left.Click += new System.EventHandler(this.m_button_left_Click);
+      this.m_button_left.Click += new System.EventHandler(this.Button_left_Click);
       // 
       // m_button_right
       // 
@@ -165,7 +165,7 @@
       this.m_button_right.Image = global::Schicksal.Helm.Properties.Resources.arrow_left_blue;
       this.m_button_right.Name = "m_button_right";
       this.m_button_right.UseVisualStyleBackColor = true;
-      this.m_button_right.Click += new System.EventHandler(this.m_button_right_Click);
+      this.m_button_right.Click += new System.EventHandler(this.Button_right_Click);
       // 
       // m_result_field
       // 

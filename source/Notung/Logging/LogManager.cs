@@ -18,7 +18,7 @@ namespace Notung.Logging
       new FileLogAppender()
     };
     private static LogProcess _process = new SyncLogProcess(_appenders);
-  
+
     public static ILog GetLogger(string source)
     {
       if (string.IsNullOrEmpty(source))
@@ -42,7 +42,7 @@ namespace Notung.Logging
     {
       if (type == null)
         throw new ArgumentNullException("type");
-      
+
       lock (_type_loggers)
       {
         ILog ret;

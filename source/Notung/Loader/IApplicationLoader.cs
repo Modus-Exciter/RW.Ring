@@ -33,7 +33,7 @@ namespace Notung.Loader
   /// </summary>
   /// <typeparam name="TContract">Контракт, реализуемый типом компонента</typeparam>
   /// <typeparam name="TService">Реальный тип компонента</typeparam>
-  public class ApplicationLoader<TContract, TService> : IApplicationLoader 
+  public class ApplicationLoader<TContract, TService> : IApplicationLoader
     where TService : class, TContract
   {
     public static readonly bool _synchronization_required = typeof(ISynchronizeInvoke).IsAssignableFrom(typeof(TService));
@@ -145,10 +145,10 @@ namespace Notung.Loader
       static ReadOnlySet<Type> SearchDependencies(ref Func<object[], object> method, ref Type[] types)
       {
         var constructor = (from ci in typeof(TService).GetConstructors()
-                           let item = new 
-                           { 
-                             Method = ci, 
-                             Params = ci.GetParameters() 
+                           let item = new
+                           {
+                             Method = ci,
+                             Params = ci.GetParameters()
                            }
                            where item.Params.Length == 0 ||
                            item.Params.All(p => !p.ParameterType.IsScalar())

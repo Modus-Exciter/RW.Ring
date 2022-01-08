@@ -18,7 +18,7 @@ namespace Notung.Feuerzauber.Styles
 
     public GridStyles()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -27,8 +27,15 @@ namespace Notung.Feuerzauber.Styles
       var obj = ctrl.TemplatedParent as DataGridColumnHeader;
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
-      var grid = (DataGrid)obj.Column.GetType().GetProperty("DataGridOwner",
-        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).GetValue(obj.Column, null);
+      DataGrid grid = null;
+
+      for (var parent = VisualTreeHelper.GetParent(obj); parent != null; parent = VisualTreeHelper.GetParent(parent))
+      {
+        grid = parent as DataGrid;
+
+        if (grid != null)
+          break;
+      }
 
       var view = grid.ItemsSource as IBindingListView;
 
@@ -37,7 +44,7 @@ namespace Notung.Feuerzauber.Styles
 
       Dictionary<string, string> filters = GetDictionary(grid);
 
-      SetFilter(filters, name, ctrl.Text, view);
+      this.SetFilter(filters, name, ctrl.Text, view);
     }
 
     private static Dictionary<string, string> GetDictionary(DataGrid grid)

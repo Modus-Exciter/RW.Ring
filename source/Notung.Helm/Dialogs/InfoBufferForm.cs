@@ -10,7 +10,7 @@ namespace Notung.Helm.Dialogs
 
     public InfoBufferForm()
     {
-      InitializeComponent();
+      this.InitializeComponent();
     }
 
     public void SetInfoBuffer(InfoBuffer buffer)
@@ -24,14 +24,14 @@ namespace Notung.Helm.Dialogs
       set
       {
         m_summary_label.Text = value;
-        AdaptSummary();
+        this.AdaptSummary();
       }
     }
 
     protected override void OnResize(EventArgs e)
     {
       base.OnResize(e);
-      AdaptSummary();
+      this.AdaptSummary();
     }
 
     public MessageBoxButtons Buttons

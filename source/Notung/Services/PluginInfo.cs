@@ -11,7 +11,7 @@ namespace Notung.Services
   {
     private readonly string m_name;
     private readonly string m_asm_file;
-    
+
     protected internal PluginInfo(string name, string assemblyFile)
     {
       if (string.IsNullOrEmpty(assemblyFile))

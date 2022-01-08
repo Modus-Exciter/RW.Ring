@@ -102,6 +102,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Tree\ListTreeNode.cs" />
+    <Compile Include="Tree\NestedPropertyTreeNode.cs" />
+    <Compile Include="Tree\TreeBindingController.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tree\TreeExtensions.cs" />
+    <Compile Include="Tree\TreeNodeMoveEventArgs.cs" />
     <Compile Include="WinResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

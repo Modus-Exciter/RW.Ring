@@ -98,7 +98,7 @@ namespace Notung.Configuration
       {
         if (!m_sections.TryGetValue(typeof(TSection), out ret))
         {
-          ret = ReadSection(typeof(TSection));
+          ret = this.ReadSection(typeof(TSection));
           m_sections.Add(typeof(TSection), ret);
         }
       }
@@ -113,13 +113,13 @@ namespace Notung.Configuration
         throw new ArgumentNullException("section");
 
       if (section.GetType() != typeof(TSection))
-        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE, 
+        throw new ArgumentException(string.Format(Resources.SECTION_TYPE_UNINHERITABLE,
           typeof(TSection), section.GetType()));
 
       using (m_lock.WriteLock())
       {
         m_sections[typeof(TSection)] = section;
-        WriteSection(section);
+        this.WriteSection(section);
       }
     }
 
@@ -146,7 +146,7 @@ namespace Notung.Configuration
       using (m_lock.WriteLock())
       {
         foreach (var kv in m_sections)
-          WriteSection(kv.Value);
+          this.WriteSection(kv.Value);
 
         m_file.Save();
       }
@@ -164,11 +164,11 @@ namespace Notung.Configuration
 
       using (var sw = new StringWriter(sb))
       {
-        var writer = new XmlTextWriter(sw) 
-        { 
-          Formatting = Formatting.Indented, 
-          IndentChar = '\t', 
-          Indentation = 1, 
+        var writer = new XmlTextWriter(sw)
+        {
+          Formatting = Formatting.Indented,
+          IndentChar = '\t',
+          Indentation = 1,
         };
 
         if (data_contract)
@@ -222,7 +222,7 @@ namespace Notung.Configuration
       _log.DebugFormat("ReadSection(): {0}", sectionType.FullName);
 
       section_name = this.GetSectionName(sectionType, out data_contract);
-      string section_xml = null;
+      string section_xml;
 
       if (m_file.TryGetSection(section_name, out section_xml))
       {
@@ -240,7 +240,7 @@ namespace Notung.Configuration
             {
               _log.Error("ReadSection(): exception", ex);
               ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-              WriteSection(ret);
+              this.WriteSection(ret);
             }
           }
           else
@@ -254,7 +254,7 @@ namespace Notung.Configuration
             {
               _log.Error("ReadSection(): exception", ex);
               ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-              WriteSection(ret);
+              this.WriteSection(ret);
             }
           }
         }
@@ -262,7 +262,7 @@ namespace Notung.Configuration
       else
       {
         ret = (ConfigurationSection)Activator.CreateInstance(sectionType);
-        WriteSection(ret);
+        this.WriteSection(ret);
       }
 
       return ret;

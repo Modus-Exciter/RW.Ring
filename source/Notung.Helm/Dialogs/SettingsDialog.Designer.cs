@@ -86,7 +86,7 @@
       this.m_button_apply.TabIndex = 1;
       this.m_button_apply.Text = "Apply";
       this.m_button_apply.UseVisualStyleBackColor = true;
-      this.m_button_apply.Click += new System.EventHandler(this.m_button_apply_Click);
+      this.m_button_apply.Click += new System.EventHandler(this.Button_apply_Click);
       // 
       // m_button_ok
       // 
@@ -110,7 +110,7 @@
       this.m_sections_tree.ShowRootLines = false;
       this.m_sections_tree.Size = new System.Drawing.Size(204, 482);
       this.m_sections_tree.TabIndex = 1;
-      this.m_sections_tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.m_sections_list_AfterSelect);
+      this.m_sections_tree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.Sections_list_AfterSelect);
       // 
       // m_image_list
       // 
@@ -147,7 +147,7 @@
       this.m_errors_view.RowHeadersVisible = false;
       this.m_errors_view.Size = new System.Drawing.Size(779, 52);
       this.m_errors_view.TabIndex = 0;
-      this.m_errors_view.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_errors_view_CellDoubleClick);
+      this.m_errors_view.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Errors_view_CellDoubleClick);
       // 
       // messageDataGridViewTextBoxColumn
       // 
@@ -161,11 +161,11 @@
       // 
       this.m_settings_controller.PagePlace = this.m_section_panel;
       this.m_settings_controller.ValidationResults = this.m_errors_view;
-      this.m_settings_controller.PageChanged += new System.EventHandler<Notung.Helm.Configuration.PageEventArgs>(this.m_settings_controller_PageChanged);
+      this.m_settings_controller.PageChanged += new System.EventHandler<Notung.Helm.Configuration.PageEventArgs>(this.Settings_controller_PageChanged);
       // 
       // m_language_switch
       // 
-      this.m_language_switch.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_language_switch_LanguageChanged);
+      this.m_language_switch.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Language_switch_LanguageChanged);
       // 
       // SettingsDialog
       // 
