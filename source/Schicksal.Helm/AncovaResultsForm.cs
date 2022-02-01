@@ -82,8 +82,17 @@ namespace Schicksal.Helm
       if (row == null)
         return;
 
-      if (row.P <= this.Probability)
+      if (row.PR <= this.Probability)
+      {
         e.CellStyle.ForeColor = m_significat_color;
+      }
+      else if (row.PH <= this.Probability && e.ColumnIndex >= 0)
+      {
+        var dpn = m_grid.Columns[e.ColumnIndex].DataPropertyName;
+
+        if (dpn == "Eta" || dpn == "TH" || dpn == "PH")
+          e.CellStyle.ForeColor = m_significat_color;
+      }
     }
 
     private void m_cmd_export_Click(object sender, EventArgs e)

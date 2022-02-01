@@ -50,10 +50,10 @@ namespace Schicksal.Regression
       };
 
       result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
-      result.T = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
-      result.R001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
-      result.R005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
-      result.P = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.T);
+      result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
+      result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
+      result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
+      result.PR = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR);
 
       return result;
     }
