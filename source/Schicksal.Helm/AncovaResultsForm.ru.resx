@@ -124,21 +124,51 @@
   <data name="factorDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
+  <data name="factorDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Фактор</value>
+  </data>
   <data name="nDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>5</value>
+  </data>
+  <data name="nDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Количество наблюдений (точек)</value>
+  </data>
+  <data name="t005DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Т критерий для 5% уровня значимости</value>
+  </data>
+  <data name="t001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Т критерий для 1% уровня значимости</value>
   </data>
   <data name="rDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>120, 26</value>
+  <data name="rDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Коэффициент линейной корреляции</value>
   </data>
+  <data name="tRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Т критерий для коэффициента линейной корреляции</value>
+  </data>
+  <data name="pRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Уровень значимости для коэффициента линейной корреляции</value>
+  </data>
+  <data name="etaDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Коэффициент криволинейной корреляции</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Т критерий для коэффициента криволинейной корреляции</value>
+  </data>
+  <data name="pHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Уровень значимости для коэффициента криволинейной корреляции</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 22</value>
   </data>
   <data name="m_cmd_export.Text" xml:space="preserve">
     <value>Экспорт</value>
+  </data>
+  <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>120, 26</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

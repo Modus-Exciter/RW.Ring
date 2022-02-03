@@ -30,6 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AncovaResultsForm));
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,6 +93,9 @@
       // factorDataGridViewTextBoxColumn
       // 
       this.factorDataGridViewTextBoxColumn.DataPropertyName = "Factor";
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      this.factorDataGridViewTextBoxColumn.DefaultCellStyle = dataGridViewCellStyle1;
+      this.factorDataGridViewTextBoxColumn.Frozen = true;
       resources.ApplyResources(this.factorDataGridViewTextBoxColumn, "factorDataGridViewTextBoxColumn");
       this.factorDataGridViewTextBoxColumn.Name = "factorDataGridViewTextBoxColumn";
       this.factorDataGridViewTextBoxColumn.ReadOnly = true;
@@ -113,6 +117,7 @@
       // t001DataGridViewTextBoxColumn
       // 
       this.t001DataGridViewTextBoxColumn.DataPropertyName = "T001";
+      this.t001DataGridViewTextBoxColumn.DividerWidth = 2;
       resources.ApplyResources(this.t001DataGridViewTextBoxColumn, "t001DataGridViewTextBoxColumn");
       this.t001DataGridViewTextBoxColumn.Name = "t001DataGridViewTextBoxColumn";
       this.t001DataGridViewTextBoxColumn.ReadOnly = true;
@@ -134,6 +139,7 @@
       // pRDataGridViewTextBoxColumn
       // 
       this.pRDataGridViewTextBoxColumn.DataPropertyName = "PR";
+      this.pRDataGridViewTextBoxColumn.DividerWidth = 2;
       resources.ApplyResources(this.pRDataGridViewTextBoxColumn, "pRDataGridViewTextBoxColumn");
       this.pRDataGridViewTextBoxColumn.Name = "pRDataGridViewTextBoxColumn";
       this.pRDataGridViewTextBoxColumn.ReadOnly = true;
