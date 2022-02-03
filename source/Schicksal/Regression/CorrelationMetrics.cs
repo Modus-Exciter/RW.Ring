@@ -38,7 +38,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Фактический критерий значимости линейной корреляции
     /// </summary>
-    [DisplayName("tr")]
+    [DisplayName("Tr")]
     public double TR { get; internal set; }
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Фактический критерий значимости криволинейной корреляции
     /// </summary>
-    [DisplayName("tη")]
+    [DisplayName("Tη")]
     public double TH { get; internal set; }
 
     /// <summary>

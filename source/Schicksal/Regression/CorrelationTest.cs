@@ -40,6 +40,146 @@ namespace Schicksal.Regression
       return up_sum / Math.Sqrt(x_sum * y_sum);
     }
 
+    public static double CalculateEta(IDataGroup factor, IDataGroup result)
+    {
+      if (factor == null)
+        throw new ArgumentNullException("factor");
+
+      if (result == null)
+        throw new ArgumentNullException("result");
+
+      if (factor.Count != result.Count)
+        throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
+
+      if (factor.Count < 6)
+        throw new ArgumentOutOfRangeException("factor.Count");
+
+      var sorted = EnumeratePoints(factor, result).OrderBy(p => p.X).ToList();
+
+      List<int> borders = RangeToGroups(sorted);
+
+      if (borders.Count < 3)
+        return CalculateR(factor, result);
+
+      int last = 0;
+
+      DPoint[][] data = new DPoint[borders.Count][];
+      double avg_y = result.Average();
+      double up_sum = 0;
+      double dn_sum = 0;
+      int index = 0;
+
+      foreach (int border in borders)
+      {
+        double group_y = 0;
+
+        data[index] = new DPoint[border - last];
+
+        for (int i = 0; i < data[index].Length; i++)
+        {
+          data[index][i] = sorted[last + i];
+          group_y += sorted[last + i].Y;
+        }
+
+        group_y /= data[index].Length;
+        up_sum += data[index].Length * (group_y - avg_y) * (group_y - avg_y);
+
+        last = border;
+        index++;
+      }
+
+      foreach (double y in result)
+        dn_sum += (y - avg_y) * (y - avg_y);
+
+      return Math.Sqrt(up_sum / dn_sum);
+    }
+
+    private static List<int> RangeToGroups(List<DPoint> sorted)
+    {
+      var borders = new List<int>();
+      var group = (int)Math.Sqrt(sorted.Count);
+
+      if (group < 2)
+        group = 2;
+
+      if (group < sorted.Count / 20)
+        group = sorted.Count / 20;
+
+      int i = group;
+
+      while (i < sorted.Count)
+      {
+        if (sorted[i - 1].X == sorted[i].X && i < sorted.Count)
+        {
+          int last = 0;
+
+          if (borders.Count > 0)
+            last = borders[borders.Count - 1];
+
+          int down = 0;
+          int up = 0;
+          bool down_found = false;
+          bool up_found = false;
+
+          for (int j = i - 1; j > last + 1; j--)
+          {
+            down++;
+
+            if (sorted[j - 1].X != sorted[j].X)
+            {
+              down_found = true;
+              break;
+            }
+          }
+
+          for (int j = i + 1; j < sorted.Count; j++)
+          {
+            up++;
+            if (sorted[j - 1].X != sorted[j].X)
+            {
+              up_found = true;
+              break;
+            }
+          }
+
+          if (!down_found && up_found)
+          {
+            i += up;
+          }
+          else if (down_found && !up_found)
+          {
+            i -= down;
+          }
+          else if (down_found && up_found)
+          {
+            if (down < up)
+              i -= down;
+            else
+              i += up;
+          }
+          else
+          {
+            break;
+          }
+        }
+
+        borders.Add(i);
+        i += group;
+      }
+
+      if (borders.Count > 0)
+      {
+        int last = borders[borders.Count - 1];
+
+        if (last < sorted.Count - 2)
+          borders.Add(sorted.Count);
+        else
+          borders[borders.Count - 1] = sorted.Count;
+      }
+
+      return borders;
+    }
+
     public static CorrelationMetrics CalculateMetrics(string factor, IDataGroup x, IDataGroup y)
     {
       var result = new CorrelationMetrics
@@ -55,7 +195,27 @@ namespace Schicksal.Regression
       result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
       result.PR = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR);
 
+      if (x.Count > 6)
+        result.Eta = CalculateEta(x, y);
+      else
+        result.Eta = result.R;
+
+      result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
+      result.PH = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH);
+
       return result;
+    }
+
+    private static IEnumerable<DPoint> EnumeratePoints(IDataGroup factor, IDataGroup result)
+    {
+      for (int i = 0; i < factor.Count; i++)
+        yield return new DPoint { X = factor[i], Y = result[i] };
+    }
+
+    private struct DPoint
+    {
+      public double X;
+      public double Y;
     }
   }
 
@@ -85,11 +245,17 @@ namespace Schicksal.Regression
       m_table = table;
       m_factors = factors;
       m_result = result;
+      m_filter = string.IsNullOrWhiteSpace(filter) ? null : filter;
+    }
 
-      List<string> expressions = GetFilterExpressions(table, factors, result, filter);
+    private string GetFilter(string factor)
+    {
+      List<string> expressions = GetFilterExpressions(m_table, new string[] { factor }, m_result, m_filter);
 
       if (expressions.Count > 0)
-        m_filter = string.Join(" and ", expressions);
+        return string.Join(" and ", expressions);
+      else
+        return null;
     }
 
     private static List<string> GetFilterExpressions(DataTable table, string[] factors, string result, string filter)
@@ -125,12 +291,12 @@ namespace Schicksal.Regression
     {
       this.Results = new CorrelationMetrics[m_factors.Length];
 
-      var y_column = new DataColumnGroup(m_table.Columns[m_result], m_filter);
-
       for (int i = 0; i < m_factors.Length; i++)
       {
-        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i],
-          new DataColumnGroup(m_table.Columns[m_factors[i]], m_filter), y_column);
+        var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], GetFilter(m_factors[i]));
+        var y_column = new DataColumnGroup(m_table.Columns[m_result], GetFilter(m_factors[i]));
+
+        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], x_column, y_column);
       }
     }
   }

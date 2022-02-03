@@ -145,6 +145,9 @@
   <data name="rDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Коэффициент линейной корреляции</value>
   </data>
+  <data name="tRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Tr</value>
+  </data>
   <data name="tRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Т критерий для коэффициента линейной корреляции</value>
   </data>
@@ -153,6 +156,9 @@
   </data>
   <data name="etaDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Коэффициент криволинейной корреляции</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Tη</value>
   </data>
   <data name="tHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Т критерий для коэффициента криволинейной корреляции</value>
