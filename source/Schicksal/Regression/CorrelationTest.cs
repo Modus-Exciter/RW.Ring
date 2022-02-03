@@ -193,7 +193,7 @@ namespace Schicksal.Regression
       result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
       result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
       result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
-      result.PR = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR);
+      result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
 
       if (x.Count > 6)
         result.Eta = CalculateEta(x, y);
@@ -201,7 +201,7 @@ namespace Schicksal.Regression
         result.Eta = result.R;
 
       result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
-      result.PH = 1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH);
+      result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
 
       return result;
     }
