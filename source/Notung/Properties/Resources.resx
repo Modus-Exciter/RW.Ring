@@ -208,4 +208,10 @@
   <data name="NO_TOKEN_LENGTH" xml:space="preserve">
     <value>Size of the token {0} cannot be calculated automatically</value>
   </data>
+  <data name="MATRIX_MUST_BE_SQUARE" xml:space="preserve">
+    <value>Matrix must be sqaure to calculate determinant</value>
+  </data>
+  <data name="MATRIX_UNABLE_TO_MULTIPLY" xml:space="preserve">
+    <value>Unable to multiply matrixes: column count in the first matrix is not equal row count in the second</value>
+  </data>
 </root>

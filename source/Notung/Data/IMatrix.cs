@@ -171,6 +171,15 @@ namespace Notung.Data
       get { return m_data[row, column]; }
       set { m_data[row, column] = value; }
     }
+
+    /// <summary>
+    /// Преобразование матрицы в двумерный массив
+    /// </summary>
+    /// <returns>Двумерный массив</returns>
+    public T[,] AsArray()
+    {
+      return m_data;
+    }
   }
 
   /// <summary>
