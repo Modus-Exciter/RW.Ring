@@ -166,6 +166,13 @@ namespace Notung.Data
       return result;
     }
 
+    /// <summary>
+    /// Расчёт обратной матрицы
+    /// </summary>
+    /// <typeparam name="T">Тип ячейки матрицы</typeparam>
+    /// <param name="matrix">Матрица, для которой нужно рассчитать обратную</param>
+    /// <param name="provider">Сведения о культуре для преобразования типа ячейки матрицы</param>
+    /// <returns>Матрица, обратная данной</returns>
     public static IMatrix<T> Invert<T>(IMatrix<T> matrix, CultureInfo provider)
       where T : IConvertible
     {
