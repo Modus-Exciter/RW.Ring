@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Data;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace NotungTest
 {
@@ -143,6 +144,153 @@ namespace NotungTest
       Assert.AreEqual(11, row[2]);
       Assert.AreEqual(0, row[3]);
       Assert.AreEqual(14, row[4]);
+    }
+
+
+    //тест на detA = detAT 
+    [TestMethod]
+    public void Determinant()
+    {
+      RectangleMatrix<double> A = new RectangleMatrix<double>(3, 3);
+      A[0, 0] = 2;
+      A[0, 1] = 4;
+      A[0, 2] = 6;
+      A[1, 0] = 8;
+      A[1, 1] = 10;
+      A[1, 2] = 12;
+      A[2, 0] = 14;
+      A[2, 1] = 16;
+      A[2, 2] = 18;
+      RectangleMatrix<double> A2 = new RectangleMatrix<double>(3, 3);
+      A2[0, 0] = 2;
+      A2[0, 1] = 4;
+      A2[0, 2] = 6;
+      A2[1, 0] = 8;
+      A2[1, 1] = 10;
+      A2[1, 2] = 12;
+      A2[2, 0] = 14;
+      A2[2, 1] = 16;
+      A2[2, 2] = 18;
+      IMatrix<double> AT = MatrixFunctions.Transpose<double>(A);
+      CultureInfo myCIintl = new CultureInfo("es-ES", false);
+      double detAT = MatrixFunctions.Determinant<double>(AT, myCIintl);
+      double detA2 = MatrixFunctions.Determinant<double>(A2, myCIintl);
+      Assert.AreEqual(detAT, detA2);
+
+    }
+    // тест на A*A^-1 = E
+    [TestMethod]
+    public void MultiplyWithInvert()
+    {
+      RectangleMatrix<double> A = new RectangleMatrix<double>(3, 3);
+      A[0, 0] = 2;
+      A[0, 1] = 4;
+      A[0, 2] = 6;
+      A[1, 0] = 8;
+      A[1, 1] = 10;
+      A[1, 2] = 12;
+      A[2, 0] = 14;
+      A[2, 1] = 16;
+      A[2, 2] = 18;
+      RectangleMatrix<double> A2 = new RectangleMatrix<double>(3, 3);
+      A2[0, 0] = 2;
+      A2[0, 1] = 4;
+      A2[0, 2] = 6;
+      A2[1, 0] = 8;
+      A2[1, 1] = 10;
+      A2[1, 2] = 12;
+      A2[2, 0] = 14;
+      A2[2, 1] = 16;
+      A2[2, 2] = 18;
+      CultureInfo myCIintl = new CultureInfo("es-ES", false);
+      IMatrix<double> invA = MatrixFunctions.Invert<double>(A, myCIintl);
+      var B = MatrixFunctions.Multiply<double>(invA, A2, myCIintl);
+      RectangleMatrix<double> E = new RectangleMatrix<double>(3, 3);
+      E[0, 0] = 1;
+      E[0, 1] = 0;
+      E[0, 2] = 0;
+      E[1, 0] = 0;
+      E[1, 1] = 1;
+      E[1, 2] = 0;
+      E[2, 0] = 0;
+      E[2, 1] = 0;
+      E[2, 2] = 1;
+      Assert.AreEqual(B[0, 0], E[0, 0]);
+      Assert.AreEqual(B[0, 1], E[0, 1]);
+      Assert.AreEqual(B[0, 2], E[0, 2]);
+      Assert.AreEqual(B[1, 0], E[1, 0]);
+      Assert.AreEqual(B[1, 1], E[1, 1]);
+      Assert.AreEqual(B[1, 2], E[1, 2]);
+      Assert.AreEqual(B[2, 0], E[2, 0]);
+      Assert.AreEqual(B[2, 1], E[2, 1]);
+      Assert.AreEqual(B[2, 2], E[2, 2]);
+    }
+
+    // тест на A*B != B*A
+    [TestMethod]
+    public void MultiplyDifferentMatrix()
+    {
+      RectangleMatrix<double> A = new RectangleMatrix<double>(3, 3);
+      A[0, 0] = 42;
+      A[0, 1] = 47;
+      A[0, 2] = 88;
+      A[1, 0] = 36;
+      A[1, 1] = 56;
+      A[1, 2] = 96;
+      A[2, 0] = 78;
+      A[2, 1] = 45;
+      A[2, 2] = 81;
+
+      RectangleMatrix<double> B = new RectangleMatrix<double>(3, 3);
+      A[0, 0] = 32;
+      A[0, 1] = 42;
+      A[0, 2] = 47;
+      A[1, 0] = 37;
+      A[1, 1] = 38;
+      A[1, 2] = 32;
+      A[2, 0] = 89;
+      A[2, 1] = 74;
+      A[2, 2] = 18;
+
+      CultureInfo myCIintl = new CultureInfo("es-ES", false);
+      var C = MatrixFunctions.Multiply<double>(A, B, myCIintl);
+      var D = MatrixFunctions.Multiply<double>(B, A, myCIintl);
+      Assert.AreNotEqual(C[0, 0], D[0, 0]);
+      Assert.AreNotEqual(C[0, 1], D[0, 1]);
+      Assert.AreNotEqual(C[0, 2], D[0, 2]);
+      Assert.AreNotEqual(C[1, 0], D[1, 0]);
+      Assert.AreNotEqual(C[1, 1], D[1, 1]);
+      Assert.AreNotEqual(C[1, 2], D[1, 2]);
+      Assert.AreNotEqual(C[2, 0], D[2, 0]);
+      Assert.AreNotEqual(C[2, 1], D[2, 1]);
+      Assert.AreNotEqual(C[2, 2], D[2, 2]);
+    }
+
+    // тест на A(m x n) * B (m x k)
+    [TestMethod]
+    public void MultiplyMatrixWithWrongDimension()
+    {
+      RectangleMatrix<double> A = new RectangleMatrix<double>(3, 3);
+      A[0, 0] = 42;
+      A[0, 1] = 47;
+      A[0, 2] = 88;
+      A[1, 0] = 36;
+      A[1, 1] = 56;
+      A[1, 2] = 96;
+      A[2, 0] = 78;
+      A[2, 1] = 45;
+      A[2, 2] = 81;
+
+      RectangleMatrix<double> B = new RectangleMatrix<double>(2, 3);
+      B[0, 0] = 42;
+      B[0, 1] = 47;
+      B[0, 2] = 88;
+      B[1, 0] = 36;
+      B[1, 1] = 56;
+      B[1, 2] = 96;
+
+      CultureInfo myCIintl = new CultureInfo("es-ES", false);
+      MatrixFunctions.Multiply(A, B, myCIintl);
     }
   }
 }
