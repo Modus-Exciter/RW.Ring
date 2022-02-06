@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notung.Data;
 using System.Collections.Generic;
 using System.Globalization;
+using System;
 
 namespace NotungTest
 {
@@ -183,25 +184,25 @@ namespace NotungTest
     public void MultiplyWithInvert()
     {
       RectangleMatrix<double> A = new RectangleMatrix<double>(3, 3);
-      A[0, 0] = 2;
-      A[0, 1] = 4;
-      A[0, 2] = 6;
-      A[1, 0] = 8;
-      A[1, 1] = 10;
+      A[0, 0] = 3;
+      A[0, 1] = 45;
+      A[0, 2] = 32;
+      A[1, 0] = 56;
+      A[1, 1] = 32;
       A[1, 2] = 12;
-      A[2, 0] = 14;
-      A[2, 1] = 16;
-      A[2, 2] = 18;
+      A[2, 0] = 46;
+      A[2, 1] = 434;
+      A[2, 2] = 64;
       RectangleMatrix<double> A2 = new RectangleMatrix<double>(3, 3);
-      A2[0, 0] = 2;
-      A2[0, 1] = 4;
-      A2[0, 2] = 6;
-      A2[1, 0] = 8;
-      A2[1, 1] = 10;
+      A2[0, 0] = 3;
+      A2[0, 1] = 45;
+      A2[0, 2] = 32;
+      A2[1, 0] = 56;
+      A2[1, 1] = 32;
       A2[1, 2] = 12;
-      A2[2, 0] = 14;
-      A2[2, 1] = 16;
-      A2[2, 2] = 18;
+      A2[2, 0] = 46;
+      A2[2, 1] = 434;
+      A2[2, 2] = 64;
       CultureInfo myCIintl = new CultureInfo("es-ES", false);
       IMatrix<double> invA = MatrixFunctions.Invert<double>(A, myCIintl);
       var B = MatrixFunctions.Multiply<double>(invA, A2, myCIintl);
@@ -215,15 +216,15 @@ namespace NotungTest
       E[2, 0] = 0;
       E[2, 1] = 0;
       E[2, 2] = 1;
-      Assert.AreEqual(B[0, 0], E[0, 0]);
-      Assert.AreEqual(B[0, 1], E[0, 1]);
-      Assert.AreEqual(B[0, 2], E[0, 2]);
-      Assert.AreEqual(B[1, 0], E[1, 0]);
-      Assert.AreEqual(B[1, 1], E[1, 1]);
-      Assert.AreEqual(B[1, 2], E[1, 2]);
-      Assert.AreEqual(B[2, 0], E[2, 0]);
-      Assert.AreEqual(B[2, 1], E[2, 1]);
-      Assert.AreEqual(B[2, 2], E[2, 2]);
+      Assert.AreEqual(E[0, 0], B[0, 0]);
+      Assert.AreEqual(E[0, 1], B[0, 1]);
+      Assert.AreEqual(E[0, 2], B[0, 2]);
+      Assert.AreEqual(E[1, 0], B[1, 0]);
+      Assert.AreEqual(E[1, 1], B[1, 1]);
+      Assert.AreEqual(E[1, 2], B[1, 2]);
+      Assert.AreEqual(E[2, 0], B[2, 0]);
+      Assert.AreEqual(E[2, 1], B[2, 1]);
+      Assert.AreEqual(E[2, 2], B[2, 2]);
     }
 
     // тест на A*B != B*A
@@ -242,15 +243,15 @@ namespace NotungTest
       A[2, 2] = 81;
 
       RectangleMatrix<double> B = new RectangleMatrix<double>(3, 3);
-      A[0, 0] = 32;
-      A[0, 1] = 42;
-      A[0, 2] = 47;
-      A[1, 0] = 37;
-      A[1, 1] = 38;
-      A[1, 2] = 32;
-      A[2, 0] = 89;
-      A[2, 1] = 74;
-      A[2, 2] = 18;
+      B[0, 0] = 32;
+      B[0, 1] = 42;
+      B[0, 2] = 47;
+      B[1, 0] = 37;
+      B[1, 1] = 38;
+      B[1, 2] = 32;
+      B[2, 0] = 89;
+      B[2, 1] = 74;
+      B[2, 2] = 18;
 
       CultureInfo myCIintl = new CultureInfo("es-ES", false);
       var C = MatrixFunctions.Multiply<double>(A, B, myCIintl);
@@ -267,6 +268,7 @@ namespace NotungTest
     }
 
     // тест на A(m x n) * B (m x k)
+    [ExpectedException(typeof(ArgumentException))]
     [TestMethod]
     public void MultiplyMatrixWithWrongDimension()
     {
