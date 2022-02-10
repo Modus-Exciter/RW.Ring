@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -45,13 +47,18 @@ namespace Schicksal.Helm
     {
       base.OnLoad(e);
 
-      var results = new CorrelationResults(this.Table, this.Factor, this.Effect);
-      var data = results.Run((x, y) => m_chart.Series[0].Points.AddXY(x, y));
+      Dictionary<Type, string> types = new Dictionary<Type, string>();
 
-      ((TextAnnotation)m_chart.Annotations[0]).Text = data.ToString();
+      types.Add(typeof(LinearDependency), "Прямая линия");
+      types.Add(typeof(ParabolicDependency), "Парабола");
+      types.Add(typeof(HyperbolicDependency), "Гипербола");
+
+      m_type_selector.DataSource = types.ToArray();
+      m_type_selector.ValueMember = "Key";
+      m_type_selector.DisplayMember = "Value";
+
+      m_type_selector.SelectedValue = typeof(LinearDependency);
       m_chart.Series[0].Name = this.Factor;
-      m_chart.Series[1].Points.AddXY(data.MinX, data.MinY);
-      m_chart.Series[1].Points.AddXY(data.MaxX, data.MaxY);
     }
 
     protected override void OnClosed(EventArgs e)
@@ -68,6 +75,31 @@ namespace Schicksal.Helm
       m_chart.DrawToBitmap(image, m_chart.DisplayRectangle);
 
       Clipboard.SetImage(image);
+    }
+
+    private void m_type_selector_SelectedValueChanged(object sender, EventArgs e)
+    {
+      if (!(m_type_selector.SelectedValue is Type))
+        return;
+
+      m_chart.Series[0].Points.Clear();
+      m_chart.Series[1].Points.Clear();
+
+      var results = new CorrelationResults(this.Table, this.Factor, this.Effect, 
+        (Type)m_type_selector.SelectedValue);
+
+      var data = results.Run((x, y) => m_chart.Series[0].Points.AddXY(x, y));
+
+      ((TextAnnotation)m_chart.Annotations[0]).Text = data.Dependency.ToString();
+
+      int pt = 100;
+      for (int i = 0; i <= pt; i++)
+      {
+        double x = data.MinX + i * (data.MaxX - data.MinX) / pt;
+
+        if (data.Dependency.CheckPoint(x))
+          m_chart.Series[1].Points.AddXY(x, data.Dependency.Calculate(x));
+      }
     }
   }
 }

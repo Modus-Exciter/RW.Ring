@@ -102,7 +102,7 @@ namespace Schicksal.Regression
             writer.WriteText(string.Format("<em>{0}</em>:", Resources.REGRESSION_DEPENDENCY));
 
           using (writer.CreateParagraph())
-            writer.WriteText(new CorrelationResults(m_table, metric.Factor, this.Result).Run().ToString());
+            writer.WriteText(new CorrelationResults(m_table, metric.Factor, this.Result, typeof(LinearDependency)).Run().ToString());
         }
       }
     }

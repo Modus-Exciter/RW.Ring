@@ -121,14 +121,8 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 24</value>
-  </data>
-  <data name="m_cmd_copy.Text" xml:space="preserve">
-    <value>Copy</value>
-  </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 28</value>
+    <value>103, 26</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -143,11 +137,8 @@
   <data name="m_chart.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_chart.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="m_chart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>835, 515</value>
+    <value>626, 418</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_chart.TabIndex" type="System.Int32, mscorlib">
@@ -166,16 +157,46 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;m_chart.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 22</value>
+  </data>
+  <data name="m_cmd_copy.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="m_type_selector.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Bottom, Right</value>
+  </data>
+  <data name="m_type_selector.Location" type="System.Drawing.Point, System.Drawing">
+    <value>353, 390</value>
+  </data>
+  <data name="m_type_selector.Size" type="System.Drawing.Size, System.Drawing">
+    <value>261, 21</value>
+  </data>
+  <data name="m_type_selector.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_type_selector.Name" xml:space="preserve">
+    <value>m_type_selector</value>
+  </data>
+  <data name="&gt;&gt;m_type_selector.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_type_selector.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_type_selector.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>835, 515</value>
+    <value>626, 418</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -625,9 +646,6 @@
         AADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAA
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>

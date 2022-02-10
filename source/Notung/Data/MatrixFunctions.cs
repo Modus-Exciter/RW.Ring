@@ -114,7 +114,7 @@ namespace Notung.Data
     /// <param name="matrix2">Вторая матрица</param>
     /// <param name="provider">Сведения о культуре для преобразования типа ячейки матрицы</param>
     /// <returns>Матрица с произведением матриц matrix1 и matrix2</returns>
-    public static IMatrix<T> Multiply<T>(IMatrix<T> matrix1, IMatrix<T> matrix2, CultureInfo provider)
+    public static IMatrix<T> Multiply<T>(this IMatrix<T> matrix1, IMatrix<T> matrix2, CultureInfo provider)
       where T : IConvertible
     {
       if (matrix1 == null)

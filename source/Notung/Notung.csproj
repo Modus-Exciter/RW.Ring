@@ -53,6 +53,7 @@
     <Compile Include="ComponentModel\ObservableObject.cs" />
     <Compile Include="Data\CartesianMultiplier.cs" />
     <Compile Include="Data\MatrixFunctions.cs" />
+    <Compile Include="Data\TransposedMatrix.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Logging\ConsoleAppender.cs" />
     <Compile Include="Net\HttpClientCaller.cs" />

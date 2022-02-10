@@ -31,12 +31,13 @@
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataVisualization.Charting.TextAnnotation textAnnotation1 = new System.Windows.Forms.DataVisualization.Charting.TextAnnotation();
       System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
       System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_copy = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_type_selector = new System.Windows.Forms.ComboBox();
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).BeginInit();
       this.m_context_menu.SuspendLayout();
       this.SuspendLayout();
@@ -88,10 +89,19 @@
       resources.ApplyResources(this.m_cmd_copy, "m_cmd_copy");
       this.m_cmd_copy.Click += new System.EventHandler(this.m_cmd_copy_Click);
       // 
+      // m_type_selector
+      // 
+      resources.ApplyResources(this.m_type_selector, "m_type_selector");
+      this.m_type_selector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+      this.m_type_selector.FormattingEnabled = true;
+      this.m_type_selector.Name = "m_type_selector";
+      this.m_type_selector.SelectedValueChanged += new System.EventHandler(this.m_type_selector_SelectedValueChanged);
+      // 
       // CorrelationForm
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.m_type_selector);
       this.Controls.Add(this.m_chart);
       this.Name = "CorrelationForm";
       this.ShowInTaskbar = false;
@@ -106,5 +116,6 @@
     private System.Windows.Forms.DataVisualization.Charting.Chart m_chart;
     private System.Windows.Forms.ContextMenuStrip m_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_copy;
+    private System.Windows.Forms.ComboBox m_type_selector;
   }
 }
