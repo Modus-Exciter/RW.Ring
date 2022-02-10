@@ -150,6 +150,9 @@
   <data name="F_CRITERIA" xml:space="preserve">
     <value>Дисперсионный анализ, F-критерий</value>
   </data>
+  <data name="IMPOSSSIBLE_DEPENDENCY" xml:space="preserve">
+    <value>Невозможно определить зависимость</value>
+  </data>
   <data name="INVALID_COLUMN_TYPE" xml:space="preserve">
     <value>Неподходящий тип колонки для сохранения</value>
   </data>

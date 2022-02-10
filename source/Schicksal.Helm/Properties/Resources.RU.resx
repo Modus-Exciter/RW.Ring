@@ -153,6 +153,9 @@
   <data name="EXCLUSIVE_COLOR" xml:space="preserve">
     <value>Цвет эксклюзивных отличий</value>
   </data>
+  <data name="EXPONENT" xml:space="preserve">
+    <value>Экспонента</value>
+  </data>
   <data name="EXPORT" xml:space="preserve">
     <value>Экспорт</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="HELP" xml:space="preserve">
     <value>Справка</value>
+  </data>
+  <data name="HYPERBOLIC" xml:space="preserve">
+    <value>Гипербола</value>
   </data>
   <data name="IMPORT" xml:space="preserve">
     <value>Импорт</value>
@@ -177,8 +183,14 @@
   <data name="LAST_FILES" xml:space="preserve">
     <value>Недавние файлы</value>
   </data>
+  <data name="LINEAR" xml:space="preserve">
+    <value>Прямая линия</value>
+  </data>
   <data name="MEAN" xml:space="preserve">
     <value>Среднее</value>
+  </data>
+  <data name="MICHAELIS" xml:space="preserve">
+    <value>Кривая Михаэлиса</value>
   </data>
   <data name="NEW" xml:space="preserve">
     <value>Создать</value>
@@ -194,6 +206,9 @@
   </data>
   <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
     <value>Открыть системную папку</value>
+  </data>
+  <data name="PARABOLIC" xml:space="preserve">
+    <value>Параболоа</value>
   </data>
   <data name="REMOVE" xml:space="preserve">
     <value>Удалить</value>

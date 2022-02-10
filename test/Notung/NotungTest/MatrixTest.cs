@@ -216,15 +216,15 @@ namespace NotungTest
       E[2, 0] = 0;
       E[2, 1] = 0;
       E[2, 2] = 1;
-      Assert.AreEqual(E[0, 0], B[0, 0]);
-      Assert.AreEqual(E[0, 1], B[0, 1]);
-      Assert.AreEqual(E[0, 2], B[0, 2]);
-      Assert.AreEqual(E[1, 0], B[1, 0]);
-      Assert.AreEqual(E[1, 1], B[1, 1]);
-      Assert.AreEqual(E[1, 2], B[1, 2]);
-      Assert.AreEqual(E[2, 0], B[2, 0]);
-      Assert.AreEqual(E[2, 1], B[2, 1]);
-      Assert.AreEqual(E[2, 2], B[2, 2]);
+      Assert.AreEqual(E[0, 0], (int)B[0, 0]);
+      Assert.AreEqual(E[0, 1], (int)B[0, 1]);
+      Assert.AreEqual(E[0, 2], (int)B[0, 2]);
+      Assert.AreEqual(E[1, 0], (int)B[1, 0]);
+      Assert.AreEqual(E[1, 1], (int)B[1, 1]);
+      Assert.AreEqual(E[1, 2], (int)B[1, 2]);
+      Assert.AreEqual(E[2, 0], (int)B[2, 0]);
+      Assert.AreEqual(E[2, 1], (int)B[2, 1]);
+      Assert.AreEqual(E[2, 2], Convert.ToInt32(B[2, 2]));
     }
 
     // тест на A*B != B*A

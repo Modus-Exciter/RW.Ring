@@ -2,61 +2,64 @@
 
 namespace Notung.Data
 {
+  /// <summary>
+  /// Класс для транспонирование матрицы без дублирования исходных данных
+  /// </summary>
   public static class TransposedMatrix
   {
+    /// <summary>
+    /// Транспонирует матрицу
+    /// </summary>
+    /// <typeparam name="T">Тип ячейки матрицы</typeparam>
+    /// <param name="source">Исходная матрица</param>
+    /// <returns>Транспонированная матрица</returns>
     public static IMatrix<T> Transpose<T>(IMatrix<T> source)
     {
       if (source == null)
         throw new ArgumentNullException("source");
 
-      var transposed = source as TransposedMatrix<T>;
+      var transposed = source as Wrapper<T>;
 
       if (transposed != null)
         return transposed.Source;
       else
-        return new TransposedMatrix<T>(source);
-    }
-  }
-
-  internal class TransposedMatrix<T> : IMatrix<T>
-  {
-    private readonly IMatrix<T> m_matrix;
-
-    public TransposedMatrix(IMatrix<T> matrix)
-    {
-      if (matrix == null)
-        throw new ArgumentNullException("matrix");
-
-      m_matrix = matrix;
+        return new Wrapper<T>(source);
     }
 
-    public IMatrix<T> Source
+    private class Wrapper<T> : IMatrix<T>
     {
-      get { return m_matrix; }
-    }
+      private readonly IMatrix<T> m_matrix;
 
-    public T this[int row, int column]
-    {
-      get { return m_matrix[column, row]; }
-      set
+      public Wrapper(IMatrix<T> matrix)
       {
-        m_matrix[column, row] = value;
+        m_matrix = matrix;
       }
-    }
 
-    public int RowCount
-    {
-      get { return m_matrix.ColumnCount; }
-    }
+      public IMatrix<T> Source
+      {
+        get { return m_matrix; }
+      }
 
-    public int ColumnCount
-    {
-      get { return m_matrix.RowCount; }
-    }
+      public T this[int row, int column]
+      {
+        get { return m_matrix[column, row]; }
+        set { m_matrix[column, row] = value; }
+      }
 
-    public override string ToString()
-    {
-      return m_matrix.ToString();
+      public int RowCount
+      {
+        get { return m_matrix.ColumnCount; }
+      }
+
+      public int ColumnCount
+      {
+        get { return m_matrix.RowCount; }
+      }
+
+      public override string ToString()
+      {
+        return m_matrix.ToString();
+      }
     }
   }
 }

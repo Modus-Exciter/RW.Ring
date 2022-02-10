@@ -9,6 +9,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using Notung.Configuration;
 using Notung.Services;
 using Schicksal.Regression;
+using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
@@ -25,7 +26,6 @@ namespace Schicksal.Helm
 
       if (resolution.width != 0)
         this.Width = resolution.width;
-
     }
 
     [DataContract]
@@ -49,9 +49,11 @@ namespace Schicksal.Helm
 
       Dictionary<Type, string> types = new Dictionary<Type, string>();
 
-      types.Add(typeof(LinearDependency), "Прямая линия");
-      types.Add(typeof(ParabolicDependency), "Парабола");
-      types.Add(typeof(HyperbolicDependency), "Гипербола");
+      types.Add(typeof(LinearDependency), Resources.LINEAR);
+      types.Add(typeof(ParabolicDependency), Resources.PARABOLIC);
+      types.Add(typeof(HyperbolicDependency), Resources.HYPERBOLIC);
+      types.Add(typeof(MichaelisDependency), Resources.MICHAELIS);
+      types.Add(typeof(ExponentialDependency), Resources.EXPONENT);
 
       m_type_selector.DataSource = types.ToArray();
       m_type_selector.ValueMember = "Key";

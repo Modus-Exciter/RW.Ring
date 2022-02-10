@@ -218,6 +218,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exponent.
+        /// </summary>
+        internal static string EXPONENT {
+            get {
+                return ResourceManager.GetString("EXPONENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export.
         /// </summary>
         internal static string EXPORT {
@@ -268,6 +277,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hyperbola.
+        /// </summary>
+        internal static string HYPERBOLIC {
+            get {
+                return ResourceManager.GetString("HYPERBOLIC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
         internal static string IMPORT {
@@ -310,6 +328,15 @@ namespace Schicksal.Helm.Properties {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Straight line.
+        /// </summary>
+        internal static string LINEAR {
+            get {
+                return ResourceManager.GetString("LINEAR", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap Logo_24 {
             get {
                 object obj = ResourceManager.GetObject("Logo_24", resourceCulture);
@@ -323,6 +350,15 @@ namespace Schicksal.Helm.Properties {
         internal static string MEAN {
             get {
                 return ResourceManager.GetString("MEAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Michaelis&apos;s curve.
+        /// </summary>
+        internal static string MICHAELIS {
+            get {
+                return ResourceManager.GetString("MICHAELIS", resourceCulture);
             }
         }
         
@@ -368,6 +404,15 @@ namespace Schicksal.Helm.Properties {
         internal static string OPEN_SYSTEM_FOLDER {
             get {
                 return ResourceManager.GetString("OPEN_SYSTEM_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parabola.
+        /// </summary>
+        internal static string PARABOLIC {
+            get {
+                return ResourceManager.GetString("PARABOLIC", resourceCulture);
             }
         }
         

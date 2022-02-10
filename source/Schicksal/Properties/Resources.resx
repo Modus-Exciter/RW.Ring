@@ -223,4 +223,7 @@
   <data name="REGRESSION_RESULTS" xml:space="preserve">
     <value>Regression analysis results</value>
   </data>
+  <data name="IMPOSSSIBLE_DEPENDENCY" xml:space="preserve">
+    <value>Unable to determine dependency!</value>
+  </data>
 </root>

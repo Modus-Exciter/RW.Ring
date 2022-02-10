@@ -181,11 +181,6 @@
     #endregion
 
     private System.Windows.Forms.DataGridView m_grid;
-    private System.Windows.Forms.DataGridViewTextBoxColumn zDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn tDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn r005DataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn r001DataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn pDataGridViewTextBoxColumn;
     private System.Windows.Forms.BindingSource m_binding_source;
     private System.Windows.Forms.ContextMenuStrip m_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_export;

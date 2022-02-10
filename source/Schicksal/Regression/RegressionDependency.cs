@@ -1,8 +1,9 @@
-﻿using Notung.Data;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
-using System;
-using System.Globalization;
 
 namespace Schicksal.Regression
 {
@@ -76,6 +77,7 @@ namespace Schicksal.Regression
       {
         double x = factor[i];
         double y = result[i];
+
         sum_up += (x - avg_x) * (y - avg_y);
         sum_dn += (x - avg_x) * (x - avg_x);
       }
@@ -124,11 +126,11 @@ namespace Schicksal.Regression
       this.C = b_m[0, 0];
     }
 
-    public double A { get; set; }
+    public double A { get; private set; }
 
-    public double B { get; set; }
+    public double B { get; private set; }
 
-    public double C { get; set; }
+    public double C { get; private set; }
 
     public override double Calculate(double x)
     {
@@ -144,15 +146,56 @@ namespace Schicksal.Regression
     }
   }
 
-  class MichaelisDependency : RegressionDependency
+  public sealed class MichaelisDependency : RegressionDependency
   {
     public MichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
+      double avg_x = 0;
+      double avg_y = 0;
+      double sum_up = 0;
+      double sum_dn = 0;
+
+      int counter = 0;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double x = factor[i];
+
+        if (x == 0)
+          continue;
+
+        avg_x += result[i] / x;
+        avg_y += result[i];
+        counter++;
+      }
+
+      avg_x /= counter;
+      avg_y /= counter;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double x = factor[i];
+
+        if (x == 0)
+          continue;
+
+        sum_up += (x - avg_x) * (result[i] - avg_y);
+        sum_dn += (x - avg_x) * (x - avg_x);
+      }
+
+      double byx = sum_up / sum_dn;
+      A = byx;
+      B = avg_y - byx * avg_x;
     }
 
-    public double A { get; set; }
+    public double A { get; private set; }
 
-    public double B { get; set; }
+    public double B { get; private set; }
+
+    public override bool CheckPoint(double x)
+    {
+      return x != -A;
+    }
 
     public override double Calculate(double x)
     {
@@ -186,7 +229,7 @@ namespace Schicksal.Regression
       IMatrix<double> a = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci).Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
 
       if (a[3, 0] == 0)
-        throw new ArgumentException();
+        throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
 
       this.B = 1.0 / a[3, 0];
       this.C = -a[2, 0] * this.B;
@@ -194,13 +237,13 @@ namespace Schicksal.Regression
       this.A = this.B * (this.D - a[0, 0]);
     }
 
-    public double A { get; set; }
+    public double A { get; private set; }
 
-    public double B { get; set; }
+    public double B { get; private set; }
 
-    public double C { get; set; }
+    public double C { get; private set; }
 
-    public double D { get; set; }
+    public double D { get; private set; }
 
     public override bool CheckPoint(double x)
     {
@@ -222,15 +265,56 @@ namespace Schicksal.Regression
     }
   }
 
-  class ExponentialDependency : RegressionDependency
+  public sealed class ExponentialDependency : RegressionDependency
   {
     public ExponentialDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
+      double avg_x = 0;
+      double avg_y = 0;
+      double sum_up = 0;
+      double sum_dn = 0;
+
+      int counter = 0;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double y = result[i];
+
+        if (y <= 0)
+          continue;
+        avg_x += factor[i];
+        avg_y += Math.Log(y);
+
+        counter++;
+      }
+
+      avg_x /= counter;
+      avg_y /= counter;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double x = factor[i];
+        double y = result[i];
+
+        if (y <= 0)
+          continue;
+
+        sum_up += (x - avg_x) * (Math.Log(y) - avg_y);
+        sum_dn += (x - avg_x) * (x - avg_x);
+      }
+      double byx = sum_up / sum_dn;
+      double k = byx;
+      double d = avg_y - byx * avg_x;
+      A = Math.Exp(d);
+      B = Math.Exp(k);
+
+      if (B == 1)
+        throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
     }
 
-    public double A { get; set; }
+    public double A { get; private set; }
 
-    public double B { get; set; }
+    public double B { get; private set; }
 
     public override double Calculate(double x)
     {

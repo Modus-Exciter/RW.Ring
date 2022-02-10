@@ -69,7 +69,6 @@
     <Compile Include="Regression\CorrelationTest.cs" />
     <Compile Include="Regression\DataColumnGroup.cs" />
     <Compile Include="Regression\DataGroupColumn.cs" />
-    <Compile Include="Regression\ListColumn.cs" />
     <Compile Include="Regression\RegressionDependency.cs" />
     <Compile Include="Regression\RegressionHtmlSaver.cs" />
     <Compile Include="SchicksalResources.Designer.cs">

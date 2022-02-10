@@ -274,4 +274,19 @@
   <data name="ANCOVA" xml:space="preserve">
     <value>Analysis of covariance</value>
   </data>
+  <data name="EXPONENT" xml:space="preserve">
+    <value>Exponent</value>
+  </data>
+  <data name="HYPERBOLIC" xml:space="preserve">
+    <value>Hyperbola</value>
+  </data>
+  <data name="LINEAR" xml:space="preserve">
+    <value>Straight line</value>
+  </data>
+  <data name="MICHAELIS" xml:space="preserve">
+    <value>Michaelis's curve</value>
+  </data>
+  <data name="PARABOLIC" xml:space="preserve">
+    <value>Parabola</value>
+  </data>
 </root>
