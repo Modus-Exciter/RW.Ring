@@ -84,11 +84,12 @@ namespace Schicksal.Helm
       if (!(m_type_selector.SelectedValue is Type))
         return;
 
-      m_chart.Series[1].Points.Clear();
-
       var data = this.Metrics.Correlations;
       var dependency = data.Dependencies.Single(d => 
         m_type_selector.SelectedValue.Equals(d.GetType()));
+
+      m_chart.Series[1].Points.SuspendUpdates();
+      m_chart.Series[1].Points.Clear();
 
       ((TextAnnotation)m_chart.Annotations[0]).Text = dependency.ToString();
 
@@ -100,7 +101,9 @@ namespace Schicksal.Helm
 
         if (dependency.CheckPoint(x))
           m_chart.Series[1].Points.AddXY(x, dependency.Calculate(x));
-      } 
+      }
+
+      m_chart.Series[1].Points.ResumeUpdates();
     }
   }
 }
