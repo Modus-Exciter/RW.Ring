@@ -55,7 +55,6 @@ namespace Schicksal.Helm
 
       m_type_selector.ValueMember = "Key";
       m_type_selector.DisplayMember = "Value";
-
       m_type_selector.SelectedValue = typeof(LinearDependency);
       m_chart.Series[0].Name = this.Metrics.Factor;
 
@@ -104,6 +103,9 @@ namespace Schicksal.Helm
       }
 
       m_chart.Series[1].Points.ResumeUpdates();
+
+      m_label_heteroscedasticity.Text = string.Format("{0}: {1:0.0000}",
+        SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity);
     }
   }
 }

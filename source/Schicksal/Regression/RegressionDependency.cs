@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
@@ -47,6 +46,8 @@ namespace Schicksal.Regression
           m_effect = value.Trim();
       }
     }
+
+    public double Heteroscedasticity { get; internal set; }
 
     public abstract double Calculate(double x);
 
@@ -282,6 +283,7 @@ namespace Schicksal.Regression
 
         if (y <= 0)
           continue;
+
         avg_x += factor[i];
         avg_y += Math.Log(y);
 
@@ -302,6 +304,7 @@ namespace Schicksal.Regression
         sum_up += (x - avg_x) * (Math.Log(y) - avg_y);
         sum_dn += (x - avg_x) * (x - avg_x);
       }
+
       double byx = sum_up / sum_dn;
       double k = byx;
       double d = avg_y - byx * avg_x;

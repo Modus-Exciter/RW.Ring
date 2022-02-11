@@ -124,6 +124,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Heteroscedasticity.
+        /// </summary>
+        public static string HETEROSCEDASTICITY {
+            get {
+                return ResourceManager.GetString("HETEROSCEDASTICITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Infinity.
         /// </summary>
         public static string INFINITY {

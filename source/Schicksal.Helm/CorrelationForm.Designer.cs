@@ -38,6 +38,7 @@
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_copy = new System.Windows.Forms.ToolStripMenuItem();
       this.m_type_selector = new System.Windows.Forms.ComboBox();
+      this.m_label_heteroscedasticity = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).BeginInit();
       this.m_context_menu.SuspendLayout();
       this.SuspendLayout();
@@ -97,10 +98,17 @@
       this.m_type_selector.Name = "m_type_selector";
       this.m_type_selector.SelectedValueChanged += new System.EventHandler(this.m_type_selector_SelectedValueChanged);
       // 
+      // m_label_heteroscedasticity
+      // 
+      resources.ApplyResources(this.m_label_heteroscedasticity, "m_label_heteroscedasticity");
+      this.m_label_heteroscedasticity.BackColor = System.Drawing.Color.White;
+      this.m_label_heteroscedasticity.Name = "m_label_heteroscedasticity";
+      // 
       // CorrelationForm
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.m_label_heteroscedasticity);
       this.Controls.Add(this.m_type_selector);
       this.Controls.Add(this.m_chart);
       this.Name = "CorrelationForm";
@@ -108,6 +116,7 @@
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).EndInit();
       this.m_context_menu.ResumeLayout(false);
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
@@ -117,5 +126,6 @@
     private System.Windows.Forms.ContextMenuStrip m_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_copy;
     private System.Windows.Forms.ComboBox m_type_selector;
+    private System.Windows.Forms.Label m_label_heteroscedasticity;
   }
 }

@@ -34,11 +34,11 @@ namespace Schicksal.Regression
       double min_x = double.MaxValue;
       double max_x = double.MinValue;
 
-      Porint2D[] points = new Porint2D[Factor.Count];
+      Point2D[] points = new Point2D[Factor.Count];
 
       for (int i = 0; i < Factor.Count; i++)
       {
-        var point = new Porint2D
+        var point = new Point2D
         {
           X = Convert.ToDouble(Factor[i]),
           Y = Convert.ToDouble(Effect[i])
@@ -83,10 +83,16 @@ namespace Schicksal.Regression
     }
   }
 
-  public struct Porint2D
+  public struct Point2D
   {
     public double X { get; internal set; }
+
     public double Y { get; internal set; }
+
+    public override string ToString()
+    {
+      return string.Format("X = {0}, Y = {1}", this.X, this.Y);
+    }
   }
 
   public class CorrelationFormula
@@ -95,7 +101,7 @@ namespace Schicksal.Regression
 
     public double MaxX { get; internal set; }
 
-    public Porint2D[] SourcePoints { get; internal set; }
+    public Point2D[] SourcePoints { get; internal set; }
 
     public RegressionDependency[] Dependencies { get; internal set; }
   }

@@ -138,6 +138,9 @@
   <data name="FLOAT" xml:space="preserve">
     <value>Real (single precision)</value>
   </data>
+  <data name="HETEROSCEDASTICITY" xml:space="preserve">
+    <value>Heteroscedasticity</value>
+  </data>
   <data name="INFINITY" xml:space="preserve">
     <value>Infinity</value>
   </data>

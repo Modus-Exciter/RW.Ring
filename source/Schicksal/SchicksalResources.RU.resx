@@ -138,6 +138,9 @@
   <data name="FLOAT" xml:space="preserve">
     <value>Вещественное число (обычная точность)</value>
   </data>
+  <data name="HETEROSCEDASTICITY" xml:space="preserve">
+    <value>Гетероскедастичность</value>
+  </data>
   <data name="INFINITY" xml:space="preserve">
     <value>Бесконечность</value>
   </data>

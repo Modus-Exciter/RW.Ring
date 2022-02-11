@@ -63,7 +63,7 @@ namespace Schicksal.Regression
 
       int last = 0;
 
-      DPoint[][] data = new DPoint[borders.Count][];
+      Point2D[][] data = new Point2D[borders.Count][];
       double avg_y = result.Average();
       double up_sum = 0;
       double dn_sum = 0;
@@ -73,7 +73,7 @@ namespace Schicksal.Regression
       {
         double group_y = 0;
 
-        data[index] = new DPoint[border - last];
+        data[index] = new Point2D[border - last];
 
         for (int i = 0; i < data[index].Length; i++)
         {
@@ -94,7 +94,7 @@ namespace Schicksal.Regression
       return Math.Sqrt(up_sum / dn_sum);
     }
 
-    private static List<int> RangeToGroups(List<DPoint> sorted)
+    private static List<int> RangeToGroups(List<Point2D> sorted)
     {
       var borders = new List<int>();
       var group = (int)Math.Sqrt(sorted.Count);
@@ -204,19 +204,50 @@ namespace Schicksal.Regression
       result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
       result.Correlations = new CorrelationResults(x, y).Run(factor, effect);
 
+      foreach (var dep in result.Correlations.Dependencies)
+        CaclulateHeteroscedasticity(x, y, dep);
+
       return result;
     }
 
-    private static IEnumerable<DPoint> EnumeratePoints(IDataGroup factor, IDataGroup result)
+    private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
     {
-      for (int i = 0; i < factor.Count; i++)
-        yield return new DPoint { X = factor[i], Y = result[i] };
+      var point_list = EnumeratePoints(x, y).Select(p => new Point2D
+      {
+        X = p.X,
+        Y = Math.Abs(p.Y - dependency.Calculate(p.X))
+      }).OrderBy(p => p.X).ToList();
+
+      var groups = point_list.GroupBy(p => p.Y).OrderBy(g => g.Key);
+
+      double rank = 0;
+      Dictionary<double, double> ranks = new Dictionary<double, double>();
+
+      foreach (var group in groups)
+      {
+        var count = group.Count();
+        ranks[group.Key] = rank + (count - 1.0) / 2;
+        rank += count;
+      }
+
+      double dsum = 0;
+
+      for (int i = 0; i < x.Count; i++)
+      {
+        double d = i - ranks[point_list[i].Y];
+        dsum += d * d;
+      }
+
+      var r = 1 - 6 * dsum / (x.Count * (x.Count * x.Count - 1));
+      var t = Math.Abs(r) * Math.Sqrt(x.Count - 2) / Math.Sqrt(1 - r * r);
+
+      dependency.Heteroscedasticity = 2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1;
     }
 
-    private struct DPoint
+    private static IEnumerable<Point2D> EnumeratePoints(IDataGroup factor, IDataGroup result)
     {
-      public double X;
-      public double Y;
+      for (int i = 0; i < factor.Count; i++)
+        yield return new Point2D { X = factor[i], Y = result[i] };
     }
   }
 
