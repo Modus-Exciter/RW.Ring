@@ -179,12 +179,12 @@ namespace Schicksal.Regression
         if (x == 0)
           continue;
 
-        sum_up += (x - avg_x) * (result[i] - avg_y);
+        sum_up += (x - avg_x) * (result[i] / x - avg_y);
         sum_dn += (x - avg_x) * (x - avg_x);
       }
 
       double byx = sum_up / sum_dn;
-      A = byx;
+      A = -byx;
       B = avg_y - byx * avg_x;
     }
 

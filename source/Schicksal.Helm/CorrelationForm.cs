@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,8 +7,8 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Notung.Configuration;
 using Notung.Services;
-using Schicksal.Regression;
 using Schicksal.Helm.Properties;
+using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
@@ -37,11 +36,7 @@ namespace Schicksal.Helm
       public int width;
     }
 
-    public DataTable Table { get; set; }
-
-    public string Factor { get; set; }
-
-    public string Effect { get; set; }
+    public CorrelationMetrics Metrics { get; set; }
 
     protected override void OnLoad(EventArgs e)
     {
@@ -55,12 +50,17 @@ namespace Schicksal.Helm
       types.Add(typeof(MichaelisDependency), Resources.MICHAELIS);
       types.Add(typeof(ExponentialDependency), Resources.EXPONENT);
 
-      m_type_selector.DataSource = types.ToArray();
+      m_type_selector.DataSource = types.Where(kv => 
+        this.Metrics.Correlations.Dependencies.Any(d => d.GetType() == kv.Key)).ToArray();
+
       m_type_selector.ValueMember = "Key";
       m_type_selector.DisplayMember = "Value";
 
       m_type_selector.SelectedValue = typeof(LinearDependency);
-      m_chart.Series[0].Name = this.Factor;
+      m_chart.Series[0].Name = this.Metrics.Factor;
+
+      foreach (var pt in this.Metrics.Correlations.SourcePoints)
+        m_chart.Series[0].Points.AddXY(pt.X, pt.Y);
     }
 
     protected override void OnClosed(EventArgs e)
@@ -84,24 +84,23 @@ namespace Schicksal.Helm
       if (!(m_type_selector.SelectedValue is Type))
         return;
 
-      m_chart.Series[0].Points.Clear();
       m_chart.Series[1].Points.Clear();
 
-      var results = new CorrelationResults(this.Table, this.Factor, this.Effect, 
-        (Type)m_type_selector.SelectedValue);
+      var data = this.Metrics.Correlations;
+      var dependency = data.Dependencies.Single(d => 
+        m_type_selector.SelectedValue.Equals(d.GetType()));
 
-      var data = results.Run((x, y) => m_chart.Series[0].Points.AddXY(x, y));
-
-      ((TextAnnotation)m_chart.Annotations[0]).Text = data.Dependency.ToString();
+      ((TextAnnotation)m_chart.Annotations[0]).Text = dependency.ToString();
 
       int pt = 100;
+
       for (int i = 0; i <= pt; i++)
       {
         double x = data.MinX + i * (data.MaxX - data.MinX) / pt;
 
-        if (data.Dependency.CheckPoint(x))
-          m_chart.Series[1].Points.AddXY(x, data.Dependency.Calculate(x));
-      }
+        if (dependency.CheckPoint(x))
+          m_chart.Series[1].Points.AddXY(x, dependency.Calculate(x));
+      } 
     }
   }
 }

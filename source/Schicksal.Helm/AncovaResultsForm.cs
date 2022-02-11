@@ -64,9 +64,7 @@ namespace Schicksal.Helm
 
       using (var form = new CorrelationForm())
       {
-        form.Factor = row.Factor;
-        form.Effect = this.ResultColumn;
-        form.Table = this.SourceTable;
+        form.Metrics = row;
         form.Text = this.Text;
 
         form.ShowDialog(this);

@@ -180,7 +180,7 @@ namespace Schicksal.Regression
       return borders;
     }
 
-    public static CorrelationMetrics CalculateMetrics(string factor, IDataGroup x, IDataGroup y)
+    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y)
     {
       var result = new CorrelationMetrics
       {
@@ -202,6 +202,7 @@ namespace Schicksal.Regression
 
       result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
       result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
+      result.Correlations = new CorrelationResults(x, y).Run(factor, effect);
 
       return result;
     }
@@ -296,7 +297,7 @@ namespace Schicksal.Regression
         var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], GetFilter(m_factors[i]));
         var y_column = new DataColumnGroup(m_table.Columns[m_result], GetFilter(m_factors[i]));
 
-        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], x_column, y_column);
+        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column);
       }
     }
   }

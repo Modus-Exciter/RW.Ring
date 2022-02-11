@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System;
 
 namespace Schicksal.Regression
 {
@@ -68,8 +70,10 @@ namespace Schicksal.Regression
     /// <summary>
     /// Нормализованный коэффициент корреляции
     /// </summary>
-    [DisplayName("z")]
     [Browsable(false)]
     public double Z { get; internal set; }
+
+    [Browsable(false)]
+    public CorrelationFormula Correlations { get; internal set; }
   }
 }

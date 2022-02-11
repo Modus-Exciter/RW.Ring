@@ -2,74 +2,91 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Collections.ObjectModel;
+using Notung;
+using Notung.Logging;
+using Schicksal.Basic;
 
 namespace Schicksal.Regression
 {
   public class CorrelationResults
   {
-    public CorrelationResults(DataTable table, string factor, string effect, Type dependencyType)
+    private static readonly ILog _log = LogManager.GetLogger(typeof(CorrelationResults));
+
+    public CorrelationResults(IDataGroup x, IDataGroup y)
     {
-      if (table == null)
-        throw new ArgumentNullException("table");
+      if (x == null)
+        throw new ArgumentNullException("x");
 
-      if (!table.Columns.Contains(factor) || !table.Columns.Contains(effect))
-        throw new KeyNotFoundException();
+      if (y == null)
+        throw new ArgumentNullException("y");
 
-      if (dependencyType == null)
-        throw new ArgumentNullException("dependencyType");
-
-      this.Table = table;
-      this.Factor = factor;
-      this.Effect = effect;
-      this.DependencyType = dependencyType;
+      this.Factor = x;
+      this.Effect = y;
     }
 
-    public DataTable Table { get; private set; }
+    public IDataGroup Factor { get; private set; }
 
-    public string Factor { get; private set; }
+    public IDataGroup Effect { get; private set; }
 
-    public string Effect { get; private set; }
-
-    public Type DependencyType { get; private set; }
-
-    public CorrelationFormula Run(Action<double, double> addXY = null)
+    public CorrelationFormula Run(string factor, string effect)
     {
       double min_x = double.MaxValue;
       double max_x = double.MinValue;
-      double min_y = 0;
-      double max_y = 0;
-      string filter = string.Format("{0} IS NOT NULL AND {1} IS NOT NULL", this.Factor, this.Effect);
 
-      DataColumnGroup x_group = new DataColumnGroup(this.Table.Columns[this.Factor], filter);
-      DataColumnGroup y_group = new DataColumnGroup(this.Table.Columns[this.Effect], filter);
+      Porint2D[] points = new Porint2D[Factor.Count];
 
-      for (int i = 0; i < x_group.Count; i++)
+      for (int i = 0; i < Factor.Count; i++)
       {
-        double x = Convert.ToDouble(x_group[i]);
-        double y = Convert.ToDouble(y_group[i]);
+        var point = new Porint2D
+        {
+          X = Convert.ToDouble(Factor[i]),
+          Y = Convert.ToDouble(Effect[i])
+        };
 
-        if (addXY != null)
-          addXY(x, y);
+        points[i] = point;
 
-        if (min_x > x)
-          min_x = x;
+        if (min_x > point.X)
+          min_x = point.X;
 
-        if (max_x < x)
-          max_x = x;
+        if (max_x < point.X)
+          max_x = point.X;
       }
 
-       var dependency = (RegressionDependency)Activator.CreateInstance(this.DependencyType, x_group, y_group);
+      List<RegressionDependency> dependencies = new List<RegressionDependency>(5);
 
-      min_y = dependency.Calculate(min_x);
-      max_y = dependency.Calculate(max_x);
+      foreach (var type in typeof(RegressionDependency).Assembly.GetAvailableTypes())
+      {
+        if (!type.IsAbstract && typeof(RegressionDependency).IsAssignableFrom(type))
+        {
+          try
+          {
+            var dp = (RegressionDependency)Activator.CreateInstance(type, Factor, Effect);
+            dp.Factor = factor;
+            dp.Effect = effect;
+            dependencies.Add(dp);
+          }
+          catch (Exception ex)
+          {
+            _log.Error("Run(): exception", ex);
+          }
+        }
+      }
 
       return new CorrelationFormula
       {
         MinX = min_x,
         MaxX = max_x,
-        Dependency = dependency
+        SourcePoints = points,
+        Dependencies = dependencies.ToArray()
       };
     }
+  }
+
+  public struct Porint2D
+  {
+    public double X { get; internal set; }
+    public double Y { get; internal set; }
   }
 
   public class CorrelationFormula
@@ -78,6 +95,8 @@ namespace Schicksal.Regression
 
     public double MaxX { get; internal set; }
 
-    public RegressionDependency Dependency { get; internal set; }
+    public Porint2D[] SourcePoints { get; internal set; }
+
+    public RegressionDependency[] Dependencies { get; internal set; }
   }
 }
