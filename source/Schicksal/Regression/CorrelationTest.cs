@@ -9,7 +9,10 @@ using Schicksal.Properties;
 
 namespace Schicksal.Regression
 {
-  public class CorrelationTest
+  /// <summary>
+  /// Расчёт всех параметров регрессий
+  /// </summary>
+  public static class CorrelationTest
   {
     private static readonly ILog _log = LogManager.GetLogger(typeof(CorrelationTest));
 
@@ -26,6 +29,9 @@ namespace Schicksal.Regression
         N = x.Count
       };
 
+      if (double.IsNaN(result.Eta))
+        result.Eta = result.R;
+
       result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
       result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
       result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
@@ -33,9 +39,6 @@ namespace Schicksal.Regression
       result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
       result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
       result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
-
-      if (double.IsNaN(result.Eta))
-        result.Eta = result.R;
 
       return result;
     }
