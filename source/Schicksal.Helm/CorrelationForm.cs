@@ -42,14 +42,14 @@ namespace Schicksal.Helm
       base.OnLoad(e);
 
       m_type_selector.DataSource = RegressionDependency.GetDependencyTypeNames().Where(kv => 
-        this.Metrics.Correlations.Dependencies.Any(d => d.GetType() == kv.Key)).ToArray();
+        this.Metrics.Formula.Dependencies.Any(d => d.GetType() == kv.Key)).ToArray();
 
       m_type_selector.ValueMember = "Key";
       m_type_selector.DisplayMember = "Value";
       m_type_selector.SelectedValue = typeof(LinearDependency);
       m_chart.Series[0].Name = this.Metrics.Factor;
 
-      foreach (var pt in this.Metrics.Correlations.SourcePoints)
+      foreach (var pt in this.Metrics.Formula.SourcePoints)
         m_chart.Series[0].Points.AddXY(pt.X, pt.Y);
     }
 
@@ -74,7 +74,7 @@ namespace Schicksal.Helm
       if (!(m_type_selector.SelectedValue is Type))
         return;
 
-      var data = this.Metrics.Correlations;
+      var data = this.Metrics.Formula;
 
       var dependency = data.Dependencies.Single(d => 
         m_type_selector.SelectedValue.Equals(d.GetType()));

@@ -73,7 +73,61 @@ namespace Schicksal.Regression
     [Browsable(false)]
     public double Z { get; internal set; }
 
+    /// <summary>
+    /// Формула регрессионной зависимости
+    /// </summary>
     [Browsable(false)]
-    public CorrelationFormula Correlations { get; internal set; }
+    public CorrelationFormula Formula { get; internal set; }
+  }
+
+  /// <summary>
+  /// Точка на графике регрессионной зависимости
+  /// </summary>
+  public struct Point2D
+  {
+    /// <summary>
+    /// Абсцисса
+    /// </summary>
+    public double X { get; internal set; }
+
+    /// <summary>
+    /// Ордината
+    /// </summary>
+    public double Y { get; internal set; }
+
+    /// <summary>
+    /// Преобразование в строку
+    /// </summary>
+    /// <returns>Координаты точки в строковом представлении</returns>
+    public override string ToString()
+    {
+      return string.Format("X = {0}, Y = {1}", this.X, this.Y);
+    }
+  }
+
+  /// <summary>
+  /// Формулы, описывающие конкретную регрессионную зависимость
+  /// </summary>
+  public class CorrelationFormula
+  {
+    /// <summary>
+    /// Минимальное значение независимой переменной
+    /// </summary>
+    public double MinX { get; internal set; }
+
+    /// <summary>
+    /// Максимальное значение независимой переменной
+    /// </summary>
+    public double MaxX { get; internal set; }
+
+    /// <summary>
+    /// Исходные точки, по которым построена регрессия
+    /// </summary>
+    public Point2D[] SourcePoints { get; internal set; }
+
+    /// <summary>
+    /// Конкретные виды зависимостей, подходящие для этих точек
+    /// </summary>
+    public RegressionDependency[] Dependencies { get; internal set; }
   }
 }

@@ -114,7 +114,7 @@ namespace Schicksal.Regression
 
           var types = RegressionDependency.GetDependencyTypeNames();
 
-          foreach (var dependency in metric.Correlations.Dependencies)
+          foreach (var dependency in metric.Formula.Dependencies)
           {
             string type_name;
 

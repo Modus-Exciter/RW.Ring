@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using Notung;
+using Notung.Logging;
 using Schicksal.Basic;
 using Schicksal.Properties;
 
@@ -10,6 +11,35 @@ namespace Schicksal.Regression
 {
   public class CorrelationTest
   {
+    private static readonly ILog _log = LogManager.GetLogger(typeof(CorrelationTest));
+
+    #region Public methods ------------------------------------------------------------------------
+
+    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y)
+    {
+      var result = new CorrelationMetrics
+      {
+        Factor = factor,
+        R = CalculateR(x, y),
+        Eta = CalculateEta(x, y),
+        Formula = CalculateFormula(x, y, factor, effect),
+        N = x.Count
+      };
+
+      result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
+      result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
+      result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
+      result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
+      result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
+      result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
+      result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
+
+      if (double.IsNaN(result.Eta))
+        result.Eta = result.R;
+
+      return result;
+    }
+
     public static double CalculateR(IDataGroup factor, IDataGroup result)
     {
       if (factor == null)
@@ -52,14 +82,14 @@ namespace Schicksal.Regression
         throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
 
       if (factor.Count < 6)
-        throw new ArgumentOutOfRangeException("factor.Count");
+        return double.NaN;
 
       var sorted = EnumeratePoints(factor, result).OrderBy(p => p.X).ToList();
 
       List<int> borders = RangeToGroups(sorted);
 
       if (borders.Count < 3)
-        return CalculateR(factor, result);
+        return double.NaN;
 
       int last = 0;
 
@@ -93,6 +123,63 @@ namespace Schicksal.Regression
 
       return Math.Sqrt(up_sum / dn_sum);
     }
+
+    public static Dictionary<double, float> CalculateSpearmanRanks(IEnumerable<double> data)
+    {
+      float rank = 1;
+      Dictionary<double, float> ranks = new Dictionary<double, float>();
+
+      foreach (var group in data.GroupBy(p => p).OrderBy(g => g.Key))
+      {
+        var count = group.Count();
+        ranks[group.Key] = rank + (count - 1f) / 2f;
+        rank += count;
+      }
+
+      return ranks;
+    }
+
+    public static CorrelationFormula CalculateFormula(IDataGroup x, IDataGroup y, string factor, string effect)
+    {
+      double min_x = double.MaxValue;
+      double max_x = double.MinValue;
+
+      Point2D[] points = new Point2D[x.Count];
+
+      for (int i = 0; i < x.Count; i++)
+      {
+        var point = new Point2D
+        {
+          X = Convert.ToDouble(x[i]),
+          Y = Convert.ToDouble(y[i])
+        };
+
+        points[i] = point;
+
+        if (min_x > point.X)
+          min_x = point.X;
+
+        if (max_x < point.X)
+          max_x = point.X;
+      }
+
+      List<RegressionDependency> dependencies = new List<RegressionDependency>(5);
+
+      Parallel.ForEach(EnumerateDependencyTypes(),
+        t => AddType(t, dependencies, x, y, factor, effect));
+
+      return new CorrelationFormula
+      {
+        MinX = min_x,
+        MaxX = max_x,
+        SourcePoints = points,
+        Dependencies = dependencies.ToArray()
+      };
+    }
+
+    #endregion
+
+    #region Implementation ------------------------------------------------------------------------
 
     private static List<int> RangeToGroups(List<Point2D> sorted)
     {
@@ -135,6 +222,7 @@ namespace Schicksal.Regression
           for (int j = i + 1; j < sorted.Count; j++)
           {
             up++;
+
             if (sorted[j - 1].X != sorted[j].X)
             {
               up_found = true;
@@ -180,51 +268,6 @@ namespace Schicksal.Regression
       return borders;
     }
 
-    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y)
-    {
-      var result = new CorrelationMetrics
-      {
-        Factor = factor,
-        R = CalculateR(x, y),
-        N = x.Count
-      };
-
-      result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
-      result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
-      result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
-      result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
-      result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
-
-      if (x.Count > 6)
-        result.Eta = CalculateEta(x, y);
-      else
-        result.Eta = result.R;
-
-      result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
-      result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
-      result.Correlations = new CorrelationResults(x, y).Run(factor, effect);
-
-      foreach (var dep in result.Correlations.Dependencies)
-        CaclulateHeteroscedasticity(x, y, dep);
-
-      return result;
-    }
-
-    public static Dictionary<double, float> CalculateSpearmanRanks(IEnumerable<double> data)
-    {
-      float rank = 1;
-      Dictionary<double, float> ranks = new Dictionary<double, float>();
-
-      foreach (var group in data.GroupBy(p => p).OrderBy(g => g.Key))
-      {
-        var count = group.Count();
-        ranks[group.Key] = rank + (count - 1f) / 2f;
-        rank += count;
-      }
-
-      return ranks;
-    }
-
     private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
     {
       var x_ranks = CalculateSpearmanRanks(x);
@@ -246,92 +289,42 @@ namespace Schicksal.Regression
         (2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1) * (r >= 0 ? 1 : -1);
     }
 
+    private static void AddType(Type type, List<RegressionDependency> dependencies, IDataGroup x, IDataGroup y, string factor, string effect)
+    {
+      try
+      {
+        var dep = (RegressionDependency)Activator.CreateInstance(type, x, y);
+        dep.Factor = factor;
+        dep.Effect = effect;
+
+        CaclulateHeteroscedasticity(x, y, dep);
+
+        lock (dependencies)
+        {
+          dependencies.Add(dep);
+        }
+      }
+      catch (Exception ex)
+      {
+        _log.Error("Run(): exception", ex);
+      }
+    }
+
+    private static IEnumerable<Type> EnumerateDependencyTypes()
+    {
+      foreach (var type in typeof(RegressionDependency).Assembly.GetAvailableTypes())
+      {
+        if (!type.IsAbstract && typeof(RegressionDependency).IsAssignableFrom(type))
+          yield return type;
+      }
+    }
+
     private static IEnumerable<Point2D> EnumeratePoints(IDataGroup factor, IDataGroup result)
     {
       for (int i = 0; i < factor.Count; i++)
         yield return new Point2D { X = factor[i], Y = result[i] };
     }
-  }
 
-  public class CorrelationTestProcessor : RunBase
-  {
-    private readonly DataTable m_table;
-    private readonly string[] m_factors;
-    private readonly string m_result;
-    private readonly string m_filter;
-
-    public string Filter
-    {
-      get { return m_filter; }
-    }
-
-    public CorrelationTestProcessor(DataTable table, string[] factors, string result, string filter)
-    {
-      if (table == null)
-        throw new ArgumentNullException("table");
-
-      if (factors == null)
-        throw new ArgumentNullException("factors");
-
-      if (string.IsNullOrEmpty(result))
-        throw new ArgumentNullException("result");
-
-      m_table = table;
-      m_factors = factors;
-      m_result = result;
-      m_filter = string.IsNullOrWhiteSpace(filter) ? null : filter;
-    }
-
-    private string GetFilter(string factor)
-    {
-      List<string> expressions = GetFilterExpressions(m_table, new string[] { factor }, m_result, m_filter);
-
-      if (expressions.Count > 0)
-        return string.Join(" and ", expressions);
-      else
-        return null;
-    }
-
-    private static List<string> GetFilterExpressions(DataTable table, string[] factors, string result, string filter)
-    {
-      List<string> expressions = new List<string>(factors.Length + 1);
-
-      foreach (var f in factors)
-      {
-        if (!table.Columns[f].DataType.IsPrimitive || table.Columns[f].DataType == typeof(bool))
-          throw new ArgumentException("Factor column must be numeric");
-
-        if (table.Columns[f].AllowDBNull)
-          expressions.Add(string.Format("[{0}] is not null", f));
-      }
-
-      if (!table.Columns[result].DataType.IsPrimitive || table.Columns[result].DataType == typeof(bool))
-        throw new ArgumentException("Result column must be numeric");
-
-      if (table.Columns[result].AllowDBNull)
-        expressions.Add(string.Format("[{0}] is not null", result));
-
-      expressions.RemoveAll((filter ?? string.Empty).Contains);
-
-      if (!string.IsNullOrEmpty(filter))
-        expressions.Add(filter);
-
-      return expressions;
-    }
-
-    public CorrelationMetrics[] Results { get; private set; }
-
-    public override void Run()
-    {
-      this.Results = new CorrelationMetrics[m_factors.Length];
-
-      for (int i = 0; i < m_factors.Length; i++)
-      {
-        var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], GetFilter(m_factors[i]));
-        var y_column = new DataColumnGroup(m_table.Columns[m_result], GetFilter(m_factors[i]));
-
-        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column);
-      }
-    }
+    #endregion
   }
 }

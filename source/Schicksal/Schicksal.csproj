@@ -65,8 +65,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Regression\CorrelationMetrics.cs" />
-    <Compile Include="Regression\CorrelationResults.cs" />
     <Compile Include="Regression\CorrelationTest.cs" />
+    <Compile Include="Regression\CorrelationTestProcessor.cs" />
     <Compile Include="Regression\DataColumnGroup.cs" />
     <Compile Include="Regression\DataGroupColumn.cs" />
     <Compile Include="Regression\RegressionDependency.cs" />
