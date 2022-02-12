@@ -160,7 +160,7 @@ namespace Schicksal
       {
         var copy = (double)value;
 
-        if (copy > 0.00005)
+        if (Math.Abs(copy) > 0.00005)
         {
           return Math.Round(copy, 4).ToString();
         }
@@ -175,7 +175,7 @@ namespace Schicksal
       {
         var copy = (float)value;
 
-        if (copy > 0.00005)
+        if (Math.Abs(copy) > 0.00005)
           return Math.Round(copy, 4).ToString();
         else
         {

@@ -210,38 +210,40 @@ namespace Schicksal.Regression
       return result;
     }
 
-    private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    public static Dictionary<double, float> CalculateSpearmanRanks(IEnumerable<double> data)
     {
-      var point_list = EnumeratePoints(x, y).Select(p => new Point2D
-      {
-        X = p.X,
-        Y = Math.Abs(p.Y - dependency.Calculate(p.X))
-      }).OrderBy(p => p.X).ToList();
+      float rank = 1;
+      Dictionary<double, float> ranks = new Dictionary<double, float>();
 
-      var groups = point_list.GroupBy(p => p.Y).OrderBy(g => g.Key);
-
-      double rank = 0;
-      Dictionary<double, double> ranks = new Dictionary<double, double>();
-
-      foreach (var group in groups)
+      foreach (var group in data.GroupBy(p => p).OrderBy(g => g.Key))
       {
         var count = group.Count();
-        ranks[group.Key] = rank + (count - 1.0) / 2;
+        ranks[group.Key] = rank + (count - 1f) / 2f;
         rank += count;
       }
+
+      return ranks;
+    }
+
+    private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    {
+      var x_ranks = CalculateSpearmanRanks(x);
+      var y_ranks = CalculateSpearmanRanks(EnumeratePoints(x, y).Select(p =>
+        Math.Abs(p.Y - dependency.Calculate(p.X))));
 
       double dsum = 0;
 
       for (int i = 0; i < x.Count; i++)
       {
-        double d = i - ranks[point_list[i].Y];
+        double d = x_ranks[x[i]] - y_ranks[Math.Abs(y[i] - dependency.Calculate(x[i]))];
         dsum += d * d;
       }
 
       var r = 1 - 6 * dsum / (x.Count * (x.Count * x.Count - 1));
       var t = Math.Abs(r) * Math.Sqrt(x.Count - 2) / Math.Sqrt(1 - r * r);
 
-      dependency.Heteroscedasticity = 2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1;
+      dependency.Heteroscedasticity = 
+        (2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1) * (r >= 0 ? 1 : -1);
     }
 
     private static IEnumerable<Point2D> EnumeratePoints(IDataGroup factor, IDataGroup result)

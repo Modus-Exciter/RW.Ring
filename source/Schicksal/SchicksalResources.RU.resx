@@ -135,11 +135,17 @@
   <data name="DOUBLE" xml:space="preserve">
     <value>Вещественное число (двойная точность)</value>
   </data>
+  <data name="EXPONENT" xml:space="preserve">
+    <value>Экспонента</value>
+  </data>
   <data name="FLOAT" xml:space="preserve">
     <value>Вещественное число (обычная точность)</value>
   </data>
   <data name="HETEROSCEDASTICITY" xml:space="preserve">
     <value>Гетероскедастичность</value>
+  </data>
+  <data name="HYPERBOLIC" xml:space="preserve">
+    <value>Гипербола</value>
   </data>
   <data name="INFINITY" xml:space="preserve">
     <value>Бесконечность</value>
@@ -150,6 +156,9 @@
   <data name="INTERVAL" xml:space="preserve">
     <value>Доверительный интервал</value>
   </data>
+  <data name="LINEAR" xml:space="preserve">
+    <value>Прямая линия</value>
+  </data>
   <data name="MAX" xml:space="preserve">
     <value>Максимум</value>
   </data>
@@ -159,8 +168,14 @@
   <data name="MEDIAN" xml:space="preserve">
     <value>Медиана</value>
   </data>
+  <data name="MICHAELIS" xml:space="preserve">
+    <value>Кривая Михаэлиса</value>
+  </data>
   <data name="MIN" xml:space="preserve">
     <value>Минимум</value>
+  </data>
+  <data name="PARABOLIC" xml:space="preserve">
+    <value>Парабола</value>
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Стандартное отклонение</value>

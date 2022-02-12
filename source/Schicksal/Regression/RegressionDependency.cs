@@ -3,6 +3,7 @@ using System.Globalization;
 using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
+using System.Collections.Generic;
 
 namespace Schicksal.Regression
 {
@@ -54,6 +55,19 @@ namespace Schicksal.Regression
     public virtual bool CheckPoint(double x)
     {
       return true;
+    }
+
+    public static Dictionary<Type, string> GetDependencyTypeNames()
+    {
+      Dictionary<Type, string> types = new Dictionary<Type, string>();
+
+      types.Add(typeof(LinearDependency), SchicksalResources.LINEAR);
+      types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
+      types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
+      types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
+      types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
+
+      return types;
     }
 
     protected static string ConvertNumber(double number)
@@ -120,7 +134,8 @@ namespace Schicksal.Regression
 
       IMatrix<double> x_t = TransposedMatrix.Transpose(x_m);
       CultureInfo ci = CultureInfo.CurrentCulture;
-      IMatrix<double> b_m = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci).Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
+      IMatrix<double> b_m = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci)
+        .Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
 
       this.A = b_m[2, 0];
       this.B = b_m[1, 0];
@@ -227,7 +242,8 @@ namespace Schicksal.Regression
 
       IMatrix<double> x_t = TransposedMatrix.Transpose(x_m);
       CultureInfo ci = CultureInfo.CurrentCulture;
-      IMatrix<double> a = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci).Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
+      IMatrix<double> a = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci)
+        .Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
 
       if (a[3, 0] == 0)
         throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
@@ -308,6 +324,7 @@ namespace Schicksal.Regression
       double byx = sum_up / sum_dn;
       double k = byx;
       double d = avg_y - byx * avg_x;
+
       A = Math.Exp(d);
       B = Math.Exp(k);
 

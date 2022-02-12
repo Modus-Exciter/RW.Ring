@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Notung.Configuration;
 using Notung.Services;
-using Schicksal.Helm.Properties;
 using Schicksal.Regression;
 
 namespace Schicksal.Helm
@@ -42,15 +41,7 @@ namespace Schicksal.Helm
     {
       base.OnLoad(e);
 
-      Dictionary<Type, string> types = new Dictionary<Type, string>();
-
-      types.Add(typeof(LinearDependency), Resources.LINEAR);
-      types.Add(typeof(ParabolicDependency), Resources.PARABOLIC);
-      types.Add(typeof(HyperbolicDependency), Resources.HYPERBOLIC);
-      types.Add(typeof(MichaelisDependency), Resources.MICHAELIS);
-      types.Add(typeof(ExponentialDependency), Resources.EXPONENT);
-
-      m_type_selector.DataSource = types.Where(kv => 
+      m_type_selector.DataSource = RegressionDependency.GetDependencyTypeNames().Where(kv => 
         this.Metrics.Correlations.Dependencies.Any(d => d.GetType() == kv.Key)).ToArray();
 
       m_type_selector.ValueMember = "Key";
@@ -84,6 +75,7 @@ namespace Schicksal.Helm
         return;
 
       var data = this.Metrics.Correlations;
+
       var dependency = data.Dependencies.Single(d => 
         m_type_selector.SelectedValue.Equals(d.GetType()));
 

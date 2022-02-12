@@ -94,15 +94,37 @@ namespace Schicksal.Regression
 
         writer.WriteHeader(Resources.REGRESSION_DETAILS, 2);
 
+        int table_number = 2;
+
         foreach (var metric in m_metrics)
         {
           writer.WriteHeader(metric.Factor, 3);
 
           using (writer.CreateParagraph())
-            writer.WriteText(string.Format("<em>{0}</em>:", Resources.REGRESSION_DEPENDENCY));
+          {
+            writer.WriteText(string.Format("<em>{0} {1}.</em> {2}. {3}: {4}",
+              Resources.TABLE, table_number++, Resources.REGRESSION_RESULTS, 
+              Resources.FACTOR, metric.Factor));
+          }
 
-          //using (writer.CreateParagraph())
-          //  writer.WriteText(new CorrelationResults(m_table, metric.Factor, this.Result).Run().ToString());
+          DataTable table = new DataTable();
+          table.Columns.Add(Resources.DEPENDENCY_TYPE, typeof(string));
+          table.Columns.Add(Resources.REGRESSION_DEPENDENCY, typeof(string));
+          table.Columns.Add(SchicksalResources.HETEROSCEDASTICITY, typeof(double));
+
+          var types = RegressionDependency.GetDependencyTypeNames();
+
+          foreach (var dependency in metric.Correlations.Dependencies)
+          {
+            string type_name;
+
+            if (!types.TryGetValue(dependency.GetType(), out type_name))
+              type_name = dependency.GetType().Name;
+
+            table.Rows.Add(type_name, dependency.ToString(), dependency.Heteroscedasticity);
+          }
+
+          writer.WriteTable(table.DefaultView);
         }
       }
     }

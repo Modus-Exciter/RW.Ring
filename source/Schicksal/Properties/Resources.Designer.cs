@@ -122,6 +122,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dependency type.
+        /// </summary>
+        internal static string DEPENDENCY_TYPE {
+            get {
+                return ResourceManager.GetString("DEPENDENCY_TYPE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to it&apos;s value was.
         /// </summary>
         internal static string DIFFERENCE_VALUE {

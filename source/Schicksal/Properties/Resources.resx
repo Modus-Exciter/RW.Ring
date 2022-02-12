@@ -226,4 +226,7 @@
   <data name="IMPOSSSIBLE_DEPENDENCY" xml:space="preserve">
     <value>Unable to determine dependency!</value>
   </data>
+  <data name="DEPENDENCY_TYPE" xml:space="preserve">
+    <value>Dependency type</value>
+  </data>
 </root>

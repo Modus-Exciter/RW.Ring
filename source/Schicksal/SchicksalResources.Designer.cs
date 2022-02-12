@@ -115,6 +115,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exponent.
+        /// </summary>
+        public static string EXPONENT {
+            get {
+                return ResourceManager.GetString("EXPONENT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Real (single precision).
         /// </summary>
         public static string FLOAT {
@@ -129,6 +138,15 @@ namespace Schicksal {
         public static string HETEROSCEDASTICITY {
             get {
                 return ResourceManager.GetString("HETEROSCEDASTICITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hyperbola.
+        /// </summary>
+        public static string HYPERBOLIC {
+            get {
+                return ResourceManager.GetString("HYPERBOLIC", resourceCulture);
             }
         }
         
@@ -160,6 +178,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Straight line.
+        /// </summary>
+        public static string LINEAR {
+            get {
+                return ResourceManager.GetString("LINEAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximum.
         /// </summary>
         public static string MAX {
@@ -187,11 +214,29 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Michaelis&apos;s curve.
+        /// </summary>
+        public static string MICHAELIS {
+            get {
+                return ResourceManager.GetString("MICHAELIS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimum.
         /// </summary>
         public static string MIN {
             get {
                 return ResourceManager.GetString("MIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parabola.
+        /// </summary>
+        public static string PARABOLIC {
+            get {
+                return ResourceManager.GetString("PARABOLIC", resourceCulture);
             }
         }
         
