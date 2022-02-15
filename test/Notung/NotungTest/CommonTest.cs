@@ -8,6 +8,7 @@ using Notung.ComponentModel;
 using Notung.Data;
 using Notung.Loader;
 using Notung.Services;
+using Schicksal.Regression;
 
 namespace NotungTest
 {
@@ -338,6 +339,51 @@ namespace NotungTest
       {
         Message = message;
       }
+    }
+
+    [TestMethod]
+    public void SpearmanRanksTest()
+    {
+      double[] nums = new double[5] { 9.5, 6, 8.7, 12, 1.1 };
+      var spear = CorrelationTest.CalculateSpearmanRanks(nums);
+      Dictionary<double, float> ranks = new Dictionary<double, float>()
+      {
+        [1.1] = 1,
+        [6] = 2,
+        [8.7] = 3,
+        [9.5] = 4,
+        [12] = 5
+      };
+     // for
+      Assert.AreEqual(ranks[1.1], spear[1.1]);
+      Assert.AreEqual(ranks[6], spear[6]);
+      Assert.AreEqual(ranks[8.7], spear[8.7]);
+      Assert.AreEqual(ranks[9.5], spear[9.5]);
+      Assert.AreEqual(ranks[12], spear[12]);
+    }
+
+    [TestMethod]
+    public void SpearmanRanksTestWithDuplicates()
+    {
+      double[] nums = new double[9] { 9.5, 6, -3, 8.7, 12, 1.1, -3, 12, 0 };
+      var spear = CorrelationTest.CalculateSpearmanRanks(nums);
+      Dictionary<double, float> ranks = new Dictionary<double, float>()
+      {
+        [-3] = 1.5f,
+        [0] = 3,
+        [1.1] = 4,
+        [6] = 5,
+        [8.7] = 6,
+        [9.5] = 7,
+        [12] = 8.5f
+      };
+      Assert.AreEqual(ranks[-3], spear[-3]);
+      Assert.AreEqual(ranks[0], spear[0]);
+      Assert.AreEqual(ranks[1.1], spear[1.1]);
+      Assert.AreEqual(ranks[6], spear[6]);
+      Assert.AreEqual(ranks[8.7], spear[8.7]);
+      Assert.AreEqual(ranks[9.5], spear[9.5]);
+      Assert.AreEqual(ranks[12], spear[12]);
     }
   }
 }
