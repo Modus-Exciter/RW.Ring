@@ -17,6 +17,8 @@ namespace Schicksal.Regression
       get { return m_filter; }
     }
 
+    public CorrelationMetrics[] Results { get; private set; }
+
     public CorrelationTestProcessor(DataTable table, string[] factors, string result, string filter)
     {
       if (table == null)
@@ -32,6 +34,24 @@ namespace Schicksal.Regression
       m_factors = factors;
       m_result = result;
       m_filter = string.IsNullOrWhiteSpace(filter) ? null : filter;
+    }
+
+    public override void Run()
+    {
+      this.Results = new CorrelationMetrics[m_factors.Length];
+
+      for (int i = 0; i < m_factors.Length; i++)
+      {
+        this.ReportProgress(m_factors[i]);
+
+        var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], GetFilter(m_factors[i]));
+        var y_column = new DataColumnGroup(m_table.Columns[m_result], GetFilter(m_factors[i]));
+
+        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column);
+
+        if (m_factors.Length > 1)
+          this.ReportProgress((i + 1) * 100 / m_factors.Length);
+      }
     }
 
     private string GetFilter(string factor)
@@ -69,26 +89,6 @@ namespace Schicksal.Regression
         expressions.Add(filter);
 
       return expressions;
-    }
-
-    public CorrelationMetrics[] Results { get; private set; }
-
-    public override void Run()
-    {
-      this.Results = new CorrelationMetrics[m_factors.Length];
-
-      for (int i = 0; i < m_factors.Length; i++)
-      {
-        this.ReportProgress(m_factors[i]);
-
-        var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], GetFilter(m_factors[i]));
-        var y_column = new DataColumnGroup(m_table.Columns[m_result], GetFilter(m_factors[i]));
-
-        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column);
-
-        if (m_factors.Length > 1)
-          this.ReportProgress((i + 1) * 100 / m_factors.Length);
-      }
     }
   }
 }

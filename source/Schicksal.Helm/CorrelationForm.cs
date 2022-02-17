@@ -87,47 +87,20 @@ namespace Schicksal.Helm
 
       ((TextAnnotation)m_chart.Annotations[0]).Text = dependency.ToString();
 
-      double[] gaps = new double[] { data.MinX }
-        .Concat(dependency.GetGaps().Where(g => g < data.MaxX && g > data.MinX))
-        .Concat(new double[] { data.MaxX }).ToArray();
-
+      double[] points = CorrelationUIUtils.GetKeyPoints(dependency, data.MaxX, data.MinX);
       double max_y = 1.3 * data.MaxY - 0.3 * data.MinY;
       double min_y = 1.3 * data.MinY - 0.3 * data.MaxY;
 
-      for (int i = 1; i < gaps.Length; i++)
+      for (int i = 1; i < points.Length; i++)
       {
-        double min_x = gaps[i - 1];
-        double max_x = gaps[i];
+        double min_x = points[i - 1];
+        double max_x = points[i];
 
+        CorrelationUIUtils.CorrectBorders(dependency, (max_x - min_x) / 1000, 
+          max_y, min_y, ref max_x, ref min_x);
+
+        Series series = GetSeriesForRange(i);
         int pt = 100;
-        double shift = (max_x - min_x) / pt / pt;
-
-        double y = dependency.Calculate(dependency.GetGaps().Contains(min_x) ? min_x + shift : min_x);
-        while (y > max_y || y < min_y)
-        {
-          min_x += shift;
-          y = dependency.Calculate(min_x);
-        }
-
-        y = dependency.Calculate(dependency.GetGaps().Contains(max_x) ? max_x - shift : max_x);
-        while (y > max_y || y < min_y)
-        {
-          max_x -= shift;
-          y = dependency.Calculate(max_x);
-        }
-
-        Series series = i == 1 ? m_chart.Series[1] : new Series("Snip " + i);
-
-        if (i > 1)
-        {
-          series.BorderWidth = m_chart.Series[1].BorderWidth;
-          series.ChartArea = m_chart.Series[1].ChartArea;
-          series.ChartType = m_chart.Series[1].ChartType;
-          series.Color = System.Drawing.Color.Red;
-          series.ShadowOffset = 1;
-          m_chart.Series.Add(series);
-        }
-
 
         for (int j = 0; j <= pt; j++)
         {
@@ -142,6 +115,53 @@ namespace Schicksal.Helm
 
       m_label_heteroscedasticity.Text = string.Format("{0}: {1:0.0000}",
         SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity);
+    }
+
+    private Series GetSeriesForRange(int index)
+    {
+      Series series = index == 1 ? m_chart.Series[1] : new Series("Snip " + index);
+
+      if (index > 1)
+      {
+        series.BorderWidth = m_chart.Series[1].BorderWidth;
+        series.ChartArea = m_chart.Series[1].ChartArea;
+        series.ChartType = m_chart.Series[1].ChartType;
+        series.Color = System.Drawing.Color.Red;
+        series.ShadowOffset = 1;
+        m_chart.Series.Add(series);
+      }
+
+      return series;
+    }
+  }
+
+  static class CorrelationUIUtils
+  {
+    public static double[] GetKeyPoints(RegressionDependency dependency, double maxX, double minX)
+    {
+      double[] points = new double[] { minX }
+        .Concat(dependency.GetGaps().Where(g => g < maxX && g > minX))
+        .Concat(new double[] { maxX }).ToArray();
+
+      return points;
+    }
+
+    public static void CorrectBorders(RegressionDependency dependency, double shift, double maxY, double minY, ref double maxX, ref double minX)
+    {
+      double y = dependency.Calculate(dependency.GetGaps().Contains(minX) ? minX + shift : minX);
+
+      while (y > maxY || y < minY)
+      {
+        minX += shift;
+        y = dependency.Calculate(minX);
+      }
+
+      y = dependency.Calculate(dependency.GetGaps().Contains(maxX) ? maxX - shift : maxX);
+      while (y > maxY || y < minY)
+      {
+        maxX -= shift;
+        y = dependency.Calculate(maxX);
+      }
     }
   }
 }
