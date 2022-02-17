@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
-using System.Collections.Generic;
 
 namespace Schicksal.Regression
 {
@@ -52,9 +52,9 @@ namespace Schicksal.Regression
 
     public abstract double Calculate(double x);
 
-    public virtual bool CheckPoint(double x)
+    public virtual double[] GetGaps()
     {
-      return true;
+      return ArrayExtensions.Empty<double>();
     }
 
     public static Dictionary<Type, string> GetDependencyTypeNames()
@@ -164,6 +164,8 @@ namespace Schicksal.Regression
 
   public sealed class MichaelisDependency : RegressionDependency
   {
+    private readonly double[] m_gaps;
+    
     public MichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
       double avg_x = 0;
@@ -202,15 +204,17 @@ namespace Schicksal.Regression
       double byx = sum_up / sum_dn;
       A = -byx;
       B = avg_y - byx * avg_x;
+
+      m_gaps = new double[] { -A };
     }
 
     public double A { get; private set; }
 
     public double B { get; private set; }
 
-    public override bool CheckPoint(double x)
+    public override double[] GetGaps()
     {
-      return x != -A;
+      return m_gaps;
     }
 
     public override double Calculate(double x)
@@ -228,6 +232,8 @@ namespace Schicksal.Regression
 
   public sealed class HyperbolicDependency : RegressionDependency
   {
+    private readonly double[] m_gaps;
+
     public HyperbolicDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
       RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Count, 4);
@@ -252,6 +258,8 @@ namespace Schicksal.Regression
       this.C = -a[2, 0] * this.B;
       this.D = this.B * (this.C - a[1, 0]);
       this.A = this.B * (this.D - a[0, 0]);
+
+      m_gaps = new double[] { this.B };
     }
 
     public double A { get; private set; }
@@ -262,9 +270,9 @@ namespace Schicksal.Regression
 
     public double D { get; private set; }
 
-    public override bool CheckPoint(double x)
+    public override double[] GetGaps()
     {
-      return x != this.B;
+      return m_gaps;
     }
 
     public override double Calculate(double x)

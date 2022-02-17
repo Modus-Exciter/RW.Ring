@@ -146,6 +146,8 @@ namespace Schicksal.Regression
     {
       double min_x = double.MaxValue;
       double max_x = double.MinValue;
+      double min_y = double.MaxValue;
+      double max_y = double.MinValue;
 
       Point2D[] points = new Point2D[x.Count];
 
@@ -164,6 +166,12 @@ namespace Schicksal.Regression
 
         if (max_x < point.X)
           max_x = point.X;
+
+        if (min_y > point.Y)
+          min_y = point.Y;
+
+        if (max_y < point.Y)
+          max_y = point.Y;
       }
 
       List<RegressionDependency> dependencies = new List<RegressionDependency>(5);
@@ -175,6 +183,8 @@ namespace Schicksal.Regression
       {
         MinX = min_x,
         MaxX = max_x,
+        MinY = min_y,
+        MaxY = max_y,
         SourcePoints = points,
         Dependencies = dependencies.ToArray()
       };
@@ -285,7 +295,7 @@ namespace Schicksal.Regression
         dsum += d * d;
       }
 
-      var r = 1 - 6 * dsum / (x.Count * (x.Count * x.Count - 1));
+      var r = 1 - 6 * dsum / (x.Count * ((double)x.Count * x.Count - 1));
       var t = Math.Abs(r) * Math.Sqrt(x.Count - 2) / Math.Sqrt(1 - r * r);
 
       dependency.Heteroscedasticity = 

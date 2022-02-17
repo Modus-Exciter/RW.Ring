@@ -31,9 +31,9 @@
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataVisualization.Charting.TextAnnotation textAnnotation1 = new System.Windows.Forms.DataVisualization.Charting.TextAnnotation();
       System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
       System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
       System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_copy = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +54,7 @@
       textAnnotation1.X = 5D;
       textAnnotation1.Y = 2D;
       this.m_chart.Annotations.Add(textAnnotation1);
-      chartArea1.Name = "ChartArea1";
+      chartArea1.Name = "RegressionGraph";
       chartArea1.Position.Auto = false;
       chartArea1.Position.Height = 90F;
       chartArea1.Position.Width = 90F;
@@ -64,14 +64,14 @@
       this.m_chart.ContextMenuStrip = this.m_context_menu;
       resources.ApplyResources(this.m_chart, "m_chart");
       this.m_chart.Name = "m_chart";
-      series1.ChartArea = "ChartArea1";
+      series1.ChartArea = "RegressionGraph";
       series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
-      series1.Name = "Series1";
+      series1.Name = "RealValues";
       series2.BorderWidth = 2;
-      series2.ChartArea = "ChartArea1";
+      series2.ChartArea = "RegressionGraph";
       series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
       series2.Color = System.Drawing.Color.Red;
-      series2.Name = "Series2";
+      series2.Name = "Dependency";
       series2.ShadowOffset = 1;
       this.m_chart.Series.Add(series1);
       this.m_chart.Series.Add(series2);

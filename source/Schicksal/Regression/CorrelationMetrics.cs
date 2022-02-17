@@ -121,6 +121,16 @@ namespace Schicksal.Regression
     public double MaxX { get; internal set; }
 
     /// <summary>
+    /// Минимальное значение зависимой переменной
+    /// </summary>
+    public double MinY { get; internal set; }
+
+    /// <summary>
+    /// Максимальное значение зависимой переменной
+    /// </summary>
+    public double MaxY { get; internal set; }
+
+    /// <summary>
     /// Исходные точки, по которым построена регрессия
     /// </summary>
     public Point2D[] SourcePoints { get; internal set; }

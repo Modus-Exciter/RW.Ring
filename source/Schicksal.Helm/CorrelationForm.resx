@@ -121,6 +121,12 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>102, 22</value>
+  </data>
+  <data name="m_cmd_copy.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
     <value>103, 26</value>
   </data>
@@ -158,12 +164,6 @@
   </data>
   <data name="&gt;&gt;m_chart.ZOrder" xml:space="preserve">
     <value>3</value>
-  </data>
-  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>110, 22</value>
-  </data>
-  <data name="m_cmd_copy.Text" xml:space="preserve">
-    <value>Copy</value>
   </data>
   <data name="m_type_selector.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Bottom, Right</value>
@@ -220,7 +220,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;m_label_heteroscedasticity.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

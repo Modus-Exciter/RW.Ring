@@ -82,16 +82,60 @@ namespace Schicksal.Helm
       m_chart.Series[1].Points.SuspendUpdates();
       m_chart.Series[1].Points.Clear();
 
+      while (m_chart.Series.Count > 2)
+        m_chart.Series.RemoveAt(m_chart.Series.Count - 1);
+
       ((TextAnnotation)m_chart.Annotations[0]).Text = dependency.ToString();
 
-      int pt = 100;
+      double[] gaps = new double[] { data.MinX }
+        .Concat(dependency.GetGaps().Where(g => g < data.MaxX && g > data.MinX))
+        .Concat(new double[] { data.MaxX }).ToArray();
 
-      for (int i = 0; i <= pt; i++)
+      double max_y = 1.3 * data.MaxY - 0.3 * data.MinY;
+      double min_y = 1.3 * data.MinY - 0.3 * data.MaxY;
+
+      for (int i = 1; i < gaps.Length; i++)
       {
-        double x = data.MinX + i * (data.MaxX - data.MinX) / pt;
+        double min_x = gaps[i - 1];
+        double max_x = gaps[i];
 
-        if (dependency.CheckPoint(x))
-          m_chart.Series[1].Points.AddXY(x, dependency.Calculate(x));
+        int pt = 100;
+        double shift = (max_x - min_x) / pt / pt;
+
+        double y = dependency.Calculate(dependency.GetGaps().Contains(min_x) ? min_x + shift : min_x);
+        while (y > max_y || y < min_y)
+        {
+          min_x += shift;
+          y = dependency.Calculate(min_x);
+        }
+
+        y = dependency.Calculate(dependency.GetGaps().Contains(max_x) ? max_x - shift : max_x);
+        while (y > max_y || y < min_y)
+        {
+          max_x -= shift;
+          y = dependency.Calculate(max_x);
+        }
+
+        Series series = i == 1 ? m_chart.Series[1] : new Series("Snip " + i);
+
+        if (i > 1)
+        {
+          series.BorderWidth = m_chart.Series[1].BorderWidth;
+          series.ChartArea = m_chart.Series[1].ChartArea;
+          series.ChartType = m_chart.Series[1].ChartType;
+          series.Color = System.Drawing.Color.Red;
+          series.ShadowOffset = 1;
+          m_chart.Series.Add(series);
+        }
+
+
+        for (int j = 0; j <= pt; j++)
+        {
+          double x = min_x + j * (max_x - min_x) / pt;
+
+          if (!dependency.GetGaps().Contains(x))
+            series.Points.AddXY(x, dependency.Calculate(x));
+        }
       }
 
       m_chart.Series[1].Points.ResumeUpdates();
