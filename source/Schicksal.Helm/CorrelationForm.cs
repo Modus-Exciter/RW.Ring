@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -148,31 +147,39 @@ namespace Schicksal.Helm
 
     public static void CorrectBorders(RegressionDependency dependency, double shift, double maxY, double minY, ref double maxX, ref double minX)
     {
-      if (dependency is MichaelisDependency)
+      if (dependency.GetGaps().Contains(minX))
       {
-        if (dependency.GetGaps().Contains(minX))
-          minX += shift * 10;
+        double y = dependency.Calculate(minX + shift);
+        double old_x = minX;
 
-        if (dependency.GetGaps().Contains(maxX))
-          maxX -= shift * 10;
+        while (y > maxY || y < minY)
+        {
+          minX += shift;
+          y = dependency.Calculate(minX);
 
-        return;
+          if (minX > maxX)
+          {
+            minX = old_x + shift * 10;
+            break;
+          }
+        }
       }
-      
-      double y = dependency.Calculate(dependency.GetGaps().Contains(minX) ? minX + shift : minX);
 
-      while (y > maxY || y < minY)
+      if (dependency.GetGaps().Contains(maxX))
       {
-        minX += shift;
-        y = dependency.Calculate(minX);
-      }
+        double y = dependency.Calculate(maxX - shift);
+        double old_x = maxX;
+        while (y > maxY || y < minY)
+        {
+          maxX -= shift;
+          y = dependency.Calculate(maxX);
 
-      y = dependency.Calculate(dependency.GetGaps().Contains(maxX) ? maxX - shift : maxX);
-
-      while (y > maxY || y < minY)
-      {
-        maxX -= shift;
-        y = dependency.Calculate(maxX);
+          if (minX > maxX)
+          {
+            maxX = old_x - shift * 10;
+            break;
+          }
+        }
       }
     }
   }
