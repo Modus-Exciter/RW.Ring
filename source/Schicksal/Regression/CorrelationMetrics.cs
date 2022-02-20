@@ -106,6 +106,31 @@ namespace Schicksal.Regression
   }
 
   /// <summary>
+  /// Пара коэффициентов, описывающих гетероскедастичность данных
+  /// </summary>
+  public struct Heteroscedasticity
+  {
+    /// <summary>
+    /// Коэффициент Спирмана для корреляции
+    /// </summary>
+    public double SpearmanCoefficent { get; set; }
+
+    /// <summary>
+    /// Вероятность наличия гетероскедастичности
+    /// </summary>
+    public double Probability { get; set; }
+
+    /// <summary>
+    /// Преобразование в строку
+    /// </summary>
+    /// <returns>Пара коэффициентов в строковом представлении</returns>
+    public override string ToString()
+    {
+      return string.Format("{0:0.0000} ({1:0.00}%)", this.SpearmanCoefficent, this.Probability * 100);
+    }
+  }
+
+  /// <summary>
   /// Формулы, описывающие конкретную регрессионную зависимость
   /// </summary>
   public class CorrelationFormula

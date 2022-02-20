@@ -120,6 +120,9 @@
   <data name="BOOL" xml:space="preserve">
     <value>Boolean</value>
   </data>
+  <data name="CONSISTENCY" xml:space="preserve">
+    <value>Consictency</value>
+  </data>
   <data name="COUNT" xml:space="preserve">
     <value>Count</value>
   </data>

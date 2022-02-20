@@ -298,8 +298,30 @@ namespace Schicksal.Regression
       var r = 1 - 6 * dsum / (x.Count * ((double)x.Count * x.Count - 1));
       var t = Math.Abs(r) * Math.Sqrt(x.Count - 2) / Math.Sqrt(1 - r * r);
 
-      dependency.Heteroscedasticity = 
-        (2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1) * (r >= 0 ? 1 : -1);
+      dependency.Heteroscedasticity = new Heteroscedasticity
+      {
+        SpearmanCoefficent = r,
+        Probability = 2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1
+      };
+    }
+
+    private static void CalculateConsistency(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    {
+      double down = DescriptionStatistics.SquareDerivation(y);
+      double up = 0;
+      int i = 0;
+      Predicate<double> condition = gap => gap == x[i];
+
+      for (; i < x.Count; i++)
+      {
+        if (Array.Exists(dependency.GetGaps(), condition))
+          break;
+
+        var derivation = dependency.Calculate(x[i]) - y[i];
+        up += derivation * derivation;
+      }
+
+      dependency.Consistency = (down - up) / down;
     }
 
     private static void AddType(Type type, List<RegressionDependency> dependencies, IDataGroup x, IDataGroup y, string factor, string effect)
@@ -311,6 +333,7 @@ namespace Schicksal.Regression
         dep.Effect = effect;
 
         CaclulateHeteroscedasticity(x, y, dep);
+        CalculateConsistency(x, y, dep);
 
         lock (dependencies)
         {

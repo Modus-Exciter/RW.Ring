@@ -229,4 +229,7 @@
   <data name="DEPENDENCY_TYPE" xml:space="preserve">
     <value>Dependency type</value>
   </data>
+  <data name="MAX_CONSISTENCY" xml:space="preserve">
+    <value>Maximal consistendy achieved for dependency type '{0}' equals {1}.</value>
+  </data>
 </root>

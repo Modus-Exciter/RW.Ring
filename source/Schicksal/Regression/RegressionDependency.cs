@@ -48,7 +48,9 @@ namespace Schicksal.Regression
       }
     }
 
-    public double Heteroscedasticity { get; internal set; }
+    public Heteroscedasticity Heteroscedasticity { get; internal set; }
+
+    public double Consistency { get; internal set; }
 
     public abstract double Calculate(double x);
 
@@ -197,8 +199,8 @@ namespace Schicksal.Regression
         if (x == 0)
           continue;
 
-        sum_up += (x - avg_x) * (result[i] / x - avg_y);
-        sum_dn += (x - avg_x) * (x - avg_x);
+        sum_up += (result[i] / x - avg_x) * (result[i] - avg_y);
+        sum_dn += (result[i] / x - avg_x) * (result[i] / x - avg_x);
       }
 
       double byx = sum_up / sum_dn;

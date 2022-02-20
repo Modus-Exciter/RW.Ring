@@ -121,14 +121,8 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>102, 22</value>
-  </data>
-  <data name="m_cmd_copy.Text" xml:space="preserve">
-    <value>Copy</value>
-  </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 26</value>
+    <value>111, 26</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -144,7 +138,7 @@
     <value>0, 0</value>
   </data>
   <data name="m_chart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>626, 418</value>
+    <value>626, 386</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_chart.TabIndex" type="System.Int32, mscorlib">
@@ -163,16 +157,22 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;m_chart.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>0</value>
   </data>
-  <data name="m_type_selector.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Right</value>
+  <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>110, 22</value>
+  </data>
+  <data name="m_cmd_copy.Text" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="m_type_selector.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
   <data name="m_type_selector.Location" type="System.Drawing.Point, System.Drawing">
-    <value>353, 390</value>
+    <value>404, 4</value>
   </data>
   <data name="m_type_selector.Size" type="System.Drawing.Size, System.Drawing">
-    <value>261, 21</value>
+    <value>200, 21</value>
   </data>
   <data name="m_type_selector.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -184,31 +184,34 @@
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_type_selector.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>m_bottom_panel</value>
   </data>
   <data name="&gt;&gt;m_type_selector.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="m_label_heteroscedasticity.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Bottom, Left</value>
+    <value>0</value>
   </data>
   <data name="m_label_heteroscedasticity.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="m_label_heteroscedasticity.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
   </data>
   <data name="m_label_heteroscedasticity.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
   <data name="m_label_heteroscedasticity.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 397</value>
+    <value>6, 1</value>
   </data>
   <data name="m_label_heteroscedasticity.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 13</value>
+    <value>19, 28</value>
   </data>
   <data name="m_label_heteroscedasticity.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
   <data name="m_label_heteroscedasticity.Text" xml:space="preserve">
     <value>[ ]</value>
+  </data>
+  <data name="m_label_heteroscedasticity.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
   </data>
   <data name="&gt;&gt;m_label_heteroscedasticity.Name" xml:space="preserve">
     <value>m_label_heteroscedasticity</value>
@@ -217,10 +220,46 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;m_label_heteroscedasticity.Parent" xml:space="preserve">
-    <value>$this</value>
+    <value>m_bottom_panel</value>
   </data>
   <data name="&gt;&gt;m_label_heteroscedasticity.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="m_bottom_panel.ColumnCount" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="m_bottom_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 386</value>
+  </data>
+  <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 1, 3, 3</value>
+  </data>
+  <data name="m_bottom_panel.RowCount" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>626, 32</value>
+  </data>
+  <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Name" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_bottom_panel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_type_selector" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_label_heteroscedasticity" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="AutoSize,0,Percent,100,AutoSize,0" /&gt;&lt;Rows Styles="Percent,100" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

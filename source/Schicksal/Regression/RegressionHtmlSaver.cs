@@ -110,7 +110,8 @@ namespace Schicksal.Regression
           DataTable table = new DataTable();
           table.Columns.Add(Resources.DEPENDENCY_TYPE, typeof(string));
           table.Columns.Add(Resources.REGRESSION_DEPENDENCY, typeof(string));
-          table.Columns.Add(SchicksalResources.HETEROSCEDASTICITY, typeof(double));
+          table.Columns.Add(SchicksalResources.CONSISTENCY, typeof(double));
+          table.Columns.Add(SchicksalResources.HETEROSCEDASTICITY, typeof(Heteroscedasticity));
 
           var types = RegressionDependency.GetDependencyTypeNames();
 
@@ -121,10 +122,21 @@ namespace Schicksal.Regression
             if (!types.TryGetValue(dependency.GetType(), out type_name))
               type_name = dependency.GetType().Name;
 
-            table.Rows.Add(type_name, dependency.ToString(), dependency.Heteroscedasticity);
+            table.Rows.Add(type_name, 
+                           dependency.ToString(), 
+                           dependency.Consistency, 
+                           dependency.Heteroscedasticity);
           }
 
           writer.WriteTable(table.DefaultView);
+
+          var max_consistensy = CorrelationGraphUtils.GetBestDependency(metric.Formula);
+
+          using (writer.CreateParagraph())
+          {
+            writer.WriteText(string.Format(Resources.MAX_CONSISTENCY,
+              types[max_consistensy.GetType()], (float)max_consistensy.Consistency));
+          }
         }
       }
     }

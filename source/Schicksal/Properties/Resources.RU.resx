@@ -159,6 +159,9 @@
   <data name="INVALID_COLUMN_TYPE" xml:space="preserve">
     <value>Неподходящий тип колонки для сохранения</value>
   </data>
+  <data name="MAX_CONSISTENCY" xml:space="preserve">
+    <value>Максимальная согласованность была получена для вида регрессионной зависимости '{0}' и составила {1}.</value>
+  </data>
   <data name="MAX_DIFFERENCE" xml:space="preserve">
     <value>Максимальная разница наблюдалась между вариантами</value>
   </data>

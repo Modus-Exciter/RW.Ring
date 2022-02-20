@@ -29,52 +29,54 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.Windows.Forms.DataVisualization.Charting.TextAnnotation textAnnotation1 = new System.Windows.Forms.DataVisualization.Charting.TextAnnotation();
-      System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-      System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-      System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+      System.Windows.Forms.DataVisualization.Charting.TextAnnotation textAnnotation2 = new System.Windows.Forms.DataVisualization.Charting.TextAnnotation();
+      System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CorrelationForm));
+      System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+      System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
       this.m_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_copy = new System.Windows.Forms.ToolStripMenuItem();
       this.m_type_selector = new System.Windows.Forms.ComboBox();
       this.m_label_heteroscedasticity = new System.Windows.Forms.Label();
+      this.m_bottom_panel = new System.Windows.Forms.TableLayoutPanel();
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).BeginInit();
       this.m_context_menu.SuspendLayout();
+      this.m_bottom_panel.SuspendLayout();
       this.SuspendLayout();
       // 
       // m_chart
       // 
-      textAnnotation1.Alignment = System.Drawing.ContentAlignment.TopLeft;
-      textAnnotation1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-      textAnnotation1.IsSizeAlwaysRelative = false;
-      textAnnotation1.Name = "TextAnnotation1";
-      textAnnotation1.Text = "Урожай = -5,541e-2 * Площадь + 2861,304 ";
-      textAnnotation1.Width = 100D;
-      textAnnotation1.X = 5D;
-      textAnnotation1.Y = 2D;
-      this.m_chart.Annotations.Add(textAnnotation1);
-      chartArea1.Name = "RegressionGraph";
-      chartArea1.Position.Auto = false;
-      chartArea1.Position.Height = 90F;
-      chartArea1.Position.Width = 90F;
-      chartArea1.Position.X = 3F;
-      chartArea1.Position.Y = 6F;
-      this.m_chart.ChartAreas.Add(chartArea1);
+      textAnnotation2.Alignment = System.Drawing.ContentAlignment.TopLeft;
+      textAnnotation2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+      textAnnotation2.IsSizeAlwaysRelative = false;
+      textAnnotation2.Name = "TextAnnotation1";
+      textAnnotation2.Text = "Урожай = -5,541e-2 * Площадь + 2861,304 ";
+      textAnnotation2.Width = 100D;
+      textAnnotation2.X = 5D;
+      textAnnotation2.Y = 2D;
+      this.m_chart.Annotations.Add(textAnnotation2);
+      chartArea2.Name = "RegressionGraph";
+      chartArea2.Position.Auto = false;
+      chartArea2.Position.Height = 92F;
+      chartArea2.Position.Width = 90F;
+      chartArea2.Position.X = 3F;
+      chartArea2.Position.Y = 8F;
+      this.m_chart.ChartAreas.Add(chartArea2);
       this.m_chart.ContextMenuStrip = this.m_context_menu;
       resources.ApplyResources(this.m_chart, "m_chart");
       this.m_chart.Name = "m_chart";
-      series1.ChartArea = "RegressionGraph";
-      series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
-      series1.Name = "RealValues";
-      series2.BorderWidth = 2;
-      series2.ChartArea = "RegressionGraph";
-      series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-      series2.Color = System.Drawing.Color.Red;
-      series2.Name = "Dependency";
-      series2.ShadowOffset = 1;
-      this.m_chart.Series.Add(series1);
-      this.m_chart.Series.Add(series2);
+      series3.ChartArea = "RegressionGraph";
+      series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+      series3.Name = "RealValues";
+      series4.BorderWidth = 2;
+      series4.ChartArea = "RegressionGraph";
+      series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+      series4.Color = System.Drawing.Color.Red;
+      series4.Name = "Dependency";
+      series4.ShadowOffset = 1;
+      this.m_chart.Series.Add(series3);
+      this.m_chart.Series.Add(series4);
       // 
       // m_context_menu
       // 
@@ -104,19 +106,27 @@
       this.m_label_heteroscedasticity.BackColor = System.Drawing.Color.White;
       this.m_label_heteroscedasticity.Name = "m_label_heteroscedasticity";
       // 
+      // m_bottom_panel
+      // 
+      this.m_bottom_panel.BackColor = System.Drawing.Color.White;
+      resources.ApplyResources(this.m_bottom_panel, "m_bottom_panel");
+      this.m_bottom_panel.Controls.Add(this.m_type_selector, 2, 0);
+      this.m_bottom_panel.Controls.Add(this.m_label_heteroscedasticity, 0, 0);
+      this.m_bottom_panel.Name = "m_bottom_panel";
+      // 
       // CorrelationForm
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Controls.Add(this.m_label_heteroscedasticity);
-      this.Controls.Add(this.m_type_selector);
       this.Controls.Add(this.m_chart);
+      this.Controls.Add(this.m_bottom_panel);
       this.Name = "CorrelationForm";
       this.ShowInTaskbar = false;
       ((System.ComponentModel.ISupportInitialize)(this.m_chart)).EndInit();
       this.m_context_menu.ResumeLayout(false);
+      this.m_bottom_panel.ResumeLayout(false);
+      this.m_bottom_panel.PerformLayout();
       this.ResumeLayout(false);
-      this.PerformLayout();
 
     }
 
@@ -127,5 +137,6 @@
     private System.Windows.Forms.ToolStripMenuItem m_cmd_copy;
     private System.Windows.Forms.ComboBox m_type_selector;
     private System.Windows.Forms.Label m_label_heteroscedasticity;
+    private System.Windows.Forms.TableLayoutPanel m_bottom_panel;
   }
 }

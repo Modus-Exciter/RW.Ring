@@ -70,6 +70,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Consictency.
+        /// </summary>
+        public static string CONSISTENCY {
+            get {
+                return ResourceManager.GetString("CONSISTENCY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Count.
         /// </summary>
         public static string COUNT {

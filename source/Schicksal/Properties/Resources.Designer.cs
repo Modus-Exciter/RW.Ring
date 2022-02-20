@@ -201,6 +201,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximal consistendy achieved for dependency type &apos;{0}&apos; equals {1}..
+        /// </summary>
+        internal static string MAX_CONSISTENCY {
+            get {
+                return ResourceManager.GetString("MAX_CONSISTENCY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximal difference occured between variants.
         /// </summary>
         internal static string MAX_DIFFERENCE {
