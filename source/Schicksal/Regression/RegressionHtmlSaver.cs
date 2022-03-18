@@ -122,9 +122,9 @@ namespace Schicksal.Regression
             if (!types.TryGetValue(dependency.GetType(), out type_name))
               type_name = dependency.GetType().Name;
 
-            table.Rows.Add(type_name, 
-                           dependency.ToString(), 
-                           dependency.Consistency, 
+            table.Rows.Add(type_name,
+                           ConvertString(dependency.ToString()),
+                           dependency.Consistency,
                            dependency.Heteroscedasticity);
           }
 
@@ -139,6 +139,39 @@ namespace Schicksal.Regression
           }
         }
       }
+    }
+
+    private static string ConvertString(string line)
+    {
+      bool changed = false;
+      string sup = "^";
+      int start = 0;
+      int end = 0;
+      for (int i = 0; i < line.Length; i++)
+      {
+        if (line[i] == sup[0])
+        {
+          start = i + 1;
+
+          while (char.IsSeparator(line, start))
+            start++;
+          end = start + 1;
+
+          while (end < line.Length && !char.IsSeparator(line, end))
+            end++;
+
+          changed = true;
+        }
+      }
+
+      if (changed)
+      {
+        line = line.Insert(end, "</sup>"); 
+        line = line.Insert(start, "<sup>");
+        line = line.Replace(sup, "");
+      }
+        
+      return line;
     }
   }
 }
