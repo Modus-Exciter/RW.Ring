@@ -120,15 +120,36 @@
   <data name="factorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>Фактор</value>
   </data>
+  <data name="factorDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Фактор или сочетание</value>
+  </data>
+  <data name="kdfDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Количество степеней свободы между группами</value>
+  </data>
+  <data name="ndfDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Количество степеней свободы внутри групп</value>
+  </data>
+  <data name="fDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Фактическое значение F-критерия</value>
+  </data>
+  <data name="f005DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Стандартное значение F-критерия для 5% уровня значимости</value>
+  </data>
+  <data name="f001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Стандартное значение F-критерия для 1% уровня значимости</value>
+  </data>
+  <data name="pDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Уровень значимости фактического значения F-критерия</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 24</value>
+    <value>119, 22</value>
   </data>
   <data name="m_cmd_export.Text" xml:space="preserve">
     <value>Экспорт</value>
   </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>135, 28</value>
+    <value>120, 26</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

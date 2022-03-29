@@ -37,6 +37,7 @@
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.factorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.kdfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ndfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,7 +45,6 @@
       this.f005DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.f001DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.pDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
       this.m_context_menu.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
@@ -91,6 +91,10 @@
       this.m_cmd_export.Name = "m_cmd_export";
       resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
       this.m_cmd_export.Click += new System.EventHandler(this.Cmd_export_Click);
+      // 
+      // m_binding_source
+      // 
+      this.m_binding_source.DataSource = typeof(Schicksal.Anova.FisherTestResult);
       // 
       // factorDataGridViewTextBoxColumn
       // 
@@ -147,10 +151,6 @@
       this.pDataGridViewTextBoxColumn.Name = "pDataGridViewTextBoxColumn";
       this.pDataGridViewTextBoxColumn.ReadOnly = true;
       // 
-      // m_binding_source
-      // 
-      this.m_binding_source.DataSource = typeof(Schicksal.Anova.FisherTestResult);
-      // 
       // AnovaResultsForm
       // 
       resources.ApplyResources(this, "$this");
@@ -168,6 +168,8 @@
 
     private System.Windows.Forms.DataGridView m_grid;
     private System.Windows.Forms.BindingSource m_binding_source;
+    private System.Windows.Forms.ContextMenuStrip m_context_menu;
+    private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
     private System.Windows.Forms.DataGridViewTextBoxColumn factorDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn kdfDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn ndfDataGridViewTextBoxColumn;
@@ -175,7 +177,5 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn f005DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn f001DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn pDataGridViewTextBoxColumn;
-    private System.Windows.Forms.ContextMenuStrip m_context_menu;
-    private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
   }
 }

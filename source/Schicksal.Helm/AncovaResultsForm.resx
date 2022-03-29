@@ -136,8 +136,11 @@
   <data name="&gt;&gt;nDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>AncovaResultsForm</value>
+  <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <data name="t001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>T criteria for 1% probability</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -191,9 +194,6 @@
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;pHDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>pHDataGridViewTextBoxColumn</value>
   </data>
   <data name="factorDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Factor</value>
@@ -743,11 +743,11 @@
   <data name="pHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Probability level for for non-linear correlation coefficent</value>
   </data>
+  <data name="t005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>T 5%</value>
+  </data>
   <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>125</value>
   </data>
   <data name="&gt;&gt;etaDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -761,8 +761,8 @@
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>759, 483</value>
   </data>
-  <data name="t005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>T 5%</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>AncovaResultsForm</value>
   </data>
   <data name="&gt;&gt;t001DataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>t001DataGridViewTextBoxColumn</value>
@@ -770,8 +770,8 @@
   <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>pRDataGridViewTextBoxColumn</value>
   </data>
-  <data name="t001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>T criteria for 1% probability</value>
+  <data name="&gt;&gt;pHDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>pHDataGridViewTextBoxColumn</value>
   </data>
   <data name="pRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>pr</value>
@@ -784,9 +784,6 @@
   </metadata>
   <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
-  </metadata>
-  <metadata name="$this.Language" type="System.Globalization.CultureInfo, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>ru</value>
   </metadata>
   <metadata name="m_context_menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>206, 14</value>

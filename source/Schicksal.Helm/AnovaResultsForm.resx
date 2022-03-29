@@ -124,6 +124,9 @@
   <data name="factorDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
+  <data name="factorDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Factor or combination</value>
+  </data>
   <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
@@ -132,6 +135,9 @@
   </data>
   <data name="kdfDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
+  </data>
+  <data name="kdfDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Inter group degrees of freedom count</value>
   </data>
   <data name="kdfDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
@@ -142,6 +148,9 @@
   <data name="ndfDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
+  <data name="ndfDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>In group  degrees of freedom count</value>
+  </data>
   <data name="ndfDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
@@ -150,6 +159,9 @@
   </data>
   <data name="fDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
+  </data>
+  <data name="fDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Actual F-criteria value</value>
   </data>
   <data name="fDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
@@ -160,6 +172,9 @@
   <data name="f005DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
+  <data name="f005DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Standard F-criteria for 5% probability</value>
+  </data>
   <data name="f005DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
@@ -168,6 +183,9 @@
   </data>
   <data name="f001DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
+  </data>
+  <data name="f001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Standard F-criteria for 1% probability</value>
   </data>
   <data name="f001DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
@@ -178,6 +196,9 @@
   <data name="pDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
+  <data name="pDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Probability level for the actual F-criteria</value>
+  </data>
   <data name="pDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
@@ -186,13 +207,13 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 24</value>
+    <value>107, 22</value>
   </data>
   <data name="m_cmd_export.Text" xml:space="preserve">
     <value>Export</value>
   </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>122, 28</value>
+    <value>108, 26</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -210,14 +231,11 @@
   <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
     <value>51</value>
   </data>
   <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>812, 593</value>
+    <value>609, 482</value>
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -238,10 +256,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>812, 593</value>
+    <value>609, 482</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -692,12 +710,6 @@
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
   </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
@@ -709,6 +721,12 @@
   </data>
   <data name="&gt;&gt;m_cmd_export.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
+    <value>m_binding_source</value>
+  </data>
+  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>factorDataGridViewTextBoxColumn</value>
@@ -751,12 +769,6 @@
   </data>
   <data name="&gt;&gt;pDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
-    <value>m_binding_source</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>AnovaResultsForm</value>

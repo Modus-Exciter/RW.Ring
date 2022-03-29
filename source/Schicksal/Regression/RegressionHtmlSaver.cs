@@ -155,6 +155,7 @@ namespace Schicksal.Regression
 
           while (char.IsSeparator(line, start))
             start++;
+
           end = start + 1;
 
           while (end < line.Length && !char.IsSeparator(line, end))
