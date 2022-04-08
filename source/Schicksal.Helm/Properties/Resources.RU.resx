@@ -130,7 +130,7 @@
     <value>Дисперсионный анализ</value>
   </data>
   <data name="BASIC_STATISTICS" xml:space="preserve">
-    <value>Базовые статистики</value>
+    <value>Описательные статистики</value>
   </data>
   <data name="COMPARISON" xml:space="preserve">
     <value>Попарное сравнение</value>
