@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using Notung;
 using Notung.Services;
+using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
@@ -148,13 +149,65 @@ namespace Schicksal.Helm
 
     private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
     {
+      m_cmd_tbedit.Text = Resources.TABLE_EDIT;
       m_cmd_remove.Text = Resources.REMOVE;
     }
 
     private void Cmd_remove_Click(object sender, EventArgs e)
     {
       if (m_grid.Rows.Count > 0 && m_grid.AllowUserToDeleteRows && m_grid.SelectedRows.Count > 0)
-        m_grid.Rows.Remove(m_grid.SelectedRows[0]);
+        try
+        {
+          m_grid.Rows.Remove(m_grid.SelectedRows[0]);
+        }
+        catch
+        {
+          return;
+        }
+    }
+
+    private void m_cmd_tbedit_Click(object sender, EventArgs e)
+    {
+      var data_table = this.DataSource;
+
+      using (var dlg = new EditColumnsDialog())
+      {
+        dlg.Text = Resources.TABLE_EDIT;
+        TableColumnInfo.FillColumnInfo(dlg.Columns, data_table);
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          this.DataSource = TableColumnInfo.CreateTable(dlg.Columns);
+          this.DataSource.Load(data_table.CreateDataReader());
+          this.DataSource.Rows.Add(this.DataSource.NewRow());
+          this.DataSource.AcceptChanges();
+          this.DataSource.Rows.RemoveAt(this.DataSource.Rows.Count - 1);
+        }
+      }
+    }
+
+    private void m_grid_CellClick(object sender, DataGridViewCellEventArgs e)
+    {
+      if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
+      {
+        DataGridViewCell cell = m_grid[e.ColumnIndex, e.RowIndex];
+        m_grid.CurrentCell = cell;
+        m_grid.BeginEdit(true);
+      }
+
+      m_grid.CurrentCell.Selected = true;
+
+    }
+
+    private void m_grid_CellEnter(object sender, DataGridViewCellEventArgs e)
+    {
+      DataGridViewCell cell = m_grid[e.ColumnIndex, e.RowIndex];
+      m_grid.CurrentCell = cell;
+      m_grid.BeginEdit(true);
+    }
+
+    private void m_grid_MouseClick(object sender, MouseEventArgs e)
+    {
+      m_grid.EndEdit();
     }
   }
 }

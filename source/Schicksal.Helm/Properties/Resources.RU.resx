@@ -225,6 +225,9 @@
   <data name="STUDENT" xml:space="preserve">
     <value>Распределение Стьюдента</value>
   </data>
+  <data name="TABLE_EDIT" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
   <data name="WINDOWS" xml:space="preserve">
     <value>Окна</value>
   </data>

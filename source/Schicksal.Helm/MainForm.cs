@@ -483,5 +483,10 @@ namespace Schicksal.Helm
         }
       }
     }
-  }
+
+        private void m_menu_analyze_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
 }

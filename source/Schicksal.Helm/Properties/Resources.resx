@@ -274,4 +274,7 @@
   <data name="ANCOVA" xml:space="preserve">
     <value>Analysis of covariance</value>
   </data>
+  <data name="TABLE_EDIT" xml:space="preserve">
+    <value>Edit</value>
+  </data>
 </root>

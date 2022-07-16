@@ -124,6 +124,21 @@ namespace Schicksal.Helm.Dialogs
       return buffer.Count == 0;
     }
 
+    public static void FillColumnInfo(IList<TableColumnInfo> columns, DataTable table)
+    {
+      if (columns == null)
+        throw new ArgumentNullException("columns");
+
+      if (table == null)
+        throw new ArgumentNullException("table");
+
+      foreach (DataColumn cl in table.Columns)
+      {
+        columns.Add(new TableColumnInfo { ColumnName = cl.ColumnName, ColumnType = cl.DataType });
+      }
+
+    }
+
     public static DataTable CreateTable(IList<TableColumnInfo> columns)
     {
       if (columns == null)
