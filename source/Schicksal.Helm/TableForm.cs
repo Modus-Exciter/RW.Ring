@@ -41,8 +41,6 @@ namespace Schicksal.Helm
       m_grid.AllowUserToAddRows = false;
       m_grid.AllowUserToDeleteRows = false;
 
-      m_cmd_remove.Visible = false;
-
       foreach (DataGridViewColumn col in m_grid.Columns)
       {
         if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
@@ -63,20 +61,6 @@ namespace Schicksal.Helm
 
       if (m_grid.Rows.Count < (1 << 10))
         m_grid.AutoResizeColumns();
-    }
-
-    private void Grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.RowIndex < 0)
-        return;
-
-      var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
-
-      if (row == null)
-        return;
-
-      if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
-        this.Text += "*";
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -150,64 +134,59 @@ namespace Schicksal.Helm
     private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
     {
       m_cmd_tbedit.Text = Resources.TABLE_EDIT;
-      m_cmd_remove.Text = Resources.REMOVE;
-    }
-
-    private void Cmd_remove_Click(object sender, EventArgs e)
-    {
-      if (m_grid.Rows.Count > 0 && m_grid.AllowUserToDeleteRows && m_grid.SelectedRows.Count > 0)
-        try
-        {
-          m_grid.Rows.Remove(m_grid.SelectedRows[0]);
-        }
-        catch
-        {
-          return;
-        }
     }
 
     private void m_cmd_tbedit_Click(object sender, EventArgs e)
     {
-      var data_table = this.DataSource;
-
       using (var dlg = new EditColumnsDialog())
       {
         dlg.Text = Resources.TABLE_EDIT;
-        TableColumnInfo.FillColumnInfo(dlg.Columns, data_table);
+        TableColumnInfo.FillColumnInfo(dlg.Columns, this.DataSource);
+
         if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
         {
-          this.DataSource = TableColumnInfo.CreateTable(dlg.Columns);
-          this.DataSource.Load(data_table.CreateDataReader());
-          this.DataSource.Rows.Add(this.DataSource.NewRow());
-          this.DataSource.AcceptChanges();
-          this.DataSource.Rows.RemoveAt(this.DataSource.Rows.Count - 1);
+          m_grid.DataSource = TableColumnInfo.CreateUpdatedTable(dlg.Columns, this.DataSource);
+
+          if (!this.Text.EndsWith("*"))
+            this.Text += "*";
         }
       }
     }
 
-    private void m_grid_CellClick(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
-      {
-        DataGridViewCell cell = m_grid[e.ColumnIndex, e.RowIndex];
-        m_grid.CurrentCell = cell;
-        m_grid.BeginEdit(true);
-      }
-
-      m_grid.CurrentCell.Selected = true;
-
-    }
-
     private void m_grid_CellEnter(object sender, DataGridViewCellEventArgs e)
     {
-      DataGridViewCell cell = m_grid[e.ColumnIndex, e.RowIndex];
-      m_grid.CurrentCell = cell;
       m_grid.BeginEdit(true);
     }
 
     private void m_grid_MouseClick(object sender, MouseEventArgs e)
     {
-      m_grid.EndEdit();
+      if (m_grid.CurrentCell != null)
+      {
+        if (m_grid.CurrentCell.IsInEditMode)
+          m_grid.EndEdit();
+        else
+          m_grid.BeginEdit(false);
+      }
+    }
+
+    private void m_grid_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+    {
+      if(!this.Text.EndsWith("*"))
+        this.Text += "*";
+    }
+
+    private void m_grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+    {
+      if (e.RowIndex < 0)
+        return;
+
+      var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
+
+      if (row == null)
+        return;
+
+      if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
+        this.Text += "*";
     }
   }
 }

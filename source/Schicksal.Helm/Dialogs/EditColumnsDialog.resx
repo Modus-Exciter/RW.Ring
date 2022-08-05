@@ -133,13 +133,10 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_button_cancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>614, 11</value>
-  </data>
-  <data name="m_button_cancel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
+    <value>408, 7</value>
   </data>
   <data name="m_button_cancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 38</value>
+    <value>75, 25</value>
   </data>
   <data name="m_button_cancel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -166,13 +163,10 @@
     <value>NoControl</value>
   </data>
   <data name="m_button_ok.Location" type="System.Drawing.Point, System.Drawing">
-    <value>494, 11</value>
-  </data>
-  <data name="m_button_ok.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
+    <value>327, 7</value>
   </data>
   <data name="m_button_ok.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 46</value>
+    <value>75, 30</value>
   </data>
   <data name="m_button_ok.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -199,16 +193,13 @@
     <value>RightToLeft</value>
   </data>
   <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 544</value>
-  </data>
-  <data name="m_bottom_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
+    <value>0, 353</value>
   </data>
   <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>6, 6, 6, 6</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>744, 70</value>
+    <value>496, 46</value>
   </data>
   <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -249,14 +240,11 @@
   <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
-  </data>
   <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
     <value>62</value>
   </data>
   <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>744, 544</value>
+    <value>496, 353</value>
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -277,10 +265,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 20</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>744, 614</value>
+    <value>496, 399</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -730,12 +718,6 @@
         AADgAAAAAAcAAOAAAAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA4AAAAAAHAADgAAAAAAcAAOAA
         AAAABwAA4AAAAAAHAADgAAAAAAcAAOAAAAAABwAA////////AAD///////8AAP///////wAA
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 5, 4, 5</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>

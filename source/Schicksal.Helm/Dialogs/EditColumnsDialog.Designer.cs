@@ -73,8 +73,10 @@
             this.m_type_column});
       this.m_grid.DataSource = this.m_binding_source;
       resources.ApplyResources(this.m_grid, "m_grid");
-      this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+      this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
       this.m_grid.Name = "m_grid";
+      this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEnter);
+      this.m_grid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_grid_CellMouseClick);
       // 
       // m_name_column
       // 

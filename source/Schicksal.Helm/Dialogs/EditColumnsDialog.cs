@@ -61,6 +61,22 @@ namespace Schicksal.Helm.Dialogs
         e.Cancel = true;
       }
     }
+
+    private void m_grid_CellEnter(object sender, DataGridViewCellEventArgs e)
+    {
+      m_grid.BeginEdit(true);
+    }
+
+    private void m_grid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    {
+      if (m_grid.CurrentCell != null)
+      {
+        if (m_grid.CurrentCell.IsInEditMode)
+          m_grid.EndEdit();
+        else
+          m_grid.BeginEdit(false);
+      }
+    }
   }
 
   public class TableColumnInfo
@@ -136,7 +152,44 @@ namespace Schicksal.Helm.Dialogs
       {
         columns.Add(new TableColumnInfo { ColumnName = cl.ColumnName, ColumnType = cl.DataType });
       }
+    }
 
+    public static DataTable CreateUpdatedTable(IList<TableColumnInfo> columns, DataTable oldTable)
+    {
+      DataTable new_table = CreateTable(columns);
+
+      using (var dr = oldTable.CreateDataReader())
+      {
+        int[] mapping = new int[new_table.Columns.Count];
+
+        for (int i = 0; i < mapping.Length; i++)
+          mapping[i] = -1;
+
+        for (int i = 0; i < dr.FieldCount; i++)
+        {
+          if (new_table.Columns.Contains(dr.GetName(i)))
+            mapping[new_table.Columns[dr.GetName(i)].Ordinal] = i;
+        }
+
+        new_table.BeginLoadData();
+
+        while (dr.Read())
+        {
+          var row = new_table.NewRow();
+
+          for (int i = 0; i < mapping.Length; i++)
+          {
+            if (mapping[i] >= 0)
+              row[i] = dr[mapping[i]];
+          }
+
+          new_table.Rows.Add(row);
+        }
+
+        new_table.EndLoadData();
+      }
+
+      return new_table;
     }
 
     public static DataTable CreateTable(IList<TableColumnInfo> columns)
