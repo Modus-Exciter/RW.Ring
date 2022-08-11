@@ -63,12 +63,13 @@
       this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_cmd_tbedit});
       this.m_context_menu.Name = "m_context_menu";
-      this.m_context_menu.Size = new System.Drawing.Size(124, 26);
+      this.m_context_menu.Size = new System.Drawing.Size(181, 48);
+      this.m_context_menu.Opening += new System.ComponentModel.CancelEventHandler(this.m_context_menu_Opening);
       // 
       // m_cmd_tbedit
       // 
       this.m_cmd_tbedit.Name = "m_cmd_tbedit";
-      this.m_cmd_tbedit.Size = new System.Drawing.Size(123, 22);
+      this.m_cmd_tbedit.Size = new System.Drawing.Size(180, 22);
       this.m_cmd_tbedit.Text = "Edit table";
       this.m_cmd_tbedit.Click += new System.EventHandler(this.m_cmd_tbedit_Click);
       // 

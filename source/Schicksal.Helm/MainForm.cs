@@ -219,11 +219,11 @@ namespace Schicksal.Helm
       if (table_form == null)
       {
         table_form = new TableForm();
+        table_form.MarkAsReadOnly();
         table_form.DataSource = loader();
         table_form.Text = text;
         table_form.FileName = key;
         table_form.MdiParent = this;
-        table_form.MarkAsReadOnly();
         table_form.WindowState = FormWindowState.Maximized;
         table_form.Show();
       }

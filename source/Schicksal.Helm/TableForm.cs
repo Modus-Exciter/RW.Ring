@@ -29,7 +29,18 @@ namespace Schicksal.Helm
         m_grid.DataSource = value;
 
         if (value != null)
+        {
           value.AcceptChanges();
+
+          if (m_grid.ReadOnly)
+          {
+            foreach (DataGridViewColumn col in m_grid.Columns)
+            {
+              if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
+                col.DefaultCellStyle.Format = "0.000";
+            }
+          }
+        }
       }
     }
 
@@ -40,12 +51,6 @@ namespace Schicksal.Helm
       m_grid.ReadOnly = true;
       m_grid.AllowUserToAddRows = false;
       m_grid.AllowUserToDeleteRows = false;
-
-      foreach (DataGridViewColumn col in m_grid.Columns)
-      {
-        if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
-          col.DefaultCellStyle.Format = "0.000";
-      }
     }
 
     protected override void OnLoad(EventArgs e)
@@ -193,6 +198,12 @@ namespace Schicksal.Helm
 
       if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
         this.Text += "*";
+    }
+
+    private void m_context_menu_Opening(object sender, CancelEventArgs e)
+    {
+      if (m_grid.ReadOnly)
+        e.Cancel = true;
     }
   }
 }
