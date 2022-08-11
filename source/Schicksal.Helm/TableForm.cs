@@ -160,7 +160,13 @@ namespace Schicksal.Helm
 
     private void m_grid_MouseClick(object sender, MouseEventArgs e)
     {
-      if (m_grid.CurrentCell != null)
+      var info = m_grid.HitTest(e.X, e.Y);
+      DataGridViewCell cell = null;
+
+      if (info != null && info.ColumnIndex >= 0 && info.RowIndex >= 0)
+        cell = m_grid.Rows[info.RowIndex].Cells[info.ColumnIndex];
+
+      if (m_grid.CurrentCell != null && m_grid.CurrentCell != cell)
       {
         if (m_grid.CurrentCell.IsInEditMode)
           m_grid.EndEdit();
