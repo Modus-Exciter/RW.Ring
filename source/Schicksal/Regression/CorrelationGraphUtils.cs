@@ -6,7 +6,7 @@ namespace Schicksal.Regression
 {
   public static class CorrelationGraphUtils
   {
-    public static System.Collections.Generic.KeyValuePair<Type, string>[] GetDependencySource(CorrelationFormula data)
+    public static KeyValuePair<Type, string>[] GetDependencySource(CorrelationFormula data)
     {
       return RegressionDependency.GetDependencyTypeNames().Where(kv =>
               data.Dependencies.Any(d => d.GetType() == kv.Key)).ToArray();
