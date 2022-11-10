@@ -113,12 +113,12 @@ namespace Schicksal.Regression
     /// <summary>
     /// Коэффициент Спирмана для корреляции
     /// </summary>
-    public double SpearmanCoefficent { get; set; }
+    public double SpearmanCoefficent { get; internal set; }
 
     /// <summary>
     /// Вероятность наличия гетероскедастичности
     /// </summary>
-    public double Probability { get; set; }
+    public double Probability { get; internal set; }
 
     /// <summary>
     /// Преобразование в строку

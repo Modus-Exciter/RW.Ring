@@ -211,57 +211,8 @@ namespace Schicksal.Regression
       {
         if (sorted[i - 1].X == sorted[i].X && i < sorted.Count)
         {
-          int last = 0;
-
-          if (borders.Count > 0)
-            last = borders[borders.Count - 1];
-
-          int down = 0;
-          int up = 0;
-          bool down_found = false;
-          bool up_found = false;
-
-          for (int j = i - 1; j > last + 1; j--)
-          {
-            down++;
-
-            if (sorted[j - 1].X != sorted[j].X)
-            {
-              down_found = true;
-              break;
-            }
-          }
-
-          for (int j = i + 1; j < sorted.Count; j++)
-          {
-            up++;
-
-            if (sorted[j - 1].X != sorted[j].X)
-            {
-              up_found = true;
-              break;
-            }
-          }
-
-          if (!down_found && up_found)
-          {
-            i += up;
-          }
-          else if (down_found && !up_found)
-          {
-            i -= down;
-          }
-          else if (down_found && up_found)
-          {
-            if (down < up)
-              i -= down;
-            else
-              i += up;
-          }
-          else
-          {
+          if (!CorrectBorder(sorted, borders, ref i))
             break;
-          }
         }
 
         borders.Add(i);
@@ -279,6 +230,57 @@ namespace Schicksal.Regression
       }
 
       return borders;
+    }
+
+    private static bool CorrectBorder(List<Point2D> sorted, List<int> borders, ref int border)
+    {
+      int last = 0;
+
+      if (borders.Count > 0)
+        last = borders[borders.Count - 1];
+
+      int down = 0;
+      int up = 0;
+      bool down_found = false;
+      bool up_found = false;
+
+      for (int j = border - 1; j > last + 1; j--)
+      {
+        down++;
+
+        if (sorted[j - 1].X != sorted[j].X)
+        {
+          down_found = true;
+          break;
+        }
+      }
+
+      for (int j = border + 1; j < sorted.Count; j++)
+      {
+        up++;
+
+        if (sorted[j - 1].X != sorted[j].X)
+        {
+          up_found = true;
+          break;
+        }
+      }
+
+      if (down_found && up_found)
+      {
+        if (down < up)
+          border -= down;
+        else
+          border += up;
+      }
+      else if (down_found)
+        border -= down;
+      else if (up_found)
+        border += up;
+      else
+        return false;
+
+      return true;
     }
 
     private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
