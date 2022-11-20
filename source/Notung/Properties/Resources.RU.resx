@@ -123,6 +123,9 @@
   <data name="BAD_DUPLICATES" xml:space="preserve">
     <value>Невозможно найти в коллекции подходящий выбор среди дубликатов</value>
   </data>
+  <data name="BUILDING_MST" xml:space="preserve">
+    <value>Построение минимального остовного дерева</value>
+  </data>
   <data name="CONTEXT_KEY_RESERVED" xml:space="preserve">
     <value>Ключ '{0}' зарезервирован</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="GRAPH_MUST_BE_ORIENTED" xml:space="preserve">
     <value>Граф должен быть ориентированным для топологической сортировки</value>
+  </data>
+  <data name="GRAPH_MUST_NOT_BE_ORIENTED" xml:space="preserve">
+    <value>Граф должен быть ориентированным для построения минимального остовного дерева</value>
   </data>
   <data name="IMPOSSIBLE_FIX" xml:space="preserve">
     <value>Коллекция требует коррекции, но это невозможно, потому что она имеет фиксированный размер</value>

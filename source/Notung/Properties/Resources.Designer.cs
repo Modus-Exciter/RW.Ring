@@ -79,6 +79,15 @@ namespace Notung.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Building minumum spanning tree.
+        /// </summary>
+        internal static string BUILDING_MST {
+            get {
+                return ResourceManager.GetString("BUILDING_MST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Key &apos;{0}&apos; is reserved.
         /// </summary>
         internal static string CONTEXT_KEY_RESERVED {
@@ -148,6 +157,15 @@ namespace Notung.Properties {
         internal static string GRAPH_MUST_BE_ORIENTED {
             get {
                 return ResourceManager.GetString("GRAPH_MUST_BE_ORIENTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Graph must not be oriented for building minumum spanning tree.
+        /// </summary>
+        internal static string GRAPH_MUST_NOT_BE_ORIENTED {
+            get {
+                return ResourceManager.GetString("GRAPH_MUST_NOT_BE_ORIENTED", resourceCulture);
             }
         }
         

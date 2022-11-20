@@ -217,4 +217,10 @@
   <data name="GRAPH_DISCONNECTED" xml:space="preserve">
     <value>Unable to build the tree: graph is disconnected</value>
   </data>
+  <data name="BUILDING_MST" xml:space="preserve">
+    <value>Building minumum spanning tree</value>
+  </data>
+  <data name="GRAPH_MUST_NOT_BE_ORIENTED" xml:space="preserve">
+    <value>Graph must not be oriented for building minumum spanning tree</value>
+  </data>
 </root>

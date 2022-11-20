@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Notung.Properties;
+using Notung.Threading;
 
 namespace Notung.Data
 {
@@ -10,6 +11,22 @@ namespace Notung.Data
   /// </summary>
   public static class MST
   {
+    #region Common --------------------------------------------------------------------------------
+
+    private struct ArcInfo<T>
+    {
+      public int From;
+      public int To;
+      public T Weight;
+
+      public bool Empty
+      {
+        get { return From == 0; }
+      }
+    }
+
+    #endregion
+
     #region Kruskal algorithm ---------------------------------------------------------------------
 
     private struct ConnectivityComponent
@@ -56,7 +73,7 @@ namespace Notung.Data
       // Все рёбра, отсортированные по возрастанию веса
       var all_arcs = (from i in Enumerable.Range(0, graph.PeakCount)
                       from a in graph.OutgoingArcs(i)
-                      .Where(a => graph.IsOriented || i < a.Item1).Select(a => new
+                      .Where(a => graph.IsOriented || i < a.Item1).Select(a => new ArcInfo<T>
                       {
                         From = i,
                         To = a.Item1,
@@ -96,18 +113,6 @@ namespace Notung.Data
 
     #region Prim algorithm ------------------------------------------------------------------------
 
-    private struct ArcInfo<T>
-    {
-      public int From;
-      public int To;
-      public T Weight;
-
-      public bool Empty
-      {
-        get { return From == 0; }
-      }
-    }
-
     private static ArcInfo<T> FindMinimum<T>(this ArcInfo<T>[] arcs, HashSet<int> unprocessed)
       where T : IComparable<T>
     {
@@ -125,16 +130,31 @@ namespace Notung.Data
       return min;
     }
 
+    private static int CalculateProgress(int graphSize, int unprocessedCount)
+    {
+      var part = graphSize - unprocessedCount;
+
+      if (int.MaxValue / 100 > part)
+        return part * 100 / graphSize;
+      else
+        return (int)(part * 100.0f / graphSize);
+    }
+
     /// <summary>
     /// Алгоритм Прима
     /// </summary>
     /// <typeparam name="T">Тип веса ребра</typeparam>
     /// <param name="graph">Граф, в котором ищется минимальное остовное дерево</param>
+    /// <param name="indicator">Индикатор прогресса операции</param>
     /// <returns>Массив рёбер, составляющих минимальное остовное дерево</returns>
-    public static Tuple<int, int, T>[] Prim<T>(IWeightedGraph<T> graph) where T : IComparable<T>
+    public static Tuple<int, int, T>[] Prim<T>(IWeightedGraph<T> graph, IProgressIndicator indicator = null)
+      where T : IComparable<T>
     {
       if (graph == null)
         throw new ArgumentNullException("graph");
+
+      if (graph.IsOriented)
+        throw new ArgumentException(Resources.GRAPH_MUST_NOT_BE_ORIENTED);
 
       if (graph.PeakCount == 0)
         return ArrayExtensions.Empty<Tuple<int, int, T>>();
@@ -151,6 +171,12 @@ namespace Notung.Data
 
       while (unprocessed.Count > 0)
       {
+        if (indicator != null)
+        {
+          indicator.ReportProgress(CalculateProgress(graph.PeakCount, unprocessed.Count),
+            Resources.BUILDING_MST);
+        }
+        
         ArcInfo<T> min = min_arcs.FindMinimum<T>(unprocessed);
 
         if (!min.Empty)
