@@ -113,6 +113,16 @@ namespace Notung.Data
 
     #region Prim algorithm ------------------------------------------------------------------------
 
+    private static int CalculateProgress(int graphSize, int unprocessedCount)
+    {
+      var part = graphSize - unprocessedCount;
+
+      if (int.MaxValue / 100 > part)
+        return part * 100 / graphSize;
+      else
+        return (int)(part * 100.0f / graphSize);
+    }
+
     private static ArcInfo<T> FindMinimum<T>(this ArcInfo<T>[] arcs, HashSet<int> unprocessed)
       where T : IComparable<T>
     {
@@ -120,7 +130,7 @@ namespace Notung.Data
 
       foreach (var peak in unprocessed)
       {
-        if (!unprocessed.Contains(arcs[peak].To) && !arcs[peak].Empty)
+        if (!arcs[peak].Empty && !unprocessed.Contains(arcs[peak].To))
         {
           if (min.Empty || min.Weight.CompareTo(arcs[peak].Weight) > 0)
             min = arcs[peak];
@@ -130,14 +140,40 @@ namespace Notung.Data
       return min;
     }
 
-    private static int CalculateProgress(int graphSize, int unprocessedCount)
+    private static void RebuildMinumum<T>(this ArcInfo<T>[] min_arcs, IWeightedGraph<T> graph, int processed, HashSet<int> unprocessed)
+      where T : IComparable<T>
     {
-      var part = graphSize - unprocessedCount;
+      if (graph.IncomingCount(processed) < unprocessed.Count)
+      {
+        foreach (var arc in graph.IncomingArcs(processed))
+        {
+          if (!unprocessed.Contains(arc.Item1))
+            continue;
 
-      if (int.MaxValue / 100 > part)
-        return part * 100 / graphSize;
+          if (min_arcs[arc.Item1].Empty || arc.Item2.CompareTo(min_arcs[arc.Item1].Weight) < 0)
+          {
+            min_arcs[arc.Item1] = new ArcInfo<T>
+            {
+              From = arc.Item1,
+              To = processed,
+              Weight = arc.Item2
+            };
+          }
+        }
+      }
       else
-        return (int)(part * 100.0f / graphSize);
+      {
+        foreach (int peak in unprocessed)
+        {
+          if (graph.HasArc(processed, peak))
+          {
+            T weight = graph[processed, peak];
+
+            if (min_arcs[peak].Empty || weight.CompareTo(min_arcs[peak].Weight) < 0)
+              min_arcs[peak] = new ArcInfo<T> { From = peak, To = processed, Weight = weight };
+          }
+        }
+      }
     }
 
     /// <summary>
@@ -186,37 +222,7 @@ namespace Notung.Data
 
           unprocessed.Remove(min.From);
 
-          if (graph.IncomingCount(min.From) < unprocessed.Count)
-          {
-            foreach (var arc in graph.IncomingArcs(min.From))
-            {
-              if (!unprocessed.Contains(arc.Item1))
-                continue;
-
-              if (min_arcs[arc.Item1].Empty || arc.Item2.CompareTo(min_arcs[arc.Item1].Weight) < 0)
-              {
-                min_arcs[arc.Item1] = new ArcInfo<T>
-                {
-                  From = arc.Item1,
-                  To = min.From,
-                  Weight = arc.Item2
-                };
-              }
-            }
-          }
-          else
-          {
-            foreach (int peak in unprocessed)
-            {
-              if (graph.HasArc(min.From, peak))
-              {
-                T weight = graph[min.From, peak];
-
-                if (min_arcs[peak].Empty || weight.CompareTo(min_arcs[peak].Weight) < 0)
-                  min_arcs[peak] = new ArcInfo<T> { From = peak, To = min.From, Weight = weight };
-              }
-            }
-          }
+          min_arcs.RebuildMinumum(graph, min.From, unprocessed);
         }
         else
           throw new ArgumentException(Resources.GRAPH_DISCONNECTED);
