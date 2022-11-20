@@ -552,6 +552,120 @@ namespace NotungTest
       items.Fix<char, CharItem>();
     }
 
+    [TestMethod]
+    public void KruskalMST1()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[0, 2] = 4;
+      graph[0, 3] = Math.Sqrt(34);
+      graph[0, 4] = Math.Sqrt(50);
+      graph[1, 2] = Math.Sqrt(18);
+      graph[1, 3] = 4;
+      graph[1, 4] = Math.Sqrt(52);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Kruskal(graph);
+      Assert.AreEqual(4, res.Length);
+    }
+
+    [TestMethod]
+    public void KruskalMST2()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[0, 3] = Math.Sqrt(34);
+      graph[0, 4] = Math.Sqrt(50);
+      graph[1, 2] = Math.Sqrt(18);
+      graph[1, 3] = 4;
+      graph[1, 4] = Math.Sqrt(52);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Kruskal(graph);
+      Assert.AreEqual(4, res.Length);
+
+      Assert.IsTrue(res.Any(t => t.Item1 == 0 && t.Item2 == 1));
+      Assert.IsTrue(res.Any(t => t.Item1 == 1 && t.Item2 == 3));
+      Assert.IsTrue(res.Any(t => t.Item1 == 2 && t.Item2 == 3));
+      Assert.IsTrue(res.Any(t => t.Item1 == 2 && t.Item2 == 4));
+    }
+
+    [TestMethod]
+    public void PrimeMST1()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[0, 3] = Math.Sqrt(34);
+      graph[0, 4] = Math.Sqrt(50);
+      graph[1, 2] = Math.Sqrt(18);
+      graph[1, 3] = 4;
+      graph[1, 4] = Math.Sqrt(52);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Prim(graph);
+      Assert.AreEqual(4, res.Length);
+
+      Assert.IsTrue(res.Any(t => t.Item1 == 0 && t.Item2 == 1));
+      Assert.IsTrue(res.Any(t => t.Item1 == 1 && t.Item2 == 3));
+      Assert.IsTrue(res.Any(t => t.Item1 == 2 && t.Item2 == 3));
+      Assert.IsTrue(res.Any(t => t.Item1 == 2 && t.Item2 == 4));
+    }
+
+    [TestMethod]
+    public void PrimeMST2()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[0, 2] = 4;
+      graph[0, 3] = Math.Sqrt(34);
+      graph[0, 4] = Math.Sqrt(50);
+      graph[1, 2] = Math.Sqrt(18);
+      graph[1, 3] = 4;
+      graph[1, 4] = Math.Sqrt(52);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Prim(graph);
+      Assert.AreEqual(4, res.Length);
+      Assert.AreEqual(Math.Sqrt(10) + 4 + Math.Sqrt(10) + Math.Sqrt(10), res.Select(t => t.Item3).Sum());
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void KruskalMSTUnable()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Kruskal(graph);
+      Assert.AreEqual(4, res.Length);
+    }
+
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void PrimeMSTUnable()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Prim(graph);
+      Assert.AreEqual(4, res.Length);
+    }
+
     private class CharItem : IDependencyItem<char>
     {
       public CharItem(char key, char[] dependencies)

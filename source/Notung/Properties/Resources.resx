@@ -214,4 +214,7 @@
   <data name="MATRIX_UNABLE_TO_MULTIPLY" xml:space="preserve">
     <value>Unable to multiply matrixes: column count in the first matrix is not equal row count in the second</value>
   </data>
+  <data name="GRAPH_DISCONNECTED" xml:space="preserve">
+    <value>Unable to build the tree: graph is disconnected</value>
+  </data>
 </root>
