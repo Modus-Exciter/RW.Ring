@@ -81,15 +81,17 @@ namespace Notung.Data
                       })
                       select a).OrderBy(a => a.Weight);
 
-      var components = new ConnectivityComponent[graph.PeakCount];
-      var result = new Tuple<int, int, T>[graph.PeakCount - 1];
       var arcs_added = 0;
-
-      for (int i = 0; i < components.Length; i++)
-      {
-        components[i].ID = i;
-        components[i].Count = 1;
-      }
+      var result = new Tuple<int, int, T>[graph.PeakCount - 1];
+      var components = ArrayExtensions.CreateAndFill<ConnectivityComponent>
+      (
+        graph.PeakCount, 
+        i => new ConnectivityComponent
+        { 
+          ID = i, 
+          Count = 1 
+        }
+      );
 
       foreach (var arc in all_arcs)
       {

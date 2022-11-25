@@ -77,13 +77,11 @@ namespace Notung.Loader
       if (instance == null)
         throw new ArgumentNullException("instance");
 
-      using (m_lock.WriteLock())
-      {
-        if (!serviceType.IsInstanceOfType(instance))
-          throw new ArgumentException("\"instance\" is not instance of type \"type\"", "instance");
+      if (!serviceType.IsInstanceOfType(instance))
+        throw new ArgumentException("\"instance\" is not instance of type \"type\"", "instance");
 
+      using (m_lock.WriteLock())
         m_creators[serviceType] = () => instance;
-      }
     }
 
     /// <summary>

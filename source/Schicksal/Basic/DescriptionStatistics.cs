@@ -131,9 +131,6 @@ namespace Schicksal.Basic
   {
     internal DescriptionStatisticsEntry() { }
 
-    [Browsable(false)]
-    public string Factor { get; internal set; }
-
     public string Description { get; internal set; }
 
     public double Mean { get; internal set; }
