@@ -638,6 +638,41 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void BoruvkaMST2()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[0, 2] = 4;
+      graph[0, 3] = Math.Sqrt(34);
+      graph[0, 4] = Math.Sqrt(50);
+      graph[1, 2] = Math.Sqrt(18);
+      graph[1, 3] = 4;
+      graph[1, 4] = Math.Sqrt(52);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Boruvka(graph);
+      Assert.AreEqual(4, res.Length);
+      Assert.AreEqual((Math.Sqrt(10) + 4 + Math.Sqrt(10) + Math.Sqrt(10)).ToString("0.000"), 
+        res.Select(t => t.Item3).Sum().ToString("0.000"));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void BoruvkaMSTUnable()
+    {
+      WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
+      graph[0, 1] = Math.Sqrt(10);
+      graph[2, 3] = Math.Sqrt(10);
+      graph[2, 4] = Math.Sqrt(10);
+      graph[3, 4] = Math.Sqrt(20);
+
+      var res = MST.Boruvka(graph);
+      Assert.AreEqual(4, res.Length);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void KruskalMSTUnable()
     {

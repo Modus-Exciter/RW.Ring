@@ -21,7 +21,7 @@ namespace Notung.Data
 
       public bool Empty
       {
-        get { return From == 0; }
+        get { return this.Equals(default(ArcInfo<T>)); }
       }
     }
 
@@ -83,7 +83,7 @@ namespace Notung.Data
 
       var arcs_added = 0;
       var result = new Tuple<int, int, T>[graph.PeakCount - 1];
-      var components = ArrayExtensions.CreateAndFill<ConnectivityComponent>
+      var components = ArrayExtensions.CreateAndFill
       (
         graph.PeakCount, 
         i => new ConnectivityComponent
@@ -194,7 +194,7 @@ namespace Notung.Data
       if (graph.IsOriented)
         throw new ArgumentException(Resources.GRAPH_MUST_NOT_BE_ORIENTED);
 
-      if (graph.PeakCount == 0)
+      if (graph.PeakCount < 2)
         return ArrayExtensions.Empty<Tuple<int, int, T>>();
 
       // Вершина 0  с самого начала считается обработанной
@@ -227,6 +227,94 @@ namespace Notung.Data
           min_arcs.RebuildMinumum(graph, min.From, unprocessed);
         }
         else
+          throw new ArgumentException(Resources.GRAPH_DISCONNECTED);
+      }
+
+      return result;
+    }
+
+    #endregion
+
+    #region Boruvka algorithm ---------------------------------------------------------------------
+
+    /// <summary>
+    /// Алгоритм Борувки
+    /// </summary>
+    /// <typeparam name="T">Тип веса ребра</typeparam>
+    /// <param name="graph">Граф, в котором ищется минимальное остовное дерево</param>
+    /// <returns>Массив рёбер, составляющих минимальное остовное дерево</returns>
+    public static Tuple<int, int, T>[] Boruvka<T>(IWeightedGraph<T> graph) where T : IComparable<T>
+    {
+      if (graph == null)
+        throw new ArgumentNullException("graph");
+
+      if (graph.IsOriented)
+        throw new ArgumentException(Resources.GRAPH_MUST_NOT_BE_ORIENTED);
+
+      if (graph.PeakCount == 0)
+        return ArrayExtensions.Empty<Tuple<int, int, T>>();
+
+      var arcs_added = 0;
+      var result = new Tuple<int, int, T>[graph.PeakCount - 1];
+      var closest = new ArcInfo<T>[graph.PeakCount];
+      var components = ArrayExtensions.CreateAndFill
+      (
+        graph.PeakCount,
+        i => new ConnectivityComponent
+        {
+          ID = i,
+          Count = 1
+        }
+      );
+     
+      var all_arcs = (from i in Enumerable.Range(0, graph.PeakCount)
+                      from a in graph.OutgoingArcs(i)
+                      .Where(a => i < a.Item1).Select(a => new ArcInfo<T>
+                      {
+                        From = i,
+                        To = a.Item1,
+                        Weight = a.Item2
+                      })
+                      select a);
+
+      while (arcs_added < result.Length)
+      {
+        Array.Clear(closest, 0, closest.Length);
+
+        foreach (var arc in all_arcs)
+        {
+          int from_root = components.FindRoot(arc.From);
+          int to_root = components.FindRoot(arc.To);
+
+          if (from_root == to_root)
+            continue;
+
+          if (closest[from_root].Empty || closest[from_root].Weight.CompareTo(arc.Weight) > 0)
+            closest[from_root] = arc;
+
+          if (closest[to_root].Empty || closest[to_root].Weight.CompareTo(arc.Weight) > 0)
+            closest[to_root] = arc;
+        }
+
+        bool added = false;
+
+        foreach (var arc in closest)
+        {
+          if (!arc.Empty)
+          {
+            int from_root = components.FindRoot(arc.From);
+            int to_root = components.FindRoot(arc.To);
+
+            if (from_root != to_root)
+            {
+              result[arcs_added++] = new Tuple<int, int, T>(arc.From, arc.To, arc.Weight);
+              components.Merge(from_root, to_root);
+              added = true;
+            }
+          }
+        }
+
+        if (!added)
           throw new ArgumentException(Resources.GRAPH_DISCONNECTED);
       }
 
