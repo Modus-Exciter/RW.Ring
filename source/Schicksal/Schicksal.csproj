@@ -56,6 +56,10 @@
     <Compile Include="Basic\JoinedDataGroup.cs" />
     <Compile Include="Basic\MultiArrayDataGroup.cs" />
     <Compile Include="Basic\TableMultyDataGroup.cs" />
+    <Compile Include="Clustering\ClusteringParameters.cs" />
+    <Compile Include="Clustering\IArcDeleter.cs" />
+    <Compile Include="Clustering\IDistanceMetrics.cs" />
+    <Compile Include="Clustering\WeightedTableGraph.cs" />
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
     <Compile Include="HtmlWriter.cs" />
