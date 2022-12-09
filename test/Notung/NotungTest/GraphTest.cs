@@ -638,6 +638,18 @@ namespace NotungTest
     }
 
     [TestMethod]
+    public void BoruvkaRing()
+    {
+      WeightedNestedList<int> graph = new WeightedNestedList<int>(3, false);
+      graph[0, 1] = 5;
+      graph[1, 2] = 5;
+      graph[0, 2] = 5;
+
+      var res = MST.Boruvka(graph);
+      Assert.AreEqual(2, res.Length);
+    }
+
+    [TestMethod]
     public void BoruvkaMST2()
     {
       WeightedNestedList<double> graph = new WeightedNestedList<double>(5, false);
