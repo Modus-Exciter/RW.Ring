@@ -484,9 +484,13 @@ namespace Schicksal.Helm
       }
     }
 
-        private void m_menu_analyze_Click(object sender, EventArgs e)
-        {
+    private void m_menu_analyze_Click(object sender, EventArgs e)
+    {
 
-        }
     }
+    private void clusteringToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+
+    }
+  }
 }
