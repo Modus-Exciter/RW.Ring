@@ -229,6 +229,7 @@
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
+    <Content Include="Resources\dot_chart.png" />
     <Content Include="Schicksal.Manual.pdf" />
     <None Include="Properties\DataSources\Schicksal.Regression.CorrelationMetrics.datasource" />
     <None Include="Schicksal.snk" />
