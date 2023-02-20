@@ -1,4 +1,5 @@
-﻿using Schicksal.Basic;
+﻿using System.Linq;
+using Schicksal.Basic;
 
 namespace Schicksal.Anova
 {
@@ -45,6 +46,37 @@ namespace Schicksal.Anova
 
       degrees.MSb = outer_dispersion;
       degrees.MSw = inner_dispersion;
+
+      return degrees;
+    }
+
+    public static FisherMetrics CalculateMultiplyCriteria(ISetMultyDataGroup groups)
+    {
+      var degrees = default(FisherMetrics);
+
+      degrees.Kdf = (uint)groups.Count - 1;
+      degrees.Ndf = (uint)groups.SelectMany(g => g).Sum(g => g.Count) - (uint)groups.Sum(g => g.Count);
+
+      if (degrees.Kdf == 0 || degrees.Ndf == 0)
+        return degrees;
+
+      var average_multi_group = new double[groups.Count];
+      var average = groups.SelectMany(g => g).SelectMany(g => g).Average();
+
+      for (int i = 0; i < groups.Count; i++)
+        average_multi_group[i] = groups[i].SelectMany(g=>g).Average();
+
+      double outer_dispersion = 0;
+      double inner_dispersion = 0;
+
+      foreach (var mg in average_multi_group)
+        outer_dispersion += (mg - average) * (mg - average);
+
+      foreach (var group in groups.SelectMany(g => g))
+        inner_dispersion += DescriptionStatistics.SquareDerivation(group);
+
+      degrees.MSb = outer_dispersion / degrees.Kdf;
+      degrees.MSw = inner_dispersion / degrees.Ndf;
 
       return degrees;
     }

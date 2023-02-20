@@ -41,6 +41,24 @@ namespace Schicksal.Basic
   }
 
   /// <summary>
+  /// Набор данных, состоящий из нескольких выборок
+  /// </summary>
+  public interface ISetMultyDataGroup : IEnumerable<IMultyDataGroup>
+  {
+    /// <summary>
+    /// Количество выборок
+    /// </summary>
+    int Count { get; }
+
+    /// <summary>
+    /// Получение выборки по порядковому номеру
+    /// </summary>
+    /// <param name="index">Порядковый номер набора выборок данных</param>
+    /// <returns>Выборка для анализа</returns>
+    IMultyDataGroup this[int index] { get; }
+  }
+
+  /// <summary>
   /// Набор данных, состоящий из нескольких выборок, с поиском по ключу
   /// </summary>
   /// <typeparam name="T">Тип ключа выборки</typeparam>
