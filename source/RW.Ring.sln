@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33328.57
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RW.Ring.Helm", "RW.Ring.Helm\RW.Ring.Helm.csproj", "{4BE5DB67-00E0-4E7F-A34C-A112337E9CBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norn", "Norn\Norn.csproj", "{D08E1588-14AE-473E-A714-207AB84B3DB4}"
@@ -19,8 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Special", "Special", "{3C7B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotungTest", "..\test\Notung\NotungTest\NotungTest.csproj", "{2201A194-421D-488F-AD04-01B6CC33FCB5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E7C90A07-C930-47D0-BCBE-34919DC5F592}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{841BE70C-7389-4A90-824F-A6DCC9694529}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		Local.testsettings = Local.testsettings
 		RW.Ring.vsmdi = RW.Ring.vsmdi
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
@@ -60,7 +63,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{841BE70C-7389-4A90-824F-A6DCC9694529}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Local.testsettings = Local.testsettings
+		RW.Ring.vsmdi = RW.Ring.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeuerzauberGraphicalTest", "..\test\Notung\FeuerzauberGraphicalTest\FeuerzauberGraphicalTest.csproj", "{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -238,6 +246,18 @@ Global
 		{D53DAB9D-26F6-41FF-99BA-A78AD12D015A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D53DAB9D-26F6-41FF-99BA-A78AD12D015A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D53DAB9D-26F6-41FF-99BA-A78AD12D015A}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -262,6 +282,7 @@ Global
 		{A35FCA0D-6E24-42A0-9E7F-77E241A26C45} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
 		{B89F703D-962C-495B-8B5B-BEC3D46D03A0} = {79C446DC-9735-4F07-88F5-E03AA0A8CA49}
 		{D53DAB9D-26F6-41FF-99BA-A78AD12D015A} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
+		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EAD07C60-7FC6-4434-97EB-F7BBCCDF36E3}
