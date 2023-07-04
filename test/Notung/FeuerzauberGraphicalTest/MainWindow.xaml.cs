@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Notung.Feuerzauber.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +25,11 @@ namespace FeuerzauberGraphicalTest
     {
       InitializeComponent();
     }
-  }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsDialogService settingsDialogService = new SettingsDialogService();
+            settingsDialogService.ShowDialog();
+        }
+    }
 }

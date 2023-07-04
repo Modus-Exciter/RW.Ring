@@ -38,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Configuration\TestPageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,6 +69,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\OuterSectionDataContract.cs" />
+    <Compile Include="Configuration\OuterSectionXml.cs" />
+    <Compile Include="Configuration\TestPage1.cs" />
+    <Compile Include="Configuration\TestPage2.cs" />
+    <Compile Include="Configuration\TestPageView.xaml.cs">
+      <DependentUpon>TestPageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -94,6 +107,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\source\Notung.Feuerzauber\Notung.Feuerzauber.csproj">
+      <Project>{d53dab9d-26f6-41ff-99ba-a78ad12d015a}</Project>
+      <Name>Notung.Feuerzauber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\source\Notung\Notung.csproj">
+      <Project>{ACB28711-7615-48EF-8096-4BE678E22E19}</Project>
+      <Name>Notung</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\DOS TRACK.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
