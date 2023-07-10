@@ -24,8 +24,8 @@ namespace FeuerzauberGraphicalTest.Configuration
 
         public override void InitializationSections(List<Type> configurationSections)
         {
-          //  configurationSections.Add(typeof(OuterSectionDataContract));
-          //  configurationSections.Add(typeof(OuterSectionXml));
+            configurationSections.Add(typeof(OuterSectionDataContract));
+            configurationSections.Add(typeof(OuterSectionXml));
         }
     }
 }

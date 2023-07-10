@@ -31,5 +31,7 @@ namespace FeuerzauberGraphicalTest
             SettingsDialogService settingsDialogService = new SettingsDialogService();
             settingsDialogService.ShowDialog();
         }
+
+     
     }
 }

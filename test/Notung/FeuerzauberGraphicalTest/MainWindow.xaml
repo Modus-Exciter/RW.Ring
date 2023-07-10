@@ -42,7 +42,7 @@
             <Button Content="Run DLL" />
             <Button Content="Open Folder" />
             <Button Content="Background" />
-            <Button Content="Settings" />
+            <Button Content="Settings" Click="Button_Click" />
             <ComboBox Width="114" SelectedIndex="0">
                 <ListBoxItem Content="English" />
                 <ListBoxItem Content="Русский" />
