@@ -69,8 +69,8 @@ namespace Schicksal.Anova
       double outer_dispersion = 0;
       double inner_dispersion = 0;
 
-      foreach (var mg in average_multi_group)
-        outer_dispersion += (mg - average) * (mg - average);
+      for (int i = 0; i < average_multi_group.Length; i++)
+        outer_dispersion += (average_multi_group[i] - average) * (average_multi_group[i] - average) * groups[i].Sum(g => g.Count);
 
       foreach (var group in groups.SelectMany(g => g))
         inner_dispersion += DescriptionStatistics.SquareDerivation(group);
