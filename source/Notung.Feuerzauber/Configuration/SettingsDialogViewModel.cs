@@ -64,7 +64,7 @@ namespace Notung.Feuerzauber.Configuration
         #region prorepty СonfigurationPageSelected
         private ConfigurationPage _сonfigurationPageSelected;
         public ConfigurationPage СonfigurationPageSelected { get => _сonfigurationPageSelected; set => 
-                SetValue("СonfigurationPageSelected", ref _сonfigurationPageSelected, value, СonfigurationPageSelectedChanged); }
+                SetValue(nameof(СonfigurationPageSelected), ref _сonfigurationPageSelected, value, СonfigurationPageSelectedChanged); }
 
         private void СonfigurationPageSelectedChanged(ConfigurationPage obj)
         {
@@ -130,10 +130,12 @@ namespace Notung.Feuerzauber.Configuration
         }
         private void ValidationResultsSelectedChanged(SettingsError obj)
         {
-            if(obj != null)
+      /*      if(obj != null)
             {
+                СonfigurationPageSelected = null;
                 СonfigurationPageSelected = _settingsController.ConfigurationPages.FirstOrDefault(x => x.GetType() == obj.SectionType);
-            }
+             
+            }*/
         }
         #endregion
 
@@ -150,6 +152,7 @@ namespace Notung.Feuerzauber.Configuration
             ApplyCommand = new RelayCommand(ApplyCommandAction, ApplyCommandCanExecute);
             CancelCommand = new RelayCommand(CancelCommandAction, CancelCommandCanExecute);
             ValueChangedCommand = new RelayCommand(ValueChangedCommandAction, ValueChangedCommandCanExecute);
+            ValidationResultSelectedCommand = new RelayCommand(ValidationResultSelectedCommandAction, ValidationResultSelectedCommandCanExecute);
         }
 
         private void ValidationErrors_ListChanged(object sender, ListChangedEventArgs e)
@@ -218,7 +221,22 @@ namespace Notung.Feuerzauber.Configuration
         }
         #endregion
 
+        /// <summary>
+        /// Двойное нажатие нажатия на ошбку
+        /// </summary>
+        #region  ValidationResultSelectedCommand 
+        public ICommand ValidationResultSelectedCommand { get; }
+        private bool ValidationResultSelectedCommandCanExecute(object arg)
+        {
+            return true;
+        }
 
+        private void ValidationResultSelectedCommandAction(object obj)
+        {
+            СonfigurationPageSelected = null;
+            СonfigurationPageSelected = _settingsController.ConfigurationPages.FirstOrDefault(x => x.GetType() == ValidationResultSelected?.SectionType);
+        }
+        #endregion
         /// <summary>
         /// Команда нажатия кнопки Cancel
         /// </summary>

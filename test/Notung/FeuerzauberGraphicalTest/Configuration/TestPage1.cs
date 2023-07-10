@@ -12,7 +12,9 @@ using System.Windows.Media.Imaging;
 
 namespace FeuerzauberGraphicalTest.Configuration
 {
-    [ConfigurationSectionView(Type = typeof(TestPageView))]
+
+    [ConfigurationPageView(Type = typeof(TestPageView))]
+    
     public class TestPage1 : ConfigurationPage
     {
         public override string Title => "Тестовая страница";
@@ -22,8 +24,8 @@ namespace FeuerzauberGraphicalTest.Configuration
 
         public override void InitializationSections(List<Type> configurationSections)
         {
-            configurationSections.Add(typeof(OuterSectionDataContract));
-            configurationSections.Add(typeof(OuterSectionXml));
+          //  configurationSections.Add(typeof(OuterSectionDataContract));
+          //  configurationSections.Add(typeof(OuterSectionXml));
         }
     }
 }

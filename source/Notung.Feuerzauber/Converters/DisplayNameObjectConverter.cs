@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -7,25 +8,26 @@ using System.Windows.Data;
 
 namespace Notung.Feuerzauber.Converters
 {
-    [ValueConversion(typeof(Type), typeof(object))]
+   [ValueConversion(typeof(object), typeof(string))]
     /// <summary>
     /// Создание  обьекта на основании обьекта Type 
     /// </summary>
-    public class TypeToObjectConverter : IValueConverter
+    public class DisplayNameObjectConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if(value != null && value is Type tp)
+            var type = value.GetType();
+            DisplayNameAttribute ana = type.GetCustomAttribute<DisplayNameAttribute>();
+            if (ana != null)
             {
-                return Activator.CreateInstance(tp);
+                return ana.DisplayName; 
             }
-            return null;
+            return type.Name;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
-                return value.GetType();
+           
             return null;
         }
     }

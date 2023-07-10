@@ -10,7 +10,7 @@ using System.Text;
 
 namespace FeuerzauberGraphicalTest.Configuration
 {
-
+    [DisplayName("Outer section data contract")]
     public class OuterSectionDataContract : ConfigurationSection
     {
 
@@ -27,6 +27,12 @@ namespace FeuerzauberGraphicalTest.Configuration
         [DefaultValue(true)]
         [TemplateView(Template = TemplatesView.CheckBox)]
         public bool BoolValue { get; set; }
+
+        [DisplayName("Язык")]
+        [TemplateView(Template = TemplatesView.ComboBox)]
+        [ListItem(TypeList = typeof(ListLanguages))]
+        public string ListValue { get;
+            set; }
         public override bool Validate(InfoBuffer buffer)
         {
             bool result = true;
@@ -47,6 +53,11 @@ namespace FeuerzauberGraphicalTest.Configuration
             {
                 buffer.Add("Number must be more than 1", InfoLevel.Warning);
                 result =  false;
+            }
+            if (string.IsNullOrWhiteSpace(ListValue))
+            {
+                buffer.Add("ListValue Null", InfoLevel.Warning);
+                result = false;
             }
 
             return result;

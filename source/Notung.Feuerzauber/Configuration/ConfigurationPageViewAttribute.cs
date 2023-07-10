@@ -6,7 +6,7 @@ using System.Text;
 namespace Notung.Feuerzauber.Configuration
 {
    
-    public class ConfigurationSectionViewAttribute : Attribute
+    public class ConfigurationPageViewAttribute : Attribute
     {
         public Type Type { get; set; }
     }

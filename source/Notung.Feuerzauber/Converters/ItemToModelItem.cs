@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Notung.Feuerzauber.Configuration;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -42,20 +43,31 @@ namespace Notung.Feuerzauber.Converters
 
     public class ModelItem
     {
+        private ListItemBase _listItemBase;
         public ModelItem(PropertyInfo property, object source)
         {
             Property = property;
-            var attr = property.GetCustomAttribute<DisplayNameAttribute>();
+            var displayNameAttribute = property.GetCustomAttribute<DisplayNameAttribute>();
             string dn = string.Empty;
-            if (attr != null)
+            if (displayNameAttribute != null)
             {
-                DisplayName =  attr.DisplayName;
+                DisplayName = displayNameAttribute.DisplayName;
             }
             else
             {
                 DisplayName = property.Name;
             }
+            var templateViewAttribute = Property.GetCustomAttribute<TemplateViewAttribute>();
+            if(templateViewAttribute != null)
+            {
+                Template = templateViewAttribute.Template;
+            }
 
+            var listItemAttribute = property.GetCustomAttribute<ListItemAttribute>();
+            if (listItemAttribute != null)
+            {
+                _listItemBase = (ListItemBase)Activator.CreateInstance(listItemAttribute.TypeList);
+            }
             Source = source;
         }
              
@@ -63,5 +75,9 @@ namespace Notung.Feuerzauber.Converters
         public string DisplayName { get; set; }
         public string Path { get => Property.Name; }
         public object Source { get; set; }
+
+        public TemplatesView Template { get; set; } = TemplatesView.None;
+
+        public IEnumerable<object> ListItem { get => _listItemBase?.GetList(); }
     } 
 }

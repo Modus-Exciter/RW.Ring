@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 namespace FeuerzauberGraphicalTest.Configuration
 {
     [XmlRoot]
+    [DisplayName("Outer section xml")]
     public class OuterSectionXml : ConfigurationSection
     {
 

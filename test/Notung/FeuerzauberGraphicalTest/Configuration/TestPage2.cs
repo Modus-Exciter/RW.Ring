@@ -14,10 +14,10 @@ namespace FeuerzauberGraphicalTest.Configuration
     
     public class TestPage2 : ConfigurationPage
     {
-        public override string Title => "Тестовая страница 2";
+        public override string Title => "Автоматическая тестовая страница";
 
         public override Image Image => Properties.Resources.DOS_TRACK;
-        public override bool UIThreadValidation => false;
+        public override bool UIThreadValidation => true;
 
         public override void InitializationSections(List<Type> configurationSections)
         {

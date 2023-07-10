@@ -51,8 +51,10 @@
   <ItemGroup>
     <Compile Include="Configuration\BindingHelper.cs" />
     <Compile Include="Configuration\ConfigurationPage.cs" />
+    <Compile Include="Configuration\ListItemAttribute.cs" />
+    <Compile Include="Configuration\ListItemBase.cs" />
     <Compile Include="Configuration\TemplateViewAttribute.cs" />
-    <Compile Include="Configuration\ConfigurationSectionViewAttribute.cs" />
+    <Compile Include="Configuration\ConfigurationPageViewAttribute.cs" />
     <Compile Include="Configuration\ContentControlHelper.cs" />
     <Compile Include="Configuration\SettingsItemDataTemplateSelector.cs" />
     <Compile Include="Configuration\IConfiguratorExtensions.cs" />
@@ -82,7 +84,7 @@
     <Compile Include="Converters\BoolToGridRowHeightConverter.cs" />
     <Compile Include="Converters\ItemToModelItem.cs" />
     <Compile Include="Converters\MathOpertorConverter.cs" />
-    <Compile Include="Converters\TypeToObjectConverter.cs" />
+    <Compile Include="Converters\DisplayNameObjectConverter.cs" />
     <Compile Include="Dialogs\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>

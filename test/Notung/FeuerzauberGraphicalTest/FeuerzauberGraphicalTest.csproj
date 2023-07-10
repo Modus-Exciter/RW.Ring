@@ -70,6 +70,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Configuration\ListLanguages.cs" />
     <Compile Include="Configuration\OuterSectionDataContract.cs" />
     <Compile Include="Configuration\OuterSectionXml.cs" />
     <Compile Include="Configuration\TestPage1.cs" />

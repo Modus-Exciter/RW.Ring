@@ -15,6 +15,7 @@ namespace Notung.Feuerzauber.Configuration
     {
         None = 0,
         TextBox = 1,
-        CheckBox = 2
+        CheckBox = 2,
+        ComboBox = 3
     }
 }

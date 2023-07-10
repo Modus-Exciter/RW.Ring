@@ -59,22 +59,31 @@ namespace Notung.Feuerzauber.Configuration
                 void SettingsControllerPropertyChanged(object sender, PropertyChangedEventArgs ee)
                 {
                     SettingsDialogViewModel s = sender as SettingsDialogViewModel;
+                    if (s == null)
+                        return;
                     switch (ee.PropertyName)
                     {
                         case nameof(s.СonfigurationPageSelected):
-                            ConfigurationSectionViewAttribute attribute = s.СonfigurationPageSelected.GetType().GetCustomAttribute<ConfigurationSectionViewAttribute>();
+                            if (s.СonfigurationPageSelected == null)
+                                return;
+                            ConfigurationPageViewAttribute attribute = s.СonfigurationPageSelected.GetType().GetCustomAttribute<ConfigurationPageViewAttribute>();
                             FrameworkElement fe = null;
+                            if (cc.Content is FrameworkElement ccc && ccc != null)
+                            {
+                                ccc.Loaded += ContentPresenterLoaded;
+                            }
+
                             if (attribute != null) //Пользовательская форма
                             {
-                                 fe = Activator.CreateInstance(attribute.Type) as FrameworkElement;
-                               
+                                fe = Activator.CreateInstance(attribute.Type) as FrameworkElement;
+
 
                             }
                             else //Стандарная форма
                             {
-                                  
+
                                 fe = new SettingsDefaultPage();
-                      
+
                             }
                             fe.Loaded += ContentPresenterLoaded;
                             cc.Content = fe;
@@ -83,16 +92,13 @@ namespace Notung.Feuerzauber.Configuration
                             break;
                     }
                 }
-                 void ContentPresenterLoaded(object sender, RoutedEventArgs ee)
+                void ContentPresenterLoaded(object sender, RoutedEventArgs ee)
                 {
-                    DependencyObject s = sender as DependencyObject;
-                    List<Binding> bindings = new List<Binding>();
-                    GetBindingsRecursive(s, cc);
-                  
+                    GetBindingsRecursive(sender as DependencyObject, cc);
                 }
 
 
-               
+
             }
         }
 
@@ -114,15 +120,28 @@ namespace Notung.Feuerzauber.Configuration
                         DependencyPropertyDescriptor dp1 = DependencyPropertyDescriptor.FromProperty(property);
 
                       
-                        if (dp1 != null)
+                        if (dp1 != null && dp1.Name != "ItemsSource")
                         {
-                            var binding = BindingOperations.GetBinding(child, dp1.DependencyProperty);
-                            if(binding != null && !string.IsNullOrWhiteSpace(binding.Path.Path))
+                           
+                            var bindingExpression = BindingOperations.GetBindingExpression(child, dp1.DependencyProperty);
+                            if (bindingExpression != null && !string.IsNullOrWhiteSpace(bindingExpression.ParentBinding.Path.Path))
                             {
-                                Debug.WriteLine($"{child.ToString()} : {dp1.DependencyProperty.Name}");
-                                Binding binding1 = new Binding(binding.Path.Path);
-                                if (binding.Source != null)
-                                    binding1.Source = binding.Source;
+
+
+                                if (bindingExpression.DataItem is DependencyObject) //Если обьект привязки связан с DependencyObject то игнорируем дальнейшую привязку
+                                {
+                                    continue;
+                                }
+                             
+                                Binding binding1 = new Binding(bindingExpression.ParentBinding.Path.Path);
+                              
+
+                                if (bindingExpression.ParentBinding.Source != null)
+                                {
+                                    binding1.Source = bindingExpression.ParentBinding.Source;
+
+                                }
+                                  
                                 binding1.Mode = BindingMode.TwoWay;
                                 fe.SetBinding(BindingHelper.BoundValueProperty, binding1);
 
@@ -134,11 +153,7 @@ namespace Notung.Feuerzauber.Configuration
 
 
                             }
-                          /*  dp1.AddValueChanged(child, (s, e) => 
-                            {
-                                GetSettingsValueChanged(cc)?.Execute(null);
-                            });*/
-
+                        
                         }
                       
                       

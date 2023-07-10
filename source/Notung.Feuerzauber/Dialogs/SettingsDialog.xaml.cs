@@ -26,11 +26,16 @@ namespace Notung.Feuerzauber.Dialogs
 
 
 
-            this.Loaded += (s, e) => {
+            this.Loaded += (s, e) =>
+            {
                 if (this.DataContext is Configuration.SettingsDialogViewModel controller) controller?.LoadedCommand?.Execute(null);
             };
+            this.ErrorsList.MouseDoubleClick += (s, e) =>
+            {
+                if (this.DataContext is Configuration.SettingsDialogViewModel controller) controller?.ValidationResultSelectedCommand?.Execute(null);
+            };
         }
-        private void ContentControl_SourceUpdated(object sender, DataTransferEventArgs e)
+            private void ContentControl_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             Debug.WriteLine(e.TargetObject);
         }
@@ -39,6 +44,12 @@ namespace Notung.Feuerzauber.Dialogs
         private void ContentControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
 
+        }
+
+        private void ListBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is ListBox lb && lb.IsFocused)
+                lb.SelectedItem = null;
         }
     }
 }

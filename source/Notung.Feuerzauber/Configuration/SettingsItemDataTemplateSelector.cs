@@ -12,21 +12,23 @@ namespace Notung.Feuerzauber.Configuration
     {
         public DataTemplate TextTemplate { get; set; }
         public DataTemplate CheckBoxTemplate { get; set; }
-
+        public DataTemplate ComboBoxTemplate { get; set; }
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
 
             if (item is ModelItem mi)
             {
-                var attr = mi.Property.GetCustomAttribute<TemplateViewAttribute>();
+              
 
-                if (attr == null || attr.Template == TemplatesView.None || attr.Template == TemplatesView.TextBox)
+                if (mi.Template == TemplatesView.None || mi.Template == TemplatesView.TextBox)
                     return TextTemplate;
                
-                switch(attr.Template)
+                switch(mi.Template)
                 {
                     case TemplatesView.CheckBox:
                         return CheckBoxTemplate;
+                    case TemplatesView.ComboBox:
+                        return ComboBoxTemplate;
                 }
             }
 

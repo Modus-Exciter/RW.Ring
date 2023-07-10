@@ -12,6 +12,7 @@
       >
 
     <UserControl.Resources>
+        <Converters:DisplayNameObjectConverter x:Key="DisplayNameObjectConverter"/>
         <Converters:ItemToModelItem x:Key="ItemToModelItem"/>
 
         <DataTemplate x:Key="TextTemplate">
@@ -21,16 +22,18 @@
         <DataTemplate x:Key="CheckBoxTemplate">
             <CheckBox conf:BindingHelper.SourceModelItem="{Binding}"   conf:BindingHelper.PropertyName="IsChecked"   />
         </DataTemplate>
-
+        <DataTemplate x:Key="ComboBoxTemplate">
+            <ComboBox conf:BindingHelper.SourceModelItem="{Binding}"     ItemsSource="{Binding ListItem}" conf:BindingHelper.PropertyName="SelectedItem"   />
+        </DataTemplate>
         <conf:SettingsItemDataTemplateSelector x:Key="TemplateSelector"
                                       TextTemplate="{StaticResource TextTemplate}"
-                                      CheckBoxTemplate="{StaticResource CheckBoxTemplate}" />
+                                      CheckBoxTemplate="{StaticResource CheckBoxTemplate}" ComboBoxTemplate="{StaticResource ComboBoxTemplate}" />
     </UserControl.Resources>
 
     <ItemsControl ItemsSource="{Binding}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
-                <GroupBox Header="Contract settings">
+                <GroupBox Header="{Binding Converter={StaticResource DisplayNameObjectConverter}, Mode=OneWay}">
                     <ItemsControl ItemsSource="{Binding Converter={StaticResource ItemToModelItem}, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
