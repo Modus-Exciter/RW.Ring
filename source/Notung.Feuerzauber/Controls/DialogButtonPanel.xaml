@@ -59,7 +59,7 @@
                 </Button.Style>
             </Button>
             <Button Content="OK" 
-                    Padding="20,0"
+                    Padding="0"
                     Command="{x:Static fz:WindowHelper.CloseYes}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
                 <Button.Style>

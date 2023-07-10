@@ -6,112 +6,139 @@
         xmlns:local="clr-namespace:Notung.Feuerzauber.Dialogs"
         xmlns:conf ="clr-namespace:Notung.Feuerzauber.Configuration"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
+             Style="{DynamicResource dialogWindow}"
     xmlns:control="clr-namespace:Notung.Feuerzauber.Controls"
   
         xmlns:Converters="clr-namespace:Notung.Feuerzauber.Converters" x:Name="window" x:Class="Notung.Feuerzauber.Dialogs.SettingsDialog"
         mc:Ignorable="d"
 
     Icon="{DynamicResource Icon}"
+  
     Title="Настройки" Height="450" Width="800">
 
     <Window.Resources>
-        <Converters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter"/>
-        <Converters:BoolToGridRowHeightConverter x:Key="BoolToGridRowHeightConverter"/>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ResourceDictionary>
 
-        <BitmapImage x:Key="Icon" >/Notung.Feuerzauber;component/Resources/settings.ico</BitmapImage>
+            <Converters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter"/>
+            <Converters:BoolToGridRowHeightConverter x:Key="BoolToGridRowHeightConverter"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+            <BitmapImage x:Key="Icon" >/Notung.Feuerzauber;component/Resources/settings.ico</BitmapImage>
+            <Style TargetType="Button" x:Key="dialogButton" BasedOn="{StaticResource ResourceKey={x:Type Button}}">
+                <Setter Property="Margin" Value="3,0"></Setter>
+                <Setter Property="Padding" Value="20,0"></Setter>
+            </Style>
+
+        </ResourceDictionary>
+       
+
     </Window.Resources>
 
 
+    <Border x:Name="RootContainer" 
+            CornerRadius="6,6,3,3"
+            BorderBrush="Gray"
+            BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <control:DialogHeader />
+            <Border  Grid.Row="1" Background="Gainsboro" CornerRadius="0,0,2,2">
+                <Grid>
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="{Binding ShowValidationResults, Converter={StaticResource BoolToGridRowHeightConverter}, ConverterParameter=2}"/>
+                        <RowDefinition Height="{Binding ShowValidationResults, Converter={StaticResource BoolToGridRowHeightConverter}}" MaxHeight="200"/>
+                        <RowDefinition Height="34"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200*"/>
+                        <ColumnDefinition Width="2"/>
+                        <ColumnDefinition Width="500*"/>
+                    </Grid.ColumnDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="{Binding ShowValidationResults, Converter={StaticResource BoolToGridRowHeightConverter}, ConverterParameter=2}"/>
-            <RowDefinition Height="{Binding ShowValidationResults, Converter={StaticResource BoolToGridRowHeightConverter}}" MaxHeight="200"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200*"/>
-            <ColumnDefinition Width="2"/>
-            <ColumnDefinition Width="500*"/>
-        </Grid.ColumnDefinitions>
+                    <ListView  ScrollViewer.HorizontalScrollBarVisibility="Disabled"   HorizontalContentAlignment="Stretch"  SelectedItem="{Binding СonfigurationPageSelected, Mode=TwoWay}"  ItemsSource="{Binding ConfigurationPagesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" >
+                        <ListView.Style>
+                            <Style TargetType="ListView">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="LostFocus">
+                                        <EventTrigger.Actions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="SelectedItem">
+                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Null}" />
+                                                    </ObjectAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger.Actions>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.Style>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate >
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="2"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-        <ListView  ScrollViewer.HorizontalScrollBarVisibility="Disabled"   HorizontalContentAlignment="Stretch"  SelectedItem="{Binding СonfigurationPageSelected, Mode=TwoWay}"  ItemsSource="{Binding ConfigurationPagesList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" >
-            <ListView.Style>
-                <Style TargetType="ListView">
-                    <Style.Triggers>
-                        <EventTrigger RoutedEvent="LostFocus">
-                            <EventTrigger.Actions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="SelectedItem">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Null}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger.Actions>
-                        </EventTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ListView.Style>
-            <ListBox.ItemTemplate>
-                <DataTemplate >
-                    <Grid >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="30"/>
-                            <ColumnDefinition Width="2"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                                    <Image    Stretch="Uniform" Margin="5,0,5,0" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Image.Source>
+                                            <Binding Path="Image" Converter="{StaticResource ImageToBitmapSourceConverter}" TargetNullValue="{StaticResource Icon}" >
 
-                        <Image    Stretch="Uniform" Margin="5,0,5,0" Height="30" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image.Source>
-                                <Binding Path="Image" Converter="{StaticResource ImageToBitmapSourceConverter}" TargetNullValue="{StaticResource Icon}" >
+                                            </Binding>
+                                        </Image.Source>
 
-                                </Binding>
-                            </Image.Source>
+                                    </Image>
+                                    <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="2" Text="{Binding Title}"  Margin="0,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="4" Visibility="{Binding PageСhanged, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Center" >*</TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListView>
 
-                        </Image>
-                        <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="2" Text="{Binding Title}"  Margin="0,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                        <TextBlock Grid.Column="4" Visibility="{Binding PageСhanged, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Stretch" VerticalAlignment="Center" >*</TextBlock>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListView>
+                    <ContentControl  Grid.Column="2" conf:ContentControlHelper.SettingsValueChanged="{Binding ValueChangedCommand}" conf:ContentControlHelper.SettingsController="{Binding DataContext, ElementName=window}"    Margin="5"/>
+                    <ListBox x:Name="ErrorsList" SelectedItem="{Binding ValidationResultSelected, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  HorizontalContentAlignment="Stretch" ItemsSource="{Binding ValidationResults}"  Grid.ColumnSpan="3"  Margin="5" Grid.Row="2" LostFocus="ListBox_LostFocus"   >
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                                        <ColumnDefinition Width="10"></ColumnDefinition>
+                                        <ColumnDefinition  MinWidth="100" Width="Auto"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock  TextWrapping="WrapWithOverflow" Text="{Binding Message}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+                                    <TextBlock  Text="{Binding Level}" Grid.Column="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Right" ></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <GridSplitter  Grid.Column="1" Margin="0" HorizontalAlignment="Stretch" />
+                    <GridSplitter  Grid.Row="1" Grid.ColumnSpan="3" Margin="0" HorizontalAlignment="Stretch" />
+                    <WrapPanel    Grid.Column="2"  Margin="5,5,5,5" Grid.Row="3" FlowDirection="RightToLeft">
+                        <WrapPanel.Resources>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Margin" Value="1,0,1,0" />
+                                <Setter Property="Padding" Value="10,0,10,0" />
+                                <Setter Property="MinWidth" Value="70" />
+                            </Style>
+                        </WrapPanel.Resources>
+                        <Button Content="Cancel" Command="{ Binding CancelCommand}" TabIndex="2" Style="{StaticResource dialogButton}" />
+                        <Button Content="Apply"  Command="{Binding ApplyCommand}" TabIndex="1" Style="{StaticResource dialogButton}" />
+                        <Button Content="OK" Command="{Binding OKCommand}" Style="{StaticResource dialogButton}"  TabIndex="0" />
 
-        <ContentControl  Grid.Column="2" conf:ContentControlHelper.SettingsValueChanged="{Binding ValueChangedCommand}" conf:ContentControlHelper.SettingsController="{Binding DataContext, ElementName=window}"    Margin="5"/>
-        <ListBox x:Name="ErrorsList" SelectedItem="{Binding ValidationResultSelected, Mode=TwoWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  HorizontalContentAlignment="Stretch" ItemsSource="{Binding ValidationResults}"  Grid.ColumnSpan="3"  Margin="5" Grid.Row="2" LostFocus="ListBox_LostFocus"   >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                            <ColumnDefinition Width="10"></ColumnDefinition>
-                            <ColumnDefinition  MinWidth="100" Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock  TextWrapping="WrapWithOverflow" Text="{Binding Message}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
-                        <TextBlock  Text="{Binding Level}" Grid.Column="2" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Right" ></TextBlock>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <GridSplitter  Grid.Column="1" Margin="0" HorizontalAlignment="Stretch" />
-        <GridSplitter  Grid.Row="1" Grid.ColumnSpan="3" Margin="0" HorizontalAlignment="Stretch" />
-        <WrapPanel    Grid.Column="2"  Margin="5,5,5,5" Grid.Row="3" FlowDirection="RightToLeft">
-            <WrapPanel.Resources>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Margin" Value="1,0,1,0" />
-                    <Setter Property="Padding" Value="10,0,10,0" />
-                    <Setter Property="MinWidth" Value="70" />
-                </Style>
-            </WrapPanel.Resources>
-            <Button Content="Cancel" Command="{ Binding CancelCommand}" TabIndex="2" />
-            <Button Content="Apply"  Command="{Binding ApplyCommand}" TabIndex="1" />
-            <Button Content="OK" Command="{Binding OKCommand}"  TabIndex="0" />
+                    </WrapPanel>
+                </Grid>
 
-        </WrapPanel>
-    </Grid>
+            </Border>
+        </Grid>
+
+    </Border>
 </Window>
