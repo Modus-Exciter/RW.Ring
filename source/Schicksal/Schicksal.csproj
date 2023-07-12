@@ -76,6 +76,7 @@
     <Compile Include="Regression\DataGroupColumn.cs" />
     <Compile Include="Regression\RegressionDependency.cs" />
     <Compile Include="Regression\RegressionHtmlSaver.cs" />
+    <Compile Include="Regression\RegressionMath.cs" />
     <Compile Include="SchicksalResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
