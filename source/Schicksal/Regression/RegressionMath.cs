@@ -105,24 +105,24 @@ namespace Schicksal.Regression
 
     public static class MathFunction
     {
-        public delegate double Function(double x);                                                //Шаблон обычной функции
-        public delegate double MultyFunction(double[] x);                                         //Шаблон функции от вектора
-        public delegate double ParamFunction(double x, double[] t);                               //Шаблон параметрической 
+        public delegate double Function(double x);
+        public delegate double MultyFunction(double[] x);
+        public delegate double ParamFunction(double x, double[] t);
 
-        public static double LogisticFunction(double x, double[] t)                               //Параметрическая логистическая функция
+        public static double LogisticFunction(double x, double[] t)
         {
             if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
             double power = Math.Pow(t[1], x);
             return t[0] * power / (t[2] + power);
         }
 
-        public static double LinearFunction(double x, double[] t)                                 //Параметрическая линейная функция
+        public static double LinearFunction(double x, double[] t)
         {
             if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
             return t[0] * x + t[1];
         }
 
-        public static double StandartVariance(IDataGroup x, IDataGroup y, Function regrFunction)    //Стандартная несмещенная дисперсия
+        public static double StandartVariance(IDataGroup x, IDataGroup y, Function regrFunction)
         {
             if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
 
@@ -140,7 +140,7 @@ namespace Schicksal.Regression
                 res += val;
             return res / x.Count;
         }
-        public static double PlainVariance(IDataGroup y)    //Стандартная несмещенная дисперсия
+        public static double PlainVariance(IDataGroup y)
         {
             double res = 0;
             double m = Mean(y);
@@ -236,12 +236,12 @@ namespace Schicksal.Regression
 
     public class LikelyhoodFunction
     {
-        IDataGroup x;                               //Массив факторов
-        IDataGroup y;                               //Массив эффектов
-        IDataGroup residual;                        //Массив невязок
-        int n;                                      //Размер выборки
-        MathFunction.ParamFunction regrFunction;    //Регрессируемая функция
-        MathFunction.Function varFunction;          //Функция дисперсии
+        IDataGroup x;
+        IDataGroup y;
+        IDataGroup residual;
+        int n;
+        MathFunction.ParamFunction regrFunction;
+        MathFunction.Function varFunction;
 
         public LikelyhoodFunction(IDataGroup x, IDataGroup y, MathFunction.ParamFunction regrFunction, MathFunction.Function varFunction = null)
         {
@@ -251,12 +251,10 @@ namespace Schicksal.Regression
             this.regrFunction = regrFunction;
             this.varFunction = varFunction;
         }
-        //Расчет функции правдоподобия
         public double Calculate(double[] t)
         {
             return varFunction == null ? calc(t) : calc(t, varFunction);
         }
-        //Расчет значения функции правдоподобия с постоянной дисперсией
         private double calc(double[] t)
         {
             double res = 10E100;
@@ -272,7 +270,6 @@ namespace Schicksal.Regression
 
             return res;
         }
-        //Расчет значения функции правдоподобия с взвешенной дисперсией
         private double calc(double[] t, MathFunction.Function varFunction)
         {
             double res = 10E100;
@@ -292,8 +289,6 @@ namespace Schicksal.Regression
 
             return res;
         }
-
-        //Расчет относительного значения значений невязок при заданном параметре для регресионной функции
         public IDataGroup CalculateResidual(double[] t)
         {
             double[] res = new double[n];
