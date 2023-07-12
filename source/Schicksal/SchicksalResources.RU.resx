@@ -162,6 +162,9 @@
   <data name="LINEAR" xml:space="preserve">
     <value>Прямая линия</value>
   </data>
+  <data name="LOGISTIC" xml:space="preserve">
+    <value>Логистическая кривая</value>
+  </data>
   <data name="MAX" xml:space="preserve">
     <value>Максимум</value>
   </data>

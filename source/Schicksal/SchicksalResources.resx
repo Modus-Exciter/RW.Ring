@@ -162,6 +162,9 @@
   <data name="LINEAR" xml:space="preserve">
     <value>Straight line</value>
   </data>
+  <data name="LOGISTIC" xml:space="preserve">
+    <value>Logistic curve</value>
+  </data>
   <data name="MAX" xml:space="preserve">
     <value>Maximum</value>
   </data>
