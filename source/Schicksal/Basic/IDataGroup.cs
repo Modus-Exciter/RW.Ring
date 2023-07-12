@@ -168,4 +168,43 @@ namespace Schicksal.Basic
       return m_data.GetEnumerator();
     }
   }
+
+  public sealed class SetMultiArrayDataGroup : ISetMultyDataGroup
+  {
+    private readonly IMultyDataGroup[] m_data;
+
+    public SetMultiArrayDataGroup(IMultyDataGroup[] data)
+    {
+      if (data == null)
+        throw new ArgumentNullException("data");
+
+      for (int i = 0; i < data.Length; i++)
+      {
+        if (data[i] == null)
+          throw new ArgumentNullException(string.Format("data[{0}]", i));
+      }
+
+      m_data = data;
+    }
+
+    public IMultyDataGroup this[int index]
+    {
+      get { return m_data[index]; }
+    }
+
+    public int Count
+    {
+      get { return m_data.Length; }
+    }
+
+    public IEnumerator<IMultyDataGroup> GetEnumerator()
+    {
+      return ((IList<IMultyDataGroup>)m_data).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return m_data.GetEnumerator();
+    }
+  }
 }
