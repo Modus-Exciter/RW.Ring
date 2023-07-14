@@ -16,7 +16,7 @@ namespace Schicksal.Basic
     private readonly DataTable m_table;
     private readonly DataViewGroup[] m_views;
     private readonly Dictionary<string, int> m_indexes;
-
+        
     /// <summary>
     /// Инициализация новой обёртки над таблицей для статистического анализа
     /// </summary>

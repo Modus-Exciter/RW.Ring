@@ -117,256 +117,256 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="m_button_no.Text" xml:space="preserve">
-    <value>No</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="m_summary_label.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
-  </data>
-  <data name="&gt;&gt;m_button_ok.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;m_button_ok.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="m_top_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 5</value>
-  </data>
-  <data name="&gt;&gt;m_button_ok.Parent" xml:space="preserve">
-    <value>m_bottom_panel</value>
-  </data>
-  <data name="&gt;&gt;m_top_panel.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_buffer_view.Name" xml:space="preserve">
-    <value>m_buffer_view</value>
-  </data>
-  <data name="&gt;&gt;m_buffer_view.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;m_bottom_panel.Name" xml:space="preserve">
-    <value>m_bottom_panel</value>
-  </data>
-  <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 262</value>
-  </data>
-  <data name="m_summary_label.Size" type="System.Drawing.Size, System.Drawing">
-    <value>466, 32</value>
-  </data>
-  <data name="m_bottom_panel.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
-    <value>RightToLeft</value>
-  </data>
-  <data name="m_buffer_view.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="&gt;&gt;m_top_panel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+  <data name="m_button_cancel.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
   <data name="m_button_cancel.Location" type="System.Drawing.Point, System.Drawing">
     <value>388, 8</value>
   </data>
-  <data name="m_summary_label.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="&gt;&gt;m_button_cancel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_button_ok.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="m_top_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="&gt;&gt;m_bottom_panel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_summary_label.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt</value>
-  </data>
-  <data name="m_button_no.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="m_top_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 5</value>
-  </data>
-  <data name="&gt;&gt;m_summary_label.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_buffer_view.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 42</value>
-  </data>
-  <data name="m_button_ok.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="m_bottom_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="&gt;&gt;m_summary_label.Name" xml:space="preserve">
-    <value>m_summary_label</value>
-  </data>
-  <data name="m_buffer_view.Size" type="System.Drawing.Size, System.Drawing">
-    <value>466, 220</value>
-  </data>
-  <data name="&gt;&gt;m_button_no.Parent" xml:space="preserve">
-    <value>m_bottom_panel</value>
-  </data>
-  <data name="m_button_ok.Location" type="System.Drawing.Point, System.Drawing">
-    <value>307, 8</value>
-  </data>
-  <data name="m_button_ok.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="m_button_no.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;m_button_yes.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_button_yes.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="m_buffer_view.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="m_button_yes.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;m_buffer_view.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;m_button_yes.Parent" xml:space="preserve">
-    <value>m_bottom_panel</value>
-  </data>
-  <data name="m_button_cancel.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;m_top_panel.Name" xml:space="preserve">
-    <value>m_top_panel</value>
-  </data>
-  <data name="m_top_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>466, 37</value>
-  </data>
-  <data name="m_button_yes.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="m_button_ok.Text" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="&gt;&gt;m_button_no.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="m_summary_label.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="&gt;&gt;m_button_no.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_button_cancel.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="m_button_cancel.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="m_button_cancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 23</value>
   </data>
-  <data name="&gt;&gt;m_button_no.Name" xml:space="preserve">
-    <value>m_button_no</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>476, 299</value>
-  </data>
-  <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>466, 32</value>
-  </data>
-  <data name="&gt;&gt;m_top_panel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;m_button_yes.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="m_button_yes.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;m_bottom_panel.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;m_button_cancel.Parent" xml:space="preserve">
-    <value>m_bottom_panel</value>
-  </data>
-  <data name="&gt;&gt;m_button_yes.Name" xml:space="preserve">
-    <value>m_button_yes</value>
-  </data>
-  <data name="m_button_no.Size" type="System.Drawing.Size, System.Drawing">
-    <value>75, 23</value>
-  </data>
-  <data name="&gt;&gt;m_button_cancel.Name" xml:space="preserve">
-    <value>m_button_cancel</value>
-  </data>
-  <data name="m_summary_label.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="m_button_yes.Text" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>InfoBufferForm</value>
-  </data>
-  <data name="m_button_no.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
-  </data>
-  <data name="&gt;&gt;m_summary_label.ZOrder" xml:space="preserve">
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_button_cancel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="m_button_cancel.Text" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="&gt;&gt;m_buffer_view.Type" xml:space="preserve">
-    <value>Notung.Helm.Controls.InfoBufferView, Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41</value>
+  <data name="m_button_cancel.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
   </data>
-  <data name="$this.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+  <data name="&gt;&gt;m_button_cancel.Name" xml:space="preserve">
+    <value>m_button_cancel</value>
   </data>
-  <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 5, 0, 0</value>
+  <data name="&gt;&gt;m_button_cancel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="m_button_cancel.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;m_button_cancel.Parent" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_button_cancel.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="&gt;&gt;m_summary_label.Parent" xml:space="preserve">
-    <value>m_top_panel</value>
+  <data name="m_button_ok.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
-  <data name="&gt;&gt;m_bottom_panel.Parent" xml:space="preserve">
-    <value>$this</value>
+  <data name="m_button_ok.Location" type="System.Drawing.Point, System.Drawing">
+    <value>307, 8</value>
   </data>
-  <data name="m_top_panel.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="m_button_ok.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="m_button_ok.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_button_ok.Text" xml:space="preserve">
+    <value>OK</value>
   </data>
   <data name="&gt;&gt;m_button_ok.Name" xml:space="preserve">
     <value>m_button_ok</value>
   </data>
-  <data name="m_button_yes.Location" type="System.Drawing.Point, System.Drawing">
-    <value>145, 8</value>
+  <data name="&gt;&gt;m_button_ok.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="m_button_no.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="&gt;&gt;m_button_ok.Parent" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_button_ok.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_button_yes.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="m_button_yes.Location" type="System.Drawing.Point, System.Drawing">
     <value>226, 8</value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="m_button_yes.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="m_button_yes.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="m_button_yes.Text" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="m_button_yes.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;m_button_yes.Name" xml:space="preserve">
+    <value>m_button_yes</value>
+  </data>
+  <data name="&gt;&gt;m_button_yes.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_button_yes.Parent" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_button_yes.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_button_no.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  </data>
+  <data name="m_button_no.Location" type="System.Drawing.Point, System.Drawing">
+    <value>145, 8</value>
+  </data>
+  <data name="m_button_no.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="m_button_no.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="m_button_no.Text" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="m_button_no.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="&gt;&gt;m_button_no.Name" xml:space="preserve">
+    <value>m_button_no</value>
+  </data>
+  <data name="&gt;&gt;m_button_no.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_button_no.Parent" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_button_no.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_bottom_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="m_bottom_panel.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
+    <value>RightToLeft</value>
+  </data>
+  <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 262</value>
+  </data>
+  <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 5, 0, 0</value>
+  </data>
+  <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>466, 32</value>
+  </data>
+  <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Name" xml:space="preserve">
+    <value>m_bottom_panel</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_bottom_panel.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="m_summary_label.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_summary_label.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
+  <data name="m_summary_label.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_summary_label.Size" type="System.Drawing.Size, System.Drawing">
+    <value>466, 32</value>
+  </data>
+  <data name="m_summary_label.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="m_summary_label.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleLeft</value>
+  </data>
+  <data name="&gt;&gt;m_summary_label.Name" xml:space="preserve">
+    <value>m_summary_label</value>
+  </data>
+  <data name="&gt;&gt;m_summary_label.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_summary_label.Parent" xml:space="preserve">
+    <value>m_top_panel</value>
+  </data>
+  <data name="&gt;&gt;m_summary_label.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_top_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Top</value>
+  </data>
+  <data name="m_top_panel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 5</value>
+  </data>
+  <data name="m_top_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 0, 0, 5</value>
+  </data>
+  <data name="m_top_panel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>466, 37</value>
+  </data>
+  <data name="m_top_panel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;m_top_panel.Name" xml:space="preserve">
+    <value>m_top_panel</value>
+  </data>
+  <data name="&gt;&gt;m_top_panel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_top_panel.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_top_panel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_buffer_view.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_buffer_view.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 42</value>
+  </data>
+  <data name="m_buffer_view.Size" type="System.Drawing.Size, System.Drawing">
+    <value>466, 220</value>
+  </data>
+  <data name="m_buffer_view.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_buffer_view.Name" xml:space="preserve">
+    <value>m_buffer_view</value>
+  </data>
+  <data name="&gt;&gt;m_buffer_view.Type" xml:space="preserve">
+    <value>Notung.Helm.Controls.InfoBufferView, Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41</value>
+  </data>
+  <data name="&gt;&gt;m_buffer_view.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_buffer_view.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>476, 299</value>
+  </data>
+  <data name="$this.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>5, 5, 5, 5</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>InfoBufferForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>
