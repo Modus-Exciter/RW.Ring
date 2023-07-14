@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.33328.57
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RW.Ring.Helm", "RW.Ring.Helm\RW.Ring.Helm.csproj", "{4BE5DB67-00E0-4E7F-A34C-A112337E9CBE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26} = {5ECA2E6B-8CBB-46F7-B7AE-9D089AF99E26}
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD} = {D4A4EA85-B27C-4560-B10B-23037C9687DD}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Norn", "Norn\Norn.csproj", "{D08E1588-14AE-473E-A714-207AB84B3DB4}"
 EndProject
@@ -71,6 +75,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeuerzauberGraphicalTest", "..\test\Notung\FeuerzauberGraphicalTest\FeuerzauberGraphicalTest.csproj", "{6D82C68D-981D-4B59-ABD3-E63AC838A9CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANOVATest", "..\test\Schicksal\ANOVATest\ANOVATest.csproj", "{C2DA15BE-3AA7-498D-B899-41E0743C20FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportImage", "ImportImage\ImportImage.csproj", "{D4A4EA85-B27C-4560-B10B-23037C9687DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -272,6 +278,18 @@ Global
 		{C2DA15BE-3AA7-498D-B899-41E0743C20FA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C2DA15BE-3AA7-498D-B899-41E0743C20FA}.Release|x86.ActiveCfg = Release|Any CPU
 		{C2DA15BE-3AA7-498D-B899-41E0743C20FA}.Release|x86.Build.0 = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -297,6 +315,7 @@ Global
 		{D53DAB9D-26F6-41FF-99BA-A78AD12D015A} = {5F05621F-620D-47F7-9F5C-D7221AD40677}
 		{6D82C68D-981D-4B59-ABD3-E63AC838A9CB} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
 		{C2DA15BE-3AA7-498D-B899-41E0743C20FA} = {EEE1D1C7-CD6A-43C6-B36D-E3A0962ED79A}
+		{D4A4EA85-B27C-4560-B10B-23037C9687DD} = {85466309-C38B-473A-977B-B44F0762BD5F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EAD07C60-7FC6-4434-97EB-F7BBCCDF36E3}
