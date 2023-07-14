@@ -23,7 +23,7 @@ namespace Notung.Feuerzauber.Styles
 
     private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
     {
-      var ctrl = sender as TextBox; 
+      var ctrl = sender as TextBox;
       var obj = ctrl.TemplatedParent as DataGridColumnHeader;
       var name = ((Binding)((DataGridBoundColumn)obj.Column).Binding).Path.Path;
 
