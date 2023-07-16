@@ -190,28 +190,56 @@ namespace ANOVATest
       Assert.AreEqual(fExp, f.F, 1e-3);
     }
 
+    /// <summary>
+    /// Анализ на данных без повторностей, сравнение однофакторного и
+    /// многофакторного метода (Интенсив~N0 Интенсив~N60 Экстенсив~N0 Экстенсив~N60)
+    /// </summary>
     [TestMethod]
-    public void CalculateMultiVsCalculateSetMulti()
+    public void OnefactorVsMultifactorWithOneRep()
     {
-      ArrayDataGroup groupA = new ArrayDataGroup(new double[] { 48, 49, 50, 53, 54, 55 });
-      ArrayDataGroup groupB = new ArrayDataGroup(new double[] { 18, 19, 20, 24, 25, 26 });
+      ArrayDataGroup groupA = new ArrayDataGroup(new double[] { 32, 29, 31, 35, 28, 26, 31, 36 });
+      ArrayDataGroup groupB = new ArrayDataGroup(new double[] { 31, 28, 31, 40, 25, 29, 35, 39 });
       MultiArrayDataGroup multi = new MultiArrayDataGroup(new IDataGroup[] { groupA, groupB });
 
       FisherMetrics multiF = FisherCriteria.CalculateCriteria(multi);
 
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 48, 49, 50 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 53, 54, 55 });
+      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 29, 31, 35 });
+      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 28, 26, 31, 36 });
       MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 18, 19, 20 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 24, 25, 26 });
+      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 31, 28, 31, 40 });
+      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 25, 29, 35, 39 });
       MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
 
       SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
 
-      Assert.AreEqual(f.MSb, multiF.MSb);
+      Assert.AreEqual(f.F, multiF.F);
+    }
+
+    /// <summary>
+    /// Разное количество повторностей во всех градациях всех факторов, игнорируемый фактор - удобрение,
+    /// и для него выполняется условие в разное число повторностей
+    /// </summary>
+    [TestMethod]
+    public void FactorsWithDifferentGradations()
+    {
+      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 30, 33 });
+      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 29 });
+      ArrayDataGroup groupA3 = new ArrayDataGroup(new double[] { 30, 35, 40 });
+      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2, groupA3 });
+
+      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 31, 32, 29, 28 });
+      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 27 });
+      ArrayDataGroup groupB3 = new ArrayDataGroup(new double[] { 33, 35 });
+      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2, groupB3 });
+
+      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+
+      FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
+      double fExp = 1.680;
+      Assert.AreEqual(fExp, f.F, 1e-3);
     }
   }
 }
