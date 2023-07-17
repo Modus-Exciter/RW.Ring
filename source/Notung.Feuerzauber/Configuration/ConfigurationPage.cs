@@ -20,7 +20,7 @@ namespace Notung.Feuerzauber.Configuration
         /// <summary>
         /// Секции
         /// </summary>
-        public  List<ConfigurationSection> Sections { get; set; }
+        public  List<ConfigurationSection> Sections { get; }
         /// <summary>
         /// Устанавливает изменена страница
         /// </summary>

@@ -78,6 +78,6 @@ namespace Notung.Feuerzauber.Converters
 
         public TemplatesView Template { get; set; } = TemplatesView.None;
 
-        public IEnumerable<object> ListItem { get => _listItemBase?.GetList(); }
+        public IEnumerable<object> ListItem { get { if (_listItemBase != null) return _listItemBase.GetList(); else return null; } }
     } 
 }

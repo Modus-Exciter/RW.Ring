@@ -36,7 +36,8 @@ namespace Notung.Feuerzauber.Configuration
         private static void OnBoundValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             var handler = GetBoundValueChangedHandler(obj);
-            handler?.Invoke(obj, EventArgs.Empty);
+            if(handler != null)
+            handler.Invoke(obj, EventArgs.Empty);
         }
         #endregion
         /// <summary>

@@ -22,8 +22,8 @@ namespace Notung.Feuerzauber.Configuration
     {
 
         #region pivate
-        private readonly ILog _log;
-        private IConfigurator _configurator;
+        private readonly ILog m_log;
+        private IConfigurator m_configurator;
 
         private readonly Dictionary<Type, bool?> m_page_statuses = new Dictionary<Type, bool?>();
         private readonly BindingList<SettingsError> m_errors = new BindingList<SettingsError>();
@@ -31,8 +31,8 @@ namespace Notung.Feuerzauber.Configuration
         #endregion
         public SettingsController(IConfigurator configurator)
         {
-            _log = LogManager.GetLogger(typeof(SettingsController));
-            _configurator = configurator;
+            m_log = LogManager.GetLogger(typeof(SettingsController));
+            m_configurator = configurator;
         }
 
         public SettingsController() : this(AppManager.Configurator) { }
@@ -99,7 +99,7 @@ namespace Notung.Feuerzauber.Configuration
 
                     if (!applyOnly)
                     {
-                        _configurator.SaveSection(section);
+                        m_configurator.SaveSection(section);
                         page.PageСhanged = false;
                     }
                        
@@ -109,7 +109,7 @@ namespace Notung.Feuerzauber.Configuration
 
             if (!applyOnly)
             {
-                _configurator.SaveSettings();
+                m_configurator.SaveSettings();
             }
                
 
@@ -122,7 +122,7 @@ namespace Notung.Feuerzauber.Configuration
         /// <returns>ConfigurationSection</returns>
         private ConfigurationSection CreateSectionCopy(Type type)
         {
-            var original = _configurator.GetSection(type);
+            var original = m_configurator.GetSection(type);
 
             using (var ms = new MemoryStream())
             {
@@ -283,7 +283,7 @@ namespace Notung.Feuerzauber.Configuration
         }
         private void HandleTypeError(Exception ex)
         {
-            _log.Error("LoadAllPages(): exception", ex);
+            m_log.Error("LoadAllPages(): exception", ex);
         }
         #endregion
     }

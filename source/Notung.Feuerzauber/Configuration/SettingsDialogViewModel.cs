@@ -15,8 +15,8 @@ namespace Notung.Feuerzauber.Configuration
    public class SettingsDialogViewModel : INotifyPropertyChanged
     {
         #region pivate
-        private readonly ILog _log;
-        private readonly SettingsDialogService _settingsDialogService;
+        private readonly ILog m_log;
+        private readonly SettingsDialogService m_settingsDialogService;
         #endregion
         #region INotifyPropertyChanged 
         /// <summary>
@@ -37,7 +37,8 @@ namespace Notung.Feuerzauber.Configuration
             {
                 destination = newValue;
                 OnPropertyChanged(prop);
-                changed?.Invoke(destination);
+                if(changed != null)
+                changed.Invoke(destination);
             }
         }
         /// <summary>
@@ -51,20 +52,27 @@ namespace Notung.Feuerzauber.Configuration
         }
         #endregion
         #region prorepty SettingsController
-        private SettingsController _settingsController;
+        private SettingsController m_settingsController;
 
-        public SettingsController SettingsController { get => _settingsController; set => SetValue("SettingsController", ref _settingsController, value, SettingsControllerChanged); }
+        public SettingsController SettingsController { get => m_settingsController; set => SetValue("SettingsController", ref m_settingsController, value, SettingsControllerChanged); }
 
 
         private void SettingsControllerChanged(SettingsController  obj)
         {
-            this.СonfigurationPageSelected = obj.ConfigurationPages?.Count > 0 ? obj.ConfigurationPages[0] : null;
+            if (obj.ConfigurationPages != null && obj.ConfigurationPages != null && obj.ConfigurationPages.Count > 0)
+            {
+                this.СonfigurationPageSelected = obj.ConfigurationPages[0];
+
+            }
+            else
+                this.СonfigurationPageSelected = null;
+    
         }
         #endregion
         #region prorepty СonfigurationPageSelected
-        private ConfigurationPage _сonfigurationPageSelected;
-        public ConfigurationPage СonfigurationPageSelected { get => _сonfigurationPageSelected; set => 
-                SetValue(nameof(СonfigurationPageSelected), ref _сonfigurationPageSelected, value, СonfigurationPageSelectedChanged); }
+        private ConfigurationPage m_сonfigurationPageSelected;
+        public ConfigurationPage СonfigurationPageSelected { get => m_сonfigurationPageSelected; set => 
+                SetValue(nameof(СonfigurationPageSelected), ref m_сonfigurationPageSelected, value, СonfigurationPageSelectedChanged); }
 
         private void СonfigurationPageSelectedChanged(ConfigurationPage obj)
         {
@@ -76,7 +84,11 @@ namespace Notung.Feuerzauber.Configuration
    
         public ObservableCollection<ConfigurationPage> ConfigurationPagesList
         {
-            get => _settingsController?.ConfigurationPages != null ? new ObservableCollection<ConfigurationPage>( _settingsController.ConfigurationPages) : null;
+            get
+            {
+                if (m_settingsController != null && m_settingsController.ConfigurationPages != null)  return new ObservableCollection<ConfigurationPage>(m_settingsController.ConfigurationPages); 
+                else return null;
+            }
             
         }
 
@@ -86,19 +98,19 @@ namespace Notung.Feuerzauber.Configuration
 
         public BindingList<SettingsError> ValidationResults
         {
-            get => _settingsController.ValidationErrors;
+            get => m_settingsController.ValidationErrors;
 
         }
 
 
         #endregion
         #region prorepty ShowValidationResults
-        private bool _showValidationResults;
+        private bool m_showValidationResults;
         public  bool ShowValidationResults
         {
-            get => _showValidationResults;
+            get => m_showValidationResults;
 
-            set => this.SetValue("ShowValidationResults", ref _showValidationResults, value, ShowValidationResultsChanged);
+            set => this.SetValue("ShowValidationResults", ref m_showValidationResults, value, ShowValidationResultsChanged);
         }
 
         private void ShowValidationResultsChanged(bool obj)
@@ -121,31 +133,26 @@ namespace Notung.Feuerzauber.Configuration
         #endregion
 
         #region prorepty ValidationResultSelected
-        private SettingsError _validationResultSelected;
+        private SettingsError m_validationResultSelected;
         public SettingsError ValidationResultSelected
         {
-            get => _validationResultSelected;
-            set => this.SetValue(nameof(ValidationResultSelected), ref _validationResultSelected, value, ValidationResultsSelectedChanged);
+            get => m_validationResultSelected;
+            set => this.SetValue(nameof(ValidationResultSelected), ref m_validationResultSelected, value, ValidationResultsSelectedChanged);
 
         }
         private void ValidationResultsSelectedChanged(SettingsError obj)
         {
-      /*      if(obj != null)
-            {
-                СonfigurationPageSelected = null;
-                СonfigurationPageSelected = _settingsController.ConfigurationPages.FirstOrDefault(x => x.GetType() == obj.SectionType);
-             
-            }*/
+
         }
         #endregion
 
         public SettingsDialogViewModel(SettingsDialogService settingsDialogService) : this(new SettingsController(), settingsDialogService) { }
         public SettingsDialogViewModel(SettingsController settingsController, SettingsDialogService settingsDialogService)
         {
-            _log = LogManager.GetLogger(typeof(SettingsDialogViewModel));
-            _settingsDialogService = settingsDialogService;
-            _settingsController = settingsController;
-            _settingsController.ValidationErrors.ListChanged += ValidationErrors_ListChanged; ;
+            m_log = LogManager.GetLogger(typeof(SettingsDialogViewModel));
+            m_settingsDialogService = settingsDialogService;
+            m_settingsController = settingsController;
+            m_settingsController.ValidationErrors.ListChanged += ValidationErrors_ListChanged; ;
 
             LoadedCommand = new RelayCommand(LoadedCommandAction, LoadedCommandCanExecute);
             OKCommand = new RelayCommand(OKCommandAction, OKCommandCanExecute);
@@ -180,7 +187,7 @@ namespace Notung.Feuerzauber.Configuration
 
         private void LoadedCommandAction(object obj)
         {
-            _settingsController.LoadAllPages();
+            m_settingsController.LoadAllPages();
             OnPropertyChanged("ConfigurationPagesList");
            
         }
@@ -199,8 +206,8 @@ namespace Notung.Feuerzauber.Configuration
         private void OKCommandAction(object obj)
         {
 
-            if (_settingsController.SaveAllSections()) 
-                _settingsDialogService.CloseDialog();
+            if (m_settingsController.SaveAllSections()) 
+                m_settingsDialogService.CloseDialog();
         }
         #endregion
 
@@ -217,7 +224,7 @@ namespace Notung.Feuerzauber.Configuration
         private void ApplyCommandAction(object obj)
         {
 
-            _settingsController.SaveAllSections(true);
+            m_settingsController.SaveAllSections(true);
         }
         #endregion
 
@@ -234,7 +241,13 @@ namespace Notung.Feuerzauber.Configuration
         private void ValidationResultSelectedCommandAction(object obj)
         {
             СonfigurationPageSelected = null;
-            СonfigurationPageSelected = _settingsController.ConfigurationPages.FirstOrDefault(x => x.GetType() == ValidationResultSelected?.SectionType);
+            СonfigurationPageSelected = m_settingsController.ConfigurationPages.FirstOrDefault(x => {
+                if (ValidationResultSelected == null)
+                    return false;
+                if (x.GetType() == ValidationResultSelected.SectionType)
+                    return true;
+                return false;
+            });
         }
         #endregion
         /// <summary>
@@ -249,7 +262,7 @@ namespace Notung.Feuerzauber.Configuration
 
         private void CancelCommandAction(object obj)
         {
-            _settingsDialogService.CloseDialog();
+            m_settingsDialogService.CloseDialog();
         }
         #endregion
 
@@ -265,7 +278,7 @@ namespace Notung.Feuerzauber.Configuration
 
         private void ValueChangedCommandAction(object obj)
         {
-            _settingsController.HandleSettingsChanged(this.СonfigurationPageSelected);
+            m_settingsController.HandleSettingsChanged(this.СonfigurationPageSelected);
             this.OnPropertyChanged("ConfigurationPagesList");
 
 
@@ -277,8 +290,8 @@ namespace Notung.Feuerzauber.Configuration
     }
     public class RelayCommand : ICommand
     {
-        private Action<object> _execute;
-        private Func<object, bool> _canExecute;
+        private Action<object> m_execute;
+        private Func<object, bool> m_canExecute;
 
         public event EventHandler CanExecuteChanged
         {
@@ -288,18 +301,18 @@ namespace Notung.Feuerzauber.Configuration
 
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
-            this._execute = execute;
-            this._canExecute = canExecute;
+            this.m_execute = execute;
+            this.m_canExecute = canExecute;
         }
 
         public bool CanExecute(object parameter)
         {
-            return this._canExecute == null || this._canExecute(parameter);
+            return this.m_canExecute == null || this.m_canExecute(parameter);
         }
 
         public void Execute(object parameter)
         {
-            this._execute(parameter);
+            this.m_execute(parameter);
         }
     }
 

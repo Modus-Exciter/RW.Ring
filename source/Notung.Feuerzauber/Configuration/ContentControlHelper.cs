@@ -146,7 +146,9 @@ namespace Notung.Feuerzauber.Configuration
                                 fe.SetBinding(BindingHelper.BoundValueProperty, binding1);
 
                                 BindingHelper.SetBoundValueChangedHandler(fe, (s, e) => {
-                                    GetSettingsValueChanged(cc)?.Execute(null);
+                                    var ev = GetSettingsValueChanged(cc);
+                                if (ev != null)
+                                        ev.Execute(null);
                                 });
 
 
