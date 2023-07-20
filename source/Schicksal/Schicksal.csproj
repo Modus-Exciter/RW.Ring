@@ -63,6 +63,8 @@
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
     <Compile Include="HtmlWriter.cs" />
+    <Compile Include="Optimization\Optimization.cs" />
+    <Compile Include="Optimization\VectorFataGroup.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

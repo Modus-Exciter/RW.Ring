@@ -7,296 +7,103 @@ using System.Text;
 
 namespace Schicksal.Regression
 {
-    public class Vector
+  public static class MathFunction
+  {
+    public static double LogisticFunction(double x, double[] t)
     {
-        double[] values;
-
-        public Vector(double[] array)
-        {
-            values = new double[array.Length];
-            Array.Copy(array, values, array.Length);
-        }
-
-        public int Dim { get { return values.Length; } }
-
-        public double this[int index] { get { return values[index]; } set { values[index] = value; } }
-
-        public string ToString()
-        {
-            string str = "";
-            for (int i = 0; i < Dim; i++)
-                str += (" " + values[i].ToString("E3")); ;
-            return str;
-        }
-
-        public void Zeros()
-        {
-            for (int i = 0; i < this.Dim; i++) values[i] = 0;
-        }
-
-        public static implicit operator double[](Vector a)
-        {
-            double[] res = new double[a.Dim];
-            for (int i = 0; i < res.Length; i++)
-                res[i] = a.values[i];
-            return res;
-        }
-
-        public static Vector operator -(Vector a)
-        {
-            double[] res = new double[a.Dim];
-            for (int i = 0; i < res.Length; i++)
-                res[i] = -a[i];
-            return new Vector(res);
-        }
-
-        public static Vector operator +(Vector a, Vector b)
-        {
-            if (a.Dim != b.Dim) throw new ArgumentException("Dimensions of vectors don't agree");
-            double[] res = new double[a.Dim];
-            for (int i = 0; i < res.Length; i++)
-                res[i] = a[i] + b[i];
-            return new Vector(res);
-        }
-
-        public static Vector operator -(Vector a, Vector b)
-        {
-            return a + (-b);
-        }
-
-        public static Vector operator /(Vector a, double b)
-        {
-            double[] res = new double[a.Dim];
-            for (int i = 0; i < res.Length; i++)
-                res[i] = a[i] / b;
-            return new Vector(res);
-        }
-
-        public static Vector operator *(double b, Vector a)
-        {
-            double[] res = new double[a.Dim];
-            for (int i = 0; i < res.Length; i++)
-                res[i] = a[i] * b;
-            return new Vector(res);
-        }
-
-        public static Vector operator *(Vector a, double b) => b * a;
-
+      if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
+      double power = Math.Pow(t[1], x);
+      return t[0] * power / (t[2] + power);
     }
 
-    public class Point
+    public static double LinearFunction(double x, double[] t)
     {
-        public static MathFunction.MultyFunction function;
+      if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
+      return t[0] * x + t[1];
+    }
+  }
 
-        public Vector x;
-        public double y;
+  public class LikelyhoodFunction
+  {
+    const double MINIMAL_WEIGHT = 0.01;
 
-        public Point(Vector x) { this.x = x; y = function(x); }
-        
-        public void ReCalculate() => y = function(x);
-        
-        public static int Compare(Point a, Point b)
-        {
-            if(a.y < b.y) return -1;
-            if(a.y > b.y) return 1;
-            return 0;
-        }
+    readonly IDataGroup m_x;
+    readonly IDataGroup m_y;
+    readonly int m_n;
+
+    Func<double, double[], double> m_regr_function;
+    Func<double, double> m_var_function;
+
+    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> regrFunction, Func<double, double> varFunction = null)
+    {
+      if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
+      this.m_x = x; this.m_y = y;
+      this.m_n = x.Count;
+      this.m_regr_function = regrFunction;
+      this.m_var_function = varFunction;
+    }
+    public double Calculate(double[] t)
+    {
+      return m_var_function == null ? this.Calc(t) : this.Calc(t, m_var_function);
+    }
+    private double Calc(double[] t)
+    {
+      double res = 10E100;
+      //double res = Math.Pow(2*Math.PI, -n/2);
+      double variance = this.StandartVariance(t);
+      double variance2 = variance * variance;
+
+      for (int i = 0; i < m_n; i++)
+      {
+        res /= variance;
+        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+      }
+
+      return res;
+    }
+    private double Calc(double[] t, Func<double, double> varFunction)
+    {
+      double res = 10E100;
+      //double res = Math.Pow(2 * Math.PI, -n / 2);
+      double standartVariance = this.StandartVariance(t);
+      double variance = 0; double variance2 = 0;
+
+      for (int i = 0; i < m_n; i++)
+      {
+        variance = varFunction(m_x[i]) * standartVariance;
+        if (variance <= 0) variance = MINIMAL_WEIGHT * standartVariance;
+        variance2 = variance * variance;
+
+        res /= variance;
+        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+      }
+
+      return res;
     }
 
-    public static class MathFunction
+    public double StandartVariance(double[] t)
     {
-        public delegate double Function(double x);
-        public delegate double MultyFunction(double[] x);
-        public delegate double ParamFunction(double x, double[] t);
+      if (m_x.Count != m_y.Count) throw new ArgumentException("Sizes of selection doesn't match");
 
-        public static double LogisticFunction(double x, double[] t)
-        {
-            if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
-            double power = Math.Pow(t[1], x);
-            return t[0] * power / (t[2] + power);
-        }
+      double res = 0;
+      for (int i = 0; i < m_x.Count; i++)
+      {
+        double derivation = m_y[i] - m_regr_function(m_x[i], t);
+        res += derivation * derivation;
+      }
+      res /= (m_x.Count - 1);
 
-        public static double LinearFunction(double x, double[] t)
-        {
-            if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
-            return t[0] * x + t[1];
-        }
-
-        public static double StandartVariance(IDataGroup x, IDataGroup y, Function regrFunction)
-        {
-            if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
-
-            double res = 0;
-            for (int i = 0; i < x.Count; i++)
-                res += Math.Pow(y[i] - regrFunction(x[i]), 2);
-            res /= (x.Count - 1);
-
-            return Math.Sqrt(res); ;
-        }
-        public static double Mean(IDataGroup x)
-        {
-            double res = 0;
-            foreach(double val in x)
-                res += val;
-            return res / x.Count;
-        }
-        public static double PlainVariance(IDataGroup y)
-        {
-            double res = 0;
-            double m = Mean(y);
-            for (int i = 0; i < y.Count; i++)
-                res += Math.Abs(y[i] - m);
-            res /= Math.Sqrt(y.Count - 1);
-            return res;
-        }
-
+      return Math.Sqrt(res); ;
     }
 
-    public static class MathOptimization
+    public IDataGroup CalculateResidual(double[] t)
     {
-        public class Options
-        {
-            public readonly double tolX;
-            public readonly double tolY;
-            public readonly int maxIter;
-            public Options(double tolX = 1E-12, double tolY = 1E-12, int maxIter = 1000)
-            {
-                this.tolX = tolX;
-                this.tolY = tolY;
-                this.maxIter = maxIter;
-            }
-        }
-        public static double[] SimplexSearch(MathFunction.MultyFunction optFunction, double[] x0, Options options = null)
-        {
-            options = options ?? new Options();
-            Point.function = optFunction;
+      double[] res = new double[m_n];
+      double variance = this.StandartVariance(t);
+      for (int i = 0; i < m_n; i++)
+        res[i] = Math.Abs(m_y[i] - m_regr_function(m_x[i], t)) / variance;
 
-            int n = x0.Length;
-            int countIter = 0;
-            double deltaY = double.MaxValue;
-            double deltaX = double.MaxValue;
-
-            List<Point> simplex = new List<Point>(n + 1);
-            for (int i = 0; i < n; i++)
-            {
-                Vector x = new Vector(x0);
-                x[i] *= 1.05;
-                if (x[i] == 0) x[i] = 2.5E-4;
-                simplex.Add(new Point(x));
-            }
-            simplex.Add(new Point(new Vector(x0)));
-
-            while (deltaY > options.tolY && countIter < options.maxIter)
-            {
-                simplex.Sort(Point.Compare);
-
-                Vector m = new Vector(new double[n]);
-                m.Zeros();
-                for(int i = 0; i < n; i++)
-                    m += simplex[i].x;
-                m /= n;
-
-                Point r = new Point(2*m - simplex[n].x);
-                
-                if (r.y < simplex[n - 1].y)
-                {
-                    if (r.y < simplex[0].y)
-                    {
-                        Point s = new Point(m + 2 * (m - simplex[n].x));
-                        if (s.y < r.y)
-                            simplex[n] = s;
-                        else
-                            simplex[n] = r;
-                    }
-                    else
-                        simplex[n] = r;
-                }
-                else
-                {
-                    if (r.y < simplex[n].y)
-                        simplex[n] = r;
-                    Point c = new Point(m + (simplex[n].x - m) / 2);
-                    if (c.y <= simplex[n].y)
-                        simplex[n] = c;
-                    else
-                        for (int i = 1; i < n + 1; i++)
-                            simplex[i] = new Point((simplex[0].x + simplex[i].x) / 2);
-                }
-
-                double[] y = new double[n + 1];
-                for (int i = 0; i < n + 1; i++)
-                    y[i] = simplex[i].y;
-                deltaY = Math.Abs(MathFunction.PlainVariance(new ArrayDataGroup(y)) / simplex[0].y);
-                countIter++;
-            }
-            simplex.Sort(Point.Compare);
-            return simplex[0].x;
-        }
+      return new ArrayDataGroup(res);
     }
-
-    public class LikelyhoodFunction
-    {
-        IDataGroup x;
-        IDataGroup y;
-        IDataGroup residual;
-        int n;
-        MathFunction.ParamFunction regrFunction;
-        MathFunction.Function varFunction;
-
-        public LikelyhoodFunction(IDataGroup x, IDataGroup y, MathFunction.ParamFunction regrFunction, MathFunction.Function varFunction = null)
-        {
-            if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
-            this.x = x; this.y = y;
-            this.n = x.Count;
-            this.regrFunction = regrFunction;
-            this.varFunction = varFunction;
-        }
-        public double Calculate(double[] t)
-        {
-            return varFunction == null ? calc(t) : calc(t, varFunction);
-        }
-        private double calc(double[] t)
-        {
-            double res = 10E100;
-            //double res = Math.Pow(2*Math.PI, -n/2);
-            double variance = MathFunction.StandartVariance(x, y, (x) => regrFunction(x, t));
-            double variance2 = variance * variance;
-
-            for (int i = 0; i < n; i++)
-            {
-                res /= variance;
-                res *= Math.Exp(-Math.Pow((y[i] - regrFunction(x[i], t)), 2) / (2 * variance2));
-            }
-
-            return res;
-        }
-        private double calc(double[] t, MathFunction.Function varFunction)
-        {
-            double res = 10E100;
-            //double res = Math.Pow(2 * Math.PI, -n / 2);
-            double standartVariance = MathFunction.StandartVariance(x, y, (x) => regrFunction(x, t));
-            double variance = 0; double variance2 = 0;
-
-            for (int i = 0; i < n; i++)
-            {
-                variance = varFunction(x[i]) * standartVariance;
-                if (variance <= 0) variance = 0.01 * standartVariance;
-                variance2 = variance * variance;
-
-                res /= variance;
-                res *= Math.Exp(-Math.Pow((y[i] - regrFunction(x[i], t)), 2) / (2 * variance2));
-            }
-
-            return res;
-        }
-        public IDataGroup CalculateResidual(double[] t)
-        {
-            double[] res = new double[n];
-            double variance = MathFunction.StandartVariance(x, y, (x) => regrFunction(x, t));
-            for (int i = 0; i < n; i++)
-                res[i] = Math.Abs(y[i] - regrFunction(x[i], t)) / variance;
-
-            return new ArrayDataGroup(res);
-        }
-    }
+  }
 }

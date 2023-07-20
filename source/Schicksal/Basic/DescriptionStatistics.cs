@@ -45,6 +45,21 @@ namespace Schicksal.Basic
 
       return sum;
     }
+    /// <summary>
+    /// Сумма модулей отклонений
+    /// </summary>
+    public static double PlainDerivation(IDataGroup group)
+    {
+      Debug.Assert(group != null);
+
+      var mean = Mean(group);
+      double sum = 0;
+
+      foreach (var value in group)
+        sum += Math.Abs(value - mean);
+
+      return sum;
+    }
 
     /// <summary>
     /// Выборочная дисперсия
@@ -55,6 +70,16 @@ namespace Schicksal.Basic
       Debug.Assert(group.Count > 1);
 
       return SquareDerivation(group) / (group.Count - 1);
+    }
+    /// <summary>
+    /// Упрощенная выборочная дисперсия
+    /// </summary>
+    public static double PlainDispersion(IDataGroup group)
+    {
+      Debug.Assert(group != null);
+      Debug.Assert(group.Count > 1);
+
+      return PlainDerivation(group) / Math.Sqrt(group.Count - 1);
     }
   }
 

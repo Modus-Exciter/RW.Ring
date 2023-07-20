@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
+using Schicksal.Optimization;
 
 namespace Schicksal.Regression
 {
