@@ -1,5 +1,6 @@
 ﻿using Notung.Data;
 using Schicksal.Basic;
+using Schicksal.VectorField;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,27 @@ namespace Schicksal.Regression
 {
   public static class MathFunction
   {
-    public static double LogisticFunction(double x, double[] t)
+
+    public static double Quadratic(VectorDataGroup x)
     {
-      if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
+      return Math.Pow(x.Length(), 2);
+    }
+
+    public static Func<VectorDataGroup, double> ReverseOnF(Func<VectorDataGroup, double> func)
+    {
+      return (VectorDataGroup x) => -func(x);
+    }
+
+    public static double Logistic(double x, IDataGroup t)
+    {
+      if (t.Dim != 3) throw new ArgumentException("Wrong size of parameter t");
       double power = Math.Pow(t[1], x);
       return t[0] * power / (t[2] + power);
     }
 
-    public static double LinearFunction(double x, double[] t)
+    public static double Linear(double x, IDataGroup t)
     {
-      if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Dim != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x + t[1];
     }
   }
@@ -31,22 +43,24 @@ namespace Schicksal.Regression
     readonly IDataGroup m_y;
     readonly int m_n;
 
-    Func<double, double[], double> m_regr_function;
+    Func<double, IDataGroup, double> m_regr_function;
     Func<double, double> m_var_function;
 
-    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> regrFunction, Func<double, double> varFunction = null)
+    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, IDataGroup, double> regrFunction, Func<double, double> varFunction = null)
     {
-      if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
+      if (x.Dim != y.Dim) throw new ArgumentException("Sizes of selection doesn't match");
       this.m_x = x; this.m_y = y;
-      this.m_n = x.Count;
+      this.m_n = x.Dim;
       this.m_regr_function = regrFunction;
       this.m_var_function = varFunction;
     }
-    public double Calculate(double[] t)
+
+    public double Calculate(IDataGroup t)
     {
       return m_var_function == null ? this.Calc(t) : this.Calc(t, m_var_function);
     }
-    private double Calc(double[] t)
+
+    private double Calc(IDataGroup t)
     {
       double res = 10E100;
       //double res = Math.Pow(2*Math.PI, -n/2);
@@ -56,12 +70,13 @@ namespace Schicksal.Regression
       for (int i = 0; i < m_n; i++)
       {
         res /= variance;
-        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+        res *= Math.Exp(-Math.Pow(m_y[i] - m_regr_function(m_x[i], t), 2) / (2 * variance2));
       }
 
       return res;
     }
-    private double Calc(double[] t, Func<double, double> varFunction)
+
+    private double Calc(IDataGroup t, Func<double, double> varFunction)
     {
       double res = 10E100;
       //double res = Math.Pow(2 * Math.PI, -n / 2);
@@ -75,30 +90,30 @@ namespace Schicksal.Regression
         variance2 = variance * variance;
 
         res /= variance;
-        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+        res *= Math.Exp(-Math.Pow(m_y[i] - m_regr_function(m_x[i], t), 2) / (2 * variance2));
       }
 
       return res;
     }
 
-    public double StandartVariance(double[] t)
+    public double StandartVariance(IDataGroup t)
     {
-      if (m_x.Count != m_y.Count) throw new ArgumentException("Sizes of selection doesn't match");
+      if (m_x.Dim != m_y.Dim) throw new ArgumentException("Sizes of selection doesn't match");
 
       double res = 0;
-      for (int i = 0; i < m_x.Count; i++)
+      for (int i = 0; i < m_x.Dim; i++)
       {
         double derivation = m_y[i] - m_regr_function(m_x[i], t);
         res += derivation * derivation;
       }
-      res /= (m_x.Count - 1);
+      res /= (m_x.Dim - 1);
 
-      return Math.Sqrt(res); ;
+      return Math.Sqrt(res);
     }
 
-    public IDataGroup CalculateResidual(double[] t)
+    public IDataGroup CalculateResidual(IDataGroup t)
     {
-      double[] res = new double[m_n];
+      VectorDataGroup res = new VectorDataGroup(new double[m_n]);
       double variance = this.StandartVariance(t);
       for (int i = 0; i < m_n; i++)
         res[i] = Math.Abs(m_y[i] - m_regr_function(m_x[i], t)) / variance;

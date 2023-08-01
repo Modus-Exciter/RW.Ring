@@ -42,6 +42,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\portable-net40+sl4+win8+wp8\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +66,8 @@
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
     <Compile Include="HtmlWriter.cs" />
-    <Compile Include="Optimization\Optimization.cs" />
+    <Compile Include="Optimization\DirectSearch.cs" />
+    <Compile Include="Optimization\SimplexSearch.cs" />
     <Compile Include="Optimization\VectorFataGroup.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -107,6 +111,7 @@
     <EmbeddedResource Include="SchicksalResources.RU.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\right_left.png" />
     <None Include="Schicksal.snk" />
   </ItemGroup>

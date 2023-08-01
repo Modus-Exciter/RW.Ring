@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Schicksal.Basic
 {
@@ -12,7 +13,7 @@ namespace Schicksal.Basic
     /// <summary>
     /// Объём выборки
     /// </summary>
-    int Count { get; }
+    int Dim { get; }
 
     /// <summary>
     /// Обращение к элементу выборки по номеру
@@ -103,7 +104,7 @@ namespace Schicksal.Basic
       get { return m_array[index]; }
     }
 
-    public int Count
+    public int Dim
     {
       get { return m_array.Length; }
     }
@@ -116,6 +117,11 @@ namespace Schicksal.Basic
     IEnumerator IEnumerable.GetEnumerator()
     {
       return m_array.GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+      { return string.Join(" ", m_array.Select(x => x.ToString("E3"))); }
     }
   }
 

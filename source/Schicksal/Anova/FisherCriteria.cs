@@ -20,7 +20,7 @@ namespace Schicksal.Anova
 
       var degrees = default(FisherMetrics);
       degrees.Kdf = (uint)group.Count - 1;
-      degrees.Ndf = (uint)(join.Count - group.Count);
+      degrees.Ndf = (uint)(join.Dim - group.Count);
 
       if (degrees.Kdf == 0 || degrees.Ndf == 0)
         return degrees;
@@ -33,7 +33,7 @@ namespace Schicksal.Anova
       double outer_dispersion = 0;
 
       for (int i = 0; i < group.Count; i++)
-        outer_dispersion += (means[i] - g_mean) * (means[i] - g_mean) * group[i].Count;
+        outer_dispersion += (means[i] - g_mean) * (means[i] - g_mean) * group[i].Dim;
 
       outer_dispersion /= degrees.Kdf;
 
@@ -55,7 +55,7 @@ namespace Schicksal.Anova
       var degrees = default(FisherMetrics);
 
       degrees.Kdf = (uint)groups.Count - 1;
-      degrees.Ndf = (uint)groups.SelectMany(g => g).Sum(g => g.Count) - (uint)groups.Sum(g => g.Count);
+      degrees.Ndf = (uint)groups.SelectMany(g => g).Sum(g => g.Dim) - (uint)groups.Sum(g => g.Count);
 
       if (degrees.Kdf == 0 || degrees.Ndf == 0)
         return degrees;

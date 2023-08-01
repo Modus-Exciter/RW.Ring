@@ -179,7 +179,7 @@ namespace Schicksal.Basic
         get { return m_view; }
       }
 
-      public int Count
+      public int Dim
       {
         get { return m_view.Count; }
       }
