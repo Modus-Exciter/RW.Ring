@@ -39,14 +39,6 @@ namespace TableSetDataGroupTest
       dtCol.ReadOnly = false;
       dt.Columns.Add(dtCol);
 
-      dtCol = new DataColumn();
-      dtCol.DataType = typeof(Int32);
-      dtCol.ColumnName = "Ignore";
-      dtCol.Caption = "Ignorable column";
-      dtCol.Unique = false;
-      dtCol.ReadOnly = false;
-      dt.Columns.Add(dtCol);
-
       dtRow = dt.NewRow();
       dtRow["Variety"] = "Itensiv";
       dtRow["N"] = "N0";
@@ -119,8 +111,8 @@ namespace TableSetDataGroupTest
       dtRow["Yield"] = 36;
       dt.Rows.Add(dtRow);
 
-      string[] fc = { "Variety", "N" };
-      string[] ic = { "Ignore" };
+      string[] fc = { "Variety" };
+      string[] ic = { "N" };
       string rc = "Yield";
 
       double e0 = Convert.ToDouble(dt.Rows[0].ItemArray[2]);
@@ -137,18 +129,19 @@ namespace TableSetDataGroupTest
       double e11 = Convert.ToDouble(dt.Rows[11].ItemArray[2]);
 
       TableSetDataGroup tsdg = new TableSetDataGroup(dt, fc, ic, rc);
+
       double a0 = tsdg[0][0][0];
       double a1 = tsdg[0][0][1];
       double a2 = tsdg[0][0][2];
       double a3 = tsdg[1][0][0];
       double a4 = tsdg[1][0][1];
       double a5 = tsdg[1][0][2];
-      double a6 = tsdg[2][0][0];
-      double a7 = tsdg[2][0][1];
-      double a8 = tsdg[2][0][2];
-      double a9 = tsdg[3][0][0];
-      double a10 = tsdg[3][0][1];
-      double a11 = tsdg[3][0][2];
+      double a6 = tsdg[0][1][0];
+      double a7 = tsdg[0][1][1];
+      double a8 = tsdg[0][1][2];
+      double a9 = tsdg[1][1][0];
+      double a10 = tsdg[1][1][1];
+      double a11 = tsdg[1][1][2];
 
       Assert.AreEqual(e0, a0);
       Assert.AreEqual(e1, a1);
