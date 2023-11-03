@@ -2,15 +2,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace Schicksal.VectorField
 {
+  public static class NumberConvert
+  {
+    public static string Do(double number)
+    {
+      if (number == 0)
+        return "0";
+      if (Math.Abs(number) < 0.1 || Math.Abs(number) > 999999)
+        return number.ToString("0.000e+0");
+      else
+        return number.ToString("0.000");
+    }
+  }
 
   public class VectorDataGroup : IDataGroup
   {
-    private double[] m_values;
+    private readonly double[] m_values;
 
     public double[] Values { get { return m_values; } }
 
@@ -23,9 +36,9 @@ namespace Schicksal.VectorField
 
     public int Dim { get { return m_values.Length; } }
 
-    public double this[int index] { get { return m_values[index]; } set { m_values[index] = value; } }
+    public double this[int index] { get { return m_values[index]; } }
 
-    public override string ToString() { return string.Join(" ", m_values.Select(x => x.ToString("E3"))); }
+    public override string ToString() { return string.Join(" ", m_values.Select(x => NumberConvert.Do(x))); }
 
     public static implicit operator double[](VectorDataGroup a)
     {
@@ -82,16 +95,30 @@ namespace Schicksal.VectorField
 
     public static VectorDataGroup operator *(VectorDataGroup a, double b) { return b * a; }
 
+    public static VectorDataGroup operator *(VectorDataGroup a, VectorDataGroup b)
+    {
+      if (a.Dim != b.Dim) throw new ArgumentException("Sizes doesn't natch");
+      double[] res = new double[a.Dim];
+      for (int i = 0; i < res.Length; i++)
+        res[i] = a[i] * b[i];
+      return new VectorDataGroup(res);
+    }
+
     public static VectorDataGroup Zeros(int Dim)
     {
       return new VectorDataGroup((new double[Dim]).Select(value => value = 0).ToArray());
     }
 
+    public static VectorDataGroup Ones(int Dim)
+    {
+      return new VectorDataGroup((new double[Dim]).Select(value => value = 1).ToArray());
+    }
+
     public static VectorDataGroup Unit(int Dim, int Index)
     {
-      VectorDataGroup res = Zeros(Dim);
+      double[] res = Zeros(Dim).ToArray();
       res[Index] = 1;
-      return res;
+      return new VectorDataGroup(res);
     }
 
     public IEnumerator<double> GetEnumerator()

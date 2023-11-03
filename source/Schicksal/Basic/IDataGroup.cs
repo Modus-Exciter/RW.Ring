@@ -118,11 +118,6 @@ namespace Schicksal.Basic
     {
       return m_array.GetEnumerator();
     }
-
-    public override string ToString()
-    {
-      { return string.Join(" ", m_array.Select(x => x.ToString("E3"))); }
-    }
   }
 
   public sealed class MultiArrayDataGroup : IMultyDataGroup

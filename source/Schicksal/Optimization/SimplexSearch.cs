@@ -7,50 +7,19 @@ using System.Text;
 
 namespace Schicksal.Optimization
 {
-  public class OptimizationOptions
-  {
-    public static readonly OptimizationOptions Default = new OptimizationOptions();
-
-    public readonly double m_tolX;
-    public readonly double m_tolY;
-    public readonly int m_maxIter;
-    public OptimizationOptions(double tolX = 1E-6, double tolY = 1E-6, int maxIter = 1000)
-    {
-      this.m_tolX = tolX;
-      this.m_tolY = tolY;
-      this.m_maxIter = maxIter;
-    }
-  }
-
   public static partial class MathOptimization
   {
-    private class FuncPoint : IComparable<FuncPoint>
-    {
-      public VectorDataGroup x;
-      public double y;
-
-      public FuncPoint(VectorDataGroup x, double y) { this.x = x; this.y = y; }
-      public FuncPoint(VectorDataGroup x, Func<VectorDataGroup, double> function) { this.x = x; this.y = function(x); }
-      public int CompareTo(FuncPoint a)
-      {
-        if (this.y < a.y) return -1;
-        if (this.y > a.y) return 1;
-        return 0;
-      }
-    }
-
-    const double MINIMAL_STEP = 2.5E-4;
-
     private static FuncPoint[] SimplexInitialization(Func<VectorDataGroup, double> optFunction, VectorDataGroup x0, int n, OptimizationOptions options)
     {
       FuncPoint[] simplex = new FuncPoint[n + 1];
+      const double MINIMAL_STEP = 2.5E-4;
 
       for (int i = 0; i < n; i++)
       {
-        VectorDataGroup x = new VectorDataGroup(x0);
+        double[] x = x0.ToArray();
         x[i] *= 1.05;
         if (x[i] == 0) x[i] = MINIMAL_STEP;
-        simplex[i] = new FuncPoint(x, optFunction);
+        simplex[i] = new FuncPoint(new VectorDataGroup(x), optFunction);
       }
       simplex[n] = new FuncPoint(new VectorDataGroup(x0), optFunction);
       Array.Sort(simplex);

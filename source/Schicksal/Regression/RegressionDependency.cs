@@ -9,6 +9,9 @@ using Schicksal.Basic;
 using Schicksal.VectorField;
 using Schicksal.Properties;
 using Schicksal.Optimization;
+using System.Linq;
+using System.Drawing.Text;
+using System.CodeDom;
 
 namespace Schicksal.Regression
 {
@@ -299,108 +302,63 @@ namespace Schicksal.Regression
 
   public sealed class ExponentialDependency : RegressionDependency
   {
+    const double Y_COEF = 2;
+    const double X_COEF = 2;
+    private readonly VectorDataGroup m_param;
+
     public ExponentialDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      double avg_x = 0;
-      double avg_y = 0;
-      double sum_up = 0;
-      double sum_dn = 0;
+      double maxY = result.Max(); double minY = result.Min();
+      double minX = factor.Min(); double maxX = factor.Max();
 
-      int counter = 0;
+      VectorDataGroup lowBound = new VectorDataGroup(new double[2] { minY, minX });
+      VectorDataGroup highBound = new VectorDataGroup(new double[2] { Y_COEF * maxY, X_COEF * maxX });
 
-      for (int i = 0; i < factor.Dim; i++)
-      {
-        double y = result[i];
-
-        if (y <= 0)
-          continue;
-
-        avg_x += factor[i];
-        avg_y += Math.Log(y);
-
-        counter++;
-      }
-
-      avg_x /= counter;
-      avg_y /= counter;
-
-      for (int i = 0; i < factor.Dim; i++)
-      {
-        double x = factor[i];
-        double y = result[i];
-
-        if (y <= 0)
-          continue;
-
-        sum_up += (x - avg_x) * (Math.Log(y) - avg_y);
-        sum_dn += (x - avg_x) * (x - avg_x);
-      }
-
-      double byx = sum_up / sum_dn;
-      double k = byx;
-      double d = avg_y - byx * avg_x;
-
-      A = Math.Exp(d);
-      B = Math.Exp(k);
-
-      if (B == 1)
-        throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
+      LikelyhoodFunction regression = new LikelyhoodFunction(factor, result, MathFunction.Michaelis);
+      m_param = MathOptimization.DIRECTSearch(regression.Calculate, lowBound, highBound);
     }
 
-    public double A { get; private set; }
+    public double A { get { return m_param[0]; } }
 
-    public double B { get; private set; }
+    public double B { get { return m_param[1]; } }
 
     public override double Calculate(double x)
     {
-      return A * Math.Pow(B, x);
+      return MathFunction.Michaelis(x, m_param);
     }
 
     public override string ToString()
     {
-      return string.Format("{0} = {1} * {2} ^ {3}",
-        this.Effect, ConvertNumber(this.A), ConvertNumber(this.B), this.Factor);
+      return string.Format("{0} = {1} * {2} / ({3} + {2})",
+        this.Effect, ConvertNumber(this.A), this.Factor, this.B);
     }
   }
 
   public sealed class LogisticDependency : RegressionDependency
   {
-    private VectorDataGroup param;
+    const double MIN_BASE = 0.1;
+    const double MAX_BASE = 5;
+    const double Y_COEF = 5;
+    const double X_COEF = 5;
+    const double MAX_X = 100;
+    private readonly VectorDataGroup m_param;
 
-    public double A { get { return param[0]; } }
-    public double B { get { return param[1]; } }
-    public double C { get { return param[2]; } }
+    public double A { get { return m_param[0]; } }
+    public double B { get { return m_param[1]; } }
+    public double C { get { return m_param[2]; } }
 
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      double maxY = double.MinValue;
-      foreach (double y in result)
-        if (y > maxY)
-          maxY = y;
+      VectorDataGroup lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
+      VectorDataGroup highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
 
-      VectorDataGroup standartParam = new VectorDataGroup(new double[3] { maxY / 1.5, 2, 20 });
-      VectorDataGroup residualParam = new VectorDataGroup(new double[2] { 0, 0 });
-      VectorDataGroup weightedParam;
-      IDataGroup residualResult;
-
-      LikelyhoodFunction regression = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
-      standartParam = MathOptimization.SimplexSearch(MathFunction.ReverseOnF(regression.Calculate), standartParam);
-      residualResult = regression.CalculateResidual(standartParam);
-
-      LikelyhoodFunction residualRegression = new LikelyhoodFunction(factor, residualResult, MathFunction.Linear);
-      residualParam = MathOptimization.SimplexSearch(MathFunction.ReverseOnF(residualRegression.Calculate), residualParam);
-
-      LikelyhoodFunction weightedRegression = new LikelyhoodFunction(factor, result, MathFunction.Logistic, (x) => MathFunction.Linear(x, residualParam));
-      weightedParam = MathOptimization.SimplexSearch(MathFunction.ReverseOnF(weightedRegression.Calculate), standartParam);
-
-      param = weightedParam;
-
-      MathOptimization.DIRECTSearch(MathFunction.Quadratic, new VectorDataGroup(new double[2] { 0, 0 }), new VectorDataGroup(new double[2] { 1, 1 }));
+      LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
+      m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
     }
 
     public override double Calculate(double x)
     {
-      return MathFunction.Logistic(x, param);
+      return MathFunction.Logistic(x, m_param);
     }
 
     public override string ToString()
