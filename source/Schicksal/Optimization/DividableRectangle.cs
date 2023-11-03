@@ -1,4 +1,5 @@
-﻿using Schicksal.VectorField;
+﻿using Schicksal.Basic;
+using Schicksal.VectorField;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,9 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
-    private class DividableRectangle : IComparable<DividableRectangle>
+    private struct DividableRectangle : IComparable<DividableRectangle>
     {
-      private class Sample : IComparable<Sample>
+      private struct Sample : IComparable<Sample>
       {
         private readonly FuncPoint left;
         private readonly FuncPoint right;
@@ -171,7 +172,7 @@ namespace Schicksal.Optimization
       public readonly VectorDataGroup highBound;
       public readonly VectorDataGroup lowBound;
 
-      public Domain(Func<VectorDataGroup, double> optFunc, VectorDataGroup lowBound, VectorDataGroup highBound)
+      public Domain(Func<IDataGroup, double> optFunc, VectorDataGroup lowBound, VectorDataGroup highBound)
       {
         VectorDataGroup center = VectorDataGroup.Ones(lowBound.Count) * UNIT_SIZE / 2;
         VectorDataGroup sizes = VectorDataGroup.Ones(lowBound.Count) * UNIT_SIZE;

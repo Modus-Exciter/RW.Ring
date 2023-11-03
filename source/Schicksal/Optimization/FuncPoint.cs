@@ -8,7 +8,7 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
-    private class FuncPoint : IComparable<FuncPoint>
+    private struct FuncPoint : IComparable<FuncPoint>
     {
       public readonly VectorDataGroup x;
       public readonly double y;

@@ -21,7 +21,7 @@ namespace Schicksal.VectorField
     }
   }
 
-  public class VectorDataGroup : IDataGroup
+  public struct VectorDataGroup : IDataGroup
   {
     private readonly double[] m_values;
 

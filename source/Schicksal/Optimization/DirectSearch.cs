@@ -15,7 +15,7 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
-    public static VectorDataGroup DIRECTSearch(Func<VectorDataGroup, double> optFunc, VectorDataGroup lowBoundary, VectorDataGroup highBoundary, OptimizationOptions options = null)
+    public static VectorDataGroup DIRECTSearch(Func<IDataGroup, double> optFunc, VectorDataGroup lowBoundary, VectorDataGroup highBoundary, OptimizationOptions options = null)
     {
       options = options ?? OptimizationOptions.Default;
       int iterCount = 0;
@@ -24,7 +24,7 @@ namespace Schicksal.Optimization
       double deltaX = double.MaxValue;
       Domain domain = new Domain(optFunc, lowBoundary, highBoundary);
       FuncPoint minPoint = domain.MinPoint; 
-      FuncPoint newMinPoint = null;
+      FuncPoint newMinPoint = domain.MinPoint;
 
       while (( (deltaY > options.m_tolY && deltaX > options.m_tolX) || deltaX == 0) && iterCount < options.m_maxIter)
       {
