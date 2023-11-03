@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Schicksal.Optimization.MathOptimization">
+    <Position X="4.75" Y="1" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="Schicksal.Optimization.MathOptimization.Domain">
+        <TypeIdentifier>
+          <NewMemberFileName>Optimization\DividableRectangle.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="Schicksal.Optimization.MathOptimization.DividableRectangle">
+        <NestedTypes>
+          <Class Name="Schicksal.Optimization.MathOptimization.DividableRectangle.Sample" Collapsed="true">
+            <TypeIdentifier>
+              <NewMemberFileName>Optimization\DividableRectangle.cs</NewMemberFileName>
+            </TypeIdentifier>
+            <Lollipop Position="0.2" />
+          </Class>
+        </NestedTypes>
+        <TypeIdentifier>
+          <NewMemberFileName>Optimization\DividableRectangle.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="Schicksal.Optimization.MathOptimization.FuncPoint" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Optimization\FuncPoint.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAQAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Optimization\DirectSearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

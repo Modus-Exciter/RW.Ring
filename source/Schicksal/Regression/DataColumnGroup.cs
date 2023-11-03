@@ -31,7 +31,7 @@ namespace Schicksal.Regression
         m_rows = column.Table.Select(filter);
     }
 
-    public int Count
+    public int Dim
     {
       get
       {

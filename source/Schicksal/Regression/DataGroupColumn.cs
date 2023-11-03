@@ -32,7 +32,7 @@ namespace Schicksal.Regression
 
     public int RowCount
     {
-      get { return m_group.Count; }
+      get { return m_group.Dim; }
     }
 
     public int ColumnCount
@@ -74,7 +74,7 @@ namespace Schicksal.Regression
 
     public int ColumnCount
     {
-      get { return m_group.Count; }
+      get { return m_group.Dim; }
     }
   }
 }

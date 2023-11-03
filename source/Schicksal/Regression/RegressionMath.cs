@@ -1,109 +1,124 @@
 ﻿using Notung.Data;
 using Schicksal.Basic;
+using Schicksal.VectorField;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Design;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
-
+using System.Security.AccessControl;
+using System.Runtime.InteropServices.ComTypes;
+#if DEBUG
+using Schicksal.Optimization;
+#endif
 namespace Schicksal.Regression
 {
   public static class MathFunction
   {
-    public static double LogisticFunction(double x, double[] t)
+    public static Func<VectorDataGroup, double> ReverseOnF(Func<VectorDataGroup, double> func)
     {
-      if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
+      return (VectorDataGroup x) => -func(x);
+    }
+
+    public static double Logistic(double x, IDataGroup t)
+    {
+      if (t.Dim != 3) throw new ArgumentException("Wrong size of parameter t");
       double power = Math.Pow(t[1], x);
       return t[0] * power / (t[2] + power);
     }
 
-    public static double LinearFunction(double x, double[] t)
+    public static double Michaelis(double x, IDataGroup t)
     {
-      if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Dim != 2) throw new ArgumentException("Wrong size of parameter t");
+      return t[0] * x / (t[1] + x);
+    }
+
+    public static double Linear(double x, IDataGroup t)
+    {
+      if (t.Dim != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x + t[1];
     }
   }
 
   public class LikelyhoodFunction
   {
-    const double MINIMAL_WEIGHT = 0.01;
+    const double MIN_VAR = 10E-3;
+    const double HET_THRESHOLD = 0.5;
+    const double SAMPLE_COUNT_THRESHOLD = 20;
 
-    readonly IDataGroup m_x;
-    readonly IDataGroup m_y;
-    readonly int m_n;
+    private readonly IDataGroup x;
+    private readonly IDataGroup y;
+    private double midVar;
+    private readonly Func<double, IDataGroup, double> dependencyFunction;
+    private readonly Func<IDataGroup, double> calculate;
+    private PolylineFit variance;
 
-    Func<double, double[], double> m_regr_function;
-    Func<double, double> m_var_function;
+    public Func<IDataGroup, double> Calculate { get { return calculate; } }
 
-    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> regrFunction, Func<double, double> varFunction = null)
+    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, IDataGroup, double> dependencyFunction)
     {
-      if (x.Count != y.Count) throw new ArgumentException("Sizes of selection doesn't match");
-      this.m_x = x; this.m_y = y;
-      this.m_n = x.Count;
-      this.m_regr_function = regrFunction;
-      this.m_var_function = varFunction;
+      if (x.Dim != y.Dim) throw new ArgumentOutOfRangeException();
+      this.x = x; 
+      this.y = y;
+      this.dependencyFunction = dependencyFunction;
+      
+      variance = new PolylineFit(x, new PolylineFit(x, y).CalculateResidual());
+
+      if (this.IsHeteroscedascity()) calculate = this.CalculateHet;
+      else calculate = this.CalculateDef;
     }
-    public double Calculate(double[] t)
-    {
-      return m_var_function == null ? this.Calc(t) : this.Calc(t, m_var_function);
-    }
-    private double Calc(double[] t)
-    {
-      double res = 10E100;
-      //double res = Math.Pow(2*Math.PI, -n/2);
-      double variance = this.StandartVariance(t);
-      double variance2 = variance * variance;
 
-      for (int i = 0; i < m_n; i++)
+    private bool IsHeteroscedascity()
+    {
+      double[] varVals = variance.Points.Select(point => point.y)
+        .Skip(1).Take(variance.Points.Length - 2).ToArray();
+
+      if (x.Dim >= SAMPLE_COUNT_THRESHOLD)
       {
-        res /= variance;
-        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+        midVar = varVals.Sum() / varVals.Length;
+        double maxDiff = varVals.Max() - varVals.Min();
+
+        if (maxDiff / midVar <= HET_THRESHOLD) return false;
+        else return true;
       }
-
-      return res;
-    }
-    private double Calc(double[] t, Func<double, double> varFunction)
-    {
-      double res = 10E100;
-      //double res = Math.Pow(2 * Math.PI, -n / 2);
-      double standartVariance = this.StandartVariance(t);
-      double variance = 0; double variance2 = 0;
-
-      for (int i = 0; i < m_n; i++)
+      else
       {
-        variance = varFunction(m_x[i]) * standartVariance;
-        if (variance <= 0) variance = MINIMAL_WEIGHT * standartVariance;
-        variance2 = variance * variance;
-
-        res /= variance;
-        res *= Math.Exp(-Math.Pow((m_y[i] - m_regr_function(m_x[i], t)), 2) / (2 * variance2));
+        midVar = varVals.Max();
+        return false;
       }
-
-      return res;
     }
 
-    public double StandartVariance(double[] t)
+    private double CalculateHet(IDataGroup t)
     {
-      if (m_x.Count != m_y.Count) throw new ArgumentException("Sizes of selection doesn't match");
-
       double res = 0;
-      for (int i = 0; i < m_x.Count; i++)
-      {
-        double derivation = m_y[i] - m_regr_function(m_x[i], t);
-        res += derivation * derivation;
-      }
-      res /= (m_x.Count - 1);
+      double a, b;
 
-      return Math.Sqrt(res); ;
+      for (int i = 0; i < x.Dim; i++)
+      {
+        a = y[i] - dependencyFunction(x[i], t);
+        b = variance.Calculate(x[i]);
+        if (b == 0) b = MIN_VAR;
+        res += (a * a) / (2 * b * b);
+      }
+      if (double.IsNaN(res)) res = double.MaxValue;
+      return res;
     }
 
-    public IDataGroup CalculateResidual(double[] t)
+    private double CalculateDef(IDataGroup t)
     {
-      double[] res = new double[m_n];
-      double variance = this.StandartVariance(t);
-      for (int i = 0; i < m_n; i++)
-        res[i] = Math.Abs(m_y[i] - m_regr_function(m_x[i], t)) / variance;
+      double res = 0;
+      double b = 2 * midVar * midVar;
+      double a;
+      
+      for (int i = 0; i < x.Dim; i++)
+      {
+        a = y[i] - dependencyFunction(x[i], t);
+        res += (a * a) / b;
+      }
 
-      return new ArrayDataGroup(res);
+      return res;
     }
   }
 }

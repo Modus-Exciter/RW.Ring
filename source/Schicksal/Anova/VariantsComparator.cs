@@ -75,13 +75,13 @@ namespace Schicksal.Anova
 
           row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
           row["Mean"] = DescriptionStatistics.Mean(group[i]);
-          row["Count"] = group[i].Count;
+          row["Count"] = group[i].Dim;
 
-          if (group[i].Count > 1)
+          if (group[i].Dim > 1)
           {
             row["Std error"] = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(group[i].Count) *
-              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - p / 2);
+            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(group[i].Dim) *
+              SpecialFunctions.invstudenttdistribution(group[i].Dim - 1, 1 - p / 2);
           }
           else
           {

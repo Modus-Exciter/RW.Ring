@@ -21,10 +21,10 @@ namespace Schicksal.Basic
 
     public static double Median(IDataGroup group)
     {
-      if (group.Count % 2 == 0)
-        return group.OrderBy(d => d).Skip(group.Count / 2 - 1).Take(2).Average();
+      if (group.Dim % 2 == 0)
+        return group.OrderBy(d => d).Skip(group.Dim / 2 - 1).Take(2).Average();
       else
-        return group.OrderBy(d => d).Skip(group.Count / 2).First();
+        return group.OrderBy(d => d).Skip(group.Dim / 2).First();
     }
 
     /// <summary>
@@ -67,9 +67,9 @@ namespace Schicksal.Basic
     public static double Dispresion(IDataGroup group)
     {
       Debug.Assert(group != null);
-      Debug.Assert(group.Count > 1);
+      Debug.Assert(group.Dim > 1);
 
-      return SquareDerivation(group) / (group.Count - 1);
+      return SquareDerivation(group) / (group.Dim - 1);
     }
     /// <summary>
     /// Упрощенная выборочная дисперсия
@@ -77,9 +77,9 @@ namespace Schicksal.Basic
     public static double PlainDispersion(IDataGroup group)
     {
       Debug.Assert(group != null);
-      Debug.Assert(group.Count > 1);
+      Debug.Assert(group.Dim > 1);
 
-      return PlainDerivation(group) / Math.Sqrt(group.Count - 1);
+      return PlainDerivation(group) / Math.Sqrt(group.Dim - 1);
     }
   }
 
@@ -130,14 +130,14 @@ namespace Schicksal.Basic
             Median = DescriptionStatistics.Median(group[i]),
             Min = group[i].Min(),
             Max = group[i].Max(),
-            Count = group[i].Count
+            Count = group[i].Dim
           };
 
           if (res[i].Count > 1)
           {
             res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(group[i].Count) *
-              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - m_probability / 2);
+            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(group[i].Dim) *
+              SpecialFunctions.invstudenttdistribution(group[i].Dim - 1, 1 - m_probability / 2);
           }
           else
           {

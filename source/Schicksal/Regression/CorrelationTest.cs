@@ -26,19 +26,19 @@ namespace Schicksal.Regression
         R = CalculateR(x, y),
         Eta = CalculateEta(x, y),
         Formula = CalculateFormula(x, y, factor, effect),
-        N = x.Count
+        N = x.Dim
       };
 
       if (double.IsNaN(result.Eta))
         result.Eta = result.R;
 
       result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
-      result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
-      result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
+      result.T001 = SpecialFunctions.invstudenttdistribution(x.Dim - 2, 1 - 0.01 / 2);
+      result.T005 = SpecialFunctions.invstudenttdistribution(x.Dim - 2, 1 - 0.05 / 2);
       result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
-      result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
+      result.PR = (1 - SpecialFunctions.studenttdistribution(x.Dim - 2, result.TR)) * 2;
       result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));
-      result.PH = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TH)) * 2;
+      result.PH = (1 - SpecialFunctions.studenttdistribution(x.Dim - 2, result.TH)) * 2;
 
       return result;
     }
@@ -51,10 +51,10 @@ namespace Schicksal.Regression
       if (result == null)
         throw new ArgumentNullException("result");
 
-      if (factor.Count != result.Count)
+      if (factor.Dim != result.Dim)
         throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
 
-      if (factor.Count < 3)
+      if (factor.Dim < 3)
         throw new ArgumentOutOfRangeException("factor.Count");
 
       double up_sum = 0;
@@ -63,7 +63,7 @@ namespace Schicksal.Regression
       double x_average = factor.Average();
       double y_average = result.Average();
 
-      for (int i = 0; i < factor.Count; i++)
+      for (int i = 0; i < factor.Dim; i++)
       {
         up_sum += (factor[i] - x_average) * (result[i] - y_average);
         x_sum += (factor[i] - x_average) * (factor[i] - x_average);
@@ -81,10 +81,10 @@ namespace Schicksal.Regression
       if (result == null)
         throw new ArgumentNullException("result");
 
-      if (factor.Count != result.Count)
+      if (factor.Dim != result.Dim)
         throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
 
-      if (factor.Count < 6)
+      if (factor.Dim < 6)
         return double.NaN;
 
       var sorted = EnumeratePoints(factor, result).OrderBy(p => p.X).ToList();
@@ -149,9 +149,9 @@ namespace Schicksal.Regression
       double min_y = double.MaxValue;
       double max_y = double.MinValue;
 
-      Point2D[] points = new Point2D[x.Count];
+      Point2D[] points = new Point2D[x.Dim];
 
-      for (int i = 0; i < x.Count; i++)
+      for (int i = 0; i < x.Dim; i++)
       {
         var point = new Point2D
         {
@@ -291,19 +291,19 @@ namespace Schicksal.Regression
 
       double dsum = 0;
 
-      for (int i = 0; i < x.Count; i++)
+      for (int i = 0; i < x.Dim; i++)
       {
         double d = x_ranks[x[i]] - y_ranks[Math.Abs(y[i] - dependency.Calculate(x[i]))];
         dsum += d * d;
       }
 
-      var r = 1 - 6 * dsum / (x.Count * ((double)x.Count * x.Count - 1));
-      var t = Math.Abs(r) * Math.Sqrt(x.Count - 2) / Math.Sqrt(1 - r * r);
+      var r = 1 - 6 * dsum / (x.Dim * ((double)x.Dim * x.Dim - 1));
+      var t = Math.Abs(r) * Math.Sqrt(x.Dim - 2) / Math.Sqrt(1 - r * r);
 
       dependency.Heteroscedasticity = new Heteroscedasticity
       {
         SpearmanCoefficent = r,
-        Probability = 2 * SpecialFunctions.studenttdistribution(x.Count - 2, t) - 1
+        Probability = 2 * SpecialFunctions.studenttdistribution(x.Dim - 2, t) - 1
       };
     }
 
@@ -314,7 +314,7 @@ namespace Schicksal.Regression
       int i = 0;
       Predicate<double> condition = gap => gap == x[i];
 
-      for (; i < x.Count; i++)
+      for (; i < x.Dim; i++)
       {
         if (Array.Exists(dependency.GetGaps(), condition))
           break;
@@ -359,7 +359,7 @@ namespace Schicksal.Regression
 
     private static IEnumerable<Point2D> EnumeratePoints(IDataGroup factor, IDataGroup result)
     {
-      for (int i = 0; i < factor.Count; i++)
+      for (int i = 0; i < factor.Dim; i++)
         yield return new Point2D { X = factor[i], Y = result[i] };
     }
 
