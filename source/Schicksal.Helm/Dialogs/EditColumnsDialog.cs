@@ -66,17 +66,6 @@ namespace Schicksal.Helm.Dialogs
     {
       m_grid.BeginEdit(true);
     }
-
-    private void m_grid_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-    {
-      if (m_grid.CurrentCell != null)
-      {
-        if (m_grid.CurrentCell.IsInEditMode)
-          m_grid.EndEdit();
-        else
-          m_grid.BeginEdit(false);
-      }
-    }
   }
 
   public class TableColumnInfo
@@ -181,6 +170,9 @@ namespace Schicksal.Helm.Dialogs
           {
             if (mapping[i] >= 0)
               row[i] = dr[mapping[i]];
+
+            if (!new_table.Columns[i].AllowDBNull && Convert.IsDBNull(row[i]))
+              row[i] = new_table.Columns[i].DefaultValue;
           }
 
           new_table.Rows.Add(row);

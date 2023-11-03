@@ -76,7 +76,6 @@
             this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.m_grid.Name = "m_grid";
             this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEnter);
-            this.m_grid.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_grid_CellMouseClick);
             // 
             // m_name_column
             // 
