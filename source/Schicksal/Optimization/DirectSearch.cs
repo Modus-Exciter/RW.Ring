@@ -19,7 +19,7 @@ namespace Schicksal.Optimization
     {
       options = options ?? OptimizationOptions.Default;
       int iterCount = 0;
-      int dim = lowBoundary.Dim;
+      int dim = lowBoundary.Count;
       double deltaY = double.MaxValue;
       double deltaX = double.MaxValue;
       Domain domain = new Domain(optFunc, lowBoundary, highBoundary);

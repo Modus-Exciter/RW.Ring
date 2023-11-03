@@ -31,7 +31,7 @@ namespace Schicksal.Optimization
     {
       options = options ?? OptimizationOptions.Default;
       int countIter = 0;
-      int n = x0.Dim;
+      int n = x0.Count;
       double deltaY = double.MaxValue;
       double deltaX = double.MaxValue;
 

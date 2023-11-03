@@ -56,7 +56,7 @@ namespace Schicksal.Optimization
       private readonly double diag;
       private readonly Func<VectorDataGroup, double> func;
 
-      public int Dim { get { return sizes.Dim; } }
+      public int Dim { get { return sizes.Count; } }
 
       public double Diag { get { return diag; } }
 
@@ -173,8 +173,8 @@ namespace Schicksal.Optimization
 
       public Domain(Func<VectorDataGroup, double> optFunc, VectorDataGroup lowBound, VectorDataGroup highBound)
       {
-        VectorDataGroup center = VectorDataGroup.Ones(lowBound.Dim) * UNIT_SIZE / 2;
-        VectorDataGroup sizes = VectorDataGroup.Ones(lowBound.Dim) * UNIT_SIZE;
+        VectorDataGroup center = VectorDataGroup.Ones(lowBound.Count) * UNIT_SIZE / 2;
+        VectorDataGroup sizes = VectorDataGroup.Ones(lowBound.Count) * UNIT_SIZE;
         this.highBound = highBound; this.lowBound = lowBound;
         Func<VectorDataGroup, double> unitOptFunc = x => optFunc(this.UnitCubeTransfer(x));
         DividableRectangle startRect = new DividableRectangle(new FuncPoint(center, unitOptFunc), sizes, unitOptFunc);

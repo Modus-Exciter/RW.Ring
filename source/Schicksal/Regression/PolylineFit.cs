@@ -61,7 +61,7 @@ namespace Schicksal.Regression
 
     public PolylineFit(IDataGroup x, IDataGroup y, double sectionCountCoef = DEFAULT_SECTION_COUNT_COEF)
     {
-      if (x.Dim != y.Dim) throw new ArgumentOutOfRangeException();
+      if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
       dataPoints = this.GetPointsByUniqeX(x, y);
       points = this.FitPoints(sectionCountCoef);
       lines = this.CreateLines();
@@ -70,7 +70,7 @@ namespace Schicksal.Regression
     private List<List<Point>> GetPointsByUniqeX(IDataGroup x, IDataGroup y)
     {
       List<List<Point>> points = new List<List<Point>> { new List<Point> { new Point(x[0], y[0]) } };
-      for (int i = 1; i < x.Dim; i++)
+      for (int i = 1; i < x.Count; i++)
       {
         if (Math.Round(x[i], TOL) == Math.Round(points[points.Count - 1][0].x, TOL))
           points[points.Count - 1].Add(new Point(x[i], y[i]));

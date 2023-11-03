@@ -24,20 +24,20 @@ namespace Schicksal.Regression
 
     public static double Logistic(double x, IDataGroup t)
     {
-      if (t.Dim != 3) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Count != 3) throw new ArgumentException("Wrong size of parameter t");
       double power = Math.Pow(t[1], x);
       return t[0] * power / (t[2] + power);
     }
 
     public static double Michaelis(double x, IDataGroup t)
     {
-      if (t.Dim != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Count != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x / (t[1] + x);
     }
 
     public static double Linear(double x, IDataGroup t)
     {
-      if (t.Dim != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Count != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x + t[1];
     }
   }
@@ -59,7 +59,7 @@ namespace Schicksal.Regression
 
     public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, IDataGroup, double> dependencyFunction)
     {
-      if (x.Dim != y.Dim) throw new ArgumentOutOfRangeException();
+      if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
       this.x = x; 
       this.y = y;
       this.dependencyFunction = dependencyFunction;
@@ -75,7 +75,7 @@ namespace Schicksal.Regression
       double[] varVals = variance.Points.Select(point => point.y)
         .Skip(1).Take(variance.Points.Length - 2).ToArray();
 
-      if (x.Dim >= SAMPLE_COUNT_THRESHOLD)
+      if (x.Count >= SAMPLE_COUNT_THRESHOLD)
       {
         midVar = varVals.Sum() / varVals.Length;
         double maxDiff = varVals.Max() - varVals.Min();
@@ -95,7 +95,7 @@ namespace Schicksal.Regression
       double res = 0;
       double a, b;
 
-      for (int i = 0; i < x.Dim; i++)
+      for (int i = 0; i < x.Count; i++)
       {
         a = y[i] - dependencyFunction(x[i], t);
         b = variance.Calculate(x[i]);
@@ -112,7 +112,7 @@ namespace Schicksal.Regression
       double b = 2 * midVar * midVar;
       double a;
       
-      for (int i = 0; i < x.Dim; i++)
+      for (int i = 0; i < x.Count; i++)
       {
         a = y[i] - dependencyFunction(x[i], t);
         res += (a * a) / b;

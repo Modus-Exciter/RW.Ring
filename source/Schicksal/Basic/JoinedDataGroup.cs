@@ -21,7 +21,7 @@ namespace Schicksal.Basic
         throw new ArgumentNullException("group");
 
       m_group = group;
-      m_total_count = m_group.Sum(g => g.Dim);
+      m_total_count = m_group.Sum(g => g.Count);
     }
 
     public double this[int index]
@@ -30,14 +30,14 @@ namespace Schicksal.Basic
       {
         int group_index = 0;
 
-        while (index >= m_group[group_index].Dim)
-          index -= m_group[group_index++].Dim;
+        while (index >= m_group[group_index].Count)
+          index -= m_group[group_index++].Count;
 
         return m_group[group_index][index];
       }
     }
 
-    public int Dim
+    public int Count
     {
       get { return m_total_count; }
     }

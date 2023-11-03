@@ -28,7 +28,7 @@ namespace Schicksal.Regression
       if (result == null)
         throw new ArgumentNullException("result");
 
-      if (factor.Dim != result.Dim)
+      if (factor.Count != result.Count)
         throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
     }
 
@@ -98,7 +98,7 @@ namespace Schicksal.Regression
       double sum_up = 0;
       double sum_dn = 0;
 
-      for (int i = 0; i < factor.Dim; i++)
+      for (int i = 0; i < factor.Count; i++)
       {
         double x = factor[i];
         double y = result[i];
@@ -133,9 +133,9 @@ namespace Schicksal.Regression
   {
     public ParabolicDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Dim, 3);
+      RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Count, 3);
 
-      for (int i = 0; i < factor.Dim; i++)
+      for (int i = 0; i < factor.Count; i++)
       {
         x_m[i, 0] = 1;
         x_m[i, 1] = factor[i];
@@ -185,7 +185,7 @@ namespace Schicksal.Regression
 
       int counter = 0;
 
-      for (int i = 0; i < factor.Dim; i++)
+      for (int i = 0; i < factor.Count; i++)
       {
         double x = factor[i];
 
@@ -200,7 +200,7 @@ namespace Schicksal.Regression
       avg_x /= counter;
       avg_y /= counter;
 
-      for (int i = 0; i < factor.Dim; i++)
+      for (int i = 0; i < factor.Count; i++)
       {
         double x = factor[i];
 
@@ -246,9 +246,9 @@ namespace Schicksal.Regression
 
     public HyperbolicDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Dim, 4);
+      RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Count, 4);
 
-      for (int i = 0; i < factor.Dim; i++)
+      for (int i = 0; i < factor.Count; i++)
       {
         x_m[i, 0] = 1;
         x_m[i, 1] = factor[i];

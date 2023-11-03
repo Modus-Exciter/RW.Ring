@@ -13,7 +13,7 @@ namespace Schicksal.Basic
     /// <summary>
     /// Объём выборки
     /// </summary>
-    int Dim { get; }
+    int Count { get; }
 
     /// <summary>
     /// Обращение к элементу выборки по номеру
@@ -104,7 +104,7 @@ namespace Schicksal.Basic
       get { return m_array[index]; }
     }
 
-    public int Dim
+    public int Count
     {
       get { return m_array.Length; }
     }

@@ -34,7 +34,7 @@ namespace Schicksal.VectorField
       Array.Copy(array, m_values, array.Length);
     }
 
-    public int Dim { get { return m_values.Length; } }
+    public int Count { get { return m_values.Length; } }
 
     public double this[int index] { get { return m_values[index]; } }
 
@@ -71,8 +71,8 @@ namespace Schicksal.VectorField
 
     public static VectorDataGroup operator +(VectorDataGroup a, VectorDataGroup b)
     {
-      if (a.Dim != b.Dim) throw new ArgumentException("Dimensions of vectors don't agree");
-      double[] res = new double[a.Dim];
+      if (a.Count != b.Count) throw new ArgumentException("Dimensions of vectors don't agree");
+      double[] res = new double[a.Count];
       for (int i = 0; i < res.Length; i++)
         res[i] = a[i] + b[i];
       return new VectorDataGroup(res);
@@ -97,8 +97,8 @@ namespace Schicksal.VectorField
 
     public static VectorDataGroup operator *(VectorDataGroup a, VectorDataGroup b)
     {
-      if (a.Dim != b.Dim) throw new ArgumentException("Sizes doesn't natch");
-      double[] res = new double[a.Dim];
+      if (a.Count != b.Count) throw new ArgumentException("Sizes doesn't natch");
+      double[] res = new double[a.Count];
       for (int i = 0; i < res.Length; i++)
         res[i] = a[i] * b[i];
       return new VectorDataGroup(res);
