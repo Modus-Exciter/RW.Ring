@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xaml">
@@ -48,6 +49,19 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\BindingHelper.cs" />
+    <Compile Include="Configuration\ConfigurationPage.cs" />
+    <Compile Include="Configuration\ListItemAttribute.cs" />
+    <Compile Include="Configuration\ListItemBase.cs" />
+    <Compile Include="Configuration\TemplateViewAttribute.cs" />
+    <Compile Include="Configuration\ConfigurationPageViewAttribute.cs" />
+    <Compile Include="Configuration\ContentControlHelper.cs" />
+    <Compile Include="Configuration\SettingsItemDataTemplateSelector.cs" />
+    <Compile Include="Configuration\IConfiguratorExtensions.cs" />
+    <Compile Include="Configuration\SettingsController.cs" />
+    <Compile Include="Configuration\SettingsDialogService.cs" />
+    <Compile Include="Configuration\SettingsDialogViewModel.cs" />
+    <Compile Include="Configuration\SettingsError.cs" />
     <Compile Include="Controls\ARILogo.xaml.cs">
       <DependentUpon>ARILogo.xaml</DependentUpon>
     </Compile>
@@ -61,10 +75,16 @@
     <Compile Include="Controls\MdiManager.xaml.cs">
       <DependentUpon>MdiManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingsDefaultPage.xaml.cs">
+      <DependentUpon>SettingsDefaultPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\GoldenRatioConverter.cs" />
     <Compile Include="Converters\GridConverter.cs" />
     <Compile Include="Converters\ImageToBitmapSourceConverter.cs" />
+    <Compile Include="Converters\BoolToGridRowHeightConverter.cs" />
+    <Compile Include="Converters\ItemToModelItem.cs" />
     <Compile Include="Converters\MathOpertorConverter.cs" />
+    <Compile Include="Converters\DisplayNameObjectConverter.cs" />
     <Compile Include="Dialogs\AboutBox.xaml.cs">
       <DependentUpon>AboutBox.xaml</DependentUpon>
     </Compile>
@@ -72,6 +92,9 @@
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\MessageDialogContext.cs" />
+    <Compile Include="Dialogs\SettingsDialog.xaml.cs">
+      <DependentUpon>SettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DispatcherSynchronizeInvoke.cs" />
     <Compile Include="ICloseCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -118,6 +141,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SettingsDefaultPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Dialogs\AboutBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -125,6 +152,10 @@
     <Page Include="Dialogs\MessageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\ButtonStyles.xaml">
       <SubType>Designer</SubType>
@@ -156,6 +187,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\settings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

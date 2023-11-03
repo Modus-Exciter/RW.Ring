@@ -1,0 +1,61 @@
+﻿<UserControl
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Notung.Feuerzauber.Controls"
+    xmlns:conf="clr-namespace:Notung.Feuerzauber.Configuration"
+      xmlns:Converters="clr-namespace:Notung.Feuerzauber.Converters" x:Class="Notung.Feuerzauber.Controls.SettingsDefaultPage"
+      mc:Ignorable="d" 
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      d:DesignHeight="450" d:DesignWidth="800"
+      >
+
+    <UserControl.Resources>
+        <Converters:DisplayNameObjectConverter x:Key="DisplayNameObjectConverter"/>
+        <Converters:ItemToModelItem x:Key="ItemToModelItem"/>
+
+        <DataTemplate x:Key="TextTemplate">
+            <TextBox conf:BindingHelper.PropertyName="Text"  conf:BindingHelper.SourceModelItem="{Binding}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="CheckBoxTemplate">
+            <CheckBox conf:BindingHelper.SourceModelItem="{Binding}"   conf:BindingHelper.PropertyName="IsChecked"   />
+        </DataTemplate>
+        <DataTemplate x:Key="ComboBoxTemplate">
+            <ComboBox conf:BindingHelper.SourceModelItem="{Binding}"     ItemsSource="{Binding ListItem}" conf:BindingHelper.PropertyName="SelectedItem"   />
+        </DataTemplate>
+        <conf:SettingsItemDataTemplateSelector x:Key="TemplateSelector"
+                                      TextTemplate="{StaticResource TextTemplate}"
+                                      CheckBoxTemplate="{StaticResource CheckBoxTemplate}" ComboBoxTemplate="{StaticResource ComboBoxTemplate}" />
+    </UserControl.Resources>
+
+    <ItemsControl ItemsSource="{Binding}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <GroupBox Header="{Binding Converter={StaticResource DisplayNameObjectConverter}, Mode=OneWay}">
+                    <ItemsControl ItemsSource="{Binding Converter={StaticResource ItemToModelItem}, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="26"/>
+                                        <RowDefinition Height="2"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="70"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="{Binding DisplayName}"/>
+                                    <ContentControl  Grid.Column="1" Content="{Binding}"
+                    ContentTemplateSelector="{StaticResource TemplateSelector}" />
+                                 
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </GroupBox>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>
