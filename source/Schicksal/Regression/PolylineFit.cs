@@ -52,19 +52,19 @@ namespace Schicksal.Regression
     const int TOL = 3;
     const double DEFAULT_SECTION_COUNT_COEF = 1;
 
-    private readonly Line[] lines;
-    private readonly Point[] points;
-    private readonly List<List<Point>> dataPoints;
+    private readonly Line[] m_lines;
+    private readonly Point[] m_points;
+    private readonly List<List<Point>> m_data_points;
 
-    public Line[] Lines { get { return (Line[])lines.Clone(); } }
-    public Point[] Points { get { return (Point[])points.Clone(); } }
+    public Line[] Lines { get { return (Line[])m_lines.Clone(); } }
+    public Point[] Points { get { return (Point[])m_points.Clone(); } }
 
     public PolylineFit(IDataGroup x, IDataGroup y, double sectionCountCoef = DEFAULT_SECTION_COUNT_COEF)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      dataPoints = this.GetPointsByUniqeX(x, y);
-      points = this.FitPoints(sectionCountCoef);
-      lines = this.CreateLines();
+      m_data_points = this.GetPointsByUniqeX(x, y);
+      m_points = this.FitPoints(sectionCountCoef);
+      m_lines = this.CreateLines();
     }
 
     private List<List<Point>> GetPointsByUniqeX(IDataGroup x, IDataGroup y)
@@ -82,14 +82,14 @@ namespace Schicksal.Regression
 
     private Point[] FitPoints(double sectionCountCoef)
     {
-      int sectionCount = (int)(sectionCountCoef * Math.Sqrt(dataPoints.Count));
-      int sectionSize = (int)((double)dataPoints.Count / sectionCount);
-      int modulo = dataPoints.Count - sectionSize * sectionCount;
+      int sectionCount = (int)(sectionCountCoef * Math.Sqrt(m_data_points.Count));
+      int sectionSize = (int)((double)m_data_points.Count / sectionCount);
+      int modulo = m_data_points.Count - sectionSize * sectionCount;
       Point[] linePoints = new Point[sectionCount + 2];
 
       linePoints[0] = new Point
-        (dataPoints[0].Select(point => point.x).Average(),
-        dataPoints[0].Select(point => point.y).Average());
+        (m_data_points[0].Select(point => point.x).Average(),
+        m_data_points[0].Select(point => point.y).Average());
 
       int index = 0;
       for (int i = 0; i < sectionCount; i++)
@@ -99,9 +99,9 @@ namespace Schicksal.Regression
         int pointsCount = 0;
         for (int j = 0; j < sectionSize || (i < modulo && j < (sectionSize + 1)); j++)
         {
-          midY += dataPoints[index].Select(point => point.y).Sum();
-          midX += dataPoints[index].Select(point => point.x).Sum();
-          pointsCount += dataPoints[index].Count;
+          midY += m_data_points[index].Select(point => point.y).Sum();
+          midX += m_data_points[index].Select(point => point.x).Sum();
+          pointsCount += m_data_points[index].Count;
           index++;
         }
         midY /= pointsCount;
@@ -110,34 +110,34 @@ namespace Schicksal.Regression
       }
 
       linePoints[linePoints.Length - 1] = new Point
-        (dataPoints.Last().Select(point => point.x).Average(),
-        dataPoints.Last().Select(point => point.y).Average());
+        (m_data_points.Last().Select(point => point.x).Average(),
+        m_data_points.Last().Select(point => point.y).Average());
 
       return linePoints;
     }
 
     private Line[] CreateLines()
     {
-      Line[] lines = new Line[points.Length - 1];
+      Line[] lines = new Line[m_points.Length - 1];
       for (int i = 0; i < lines.Length; i++)
-        lines[i] = new Line(points[i], points[i + 1]);
+        lines[i] = new Line(m_points[i], m_points[i + 1]);
       return lines;
     }
 
     public double Calculate(double x)
     {
       int i = 0;
-      while (!lines[i].IsXBelong(x)) i++;
-      return lines[i].Calculate(x);
+      while (!m_lines[i].IsXBelong(x)) i++;
+      return m_lines[i].Calculate(x);
     }
 
     public IDataGroup CalculateResidual()
     {
       List<double> res = new List<double>();
 
-      for (int i = 0; i < dataPoints.Count; i++)
-        for (int j = 0; j < dataPoints[i].Count; j++)
-          res.Add(Math.Abs(this.Calculate(dataPoints[i][j].x) - dataPoints[i][j].y));
+      for (int i = 0; i < m_data_points.Count; i++)
+        for (int j = 0; j < m_data_points[i].Count; j++)
+          res.Add(Math.Abs(this.Calculate(m_data_points[i][j].x) - m_data_points[i][j].y));
 
       return new ArrayDataGroup(res.ToArray());
     }
