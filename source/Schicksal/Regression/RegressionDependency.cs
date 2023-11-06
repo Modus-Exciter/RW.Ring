@@ -75,8 +75,9 @@ namespace Schicksal.Regression
       types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
       types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
       types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
-      types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
+      types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
       types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
+      types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
       return types;
     }
 
@@ -302,11 +303,77 @@ namespace Schicksal.Regression
 
   public sealed class ExponentialDependency : RegressionDependency
   {
+    public ExponentialDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    {
+      double avg_x = 0;
+      double avg_y = 0;
+      double sum_up = 0;
+      double sum_dn = 0;
+
+      int counter = 0;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double y = result[i];
+
+        if (y <= 0)
+          continue;
+
+        avg_x += factor[i];
+        avg_y += Math.Log(y);
+
+        counter++;
+      }
+
+      avg_x /= counter;
+      avg_y /= counter;
+
+      for (int i = 0; i < factor.Count; i++)
+      {
+        double x = factor[i];
+        double y = result[i];
+
+        if (y <= 0)
+          continue;
+
+        sum_up += (x - avg_x) * (Math.Log(y) - avg_y);
+        sum_dn += (x - avg_x) * (x - avg_x);
+      }
+
+      double byx = sum_up / sum_dn;
+      double k = byx;
+      double d = avg_y - byx * avg_x;
+
+      A = Math.Exp(d);
+      B = Math.Exp(k);
+
+      if (B == 1)
+        throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
+    }
+
+    public double A { get; private set; }
+
+    public double B { get; private set; }
+
+    public override double Calculate(double x)
+    {
+      return A * Math.Pow(B, x);
+    }
+
+    public override string ToString()
+    {
+      return string.Format("{0} = {1} * {2} ^ {3}",
+        this.Effect, ConvertNumber(this.A), ConvertNumber(this.B), this.Factor);
+    }
+  }
+
+  public sealed class LikehoodMichaelisDependency : RegressionDependency
+  {
     const double Y_COEF = 2;
     const double X_COEF = 2;
     private readonly VectorDataGroup m_param;
 
-    public ExponentialDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public LikehoodMichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
       double maxY = result.Max(); double minY = result.Min();
       double minX = factor.Min(); double maxX = factor.Max();
@@ -363,7 +430,8 @@ namespace Schicksal.Regression
 
     public override string ToString()
     {
-      return string.Format("{0} = {1} * {2} ^ {3} / ({4} + {2} ^ {3})", this.Effect, ConvertNumber(A), ConvertNumber(B), Factor, ConvertNumber(C));
+      return string.Format("{0} = {1} * {2} ^ {3} / ({4} + {2} ^ {3})", 
+        this.Effect, ConvertNumber(A), ConvertNumber(B), this.Factor, ConvertNumber(C));
     }
   }
 }

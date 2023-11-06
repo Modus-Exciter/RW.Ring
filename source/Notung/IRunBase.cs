@@ -26,7 +26,7 @@ namespace Notung
   public interface ICancelableRunBase : IRunBase
   {
     /// <summary>
-    /// Токен отмены задачи
+    /// Токен отмены задачи 
     /// </summary>
     CancellationToken CancellationToken { get; set; }
 
