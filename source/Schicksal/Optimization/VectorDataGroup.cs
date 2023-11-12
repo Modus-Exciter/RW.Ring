@@ -20,7 +20,9 @@ namespace Schicksal.VectorField
         return number.ToString("0.000");
     }
   }
-
+  /// <summary>
+  /// Структура, осуществляющая векторные операции
+  /// </summary>
   public struct VectorDataGroup : IDataGroup
   {
     private readonly double[] m_values;
@@ -64,12 +66,12 @@ namespace Schicksal.VectorField
       return new VectorDataGroup(result);
     }
 
-    public static VectorDataGroup operator -(VectorDataGroup a)
+    public static VectorDataGroup operator -(in VectorDataGroup a)
     {
       return new VectorDataGroup(a.m_values.Select(value => -value).ToArray());
     }
 
-    public static VectorDataGroup operator +(VectorDataGroup a, VectorDataGroup b)
+    public static VectorDataGroup operator +(in VectorDataGroup a, in VectorDataGroup b)
     {
       if (a.Count != b.Count) throw new ArgumentException("Dimensions of vectors don't agree");
       double[] res = new double[a.Count];
@@ -78,24 +80,24 @@ namespace Schicksal.VectorField
       return new VectorDataGroup(res);
     }
 
-    public static VectorDataGroup operator -(VectorDataGroup a, VectorDataGroup b)
+    public static VectorDataGroup operator -(in VectorDataGroup a, in VectorDataGroup b)
     {
       return a + (-b);
     }
 
-    public static VectorDataGroup operator /(VectorDataGroup a, double b)
+    public static VectorDataGroup operator /(in VectorDataGroup a, double b)
     {
       return new VectorDataGroup(a.m_values.Select(value => value / b).ToArray());
     }
 
-    public static VectorDataGroup operator *(double b, VectorDataGroup a)
+    public static VectorDataGroup operator *(double b, in VectorDataGroup a)
     {
       return new VectorDataGroup(a.m_values.Select(value => value * b).ToArray());
     }
 
-    public static VectorDataGroup operator *(VectorDataGroup a, double b) { return b * a; }
+    public static VectorDataGroup operator *(in VectorDataGroup a, double b) { return b * a; }
 
-    public static VectorDataGroup operator *(VectorDataGroup a, VectorDataGroup b)
+    public static VectorDataGroup operator *(in VectorDataGroup a, in VectorDataGroup b)
     {
       if (a.Count != b.Count) throw new ArgumentException("Sizes doesn't natch");
       double[] res = new double[a.Count];

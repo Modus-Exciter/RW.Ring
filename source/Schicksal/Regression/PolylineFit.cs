@@ -8,6 +8,9 @@ namespace Schicksal.Regression
 {
   public class PolylineFit
   {
+    /// <summary>
+    /// Точка
+    /// </summary>
     public struct Point
     {
       public readonly double x;
@@ -23,50 +26,103 @@ namespace Schicksal.Regression
         return x.ToString() + ' ' + y.ToString();
       }
     }
+    /// <summary>
+    /// Отрезок
+    /// </summary>
     public struct Line
     {
+      /// <summary>
+      /// Правая точка
+      /// </summary>
       public readonly Point left;
+      /// <summary>
+      /// Левая точка
+      /// </summary>
       public readonly Point right;
+      /// <summary>
+      /// Угол наклона
+      /// </summary>
       public readonly double slope;
-
+      /// <summary>
+      /// Инициализация отрезка
+      /// </summary>
+      /// <param name="left">Левая точка</param>
+      /// <param name="right">Правая точкуа</param>
       public Line(Point left, Point right)
       {
         this.left = left;
         this.right = right;
         this.slope = (right.y - left.y) / (right.x - left.x);
       }
-
+      /// <summary>
+      /// Принадлежит ли аргумент области определения отрезца
+      /// </summary>
+      /// <param name="x">Аргумент</param>
+      /// <returns></returns>
       public bool IsXBelong(double x)
       {
         if (x >= left.x && x <= right.x)
           return true;
         return false;
       }
-
+      /// <summary>
+      /// Расчет значения отрезка в точке
+      /// </summary>
+      /// <param name="x">Аргумент</param>
+      /// <returns>Значение y отрезка</returns>
       public double Calculate(double x)
       {
         return (x - left.x) * slope + left.y;
       }
     }
-
-    const int TOL = 3;
+    /// <summary>
+    /// Точность операции эквивалентности фактора
+    /// </summary>
+    const int TOL = 4;
+    /// <summary>
+    /// Обычное значение коэффициента количества точек
+    /// </summary>
     const double DEFAULT_SECTION_COUNT_COEF = 1;
 
     private readonly Line[] m_lines;
     private readonly Point[] m_points;
+    /// <summary>
+    /// Упорядоченные точки
+    /// </summary>
     private readonly List<List<Point>> m_data_points;
-
+    /// <summary>
+    /// Отрезки ломанной
+    /// </summary>
     public Line[] Lines { get { return (Line[])m_lines.Clone(); } }
+    /// <summary>
+    /// Узловые точки ломанной
+    /// </summary>
     public Point[] Points { get { return (Point[])m_points.Clone(); } }
-
+    /// <summary>
+    /// Инициализация ломанной
+    /// </summary>
+    /// <param name="x">Фактор</param>
+    /// <param name="y">Результат</param>
+    /// <param name="sectionCountCoef">Коэффициент количества точек</param>
+    /// <exception cref="ArgumentOutOfRangeException">Размер массива факторов не совпадает с размером массива результатов</exception>
     public PolylineFit(IDataGroup x, IDataGroup y, double sectionCountCoef = DEFAULT_SECTION_COUNT_COEF)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
       m_data_points = this.GetPointsByUniqeX(x, y);
+      m_data_points.Sort((firstList, secondList) => {
+        if (firstList[0].x < secondList[0].x) return -1;
+        if (firstList[0].x > secondList[0].x) return 1;
+        return 0;
+      });
       m_points = this.FitPoints(sectionCountCoef);
       m_lines = this.CreateLines();
     }
-
+    /// <summary>
+    /// Преобразование изначальной выборки в связанную структуру по уникальным иксам
+    /// </summary>
+    /// <param name="x">Фактор</param>
+    /// <param name="y">Результат</param>
+    /// <returns>Список по x списков по y</returns>
     private List<List<Point>> GetPointsByUniqeX(IDataGroup x, IDataGroup y)
     {
       List<List<Point>> points = new List<List<Point>> { new List<Point> { new Point(x[0], y[0]) } };
@@ -79,7 +135,12 @@ namespace Schicksal.Regression
       }
       return points;
     }
-
+    /// <summary>
+    /// Расчет средних геометрических для подвыборок изначальной выборки.
+    /// Расчет узлов ломанной
+    /// </summary>
+    /// <param name="sectionCountCoef">Коэффициент количества выборок</param>
+    /// <returns>Точки ломанной</returns>
     private Point[] FitPoints(double sectionCountCoef)
     {
       int sectionCount = (int)(sectionCountCoef * Math.Sqrt(m_data_points.Count));
@@ -115,7 +176,10 @@ namespace Schicksal.Regression
 
       return linePoints;
     }
-
+    /// <summary>
+    /// Расчет отрезков
+    /// </summary>
+    /// <returns>Отрезки, составляющие ломанную</returns>
     private Line[] CreateLines()
     {
       Line[] lines = new Line[m_points.Length - 1];
@@ -123,14 +187,21 @@ namespace Schicksal.Regression
         lines[i] = new Line(m_points[i], m_points[i + 1]);
       return lines;
     }
-
+    /// <summary>
+    /// Расчет значения ломанной
+    /// </summary>
+    /// <param name="x">Аргумент</param>
+    /// <returns>Значение ломанной</returns>
     public double Calculate(double x)
     {
       int i = 0;
       while (!m_lines[i].IsXBelong(x)) i++;
       return m_lines[i].Calculate(x);
     }
-
+    /// <summary>
+    /// Расчет выборки невязок
+    /// </summary>
+    /// <returns>Массив невязок</returns>
     public IDataGroup CalculateResidual()
     {
       List<double> res = new List<double>();

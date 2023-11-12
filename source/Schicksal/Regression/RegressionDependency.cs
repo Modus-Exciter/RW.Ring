@@ -416,9 +416,10 @@ namespace Schicksal.Regression
 
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
+      //Определение границ
       VectorDataGroup lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
       VectorDataGroup highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
-
+      //Инициализация функции правдоподобия и оптимизация
       LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
       m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
     }
