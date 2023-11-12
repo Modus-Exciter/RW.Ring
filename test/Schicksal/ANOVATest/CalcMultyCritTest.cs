@@ -203,13 +203,8 @@ namespace ANOVATest
 
       FisherMetrics multiF = FisherCriteria.CalculateCriteria(multi);
 
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 29, 31, 35 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 28, 26, 31, 36 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
-
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 31, 28, 31, 40 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 25, 29, 35, 39 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new[] { groupA });
+      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new[] { groupB });
 
       SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
 
