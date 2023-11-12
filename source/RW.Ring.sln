@@ -78,7 +78,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ANOVATest", "..\test\Schick
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImportImage", "ImportImage\ImportImage.csproj", "{D4A4EA85-B27C-4560-B10B-23037C9687DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableSetDataGroupTest", "..\test\Schicksal\BasicTest\TableSetDataGroupTest\TableSetDataGroupTest.csproj", "{C76CDEEA-AAEA-4A37-B0C6-ED57519AAE77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicStatisticsTest", "..\test\Schicksal\BasicStatisticsTest\BasicStatisticsTest.csproj", "{C76CDEEA-AAEA-4A37-B0C6-ED57519AAE77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

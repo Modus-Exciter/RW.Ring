@@ -3,7 +3,7 @@ using System;
 using Schicksal.Basic;
 using System.Data;
 
-namespace TableSetDataGroupTest
+namespace ANOVATest
 {
   [TestClass]
   public class TableSetDataGroupTest

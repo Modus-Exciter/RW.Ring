@@ -11,13 +11,13 @@ namespace Schicksal.Optimization
   class FileExportMath
   {
     const string FILE_TYPE = ".txt";
-    static readonly string DOC_PATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+    static readonly string _doc_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
     private static FileInfo InilializeFile(string fileName) 
     {
       FileInfo file;
 
-      string baseName = Path.Combine(DOC_PATH, fileName);
+      string baseName = Path.Combine(_doc_path, fileName);
       string probName = baseName;
       int i = 1;
       while (File.Exists(probName + FILE_TYPE))
