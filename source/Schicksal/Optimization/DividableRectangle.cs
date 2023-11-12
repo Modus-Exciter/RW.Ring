@@ -19,9 +19,9 @@ namespace Schicksal.Optimization
 
         public Sample(in FuncPoint left, in FuncPoint right, int dimIndex)
         {
-          this.m_left = left;
-          this.m_right = right;
-          this.m_dim_index = dimIndex;
+          m_left = left;
+          m_right = right;
+          m_dim_index = dimIndex;
         }
 
         public int Dim
@@ -67,27 +67,42 @@ namespace Schicksal.Optimization
       /// <summary>
       /// Размерность гиперпрямоугольника
       /// </summary>
-      public int Dim { get { return m_sizes.Count; } }
+      public int Dim
+      {
+        get { return m_sizes.Count; }
+      }
 
       /// <summary>
       /// Длина диагонали (критерий оптимальности)
       /// </summary>
-      public double Diag { get { return m_diag; } }
+      public double Diag
+      {
+        get { return m_diag; }
+      }
       
       /// <summary>
       /// Значение функции в центре (критерий оптимальности)
       /// </summary>
-      public double F { get { return m_center.y; } }
+      public double F
+      {
+        get { return m_center.y; }
+      }
       
       /// <summary>
       /// Положение центра в R^n пространстве
       /// </summary>
-      public VectorDataGroup X { get { return m_center.x; } }
+      public VectorDataGroup X
+      {
+        get { return m_center.x; }
+      }
 
       /// <summary>
       /// Совокупность значения функции в центре и положения центра
       /// </summary>
-      public FuncPoint Center { get { return m_center; } }
+      public FuncPoint Center
+      {
+        get { return m_center; }
+      }
 
       /// <summary>
       /// Строка для отладки
@@ -95,7 +110,11 @@ namespace Schicksal.Optimization
       /// <returns> Полную информацию о существенных свойствах прямоугольника</returns>
       public override string ToString()
       {
-        return String.Format("x:{0}   f:{1}     d:{3}   sizes:{2}", this.X.ToString(), NumberConvert.Do(this.F), this.m_sizes.ToString(), NumberConvert.Do(this.Diag));
+        return String.Format("x:{0}   f:{1}     d:{3}   sizes:{2}", 
+          this.X.ToString(),
+          NumberConvert.Do(this.F),
+          this.m_sizes.ToString(),
+          NumberConvert.Do(this.Diag));
       }
 
       /// <summary>
