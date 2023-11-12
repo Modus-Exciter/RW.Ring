@@ -13,35 +13,35 @@ namespace Schicksal.Optimization
     {
       private struct Sample : IComparable<Sample>
       {
-        private readonly FuncPoint left;
-        private readonly FuncPoint right;
-        private readonly int dimIndex;
+        private readonly FuncPoint m_left;
+        private readonly FuncPoint m_right;
+        private readonly int m_dim_index;
 
         public Sample(in FuncPoint left, in FuncPoint right, int dimIndex)
         {
-          this.left = left;
-          this.right = right;
-          this.dimIndex = dimIndex;
+          this.m_left = left;
+          this.m_right = right;
+          this.m_dim_index = dimIndex;
         }
 
         public int Dim
         {
-          get { return dimIndex; }
+          get { return m_dim_index; }
         }
 
         public FuncPoint Left
         {
-          get { return left; }
+          get { return m_left; }
         }
 
         public FuncPoint Right
         {
-          get { return right; }
+          get { return m_right; }
         }
 
         public FuncPoint Min
         {
-          get { return left.y < right.y ? left : right; }
+          get { return m_left.y < m_right.y ? m_left : m_right; }
         }
 
         public int CompareTo(Sample point)
@@ -53,41 +53,41 @@ namespace Schicksal.Optimization
       const int DIVIDE_COUNT = 3;
 
       //Центр треугольника с значением фуннции в нем. Значение функции - одно из состовляющих критерия оптимальности
-      private readonly FuncPoint center;
+      private readonly FuncPoint m_center;
       
       //Размеры прямоугольника
-      private readonly VectorDataGroup sizes;
+      private readonly VectorDataGroup m_sizes;
       
       //Диагональ - одно из состовляющих критерия оптимальности
-      private readonly double diag;
+      private readonly double m_diag;
       
       //Функция, по которой осуществляется оптимизационный расчет
-      private readonly Func<VectorDataGroup, double> func;
+      private readonly Func<VectorDataGroup, double> m_func;
 
       /// <summary>
       /// Размерность гиперпрямоугольника
       /// </summary>
-      public int Dim { get { return sizes.Count; } }
+      public int Dim { get { return m_sizes.Count; } }
 
       /// <summary>
       /// Длина диагонали (критерий оптимальности)
       /// </summary>
-      public double Diag { get { return diag; } }
+      public double Diag { get { return m_diag; } }
       
       /// <summary>
       /// Значение функции в центре (критерий оптимальности)
       /// </summary>
-      public double F { get { return center.y; } }
+      public double F { get { return m_center.y; } }
       
       /// <summary>
       /// Положение центра в R^n пространстве
       /// </summary>
-      public VectorDataGroup X { get { return center.x; } }
+      public VectorDataGroup X { get { return m_center.x; } }
 
       /// <summary>
       /// Совокупность значения функции в центре и положения центра
       /// </summary>
-      public FuncPoint Center { get { return center; } }
+      public FuncPoint Center { get { return m_center; } }
 
       /// <summary>
       /// Строка для отладки
@@ -95,7 +95,7 @@ namespace Schicksal.Optimization
       /// <returns> Полную информацию о существенных свойствах прямоугольника</returns>
       public override string ToString()
       {
-        return String.Format("x:{0}   f:{1}     d:{3}   sizes:{2}", this.X.ToString(), NumberConvert.Do(this.F), this.sizes.ToString(), NumberConvert.Do(this.Diag));
+        return String.Format("x:{0}   f:{1}     d:{3}   sizes:{2}", this.X.ToString(), NumberConvert.Do(this.F), this.m_sizes.ToString(), NumberConvert.Do(this.Diag));
       }
 
       /// <summary>
@@ -106,10 +106,10 @@ namespace Schicksal.Optimization
       /// <param name="func">Расчетная функция</param>
       public DividableRectangle(in FuncPoint center, in VectorDataGroup sizes, Func<VectorDataGroup, double> func)
       {
-        this.center = center;
-        this.sizes = sizes;
-        this.func = func;
-        diag = sizes.Length();
+        this.m_center = center;
+        this.m_sizes = sizes;
+        this.m_func = func;
+        m_diag = sizes.Length();
       }
 
       /// <summary>
@@ -146,9 +146,9 @@ namespace Schicksal.Optimization
 
         VectorDataGroup sizes = this.SplitSize(sample.Dim);
 
-        result[0] = new DividableRectangle(sample.Left, sizes, func);
-        result[1] = new DividableRectangle(sample.Right, sizes, func);
-        result[2] = new DividableRectangle(center, sizes, func);
+        result[0] = new DividableRectangle(sample.Left, sizes, m_func);
+        result[1] = new DividableRectangle(sample.Right, sizes, m_func);
+        result[2] = new DividableRectangle(m_center, sizes, m_func);
 
         return result;
       }
@@ -166,9 +166,9 @@ namespace Schicksal.Optimization
 
         for (int i = 0; i < dimIndex.Length; i++)
         {
-          delta = sizes[dimIndex[i]] / DIVIDE_COUNT;
-          left = new FuncPoint(center.x - this.UnitVector(dimIndex[i]) * delta, func);
-          right = new FuncPoint(center.x + this.UnitVector(dimIndex[i]) * delta, func);
+          delta = m_sizes[dimIndex[i]] / DIVIDE_COUNT;
+          left = new FuncPoint(m_center.x - this.UnitVector(dimIndex[i]) * delta, m_func);
+          right = new FuncPoint(m_center.x + this.UnitVector(dimIndex[i]) * delta, m_func);
           samples[i] = new Sample(left, right, dimIndex[i]);
         }
 
@@ -182,10 +182,10 @@ namespace Schicksal.Optimization
       private int[] GetSplitDimensions()
       {
         List<int> res = new List<int>(this.Dim);
-        double max = sizes.Max();
+        double max = m_sizes.Max();
 
         for (int i = 0; i < this.Dim; i++)
-          if (sizes[i] == max)
+          if (m_sizes[i] == max)
             res.Add(i); 
 
         return res.ToArray();
@@ -198,7 +198,7 @@ namespace Schicksal.Optimization
       /// <returns></returns>
       private VectorDataGroup SplitSize(int dimIndex)
       {
-        double[] newSizes = sizes.ToArray();
+        double[] newSizes = m_sizes.ToArray();
         newSizes[dimIndex] /= DIVIDE_COUNT;
         return new VectorDataGroup(newSizes);
       }
