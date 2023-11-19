@@ -16,13 +16,13 @@ namespace Schicksal.Optimization
   public static partial class MathOptimization
   {
     /// <summary>
-    /// 
+    /// Абсолютный интервальный оптимизационный алгоритм DIRECT
     /// </summary>
     /// <param name="optFunc">Оптимизируемая функция</param>
     /// <param name="lowBoundary">Нижняя граница поиска (по всем измерениям)</param>
     /// <param name="highBoundary">Верхняя граница поиска</param>
     /// <param name="options">Параметры оптимизации: точность, кол-во итераций</param>
-    /// <returns></returns>
+    /// <returns>Минимум функции</returns>
     public static VectorDataGroup DIRECTSearch(Func<IDataGroup, double> optFunc, in VectorDataGroup lowBoundary, in VectorDataGroup highBoundary, OptimizationOptions options = null)
     {
       options = options ?? OptimizationOptions.Default;

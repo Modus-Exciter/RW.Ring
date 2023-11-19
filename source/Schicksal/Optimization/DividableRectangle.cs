@@ -11,6 +11,9 @@ namespace Schicksal.Optimization
   {
     private struct DividableRectangle : IComparable<DividableRectangle>
     {
+      /// <summary>
+      /// Пробы функции в "левом" и "правом" центре относительно середины
+      /// </summary>
       private struct Sample : IComparable<Sample>
       {
         private readonly FuncPoint m_left;

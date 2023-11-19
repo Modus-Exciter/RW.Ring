@@ -8,6 +8,9 @@ using System.Text;
 
 namespace Schicksal.Optimization
 {
+  /// <summary>
+  /// Класс для вывода массивов информации в текст
+  /// </summary>
   class FileExportMath
   {
     const string FILE_TYPE = ".txt";

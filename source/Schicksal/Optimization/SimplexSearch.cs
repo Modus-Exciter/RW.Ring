@@ -9,6 +9,14 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
+    /// <summary>
+    /// Инициализация начального симплекса
+    /// </summary>
+    /// <param name="optFunction">Оптимизируемая функция</param>
+    /// <param name="x0">Начальное приближение</param>
+    /// <param name="n">Размерность задачи</param>
+    /// <param name="options">Параметры оптимизации</param>
+    /// <returns>Массив точек, представляющих собой изначальный симплекс</returns>
     private static FuncPoint[] SimplexInitialization(Func<VectorDataGroup, double> optFunction, VectorDataGroup x0, int n, OptimizationOptions options)
     {
       FuncPoint[] simplex = new FuncPoint[n + 1];
@@ -26,7 +34,13 @@ namespace Schicksal.Optimization
 
       return simplex;
     }
-
+    /// <summary>
+    /// Локальный аглоритм оптимизации с помощью симплексов
+    /// </summary>
+    /// <param name="optFunction">Оптимизируемая функция</param>
+    /// <param name="x0">Начальное приближение</param>
+    /// <param name="options">Параметры оптимизации</param>
+    /// <returns>Минимум исследуемой функции</returns>
     public static VectorDataGroup SimplexSearch(Func<VectorDataGroup, double> optFunction, VectorDataGroup x0, OptimizationOptions options = null)
     {
       options = options ?? OptimizationOptions.Default;

@@ -419,9 +419,33 @@ namespace Schicksal.Regression
       //Определение границ
       VectorDataGroup lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
       VectorDataGroup highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
-      //Инициализация функции правдоподобия и оптимизация
-      LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
-      m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
+      
+      //Ветвление масштабирования изначальной выборки и преобразования полученных резульатов
+      if (factor.Max() >= MAX_X)
+      {
+        //Масштабирование выборки
+        double scaleCoef = 0;
+        scaleCoef = factor.Max() / MAX_X;
+        factor = new ArrayDataGroup(factor.Select(x => x / scaleCoef).ToArray());
+        result = new ArrayDataGroup(result.Select(y => y / scaleCoef).ToArray());
+
+        //Инициализация функции правдоподобия и оптимизация
+        LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
+        VectorDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
+        
+        //Преобразование коэффициентов
+        m_param = new VectorDataGroup(new double[3]
+        { scaleCoef*tempParam[0], 
+          Math.Pow(tempParam[1], 1 / scaleCoef), 
+          tempParam[2] 
+        });
+      }
+      else
+      {
+        //Инициализация функции правдоподобия и оптимизация
+        LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
+        m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
+      }
     }
 
     public override double Calculate(double x)
