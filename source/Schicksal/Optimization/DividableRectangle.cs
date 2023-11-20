@@ -243,17 +243,33 @@ namespace Schicksal.Optimization
       /// <summary>
       /// Установленный размер пространства дла оптимизационного алгоритма
       /// </summary>
-      public const double UNIT_SIZE = 10E6;
+      public const double UNIT_SIZE = 1E10;
 
       /// <summary>
       /// Домен всех прямоугольников. Представляет собой сортированные списки.
       /// </summary>
       public readonly List<List<DividableRectangle>> domain;
+
+      /// <summary>
+      /// Точка с минимальным значением функции с обратным преобразованием
+      /// </summary>
+      public FuncPoint MinPointReal 
+      { get 
+        {
+          FuncPoint temp = domain.Select(rectList => rectList[0]).Min().Center;
+          return new FuncPoint(this.UnitCubeTransfer(temp.x), temp.y);
+        } 
+      }
       
       /// <summary>
-      /// Точка с минимальным значением функции
+      /// Точка с минимальным значением функции без обратного преобразования
       /// </summary>
-      public FuncPoint MinPoint { get { return this.GetMinPoint(); } }
+      public FuncPoint MinPoint 
+      { get 
+        { 
+          return domain.Select(rectList => rectList[0]).Min().Center; 
+        } 
+      }
 
       /// <summary>
       /// Верхняя граница
@@ -345,16 +361,6 @@ namespace Schicksal.Optimization
           result.Add(domain[i][0]);
 
         return result.ToArray();
-      }
-
-      /// <summary>
-      /// Минимальная точка
-      /// </summary>
-      /// <returns>Масштабированная обратно минимальная точка</returns>
-      private FuncPoint GetMinPoint()
-      {
-        FuncPoint temp = domain.Select(rectList => rectList[0]).Min().Center;
-        return new FuncPoint(this.UnitCubeTransfer(temp.x), temp.y);
       }
     }
   }

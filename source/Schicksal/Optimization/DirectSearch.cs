@@ -55,7 +55,7 @@ namespace Schicksal.Optimization
         iterCount++;
       }
 
-      return newMinPoint.x;
+      return domain.MinPointReal.x;
     }
   }
 }
