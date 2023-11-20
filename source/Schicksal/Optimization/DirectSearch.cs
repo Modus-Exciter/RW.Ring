@@ -37,7 +37,7 @@ namespace Schicksal.Optimization
       FuncPoint minPoint = domain.MinPoint; 
       FuncPoint newMinPoint = domain.MinPoint;
       //Основной цикл алгоритма
-      while (( (deltaY > options.m_tolY && deltaX > options.m_tolX) || deltaX == 0) && iterCount < options.m_maxIter)
+      while (iterCount < options.m_maxIter)
       {
         //Расчет потенциальных прямоугольников
         DividableRectangle[] potentialRect = domain.GetPotentialRectangles();
@@ -50,12 +50,12 @@ namespace Schicksal.Optimization
         //Расчет количественных критерий остановка
         newMinPoint = domain.MinPoint;
         deltaX = Math.Abs((newMinPoint.x - minPoint.x).Length()/dim);
-        deltaY = Math.Abs((newMinPoint.y - minPoint.y)/newMinPoint.y);
+        deltaY = Math.Abs(newMinPoint.y - minPoint.y);
         minPoint = newMinPoint;
         iterCount++;
       }
 
-      return newMinPoint.x;
+      return domain.MinPointReal.x;
     }
   }
 }

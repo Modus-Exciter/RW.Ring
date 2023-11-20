@@ -75,7 +75,7 @@ namespace Schicksal.Regression
       types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
       types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
       types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
-      types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
+      //types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
       types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
       types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
       return types;
@@ -367,7 +367,7 @@ namespace Schicksal.Regression
     }
   }
 
-  public sealed class LikehoodMichaelisDependency : RegressionDependency
+  /*public sealed class LikehoodMichaelisDependency : RegressionDependency
   {
     const double Y_COEF = 2;
     const double X_COEF = 2;
@@ -399,14 +399,14 @@ namespace Schicksal.Regression
       return string.Format("{0} = {1} * {2} / ({3} + {2})",
         this.Effect, ConvertNumber(this.A), this.Factor, this.B);
     }
-  }
+  }*/
 
   public sealed class LogisticDependency : RegressionDependency
   {
-    const double MIN_BASE = 0.1;
+    const double MIN_BASE = 0.5;
     const double MAX_BASE = 5;
-    const double Y_COEF = 5;
-    const double X_COEF = 5;
+    const double Y_COEF = 2;
+    const double X_COEF = 2;
     const double MAX_X = 100;
     private readonly VectorDataGroup m_param;
 
@@ -417,8 +417,8 @@ namespace Schicksal.Regression
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
       //Определение границ
-      VectorDataGroup lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
-      VectorDataGroup highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
+      VectorDataGroup lowBound;
+      VectorDataGroup highBound;
       
       //Ветвление масштабирования изначальной выборки и преобразования полученных резульатов
       if (factor.Max() >= MAX_X)
@@ -428,6 +428,10 @@ namespace Schicksal.Regression
         scaleCoef = factor.Max() / MAX_X;
         factor = new ArrayDataGroup(factor.Select(x => x / scaleCoef).ToArray());
         result = new ArrayDataGroup(result.Select(y => y / scaleCoef).ToArray());
+
+        //Определение границ
+        lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
+        highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
 
         //Инициализация функции правдоподобия и оптимизация
         LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
@@ -442,6 +446,10 @@ namespace Schicksal.Regression
       }
       else
       {
+        //Определение границ
+        lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
+        highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
+
         //Инициализация функции правдоподобия и оптимизация
         LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
         m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
