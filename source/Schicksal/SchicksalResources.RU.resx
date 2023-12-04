@@ -121,7 +121,10 @@
     <value>Логический</value>
   </data>
   <data name="CONSISTENCY" xml:space="preserve">
-    <value>Согласованность</value>
+    <value>Квадрат индекса корреляции</value>
+  </data>
+  <data name="CONSISTENCY_WEIGHTED" xml:space="preserve">
+    <value>Взвешенный квадрат индекса корреляции</value>
   </data>
   <data name="COUNT" xml:space="preserve">
     <value>Количество</value>
@@ -182,6 +185,12 @@
   </data>
   <data name="PARABOLIC" xml:space="preserve">
     <value>Парабола</value>
+  </data>
+  <data name="RMS_ERROR" xml:space="preserve">
+    <value>Среднеквадратичное отклонение</value>
+  </data>
+  <data name="RMS_ERROR_WEIGHTED" xml:space="preserve">
+    <value>Взвешенное среднеквадратичное отклонение</value>
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Стандартное отклонение</value>

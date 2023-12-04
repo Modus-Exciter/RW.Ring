@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using Microsoft.Win32;
 using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.VectorField;
 using Schicksal.Properties;
 using Schicksal.Optimization;
 using System.Linq;
-using System.Drawing.Text;
-using System.CodeDom;
 
 namespace Schicksal.Regression
 {
+  public interface IDispersionWeighted
+  {
+    Func<double, double> WeightFunction { get; }
+  }
+
   public abstract class RegressionDependency
   {
     private string m_factor = "x";
@@ -59,6 +59,12 @@ namespace Schicksal.Regression
     public Heteroscedasticity Heteroscedasticity { get; internal set; }
 
     public double Consistency { get; internal set; }
+
+    public double ConsistencyWeighted { get; internal set; }
+
+    public double RMSError { get; internal set; }
+
+    public double RMSErrorWeighted { get; internal set; }
 
     public abstract double Calculate(double x);
 
@@ -367,7 +373,7 @@ namespace Schicksal.Regression
     }
   }
 
-  /*public sealed class LikehoodMichaelisDependency : RegressionDependency
+  /*public sealed class LikehoodMichaelisDependency : RegressionDependency, IDispersionWeighted
   {
     const double Y_COEF = 2;
     const double X_COEF = 2;
@@ -389,6 +395,8 @@ namespace Schicksal.Regression
 
     public double B { get { return m_param[1]; } }
 
+    public Func<double, double> WeightFunction => throw new NotImplementedException();
+
     public override double Calculate(double x)
     {
       return MathFunction.Michaelis(x, m_param);
@@ -401,18 +409,20 @@ namespace Schicksal.Regression
     }
   }*/
 
-  public sealed class LogisticDependency : RegressionDependency
+  public sealed class LogisticDependency : RegressionDependency, IDispersionWeighted
   {
     const double MIN_BASE = 0.5;
     const double MAX_BASE = 5;
     const double Y_COEF = 2;
-    const double X_COEF = 2;
+    const double X_COEF = 5;
     const double MAX_X = 100;
     private readonly VectorDataGroup m_param;
 
     public double A { get { return m_param[0]; } }
     public double B { get { return m_param[1]; } }
     public double C { get { return m_param[2]; } }
+
+    public Func<double, double> WeightFunction => throw new NotImplementedException();
 
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {

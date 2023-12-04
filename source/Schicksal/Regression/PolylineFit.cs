@@ -2,56 +2,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Schicksal.Regression
 {
   public class PolylineFit
   {
     /// <summary>
-    /// Точка
-    /// </summary>
-    public struct Point
-    {
-      public readonly double x;
-      public readonly double y;
-
-      public Point(double x, double y)
-      {
-        this.x = x; this.y = y;
-      }
-
-      public override string ToString()
-      {
-        return x.ToString() + ' ' + y.ToString();
-      }
-    }
-    /// <summary>
     /// Отрезок
     /// </summary>
     public struct Line
     {
-      /// <summary>
-      /// Правая точка
-      /// </summary>
-      public readonly Point left;
-      /// <summary>
-      /// Левая точка
-      /// </summary>
-      public readonly Point right;
-      /// <summary>
-      /// Угол наклона
-      /// </summary>
-      public readonly double slope;
-      /// <summary>
-      /// Инициализация отрезка
-      /// </summary>
-      /// <param name="left">Левая точка</param>
-      /// <param name="right">Правая точкуа</param>
-      public Line(Point left, Point right)
+      public double leftX;
+      public double rightX;
+      public double offsetY;
+      public double slope;
+
+      public Line((double x, double y) left, (double x, double y) right)
       {
-        this.left = left;
-        this.right = right;
+        this.leftX = left.x;
+        this.rightX = right.x;
+        this.offsetY = left.y;
         this.slope = (right.y - left.y) / (right.x - left.x);
       }
       /// <summary>
@@ -61,7 +31,7 @@ namespace Schicksal.Regression
       /// <returns></returns>
       public bool IsXBelong(double x)
       {
-        if (x >= left.x && x <= right.x)
+        if (x >= leftX && x <= rightX)
           return true;
         return false;
       }
@@ -72,24 +42,18 @@ namespace Schicksal.Regression
       /// <returns>Значение y отрезка</returns>
       public double Calculate(double x)
       {
-        return (x - left.x) * slope + left.y;
+        return (x - leftX) * slope + offsetY;
       }
     }
     /// <summary>
     /// Точность операции эквивалентности фактора
     /// </summary>
     const int TOL = 4;
-    /// <summary>
-    /// Обычное значение коэффициента количества точек
-    /// </summary>
-    const double DEFAULT_SECTION_COUNT_COEF = 1;
 
+    private readonly IDataGroup x;
+    private readonly IDataGroup y;
     private readonly Line[] m_lines;
-    private readonly Point[] m_points;
-    /// <summary>
-    /// Упорядоченные точки
-    /// </summary>
-    private readonly List<List<Point>> m_data_points;
+    private readonly (double x, double y)[] m_nodes;
     /// <summary>
     /// Отрезки ломанной
     /// </summary>
@@ -97,25 +61,25 @@ namespace Schicksal.Regression
     /// <summary>
     /// Узловые точки ломанной
     /// </summary>
-    public Point[] Points { get { return (Point[])m_points.Clone(); } }
+    public (double x, double y)[] Nodes { get { return ((double, double)[])m_nodes.Clone(); } }
     /// <summary>
     /// Инициализация ломанной
     /// </summary>
     /// <param name="x">Фактор</param>
     /// <param name="y">Результат</param>
-    /// <param name="sectionCountCoef">Коэффициент количества точек</param>
     /// <exception cref="ArgumentOutOfRangeException">Размер массива факторов не совпадает с размером массива результатов</exception>
-    public PolylineFit(IDataGroup x, IDataGroup y, double sectionCountCoef = DEFAULT_SECTION_COUNT_COEF)
+    public PolylineFit(IDataGroup x, IDataGroup y)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      m_data_points = this.GetPointsByUniqeX(x, y);
-      m_data_points.Sort((firstList, secondList) => {
-        if (firstList[0].x < secondList[0].x) return -1;
-        if (firstList[0].x > secondList[0].x) return 1;
-        return 0;
-      });
-      m_points = this.FitPoints(sectionCountCoef);
-      m_lines = this.CreateLines();
+      this.x = new ArrayDataGroup(x.ToArray());
+      this.y = new ArrayDataGroup(y.ToArray());
+
+      List<List<(double x, double y)>> uniqeDataPoints = this.GroupByUniqeX(this.x, this.y);
+      int[] subsetsSizes = this.SubsetsSizes(uniqeDataPoints);
+      
+      (double x, double y)[] dataPoints = uniqeDataPoints.SelectMany(i => i).ToArray();
+      m_nodes = this.FitPoints(subsetsSizes, dataPoints);
+      m_lines = this.CreateLines(dataPoints);
     }
     /// <summary>
     /// Преобразование изначальной выборки в связанную структуру по уникальным иксам
@@ -123,17 +87,51 @@ namespace Schicksal.Regression
     /// <param name="x">Фактор</param>
     /// <param name="y">Результат</param>
     /// <returns>Список по x списков по y</returns>
-    private List<List<Point>> GetPointsByUniqeX(IDataGroup x, IDataGroup y)
+    private List<List<(double, double)>> GroupByUniqeX(IDataGroup x, IDataGroup y)
     {
-      List<List<Point>> points = new List<List<Point>> { new List<Point> { new Point(x[0], y[0]) } };
+      var uniqeX = new List<List<(double x, double y)>> { new List<(double, double)> { (x[0], y[0]) } };
       for (int i = 1; i < x.Count; i++)
       {
-        if (Math.Round(x[i], TOL) == Math.Round(points[points.Count - 1][0].x, TOL))
-          points[points.Count - 1].Add(new Point(x[i], y[i]));
+        if (Math.Round(x[i], TOL) == Math.Round(uniqeX[uniqeX.Count - 1][0].x, TOL))
+          uniqeX[uniqeX.Count - 1].Add((x[i], y[i]));
         else
-          points.Add(new List<Point> { new Point(x[i], y[i]) });
+          uniqeX.Add(new List<(double, double)> { (x[i], y[i]) });
       }
-      return points;
+      uniqeX.Sort((firstList, secondList) => {
+        if (firstList[0].x < secondList[0].x) return -1;
+        if (firstList[0].x > secondList[0].x) return 1;
+        return 0;
+      });
+      return uniqeX;
+    }
+    /// <summary>
+    /// Расчитывает размеры подвыборок
+    /// </summary>
+    /// <returns>Размеры подвыборок для расчета узлов</returns>
+    private int[] SubsetsSizes(List<List<(double x, double y)>> dataPoints)
+    {
+      int nodeCount = 2*(int)Math.Sqrt(dataPoints.Count);
+      var domain = new LinkedList<int>(dataPoints.Select(subset => subset.Count));
+      while (domain.Count > nodeCount)
+      {
+        int minSum = int.MaxValue;
+        var node = domain.First;
+        var minSets = (First: node, Second: node.Next);
+        while(node.Next != null)
+        {
+          int sum = 0;
+          sum = node.Value + node.Next.Value;
+          if (sum < minSum)
+          {
+            minSum = sum;
+            minSets = (node, node.Next);
+          }
+          node = node.Next;
+        }
+        minSets.First.Value += minSets.Second.Value;
+        domain.Remove(minSets.Second);
+      }
+      return domain.ToArray();
     }
     /// <summary>
     /// Расчет средних геометрических для подвыборок изначальной выборки.
@@ -141,50 +139,34 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="sectionCountCoef">Коэффициент количества выборок</param>
     /// <returns>Точки ломанной</returns>
-    private Point[] FitPoints(double sectionCountCoef)
+    private (double, double)[] FitPoints(int[] sizes, (double x, double y)[] dataPoints)
     {
-      int sectionCount = (int)(sectionCountCoef * Math.Sqrt(m_data_points.Count));
-      int sectionSize = (int)((double)m_data_points.Count / sectionCount);
-      int modulo = m_data_points.Count - sectionSize * sectionCount;
-      Point[] linePoints = new Point[sectionCount + 2];
-
-      linePoints[0] = new Point
-        (m_data_points[0].Select(point => point.x).Average(),
-        m_data_points[0].Select(point => point.y).Average());
-
-      int index = 0;
-      for (int i = 0; i < sectionCount; i++)
+      (double x, double y)[] nodes = new (double, double)[sizes.Length];
+      int offset = 0;
+      for (int i = 0; i < sizes.Length; i++)
       {
-        double midY = 0;
-        double midX = 0;
-        int pointsCount = 0;
-        for (int j = 0; j < sectionSize || (i < modulo && j < (sectionSize + 1)); j++)
+        (double x, double y) sum = (0, 0);
+        for (int j = offset; j < offset + sizes[i]; j++)
         {
-          midY += m_data_points[index].Select(point => point.y).Sum();
-          midX += m_data_points[index].Select(point => point.x).Sum();
-          pointsCount += m_data_points[index].Count;
-          index++;
+          sum.x += dataPoints[j].x;
+          sum.y += dataPoints[j].y;
         }
-        midY /= pointsCount;
-        midX /= pointsCount;
-        linePoints[i + 1] = new Point(midX, midY);
+        nodes[i] = (sum.x / sizes[i], sum.y / sizes[i]);
+        offset += sizes[i];
       }
-
-      linePoints[linePoints.Length - 1] = new Point
-        (m_data_points.Last().Select(point => point.x).Average(),
-        m_data_points.Last().Select(point => point.y).Average());
-
-      return linePoints;
+      return nodes;
     }
     /// <summary>
     /// Расчет отрезков
     /// </summary>
     /// <returns>Отрезки, составляющие ломанную</returns>
-    private Line[] CreateLines()
+    private Line[] CreateLines((double x, double y)[] dataPoints)
     {
-      Line[] lines = new Line[m_points.Length - 1];
-      for (int i = 0; i < lines.Length; i++)
-        lines[i] = new Line(m_points[i], m_points[i + 1]);
+      Line[] lines = new Line[m_nodes.Length - 1];
+      lines[0] = new Line(m_nodes[0], m_nodes[1]) { leftX = dataPoints[0].x };
+      for (int i = 1; i < lines.Length - 1; i++)
+        lines[i] = new Line(m_nodes[i], m_nodes[i + 1]);
+      lines[lines.Length - 1] = new Line(m_nodes[m_nodes.Length - 2], m_nodes.Last()) { rightX = dataPoints.Last().x };
       return lines;
     }
     /// <summary>
@@ -198,19 +180,17 @@ namespace Schicksal.Regression
       while (!m_lines[i].IsXBelong(x)) i++;
       return m_lines[i].Calculate(x);
     }
+
     /// <summary>
     /// Расчет выборки невязок
     /// </summary>
     /// <returns>Массив невязок</returns>
     public IDataGroup CalculateResidual()
     {
-      List<double> res = new List<double>();
-
-      for (int i = 0; i < m_data_points.Count; i++)
-        for (int j = 0; j < m_data_points[i].Count; j++)
-          res.Add(Math.Abs(this.Calculate(m_data_points[i][j].x) - m_data_points[i][j].y));
-
-      return new ArrayDataGroup(res.ToArray());
+      double[] residual = new double[x.Count];
+      for (int i = 0; i < x.Count; i++)
+        residual[i] = Math.Abs(y[i] - this.Calculate(x[i]));
+      return new ArrayDataGroup(residual);
     }
   }
 }

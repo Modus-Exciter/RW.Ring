@@ -86,7 +86,7 @@ namespace Schicksal.Regression
     /// Граница, определяющая, использовать ли константное значение дисперсии или функцию
     /// </summary>
     const double SAMPLE_COUNT_THRESHOLD = 20;
-
+    const double SAMPLE_COUNT_PER_NODE_THRESHOLD = 10;
     /// <summary>
     /// Фактор
     /// </summary>
@@ -125,10 +125,10 @@ namespace Schicksal.Regression
     public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, IDataGroup, double> dependencyFunction)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      this.x = x; 
+      this.x = x;
       this.y = y;
       this.dependencyFunction = dependencyFunction;
-      
+      ///ADD sorting
       variance = new PolylineFit(x, new PolylineFit(x, y).CalculateResidual());
 
       if (this.IsHeteroscedascity()) calculate = this.CalculateHet;
@@ -140,10 +140,9 @@ namespace Schicksal.Regression
     /// <returns>Наличие гетероскедастичности</returns>
     private bool IsHeteroscedascity()
     {
-      double[] varVals = variance.Points.Select(point => point.y)
-        .Skip(1).Take(variance.Points.Length - 2).ToArray();
+      double[] varVals = variance.Nodes.Select(point => point.y).ToArray();
 
-      if (x.Count >= SAMPLE_COUNT_THRESHOLD)
+      if (x.Count >= SAMPLE_COUNT_THRESHOLD && x.Count / variance.Nodes.Length > SAMPLE_COUNT_PER_NODE_THRESHOLD)
       {
         midVar = varVals.Sum() / varVals.Length;
         double maxDiff = varVals.Max() - varVals.Min();
