@@ -69,6 +69,7 @@
     <Compile Include="HtmlWriter.cs" />
     <Compile Include="Optimization\DirectSearch.cs" />
     <Compile Include="Optimization\DividableRectangle.cs" />
+    <Compile Include="Optimization\Domain.cs" />
     <Compile Include="Optimization\ExportDebugInfo.cs" />
     <Compile Include="Optimization\FuncPoint.cs" />
     <Compile Include="Optimization\OptimizationOptions.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Regression\CorrelationGraphUtils.cs" />
     <Compile Include="Regression\DataColumnGroup.cs" />
     <Compile Include="Regression\DataGroupColumn.cs" />
+    <Compile Include="Regression\Dispersion.cs" />
     <Compile Include="Regression\PolylineFit.cs" />
     <Compile Include="Regression\RegressionDependency.cs" />
     <Compile Include="Regression\RegressionHtmlSaver.cs" />

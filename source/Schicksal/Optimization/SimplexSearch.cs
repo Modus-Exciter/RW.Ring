@@ -29,7 +29,7 @@ namespace Schicksal.Optimization
         if (x[i] == 0) x[i] = MINIMAL_STEP;
         simplex[i] = new FuncPoint(new VectorDataGroup(x), optFunction);
       }
-      simplex[n] = new FuncPoint(new VectorDataGroup(x0), optFunction);
+      simplex[n] = new FuncPoint(x0, optFunction);
       Array.Sort(simplex);
 
       return simplex;

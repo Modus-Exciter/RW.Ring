@@ -1,15 +1,7 @@
-﻿using Notung.Data;
-using Schicksal.Basic;
+﻿using Schicksal.Basic;
 using Schicksal.VectorField;
 using System;
-using System.Collections.Generic;
-using System.Drawing.Design;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Security.AccessControl;
-using System.Runtime.InteropServices.ComTypes;
 #if DEBUG
 using Schicksal.Optimization;
 #endif
@@ -129,10 +121,12 @@ namespace Schicksal.Regression
       this.y = y;
       this.dependencyFunction = dependencyFunction;
       ///ADD sorting
-      variance = new PolylineFit(x, new PolylineFit(x, y).CalculateResidual());
+      variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
 
-      if (this.IsHeteroscedascity()) calculate = this.CalculateHet;
-      else calculate = this.CalculateDef;
+      if (this.IsHeteroscedascity()) 
+        calculate = this.CalculateHet;
+      else 
+        calculate = this.CalculateDef;
     }
     /// <summary>
     /// Определение наличия гетероскедастичности

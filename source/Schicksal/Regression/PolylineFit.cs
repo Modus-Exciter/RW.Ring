@@ -50,8 +50,6 @@ namespace Schicksal.Regression
     /// </summary>
     const int TOL = 4;
 
-    private readonly IDataGroup x;
-    private readonly IDataGroup y;
     private readonly Line[] m_lines;
     private readonly (double x, double y)[] m_nodes;
     /// <summary>
@@ -71,10 +69,8 @@ namespace Schicksal.Regression
     public PolylineFit(IDataGroup x, IDataGroup y)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      this.x = new ArrayDataGroup(x.ToArray());
-      this.y = new ArrayDataGroup(y.ToArray());
 
-      List<List<(double x, double y)>> uniqeDataPoints = this.GroupByUniqeX(this.x, this.y);
+      List<List<(double x, double y)>> uniqeDataPoints = this.GroupByUniqeX(x, y);
       int[] subsetsSizes = this.SubsetsSizes(uniqeDataPoints);
       
       (double x, double y)[] dataPoints = uniqeDataPoints.SelectMany(i => i).ToArray();
@@ -179,18 +175,6 @@ namespace Schicksal.Regression
       int i = 0;
       while (!m_lines[i].IsXBelong(x)) i++;
       return m_lines[i].Calculate(x);
-    }
-
-    /// <summary>
-    /// Расчет выборки невязок
-    /// </summary>
-    /// <returns>Массив невязок</returns>
-    public IDataGroup CalculateResidual()
-    {
-      double[] residual = new double[x.Count];
-      for (int i = 0; i < x.Count; i++)
-        residual[i] = Math.Abs(y[i] - this.Calculate(x[i]));
-      return new ArrayDataGroup(residual);
     }
   }
 }

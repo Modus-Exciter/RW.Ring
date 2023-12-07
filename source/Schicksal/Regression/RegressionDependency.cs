@@ -10,11 +10,6 @@ using System.Linq;
 
 namespace Schicksal.Regression
 {
-  public interface IDispersionWeighted
-  {
-    Func<double, double> WeightFunction { get; }
-  }
-
   public abstract class RegressionDependency
   {
     private string m_factor = "x";
@@ -81,7 +76,7 @@ namespace Schicksal.Regression
       types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
       types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
       types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
-      //types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
+      types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
       types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
       types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
       return types;
@@ -373,29 +368,31 @@ namespace Schicksal.Regression
     }
   }
 
-  /*public sealed class LikehoodMichaelisDependency : RegressionDependency, IDispersionWeighted
+  public sealed class LikehoodMichaelisDependency : RegressionDependency
   {
     const double Y_COEF = 2;
     const double X_COEF = 2;
     private readonly VectorDataGroup m_param;
+    private readonly PolylineFit m_variance;
+
+    public double A { get { return m_param[0]; } }
+
+    public double B { get { return m_param[1]; } }
 
     public LikehoodMichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
       double maxY = result.Max(); double minY = result.Min();
       double minX = factor.Min(); double maxX = factor.Max();
 
-      VectorDataGroup lowBound = new VectorDataGroup(new double[2] { minY, minX });
-      VectorDataGroup highBound = new VectorDataGroup(new double[2] { Y_COEF * maxY, X_COEF * maxX });
+      VectorDataGroup lowBound = new VectorDataGroup(minY, minX);
+      VectorDataGroup highBound = new VectorDataGroup(Y_COEF * maxY, X_COEF * maxX);
 
       LikelyhoodFunction regression = new LikelyhoodFunction(factor, result, MathFunction.Michaelis);
       m_param = MathOptimization.DIRECTSearch(regression.Calculate, lowBound, highBound);
+
+      IDataGroup residual = Residual.Calculate(factor, result, this.Calculate);
+      m_variance = new PolylineFit(factor, residual);
     }
-
-    public double A { get { return m_param[0]; } }
-
-    public double B { get { return m_param[1]; } }
-
-    public Func<double, double> WeightFunction => throw new NotImplementedException();
 
     public override double Calculate(double x)
     {
@@ -407,9 +404,9 @@ namespace Schicksal.Regression
       return string.Format("{0} = {1} * {2} / ({3} + {2})",
         this.Effect, ConvertNumber(this.A), this.Factor, this.B);
     }
-  }*/
+  }
 
-  public sealed class LogisticDependency : RegressionDependency, IDispersionWeighted
+  public sealed class LogisticDependency : RegressionDependency
   {
     const double MIN_BASE = 0.5;
     const double MAX_BASE = 5;
@@ -417,53 +414,56 @@ namespace Schicksal.Regression
     const double X_COEF = 5;
     const double MAX_X = 100;
     private readonly VectorDataGroup m_param;
+    private readonly PolylineFit m_variance;
 
     public double A { get { return m_param[0]; } }
     public double B { get { return m_param[1]; } }
     public double C { get { return m_param[2]; } }
 
-    public Func<double, double> WeightFunction => throw new NotImplementedException();
-
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      //Определение границ
       VectorDataGroup lowBound;
       VectorDataGroup highBound;
-      
+      LikelyhoodFunction likelyhood;
+      IDataGroup x = new ArrayDataGroup(factor.ToArray());
+      IDataGroup y = new ArrayDataGroup(result.ToArray());
       //Ветвление масштабирования изначальной выборки и преобразования полученных резульатов
-      if (factor.Max() >= MAX_X)
+      if (x.Max() >= MAX_X)
       {
         //Масштабирование выборки
         double scaleCoef = 0;
-        scaleCoef = factor.Max() / MAX_X;
-        factor = new ArrayDataGroup(factor.Select(x => x / scaleCoef).ToArray());
-        result = new ArrayDataGroup(result.Select(y => y / scaleCoef).ToArray());
+        scaleCoef = x.Max() / MAX_X;
+        x = new ArrayDataGroup(x.Select(xi => xi / scaleCoef).ToArray());
+        y = new ArrayDataGroup(y.Select(yi => yi / scaleCoef).ToArray());
 
         //Определение границ
-        lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
-        highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
+        lowBound = new VectorDataGroup(y.Min(), MIN_BASE, x.Min());
+        highBound = new VectorDataGroup(Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max());
 
         //Инициализация функции правдоподобия и оптимизация
-        LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
+        likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
         VectorDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
-        
         //Преобразование коэффициентов
-        m_param = new VectorDataGroup(new double[3]
-        { scaleCoef*tempParam[0], 
+        m_param = new VectorDataGroup(
+          scaleCoef*tempParam[0], 
           Math.Pow(tempParam[1], 1 / scaleCoef), 
           tempParam[2] 
-        });
+        );
       }
       else
       {
         //Определение границ
-        lowBound = new VectorDataGroup(new double[3] { result.Min(), MIN_BASE, factor.Min() });
-        highBound = new VectorDataGroup(new double[3] { Y_COEF * result.Max(), MAX_BASE, X_COEF * factor.Max() });
+        lowBound = new VectorDataGroup(y.Min(), MIN_BASE, x.Min());
+        highBound = new VectorDataGroup(Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max());
 
         //Инициализация функции правдоподобия и оптимизация
-        LikelyhoodFunction likelyhood = new LikelyhoodFunction(factor, result, MathFunction.Logistic);
+        likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
         m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
       }
+      /*
+      IDataGroup residual = Residual.Calculate(factor, result, this.Calculate);
+      m_variance = new PolylineFit(factor, residual);
+      */
     }
 
     public override double Calculate(double x)

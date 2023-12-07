@@ -45,6 +45,7 @@ namespace Schicksal.Basic
 
       return sum;
     }
+
     /// <summary>
     /// Сумма модулей отклонений
     /// </summary>

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Notung;
 using Notung.Logging;
 using Schicksal.Basic;
 using Schicksal.Properties;
+using Schicksal.VectorField;
 
 namespace Schicksal.Regression
 {
@@ -311,6 +313,7 @@ namespace Schicksal.Regression
     {
       double down = DescriptionStatistics.SquareDerivation(y);
       double up = 0;
+      double upW = 0;
       int i = 0;
       Predicate<double> condition = gap => gap == x[i];
 
@@ -326,6 +329,27 @@ namespace Schicksal.Regression
       dependency.Consistency = (down - up) / down;
     }
 
+    private static void CalculateConsistencyWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep)
+    {
+      Dispersion disp = new Dispersion(x, y, dep.Calculate);
+      double mean = DescriptionStatistics.Mean(y);
+      double num = 0, denum = 0;
+      double residualRegr = 0;
+      double residualMid = 0;
+
+      for (int i = 0; i < x.Count; i++)
+      {
+        residualRegr = (y[i] - dep.Calculate(x[i])) / disp.Calculate(x[i]);
+        residualRegr *= residualRegr;
+        residualMid = (y[i] - mean) / disp.Calculate(x[i]);
+        residualMid *= residualMid;
+
+        num += residualRegr;
+        denum += residualMid;
+      }
+      dep.ConsistencyWeighted = 1 - num / denum;
+    }
+
     private static void AddType(Type type, List<RegressionDependency> dependencies, IDataGroup x, IDataGroup y, string factor, string effect)
     {
       try
@@ -334,8 +358,10 @@ namespace Schicksal.Regression
         dep.Factor = factor;
         dep.Effect = effect;
 
+
         CaclulateHeteroscedasticity(x, y, dep);
         CalculateConsistency(x, y, dep);
+        CalculateConsistencyWeighted(x, y, dep);
 
         lock (dependencies)
         {

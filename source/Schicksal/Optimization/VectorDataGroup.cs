@@ -29,11 +29,16 @@ namespace Schicksal.VectorField
 
     public double[] Values { get { return m_values; } }
 
-    public VectorDataGroup(double[] array)
+    public VectorDataGroup(params double[] array)
     {
       if (array == null) throw new ArgumentNullException("array");
-      m_values = new double[array.Length];
-      Array.Copy(array, m_values, array.Length);
+      m_values = array;
+    }
+
+    public VectorDataGroup(IDataGroup array)
+    {
+      if(array.Count == 0) throw new ArgumentNullException("array");
+      m_values = array.ToArray();
     }
 
     public int Count { get { return m_values.Length; } }
