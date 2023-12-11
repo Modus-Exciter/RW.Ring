@@ -2,10 +2,12 @@
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Anova;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Schicksal.Helm
 {
@@ -48,20 +50,26 @@ namespace Schicksal.Helm
         return;
 
       var fisher = m_grid.Rows[e.RowIndex].DataBoundItem as FisherTestResult;
+
       if (fisher == null)
         return;
-      string[] ignored_factors = new string[m_grid.Rows.Count - 1];
-      int ignored_cntr = 0;
-      for (int i = 0; i < m_grid.Rows.Count; i++)
+
+      var ignored_factors = new HashSet<string>();
+      var current_factors = new HashSet<string>(fisher.Factor.Split('+'));
+
+      foreach (var row in this.DataSource)
       {
-        string currentFactor = m_grid.Rows[i].Cells[0].Value.ToString();
-        if (currentFactor != fisher.Factor)
+        if (ReferenceEquals(row, fisher))
+          continue;
+
+        foreach (var f in row.Factor.Split('+'))
         {
-          ignored_factors[ignored_cntr] = currentFactor;
-          ignored_cntr++;
+          if (!current_factors.Contains(f))
+            ignored_factors.Add(f);
         }
       }
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, ignored_factors, this.ResultColumn, this.Filter, this.Probability))
+
+      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, ignored_factors.ToArray(), this.ResultColumn, this.Filter, this.Probability))
       {
         compare.ShowDialog(this);
       }
