@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Notung;
+using Schicksal.Basic;
+using Schicksal.Properties;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using Notung;
-using Schicksal.Basic;
-using Schicksal.Properties;
 
 namespace Schicksal.Anova
 {
@@ -14,12 +14,14 @@ namespace Schicksal.Anova
     private readonly DataTable m_source;
     private readonly string[] m_factors;
     private readonly string m_result;
+    private readonly string[] m_ignorable_factors;
     private readonly string m_filter;
 
-    public VariantsComparator(DataTable table, string factor, string result, string filter)
+    public VariantsComparator(DataTable table, string factor, string[] ignored_factors, string result, string filter)
     {
       m_source = table;
       m_factors = factor.Split('+');
+      m_ignorable_factors = ignored_factors;
       m_result = result;
       m_filter = filter;
     }
@@ -92,7 +94,6 @@ namespace Schicksal.Anova
           res.Rows.Add(row);
         }
       }
-
       return res;
     }
 

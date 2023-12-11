@@ -103,7 +103,8 @@ namespace Schicksal.Anova
       using (writer.CreateParagraph())
         writer.WriteText(string.Format("<em>{0} {1}.</em> {2}", Resources.TABLE, number + 2, Resources.BASIC_METRICS));
 
-      var processor = new VariantsComparator(m_table, factor.Factor, this.Result, this.Filter);
+      string[] ignored_factors = { };
+      var processor = new VariantsComparator(m_table, factor.Factor, ignored_factors, this.Result, this.Filter);
       var comparator = new MultiVariantsComparator(processor, m_probability);
       comparator.Run();
       comparator.Source.Columns.Remove("Factor");
