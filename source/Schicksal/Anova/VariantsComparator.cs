@@ -17,11 +17,11 @@ namespace Schicksal.Anova
     private readonly string[] m_ignorable_factors;
     private readonly string m_filter;
 
-    public VariantsComparator(DataTable table, string factor, string[] ignored_factors, string result, string filter)
+    public VariantsComparator(DataTable table, string factor, string ignoredFactors, string result, string filter)
     {
       m_source = table;
       m_factors = factor.Split('+');
-      m_ignorable_factors = ignored_factors;
+      m_ignorable_factors = ignoredFactors.Split('+');
       m_result = result;
       m_filter = filter;
     }
