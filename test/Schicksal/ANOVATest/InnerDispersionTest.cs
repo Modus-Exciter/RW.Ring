@@ -68,5 +68,22 @@ namespace ANOVATest
       Assert.AreEqual(f2.Ndf, f1.Ndf);
       Assert.AreEqual(f2.MSw, f1.MSw);
     }
+    [TestMethod]
+    public void Dospehov228pageTest()
+    {
+      ArrayDataGroup groupA0B0 = new ArrayDataGroup(new double[] { 24.1, 25.8, 23, 27 });
+      ArrayDataGroup groupA0B1 = new ArrayDataGroup(new double[] { 28.4, 29.7, 30.1, 27.4 });
+      ArrayDataGroup groupA0B2 = new ArrayDataGroup(new double[] { 28.7, 30.4, 32, 27 });
+      MultiArrayDataGroup multiA0 = new MultiArrayDataGroup(new IDataGroup[] { groupA0B0, groupA0B1, groupA0B2 });
+
+      ArrayDataGroup groupA1B0 = new ArrayDataGroup(new double[] { 30.7, 34.4, 34, 31 });
+      ArrayDataGroup groupA1B1 = new ArrayDataGroup(new double[] { 46.7, 45.5, 47.1, 46.3 });
+      ArrayDataGroup groupA1B2 = new ArrayDataGroup(new double[] { 59.4, 50.7, 64.5, 60.1 });
+      MultiArrayDataGroup multiA1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B0, groupA1B1, groupA1B2 });
+
+      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA0, multiA1 });
+      FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
+      Assert.AreEqual(Math.Round(249.88), Math.Round(f.F));
+    }
   }
 }
