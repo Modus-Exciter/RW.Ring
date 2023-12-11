@@ -48,11 +48,20 @@ namespace Schicksal.Helm
         return;
 
       var fisher = m_grid.Rows[e.RowIndex].DataBoundItem as FisherTestResult;
-
       if (fisher == null)
         return;
-
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, this.ResultColumn, this.Filter, this.Probability))
+      string[] ignored_factors = new string[m_grid.Rows.Count - 1];
+      int ignored_cntr = 0;
+      for (int i = 0; i < m_grid.Rows.Count; i++)
+      {
+        string currentFactor = m_grid.Rows[i].Cells[0].Value.ToString();
+        if (currentFactor != fisher.Factor)
+        {
+          ignored_factors[ignored_cntr] = currentFactor;
+          ignored_cntr++;
+        }
+      }
+      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, ignored_factors, this.ResultColumn, this.Filter, this.Probability))
       {
         compare.ShowDialog(this);
       }
