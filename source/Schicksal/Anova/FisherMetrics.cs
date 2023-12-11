@@ -47,6 +47,12 @@ namespace Schicksal.Anova
     public string Factor { get; internal set; }
 
     /// <summary>
+    /// Фактор, который учитывается при расчёте внутригрупповой дисперсии,
+    /// но не учитывается при расчёте межгрупповой дисперсии
+    /// </summary>
+    public string IgnoredFactor { get; internal set; }
+
+    /// <summary>
     /// Число степеней свободы для межгрупповой дисперсии
     /// </summary>
     public uint Kdf { get; internal set; }

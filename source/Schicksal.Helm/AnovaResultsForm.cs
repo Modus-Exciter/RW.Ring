@@ -54,23 +54,8 @@ namespace Schicksal.Helm
       if (fisher == null)
         return;
 
-      var ignored_factors = new HashSet<string>();
-      var current_factors = new HashSet<string>(fisher.Factor.Split('+'));
-
-      foreach (var row in this.DataSource)
-      {
-        if (ReferenceEquals(row, fisher))
-          continue;
-
-        foreach (var f in row.Factor.Split('+'))
-        {
-          if (!current_factors.Contains(f))
-            ignored_factors.Add(f);
-        }
-      }
-
       using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
-        ignored_factors.ToArray(), this.ResultColumn, this.Filter, this.Probability))
+        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability))
       {
         compare.ShowDialog(this);
       }

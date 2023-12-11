@@ -64,9 +64,8 @@ namespace Schicksal.Anova
 
       if (ignoredFactors.Count == 0)
       {
-        SingleFactorAnalysis(result, factors);
+        this.SingleFactorAnalysis(result, factors);
       }
-
       else
       {
         using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
@@ -80,6 +79,7 @@ namespace Schicksal.Anova
             row.Kdf = degrees.Kdf;
             row.Ndf = degrees.Ndf;
             row.Factor = string.Join("+", factors);
+            row.IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors));
             row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
             row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
             row.P = FisherCriteria.GetProbability(degrees);
@@ -89,10 +89,24 @@ namespace Schicksal.Anova
           }
           else
           {
-            SingleFactorAnalysis(result, factors);
+            this.SingleFactorAnalysis(result, factors);
           }
         }
       }
+    }
+
+    private string[] GetIgnoredFactors(List<string> factors)
+    {
+      var result = new string[m_factors.Length - factors.Count];
+      int j = 0;
+
+      for (int i = 0; i < m_factors.Length; i++)
+      {
+        if (!factors.Contains(m_factors[i]))
+          result[j++] = m_factors[i];
+      }
+
+      return result;
     }
 
     private void SingleFactorAnalysis(List<FisherTestResult> result, List<string> factors)
@@ -109,6 +123,7 @@ namespace Schicksal.Anova
           row.Kdf = degrees.Kdf;
           row.Ndf = degrees.Ndf;
           row.Factor = string.Join("+", factors);
+          row.IgnoredFactor = string.Empty;
           row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
           row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
           row.P = FisherCriteria.GetProbability(degrees);
