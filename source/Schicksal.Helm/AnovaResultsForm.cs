@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Anova;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Schicksal.Helm
 {
@@ -69,7 +69,8 @@ namespace Schicksal.Helm
         }
       }
 
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, ignored_factors.ToArray(), this.ResultColumn, this.Filter, this.Probability))
+      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
+        ignored_factors.ToArray(), this.ResultColumn, this.Filter, this.Probability))
       {
         compare.ShowDialog(this);
       }
