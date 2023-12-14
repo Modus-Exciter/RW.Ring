@@ -79,7 +79,7 @@ namespace Schicksal.Basic
     {
       var formattable = value as IFormattable;
 
-      if (value is string)
+      if (value is string || value is char)
         return string.Format("'{0}'", value);
       else if (value is DateTime)
         return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));

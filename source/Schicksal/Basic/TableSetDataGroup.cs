@@ -49,27 +49,21 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-            {
               sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], this.GetInvariant(row[columnIndexes[i]]));
+          }
 
-            }
-          }
           if (!sets.Add(sb.ToString()))
-          {
             continue;
-          }
+
           MultyViewGroup mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString());
           tuples.Add(mul);
 
           for (int i = 0; i < mul.Count; i++)
             m_indexes[mul.GetKey(i)] = tuples.Count - 1;
-
-
         }
-
       }
-      m_views = tuples.ToArray();
 
+      m_views = tuples.ToArray();
     }
 
     private static void CheckConstrictorParameters(DataTable table, string[] factorColumns, string[] ignorableColumns, string resultColumn)
@@ -85,9 +79,6 @@ namespace Schicksal.Basic
 
       if (ignorableColumns == null)//potencial bug
         throw new ArgumentNullException("ignorableColumns");
-
-      if (ignorableColumns.Length == 0)
-        throw new ArgumentException("Ignorable factor column is empty");
 
       if (string.IsNullOrEmpty(resultColumn))
         throw new ArgumentNullException("resultColumn");
@@ -141,15 +132,9 @@ namespace Schicksal.Basic
     }
 
     //?
-    public string[] GetKey(int index)
+    public string GetKey(int index)
     {
-      List<string> arr = new List<string>();
-      foreach (String str in m_indexes.Keys)
-      {
-        if (m_indexes[str] == index) arr.Add(str);
-      }
-
-      return arr.ToArray();
+      return m_views[index].ToString();
     }
 
     public int GetIndex(string rowFilter)
@@ -182,6 +167,7 @@ namespace Schicksal.Basic
     private class MultyViewGroup : IMultyDataGroup<string>, IDisposable
     {
       private readonly DataViewGroup[] m_views;
+      private readonly string m_filter;
 
       private readonly Dictionary<string, int> m_indexes;
 
@@ -213,6 +199,7 @@ namespace Schicksal.Basic
             }
             if (!sets.Add(sb.ToString()))
               continue;
+
             var view = new DataView(m_table, sb.ToString(), null, DataViewRowState.CurrentRows);
 
             if (view.Count > 0)
@@ -222,12 +209,11 @@ namespace Schicksal.Basic
             }
             else
               view.Dispose();
-
           }
-
         }
-        m_views = tuples.ToArray();
 
+        m_filter = filter;
+        m_views = tuples.ToArray();
       }
 
       private string GetInvariant(object value)
@@ -245,7 +231,10 @@ namespace Schicksal.Basic
         else
           return "NULL";
       }
-
+      public override string ToString()
+      {
+        return m_filter;
+      }
       public IDataGroup this[string rowFilter]
       {
         get { return m_views[m_indexes[rowFilter]]; }

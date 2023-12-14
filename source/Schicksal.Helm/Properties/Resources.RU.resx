@@ -189,6 +189,12 @@
   <data name="NO_COLUMNS" xml:space="preserve">
     <value>Не созданы колонки</value>
   </data>
+  <data name="NO_FACTOR_COLUMNS" xml:space="preserve">
+    <value>Не выбраны факторы</value>
+  </data>
+  <data name="NO_RESULT_COUMN" xml:space="preserve">
+    <value>Не выбрана колонка результатов</value>
+  </data>
   <data name="OPEN" xml:space="preserve">
     <value>Открыть</value>
   </data>

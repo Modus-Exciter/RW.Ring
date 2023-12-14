@@ -76,6 +76,7 @@ namespace Schicksal.Helm
         m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
         m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
         m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
+        m_grid.Columns["Ignorable"].Visible = false;
 
         m_summary_page.Text = Resources.STATISTICS;
         m_details_page.Text = Resources.COMPARISON;

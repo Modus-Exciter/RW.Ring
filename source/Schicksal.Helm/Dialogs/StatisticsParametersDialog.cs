@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Notung;
+using Notung.Services;
+using Schicksal.Helm.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Notung;
 
 namespace Schicksal.Helm.Dialogs
 {
@@ -32,20 +34,45 @@ namespace Schicksal.Helm.Dialogs
     {
       this.DataSource.RemovePredictor(m_list_selected.Text);
     }
+
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+      base.OnFormClosing(e);
+
+      if (this.DialogResult == DialogResult.OK)
+      {
+        InfoBuffer buffer = new InfoBuffer();
+
+        if (!this.DataSource.Validate(buffer))
+        {
+          AppManager.Notificator.Show(buffer);
+          e.Cancel = true;
+        }
+        else if (buffer.Count > 0)
+          e.Cancel = !AppManager.Notificator.Confirm(buffer);
+      }
+    }
   }
 
-  public class AnovaDialogData : IValidator
+  public class AnovaDialogData : IValidator, INotifyPropertyChanged
   {
     private readonly BindingList<string> m_total_columns = new BindingList<string>();
     private readonly BindingList<string> m_predictors = new BindingList<string>();
     private readonly BindingList<string> m_calculatable = new BindingList<string>();
     private readonly HashSet<string> m_total_calculatable = new HashSet<string>();
     private readonly string m_hash;
+    private string m_result;
+    private string m_filter;
+    private float m_probability;
+
+    public event PropertyChangedEventHandler PropertyChanged;
 
     public AnovaDialogData(DataTable table, Dictionary<string, string[]> settings)
     {
       if (table == null)
         throw new ArgumentNullException("table");
+
+      m_calculatable.Add(string.Empty);
 
       foreach (DataColumn column in table.Columns)
       {
@@ -97,6 +124,9 @@ namespace Schicksal.Helm.Dialogs
 
     public void AddPredictor(string value)
     {
+      if (value == this.Result)
+        this.Result = string.Empty;
+
       m_predictors.Add(value);
       m_total_columns.Remove(value);
       m_calculatable.Remove(value);
@@ -126,15 +156,51 @@ namespace Schicksal.Helm.Dialogs
       settings[m_hash] = array;
     }
 
-    public string Result { get; set; }
+    public string Result
+    {
+      get { return m_result; }
+      set
+      {
+        m_result = value;
+        this.OnPropertyChanged("Result");
+      }
+    }
 
-    public string Filter { get; set; }
+    private void OnPropertyChanged(string propertyName)
+    {
+      if (this.PropertyChanged != null)
+        this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
 
-    public float Probability { get; set; }
+    public string Filter
+    {
+      get { return m_filter; }
+      set
+      {
+        m_filter = value;
+        this.OnPropertyChanged("Filter");
+      }
+    }
+
+    public float Probability
+    {
+      get { return m_probability; }
+      set
+      {
+        m_probability = value;
+        this.OnPropertyChanged("Probability");
+      }
+    }
 
     public bool Validate(InfoBuffer buffer)
     {
-      return true;
+      if (string.IsNullOrEmpty(this.Result))
+        buffer.Add(Resources.NO_RESULT_COUMN, InfoLevel.Warning);
+
+      if (m_predictors.Count == 0)
+        buffer.Add(Resources.NO_FACTOR_COLUMNS, InfoLevel.Warning);
+
+      return buffer.Count == 0;
     }
   }
 }
