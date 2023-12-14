@@ -19,7 +19,7 @@ namespace Schicksal.Helm.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -393,6 +393,24 @@ namespace Schicksal.Helm.Properties {
         internal static string NO_COLUMNS {
             get {
                 return ResourceManager.GetString("NO_COLUMNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Factor columns not selected.
+        /// </summary>
+        internal static string NO_FACTOR_COLUMNS {
+            get {
+                return ResourceManager.GetString("NO_FACTOR_COLUMNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Result column not selected.
+        /// </summary>
+        internal static string NO_RESULT_COUMN {
+            get {
+                return ResourceManager.GetString("NO_RESULT_COUMN", resourceCulture);
             }
         }
         

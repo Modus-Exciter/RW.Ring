@@ -1,4 +1,5 @@
 ﻿using Notung;
+using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
 using System;
@@ -21,7 +22,7 @@ namespace Schicksal.Anova
     {
       m_source = table;
       m_factors = factor.Split('+');
-      m_ignorable_factors = ignoredFactors.Split('+');
+      m_ignorable_factors = string.IsNullOrEmpty(ignoredFactors) ? ArrayExtensions.Empty<string>() : ignoredFactors.Split('+');
       m_result = result;
       m_filter = filter;
     }
@@ -54,14 +55,14 @@ namespace Schicksal.Anova
       res.Columns.Add("Mean", typeof(double));
       res.Columns.Add("Std error", typeof(double));
       res.Columns.Add("Interval", typeof(double));
+      res.Columns.Add("Ignorable", typeof(int));
 
-      using (var group = new TableMultyDataGroup(m_source, m_factors, m_result, m_filter))
+      using (var groupset = new TableSetDataGroup(m_source, m_factors, m_ignorable_factors, m_result, m_filter))
       {
-        for (int i = 0; i < group.Count; i++)
+        for (int i = 0; i < groupset.Count; i++)
         {
           var row = res.NewRow();
-
-          var filter = group.GetKey(i);
+          var filter = groupset.GetKey(i);
 
           foreach (string factor in m_factors)
           {
@@ -75,15 +76,19 @@ namespace Schicksal.Anova
               m_source.Columns[factor].DataType).ConvertFromInvariantString(search);
           }
 
-          row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
-          row["Mean"] = DescriptionStatistics.Mean(group[i]);
-          row["Count"] = group[i].Count;
+          var join = new JoinedDataGroup(groupset[i]);
 
-          if (group[i].Count > 1)
+          row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
+          row["Mean"] = DescriptionStatistics.Mean(join);
+          row["Count"] = join.Count;
+          row["Ignorable"] = groupset[i].Count;
+
+          if (join.Count > groupset[i].Count)
           {
-            row["Std error"] = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(group[i].Count) *
-              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - p / 2);
+            var sum = groupset[i].Sum(b => DescriptionStatistics.SquareDerivation(b));
+            row["Std error"] = Math.Sqrt(sum / (join.Count - groupset[i].Count));
+            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(join.Count) * 
+              SpecialFunctions.invstudenttdistribution(join.Count - groupset[i].Count, 1 - p / 2);
           }
           else
           {
@@ -160,9 +165,10 @@ namespace Schicksal.Anova
       double std_err2 = (double)row2["Std error"];
       int count1 = (int)row1["Count"];
       int count2 = (int)row2["Count"];
+      int ig1 = (int)row1["Ignorable"];
+      int ig2 = (int)row2["Ignorable"];
 
-      df = count1 + count2 - 2;
-
+      df = count1 + count2 - ig1 - ig2; 
       return Math.Sqrt(std_err1 * std_err1 / count1 + std_err2 * std_err2 / count2);
     }
   }
