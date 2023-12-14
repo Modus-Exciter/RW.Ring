@@ -8,7 +8,6 @@ using System.Text;
 
 namespace Schicksal.Basic
 {
-
   public sealed class TableSetDataGroup : ISetMultyDataGroup, IDisposable
   {
     private readonly DataTable m_table;
@@ -22,18 +21,14 @@ namespace Schicksal.Basic
       m_table = table;
 
       var tuples = new List<MultyViewGroup>();
-
-
-
-
       var sets = new HashSet<string>();
       var columnIndexes = new int[factorColumns.Length];
 
       for (int i = 0; i < factorColumns.Length; i++)
         columnIndexes[i] = m_table.Columns[factorColumns[i]].Ordinal;
 
-
       m_indexes = new Dictionary<string, int>();
+
       using (DataView filtered_table = new DataView(table, filter, null, DataViewRowState.CurrentRows))
       {
         foreach (DataRowView row in filtered_table)
@@ -231,10 +226,12 @@ namespace Schicksal.Basic
         else
           return "NULL";
       }
+
       public override string ToString()
       {
         return m_filter;
       }
+
       public IDataGroup this[string rowFilter]
       {
         get { return m_views[m_indexes[rowFilter]]; }
@@ -254,7 +251,6 @@ namespace Schicksal.Basic
       {
         return m_indexes[rowFilter];
       }
-
 
       public int Count
       {

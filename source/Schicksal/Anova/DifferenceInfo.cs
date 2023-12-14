@@ -8,30 +8,62 @@ using Schicksal.Properties;
 
 namespace Schicksal.Anova
 {
+  /// <summary>
+  /// Результаты сравнения двух градаций фактора
+  /// </summary>
   public sealed class DifferenceInfo
   {
+    /// <summary>
+    /// Описание первой градации фактора
+    /// </summary>
     public string Factor1 { get; internal set; }
 
+    /// <summary>
+    /// Среднее значение эффекта в первой градации фактора
+    /// </summary>
     public double Mean1 { get; internal set; }
 
+    /// <summary>
+    /// Описание второй градации фактора
+    /// </summary>
     public string Factor2 { get; internal set; }
 
+    /// <summary>
+    /// Среднее значение эффекта во второй градации фактора
+    /// </summary>
     public double Mean2 { get; internal set; }
 
     [Browsable(false)]
     public string Result { get; internal set; }
 
+    /// <summary>
+    /// Абсолютная разность средних значений по сравниваемым градациям фактора
+    /// </summary>
     public double ActualDifference { get; internal set; }
 
+    /// <summary>
+    /// Наименьшая существенная разница для сравниваемых градаций фактора
+    /// </summary>
     public double MinimalDifference { get; internal set; }
 
+    /// <summary>
+    /// Критический уровень значимости, на котором разность будет существенной
+    /// </summary>
     public double Probability { get; internal set; }
 
+    /// <summary>
+    /// Преобразование в строку
+    /// </summary>
+    /// <returns>Фактор 1 vs Фактор 2</returns>
     public override string ToString()
     {
       return string.Format("{0} vs {1}", this.Factor1, this.Factor2);
     }
 
+    /// <summary>
+    /// Преорбразование данных в массив кортежей
+    /// </summary>
+    /// <returns>Каждый кортеж содержит информацию об одном из свойств текущего объекта</returns>
     public Tuple<string, string>[] ToTuples()
     {
       var list = new Tuple<string, string>[10];

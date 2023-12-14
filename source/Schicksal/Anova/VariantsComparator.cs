@@ -1,15 +1,18 @@
-﻿using Notung;
-using Notung.Data;
-using Schicksal.Basic;
-using Schicksal.Properties;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using Notung;
+using Notung.Data;
+using Schicksal.Basic;
+using Schicksal.Properties;
 
 namespace Schicksal.Anova
 {
+  /// <summary>
+  /// Детализация дисперсионного анализа, сравнение отдельных градаций факторов
+  /// </summary>
   public class VariantsComparator
   {
     private readonly DataTable m_source;
@@ -18,6 +21,14 @@ namespace Schicksal.Anova
     private readonly string[] m_ignorable_factors;
     private readonly string m_filter;
 
+    /// <summary>
+    /// Инициализация детализации
+    /// </summary>
+    /// <param name="table">Таблица с исходными данными</param>
+    /// <param name="factor">Факторы, градации которых сравниваются</param>
+    /// <param name="ignoredFactors">Факторы, градации которых игнорируются, но тоже влияют</param>
+    /// <param name="result">Колонка таблицы с эффектом</param>
+    /// <param name="filter">Фильтр по таблице</param>
     public VariantsComparator(DataTable table, string factor, string ignoredFactors, string result, string filter)
     {
       m_source = table;
@@ -27,21 +38,37 @@ namespace Schicksal.Anova
       m_filter = filter;
     }
 
+    /// <summary>
+    /// Колонка таблицы с эффектом
+    /// </summary>
     public string ResultField
     {
       get { return m_result; }
     }
 
+    /// <summary>
+    /// Факторы, градации которых сравниваются
+    /// </summary>
     public string[] Factors
     {
       get { return m_factors; }
     }
 
+    /// <summary>
+    /// Факторы, градации которых игнорируются, но тоже влияют
+    /// </summary>
     public string Filter
     {
       get { return m_filter; }
     }
 
+    /// <summary>
+    /// Генерация таблицы с описательными статистиками по факторам, градации которых сравниваются
+    /// </summary>
+    /// <param name="p">Уровень значимости для расчёта доверительных интервалов</param>
+    /// <returns>Таблица содержит градации всех факторов. По каждой градации показано
+    /// количество наблюдений, среднее арифметическое, количество наблюдений, стандартное
+    /// отклонение, доверительный  интервал и количество градаций игнорируемого фактора</returns>
     public DataTable CreateDescriptiveTable(double p)
     {
       var res = new DataTable();
@@ -102,32 +129,13 @@ namespace Schicksal.Anova
       return res;
     }
 
-    private static string GetFactorLevel(string filter, string factor)
-    {
-      var search = string.Format("[{0}] = ", factor);
-      var index = filter.IndexOf(search);
-      if (index >= 0)
-      {
-        var next = filter.IndexOf(" AND ", index + search.Length);
-
-        if (next >= 0)
-          search = filter.Substring(index + search.Length, next - (index + search.Length));
-        else
-          search = filter.Substring(index + search.Length);
-      }
-      else
-      {
-        search = string.Format("[{0}] IS NULL", factor);
-
-        if (!filter.Contains(search))
-          search = filter;
-        else
-          search = CoreResources.NULL;
-      }
-
-      return search;
-    }
-
+    /// <summary>
+    /// Сравнение двух градаций факторов
+    /// </summary>
+    /// <param name="row1">Первая из сравниваемых строк, содержащих описание градации фактора</param>
+    /// <param name="row2">Вторая из сравниваемых строк, содержащих описание градации фактора</param>
+    /// <param name="p">Уровень значимости</param>
+    /// <returns>Результаты сравнения двух градаций фактора</returns>
     public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
     {
       int df;
@@ -159,6 +167,32 @@ namespace Schicksal.Anova
       return result;
     }
 
+    private static string GetFactorLevel(string filter, string factor)
+    {
+      var search = string.Format("[{0}] = ", factor);
+      var index = filter.IndexOf(search);
+      if (index >= 0)
+      {
+        var next = filter.IndexOf(" AND ", index + search.Length);
+
+        if (next >= 0)
+          search = filter.Substring(index + search.Length, next - (index + search.Length));
+        else
+          search = filter.Substring(index + search.Length);
+      }
+      else
+      {
+        search = string.Format("[{0}] IS NULL", factor);
+
+        if (!filter.Contains(search))
+          search = filter;
+        else
+          search = CoreResources.NULL;
+      }
+
+      return search;
+    }
+
     private double GetError(DataRowView row1, DataRowView row2, out int df)
     {
       double std_err1 = (double)row1["Std error"];
@@ -173,6 +207,9 @@ namespace Schicksal.Anova
     }
   }
 
+  /// <summary>
+  /// Задача, запускающая сравнение градаций фактора
+  /// </summary>
   public sealed class MultiVariantsComparator : RunBase, IServiceProvider
   {
     private readonly VariantsComparator m_comparator;
@@ -180,6 +217,11 @@ namespace Schicksal.Anova
     private string m_factor1_max;
     private string m_factor2_max;
 
+    /// <summary>
+    /// Инициализация новой задачи на сравнение градаций факторов
+    /// </summary>
+    /// <param name="comparator">Объект для сравнения градаций фактора</param>
+    /// <param name="p">Уровень значимости</param>
     public MultiVariantsComparator(VariantsComparator comparator, double p)
     {
       if (comparator == null)
@@ -191,10 +233,19 @@ namespace Schicksal.Anova
       m_factor2_max = string.Empty;
     }
 
+    /// <summary>
+    /// Результаты попарного сравнения градаций фактора
+    /// </summary>
     public DifferenceInfo[] Results { get; private set; }
 
+    /// <summary>
+    /// Информация обо всех градациях фактора
+    /// </summary>
     public DataTable Source { get; private set; }
 
+    /// <summary>
+    /// Запуск задачи на выполнение
+    /// </summary>
     public override void Run()
     {
       this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField,
@@ -203,32 +254,33 @@ namespace Schicksal.Anova
       if (this.Source == null)
         this.Source = m_comparator.CreateDescriptiveTable(m_probability);
 
-      Tuple<int, int>[] pairs = new Tuple<int, int>[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
+      DifferenceInfo[] result = new DifferenceInfo[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
       int k = 0;
 
       for (int i = 0; i < this.Source.Rows.Count - 1; i++)
       {
         for (int j = i + 1; j < this.Source.Rows.Count; j++)
-          pairs[k++] = new Tuple<int, int>(i, j);
-      }
+        {
+          result[k] = m_comparator.GetDifferenceInfo(
+            this.Source.DefaultView[i], this.Source.DefaultView[j], m_probability);
 
-      DifferenceInfo[] result = new DifferenceInfo[pairs.Length];
+          if (result[k].Factor1.Length > m_factor1_max.Length)
+            m_factor1_max = result[k].Factor1;
 
-      for (k = 0; k < result.Length; k++)
-      {
-        result[k] = m_comparator.GetDifferenceInfo(
-          this.Source.DefaultView[pairs[k].Item1], this.Source.DefaultView[pairs[k].Item2], m_probability);
+          if (result[k].Factor2.Length > m_factor2_max.Length)
+            m_factor2_max = result[k].Factor2;
 
-        if (result[k].Factor1.Length > m_factor1_max.Length)
-          m_factor1_max = result[k].Factor1;
-
-        if (result[k].Factor2.Length > m_factor2_max.Length)
-          m_factor2_max = result[k].Factor2;
+          k++;
+        }
       }
 
       this.Results = result;
     }
 
+    /// <summary>
+    /// Создание примера строки для быстрой настройки ширины колонок таблицы
+    /// </summary>
+    /// <returns>Первый попвашийся объект из результатов с заполненными всеми полями</returns>
     public DifferenceInfo CreateExample()
     {
       if (this.Results == null)
