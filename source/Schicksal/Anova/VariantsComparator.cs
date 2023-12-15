@@ -88,8 +88,8 @@ namespace Schicksal.Anova
       {
         for (int i = 0; i < groupset.Count; i++)
         {
-          var row = res.NewRow();
-          var filter = groupset.GetKey(i);
+          DataRow row = res.NewRow();
+          string filter = groupset.GetKey(i);
 
           foreach (string factor in m_factors)
           {
@@ -140,13 +140,15 @@ namespace Schicksal.Anova
     {
       int df;
       double error = this.GetError(row1, row2, out df);
-      DifferenceInfo result = new DifferenceInfo();
+      var result = new DifferenceInfo
+      {
+        Factor1 = row1["Factor"].ToString(),
+        Factor2 = row2["Factor"].ToString(),
+        Mean1 = (double)row1["Mean"],
+        Mean2 = (double)row2["Mean"],
+        Result = m_result
+      };
 
-      result.Factor1 = row1["Factor"].ToString();
-      result.Factor2 = row2["Factor"].ToString();
-      result.Mean1 = (double)row1["Mean"];
-      result.Mean2 = (double)row2["Mean"];
-      result.Result = m_result;
       result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
 
       if (df > 0)
@@ -254,7 +256,7 @@ namespace Schicksal.Anova
       if (this.Source == null)
         this.Source = m_comparator.CreateDescriptiveTable(m_probability);
 
-      DifferenceInfo[] result = new DifferenceInfo[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
+      var result = new DifferenceInfo[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
       int k = 0;
 
       for (int i = 0; i < this.Source.Rows.Count - 1; i++)
@@ -280,7 +282,7 @@ namespace Schicksal.Anova
     /// <summary>
     /// Создание примера строки для быстрой настройки ширины колонок таблицы
     /// </summary>
-    /// <returns>Первый попвашийся объект из результатов с заполненными всеми полями</returns>
+    /// <returns>Первый попавшийся объект из результатов с заполненными всеми полями</returns>
     public DifferenceInfo CreateExample()
     {
       if (this.Results == null)
