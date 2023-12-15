@@ -33,6 +33,9 @@ namespace Schicksal.Anova
     /// </summary>
     public double Mean2 { get; internal set; }
 
+    /// <summary>
+    /// Колонка таблицы данных с результатом влияния факторов
+    /// </summary>
     [Browsable(false)]
     public string Result { get; internal set; }
 
@@ -169,7 +172,7 @@ namespace Schicksal.Anova
       if (m_indexes.ContainsKey(property.Name))
         return;
 
-      Dictionary<object, int> index = new Dictionary<object, int>();
+      var index = new Dictionary<object, int>();
 
       for (int i = 0; i < m_list.Length; i++)
       {

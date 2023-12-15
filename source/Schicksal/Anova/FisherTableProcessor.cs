@@ -1,7 +1,8 @@
-﻿using Notung;
-using Schicksal.Basic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
+using Notung;
+using Schicksal.Basic;
 
 namespace Schicksal.Anova
 {
@@ -33,11 +34,11 @@ namespace Schicksal.Anova
 
       var result = new List<FisherTestResult>(group_count);
 
-      //if (this.RunInParrallel)
-      //{
-      //  Parallel.For(1, group_count, (i) => this.ProcessFactor(group_count, result, i));
-      //}
-      //else
+      if (this.RunInParrallel)
+      {
+        Parallel.For(1, group_count, (i) => this.ProcessFactor(group_count, result, i));
+      }
+      else
       {
         for (int i = 1; i < group_count; i++)
           this.ProcessFactor(group_count, result, i);
@@ -62,36 +63,42 @@ namespace Schicksal.Anova
       lock (result)
         this.ReportProgress(result.Count * 100 / groupCount, string.Join("+", factors));
 
-      if (ignoredFactors.Count == 0)
+      if (ignoredFactors.Count > 0)
       {
-        this.SingleFactorAnalysis(result, factors);
+        if (!this.DoubleFactorAnalysis(result, factors, ignoredFactors))
+          this.SingleFactorAnalysis(result, factors);
       }
       else
+        this.SingleFactorAnalysis(result, factors);
+    }
+
+    private bool DoubleFactorAnalysis(List<FisherTestResult> result, List<string> factors, List<string> ignoredFactors)
+    {
+      using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
       {
-        using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
+        FisherMetrics degrees = FisherCriteria.CalculateMultiplyCriteria(groups);
+
+        if (degrees.Ndf != 0)
         {
-          FisherMetrics degrees = FisherCriteria.CalculateMultiplyCriteria(groups);
-          if (degrees.Ndf != 0)
+          var row = new FisherTestResult
           {
-            var row = new FisherTestResult();
+            F = degrees.F,
+            Kdf = degrees.Kdf,
+            Ndf = degrees.Ndf,
+            Factor = string.Join("+", factors),
+            IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors)),
+            F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf),
+            F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf),
+            P = FisherCriteria.GetProbability(degrees)
+          };
 
-            row.F = degrees.F;
-            row.Kdf = degrees.Kdf;
-            row.Ndf = degrees.Ndf;
-            row.Factor = string.Join("+", factors);
-            row.IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors));
-            row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
-            row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
-            row.P = FisherCriteria.GetProbability(degrees);
+          lock (result)
+            result.Add(row);
 
-            lock (result)
-              result.Add(row);
-          }
-          else
-          {
-            this.SingleFactorAnalysis(result, factors);
-          }
+          return true;
         }
+        else
+          return false;
       }
     }
 
@@ -117,16 +124,17 @@ namespace Schicksal.Anova
 
         if (degrees.Ndf != 0)
         {
-          var row = new FisherTestResult();
-
-          row.F = degrees.F;
-          row.Kdf = degrees.Kdf;
-          row.Ndf = degrees.Ndf;
-          row.Factor = string.Join("+", factors);
-          row.IgnoredFactor = string.Empty;
-          row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
-          row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
-          row.P = FisherCriteria.GetProbability(degrees);
+          var row = new FisherTestResult
+          {
+            F = degrees.F,
+            Kdf = degrees.Kdf,
+            Ndf = degrees.Ndf,
+            Factor = string.Join("+", factors),
+            IgnoredFactor = string.Empty,
+            F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf),
+            F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf),
+            P = FisherCriteria.GetProbability(degrees)
+          };
 
           lock (result)
             result.Add(row);

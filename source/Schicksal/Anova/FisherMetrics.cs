@@ -42,13 +42,12 @@ namespace Schicksal.Anova
   public sealed class FisherTestResult
   {
     /// <summary>
-    /// Фактор, для которого рассчитывается влияние
+    /// Фактор, влияние которого оценивается
     /// </summary>
     public string Factor { get; internal set; }
 
     /// <summary>
-    /// Фактор, который учитывается при расчёте внутригрупповой дисперсии,
-    /// но не учитывается при расчёте межгрупповой дисперсии
+    /// Фактор, влияние которого игнорируется
     /// </summary>
     public string IgnoredFactor { get; internal set; }
 
