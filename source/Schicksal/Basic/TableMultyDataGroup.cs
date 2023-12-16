@@ -27,7 +27,6 @@ namespace Schicksal.Basic
     public TableMultyDataGroup(DataTable table, string[] factorColumns, string resultColumn, string filter = null)
     {
       CheckConstructorParameters(table, factorColumns, resultColumn);
-
       m_table = table;
 
       var sets = new HashSet<string>();
@@ -43,7 +42,7 @@ namespace Schicksal.Basic
       {
         foreach (DataRowView row in filtered_table)
         {
-          StringBuilder sb = new StringBuilder();
+          var sb = new StringBuilder();
           sb.AppendFormat("[{0}] is not null", resultColumn);
 
           for (int i = 0; i < factorColumns.Length; i++)
@@ -51,7 +50,7 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], this.GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!string.IsNullOrEmpty(filter))
@@ -75,7 +74,12 @@ namespace Schicksal.Basic
       m_views = tuples.ToArray();
     }
 
-    private string GetInvariant(object value)
+    /// <summary>
+    /// Преобразование значения в строку для выражения фильтра
+    /// </summary>
+    /// <param name="value">Значение</param>
+    /// <returns>Строковое представление значения в тексте фильтра</returns>
+    public static string GetInvariant(object value)
     {
       var formattable = value as IFormattable;
 
