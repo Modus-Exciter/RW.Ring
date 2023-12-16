@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 
 namespace Schicksal.Basic
 {
+  /// <summary>
+  /// Обёртка над таблицей для многофакторного анализа
+  /// </summary>
   public sealed class TableSetDataGroup : ISetMultyDataGroup, IDisposable
   {
     private readonly DataTable m_table;
@@ -29,11 +31,11 @@ namespace Schicksal.Basic
 
       m_indexes = new Dictionary<string, int>();
 
-      using (DataView filtered_table = new DataView(table, filter, null, DataViewRowState.CurrentRows))
+      using (var filtered_table = new DataView(table, filter, null, DataViewRowState.CurrentRows))
       {
         foreach (DataRowView row in filtered_table)
         {
-          StringBuilder sb = new StringBuilder();
+          var sb = new StringBuilder();
           sb.AppendFormat("[{0}] is not null", resultColumn);
 
           if (!string.IsNullOrEmpty(filter))
@@ -44,13 +46,13 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], this.GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], TableMultyDataGroup.GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!sets.Add(sb.ToString()))
             continue;
 
-          MultyViewGroup mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString());
+          var mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString());
           tuples.Add(mul);
 
           for (int i = 0; i < mul.Count; i++)
@@ -72,7 +74,7 @@ namespace Schicksal.Basic
       if (factorColumns.Length == 0)
         throw new ArgumentException("Factor columns list is empty");
 
-      if (ignorableColumns == null)//potencial bug
+      if (ignorableColumns == null)
         throw new ArgumentNullException("ignorableColumns");
 
       if (string.IsNullOrEmpty(resultColumn))
@@ -126,7 +128,6 @@ namespace Schicksal.Basic
       return this.GetEnumerator();
     }
 
-    //?
     public string GetKey(int index)
     {
       return m_views[index].ToString();
@@ -141,22 +142,6 @@ namespace Schicksal.Basic
     {
       foreach (MultyViewGroup group in m_views)
         group.Dispose();
-    }
-
-    private string GetInvariant(object value)
-    {
-      var formattable = value as IFormattable;
-
-      if (value is string)
-        return string.Format("'{0}'", value);
-      else if (value is DateTime)
-        return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));
-      else if (formattable != null)
-        return formattable.ToString(null, CultureInfo.InvariantCulture);
-      else if (value != null)
-        return value.ToString();
-      else
-        return "NULL";
     }
 
     private class MultyViewGroup : IMultyDataGroup<string>, IDisposable
@@ -181,7 +166,8 @@ namespace Schicksal.Basic
         {
           foreach (DataRowView row in filtered_table)
           {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
+
             if (!string.IsNullOrEmpty(filter))
               sb.AppendFormat("{0}", filter);
 
@@ -190,7 +176,7 @@ namespace Schicksal.Basic
               if (row.Row.IsNull(ignorableIndexes[i]))
                 sb.AppendFormat(" AND [{0}] IS NULL", ignorableColumns[i]);
               else
-                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], this.GetInvariant(row[ignorableIndexes[i]]));
+                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], TableMultyDataGroup.GetInvariant(row[ignorableIndexes[i]]));
             }
             if (!sets.Add(sb.ToString()))
               continue;
@@ -209,22 +195,6 @@ namespace Schicksal.Basic
 
         m_filter = filter;
         m_views = tuples.ToArray();
-      }
-
-      private string GetInvariant(object value)
-      {
-        var formattable = value as IFormattable;
-
-        if (value is string)
-          return string.Format("'{0}'", value);
-        else if (value is DateTime)
-          return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));
-        else if (formattable != null)
-          return formattable.ToString(null, CultureInfo.InvariantCulture);
-        else if (value != null)
-          return value.ToString();
-        else
-          return "NULL";
       }
 
       public override string ToString()
