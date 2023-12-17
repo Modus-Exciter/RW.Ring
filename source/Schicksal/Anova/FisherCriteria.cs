@@ -50,12 +50,18 @@ namespace Schicksal.Anova
       return degrees;
     }
 
+    /// <summary>
+    /// Сравнение внутригрупповой и межгрупповой дисперсии
+    /// тестом Фишера (для многофакторного анализа)
+    /// </summary>
+    /// <param name="group">Выборка данных, разделённая на группы</param>
+    /// <returns>Результат сравнения в виде специальной структуры</returns>
     public static FisherMetrics CalculateMultiplyCriteria(ISetMultyDataGroup groups)
     {
       var degrees = default(FisherMetrics);
 
       degrees.Kdf = (uint)groups.Count - 1;
-      degrees.Ndf = (uint)groups.SelectMany(g => g).Sum(g => g.Count) - (uint)groups.Sum(g => g.Count);
+      degrees.Ndf = GetWithinDegreesOfFreedom(groups);
 
       if (degrees.Kdf == 0 || degrees.Ndf == 0)
         return degrees;
@@ -64,7 +70,7 @@ namespace Schicksal.Anova
       var average = groups.SelectMany(g => g).SelectMany(g => g).Average();
 
       for (int i = 0; i < groups.Count; i++)
-        average_multi_group[i] = groups[i].SelectMany(g=>g).Average();
+        average_multi_group[i] = groups[i].SelectMany(g => g).Average();
 
       double outer_dispersion = 0;
       double inner_dispersion = 0;
@@ -79,6 +85,21 @@ namespace Schicksal.Anova
       degrees.MSw = inner_dispersion / degrees.Ndf;
 
       return degrees;
+    }
+
+    internal static uint GetWithinDegreesOfFreedom(ISetMultyDataGroup groups)
+    {
+      return (uint)groups.SelectMany(g => g).Sum(g => g.Count) - (uint)groups.Sum(g => g.Count);
+    }
+
+    internal static double GetWithinDispersion(ISetMultyDataGroup groups)
+    {
+      double inner_dispersion = 0;
+
+      foreach (var group in groups.SelectMany(g => g))
+        inner_dispersion += DescriptionStatistics.SquareDerivation(group);
+
+      return inner_dispersion / GetWithinDegreesOfFreedom(groups);
     }
 
     /// <summary>
