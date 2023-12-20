@@ -285,7 +285,7 @@ namespace Schicksal.Regression
       return true;
     }
 
-    private static void CaclulateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    private static void CalculateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
     {
       var x_ranks = CalculateSpearmanRanks(x);
       var y_ranks = CalculateSpearmanRanks(EnumeratePoints(x, y).Select(p =>
@@ -329,9 +329,8 @@ namespace Schicksal.Regression
       dependency.Consistency = (down - up) / down;
     }
 
-    private static void CalculateConsistencyWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep)
+    private static void CalculateConsistencyWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep, Dispersion disp)
     {
-      Dispersion disp = new Dispersion(x, y, dep.Calculate);
       double mean = DescriptionStatistics.Mean(y);
       double num = 0, denum = 0;
       double residualRegr = 0;
@@ -339,9 +338,9 @@ namespace Schicksal.Regression
 
       for (int i = 0; i < x.Count; i++)
       {
-        residualRegr = (y[i] - dep.Calculate(x[i])) / disp.Calculate(x[i]);
+        residualRegr = (y[i] - dep.Calculate(x[i])) / disp[i];
         residualRegr *= residualRegr;
-        residualMid = (y[i] - mean) / disp.Calculate(x[i]);
+        residualMid = (y[i] - mean) / disp[i];
         residualMid *= residualMid;
 
         num += residualRegr;
@@ -350,18 +349,50 @@ namespace Schicksal.Regression
       dep.ConsistencyWeighted = 1 - num / denum;
     }
 
+    private static void CalculateRMSError(IDataGroup x, IDataGroup y, RegressionDependency dep)
+    {
+      double result = 0;
+      double residual;
+
+      for (int i = 0; i < x.Count; i++)
+      {
+        residual = y[i] - dep.Calculate(x[i]);
+        result += residual * residual;
+      }
+
+      dep.RMSError = Math.Sqrt(result / x.Count);
+    }
+
+    private static void CalculateRMSErrorWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep, Dispersion disp)
+    {
+      double num = 0;
+      double denum = 0;
+      double residual;
+
+      for (int i = 0; i < x.Count; i++)
+      {
+        residual = (y[i] - dep.Calculate(x[i])) / disp[i];
+        num += residual * residual;
+        denum += 1 / (disp[i]* disp[i]);
+      }
+
+      dep.RMSErrorWeighted = Math.Sqrt(num / denum);
+    }
+
     private static void AddType(Type type, List<RegressionDependency> dependencies, IDataGroup x, IDataGroup y, string factor, string effect)
     {
       try
       {
         var dep = (RegressionDependency)Activator.CreateInstance(type, x, y);
+        Dispersion disp = new Dispersion(x, y, dep.Calculate);
         dep.Factor = factor;
         dep.Effect = effect;
 
-
-        CaclulateHeteroscedasticity(x, y, dep);
+        CalculateHeteroscedasticity(x, y, dep);
         CalculateConsistency(x, y, dep);
-        CalculateConsistencyWeighted(x, y, dep);
+        CalculateConsistencyWeighted(x, y, dep, disp);
+        CalculateRMSError(x, y, dep);
+        CalculateRMSErrorWeighted(x, y, dep, disp);
 
         lock (dependencies)
         {
