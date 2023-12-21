@@ -269,7 +269,8 @@ namespace Schicksal.Helm
         dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          var processor = new FisherTableProcessor(table, dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result);
+          var processor = new FisherTableProcessor(table, dlg.DataSource.Predictors.ToArray(), 
+            dlg.DataSource.Result, dlg.DataSource.Probability);
 
           if (!string.IsNullOrEmpty(dlg.DataSource.Filter))
             processor.Filter = dlg.DataSource.Filter;
@@ -459,7 +460,7 @@ namespace Schicksal.Helm
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
           var processor = new CorrelationTestProcessor(table,
-            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result, dlg.DataSource.Filter);
+            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result, dlg.DataSource.Filter, dlg.DataSource.Probability);
 
           if (AppManager.OperationLauncher.Run(processor,
             new LaunchParameters

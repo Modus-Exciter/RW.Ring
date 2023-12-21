@@ -22,14 +22,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Критическое значение коэффициента корреляции для уровня значимости 0,05
     /// </summary>
-    [DisplayName("T 5%")]
-    public double T005 { get; internal set; }
-
-    /// <summary>
-    /// Критическое значение коэффициента корреляции для уровня значимости 0,01
-    /// </summary>
-    [DisplayName("T 1%")]
-    public double T001 { get; internal set; }
+    public double TStandard { get; internal set; }
 
     /// <summary>
     /// Коэффициент линейной корреляции

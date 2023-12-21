@@ -11,12 +11,14 @@ namespace Schicksal.Anova
     private readonly DataTable m_source;
     private readonly string[] m_factors;
     private readonly string m_result_column;
+    private readonly double m_probability;
 
-    public FisherTableProcessor(DataTable table, string[] factors, string result)
+    public FisherTableProcessor(DataTable table, string[] factors, string result, double p)
     {
       m_source = table;
       m_factors = factors;
       m_result_column = result;
+      m_probability = p;
     }
 
     public string Filter { get; set; }
@@ -87,8 +89,7 @@ namespace Schicksal.Anova
             Ndf = degrees.Ndf,
             Factor = string.Join("+", factors),
             IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors)),
-            F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf),
-            F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf),
+            FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
             P = FisherCriteria.GetProbability(degrees)
           };
 
@@ -131,8 +132,7 @@ namespace Schicksal.Anova
             Ndf = degrees.Ndf,
             Factor = string.Join("+", factors),
             IgnoredFactor = string.Empty,
-            F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf),
-            F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf),
+            FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
             P = FisherCriteria.GetProbability(degrees)
           };
 

@@ -67,6 +67,11 @@ namespace Schicksal.Anova
     public double F { get; internal set; }
 
     /// <summary>
+    /// Критическое значение критерия F для указанного уровня значимости
+    /// </summary>
+    public double FCritical { get; internal set; }
+    /*
+    /// <summary>
     /// Критическое значение критерия F для 5% вероятности нулевой гипотезы
     /// </summary>
     [DisplayName("F 5%")]
@@ -77,7 +82,7 @@ namespace Schicksal.Anova
     /// </summary>
     [DisplayName("F 1%")]
     public double F001 { get; internal set; }
-
+    */
     /// <summary>
     /// Вероятность нулевой гипотезы для полученного значения критерия F
     /// </summary>

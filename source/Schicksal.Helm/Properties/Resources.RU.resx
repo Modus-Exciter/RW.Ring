@@ -219,8 +219,14 @@
   <data name="SIGNIFICAT_COLOR" xml:space="preserve">
     <value>Цвет значимых отличий</value>
   </data>
+  <data name="STANDARD_F_VALUE" xml:space="preserve">
+    <value>Стандартное значение F-критерия для {0}% уровня значимости</value>
+  </data>
   <data name="STANDARD_TABLES" xml:space="preserve">
     <value>Справочные таблицы</value>
+  </data>
+  <data name="STANDARD_T_VALUE" xml:space="preserve">
+    <value>Значение T-критерия для {0}% уровня значимости</value>
   </data>
   <data name="STATISTICS" xml:space="preserve">
     <value>Статистика</value>

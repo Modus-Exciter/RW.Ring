@@ -166,28 +166,16 @@
   <data name="fDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
-  <data name="f005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>F 5%</value>
+  <metadata name="fCriticalColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="fCriticalColumn.HeaderText" xml:space="preserve">
+    <value>FCritical</value>
   </data>
-  <data name="f005DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+  <data name="fCriticalColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="f005DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Standard F-criteria for 5% probability</value>
-  </data>
-  <data name="f005DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>125</value>
-  </data>
-  <data name="f001DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>F 1%</value>
-  </data>
-  <data name="f001DataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="f001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Standard F-criteria for 1% probability</value>
-  </data>
-  <data name="f001DataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+  <data name="fCriticalColumn.Width" type="System.Int32, mscorlib">
     <value>125</value>
   </data>
   <data name="pDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
@@ -207,13 +195,13 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
-    <value>107, 22</value>
+    <value>121, 24</value>
   </data>
   <data name="m_cmd_export.Text" xml:space="preserve">
     <value>Export</value>
   </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 26</value>
+    <value>122, 28</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -231,11 +219,14 @@
   <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
+  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
     <value>51</value>
   </data>
   <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
+    <value>812, 593</value>
   </data>
   <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -256,10 +247,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
+    <value>8, 16</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>609, 482</value>
+    <value>812, 593</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -710,6 +701,9 @@
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
   </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterScreen</value>
   </data>
@@ -752,16 +746,10 @@
   <data name="&gt;&gt;fDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;f005DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>f005DataGridViewTextBoxColumn</value>
+  <data name="&gt;&gt;fCriticalColumn.Name" xml:space="preserve">
+    <value>fCriticalColumn</value>
   </data>
-  <data name="&gt;&gt;f005DataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;f001DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>f001DataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;f001DataGridViewTextBoxColumn.Type" xml:space="preserve">
+  <data name="&gt;&gt;fCriticalColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;pDataGridViewTextBoxColumn.Name" xml:space="preserve">
