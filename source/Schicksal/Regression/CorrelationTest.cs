@@ -18,7 +18,7 @@ namespace Schicksal.Regression
 
     #region Public methods ------------------------------------------------------------------------
 
-    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y)
+    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y, double p)
     {
       var result = new CorrelationMetrics
       {
@@ -33,8 +33,9 @@ namespace Schicksal.Regression
         result.Eta = result.R;
 
       result.Z = 0.5 * Math.Log((1 + result.R) / (1 - result.R));
-      result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
-      result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
+      result.TStandard = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - p / 2);
+      //result.T001 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.01 / 2);
+      //result.T005 = SpecialFunctions.invstudenttdistribution(x.Count - 2, 1 - 0.05 / 2);
       result.TR = Math.Abs(result.R) / Math.Sqrt((1 - result.R * result.R) / (result.N - 2));
       result.PR = (1 - SpecialFunctions.studenttdistribution(x.Count - 2, result.TR)) * 2;
       result.TH = Math.Abs(result.Eta) / Math.Sqrt((1 - result.Eta * result.Eta) / (result.N - 2));

@@ -117,140 +117,176 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;m_context_menu.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pHDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="factorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>Factor</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="rDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+  <data name="factorDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
-    <value>m_binding_source</value>
-  </data>
-  <data name="&gt;&gt;nDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>125</value>
-  </data>
-  <data name="t001DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>T criteria for 1% probability</value>
-  </data>
-  <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
-    <value>m_context_menu</value>
-  </data>
-  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
-    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>6, 13</value>
-  </data>
-  <data name="&gt;&gt;rDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>rDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;m_cmd_export.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="tRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>tr</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="nDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>N</value>
-  </data>
-  <data name="&gt;&gt;nDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>nDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="t005DataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>T criteria for 5% probability</value>
-  </data>
-  <data name="&gt;&gt;m_grid.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;t005DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>t005DataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>factorDataGridViewTextBoxColumn</value>
-  </data>
-  <data name="m_grid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="&gt;&gt;t005DataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
   </data>
   <data name="factorDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>Factor</value>
   </data>
-  <data name="&gt;&gt;m_grid.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="factorDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
-  <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
-    <value>51</value>
+  <data name="nDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>N</value>
   </data>
-  <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
-    <value>117, 22</value>
+  <data name="nDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="etaDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>η</value>
+  <data name="nDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Observations (points) quantity</value>
   </data>
-  <data name="pRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Probability level for for linear correlation coefficent</value>
+  <data name="nDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
-  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>759, 483</value>
+  <metadata name="tStandardColumn.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="tStandardColumn.HeaderText" xml:space="preserve">
+    <value>TStandard</value>
   </data>
-  <data name="tHDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>tη</value>
+  <data name="tStandardColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
   </data>
-  <data name="pHDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>pη</value>
-  </data>
-  <data name="&gt;&gt;m_grid.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="etaDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Non-linear correlation coefficient</value>
-  </data>
-  <data name="&gt;&gt;tHDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;m_grid.Name" xml:space="preserve">
-    <value>m_grid</value>
+  <data name="tStandardColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
   <data name="rDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
     <value>r</value>
   </data>
+  <data name="rDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="rDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Linear correlation coefficient</value>
+  </data>
+  <data name="rDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <data name="tRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>tr</value>
+  </data>
+  <data name="tRDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
   <data name="tRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
     <value>T criteria for linear correlation coefficent</value>
   </data>
-  <data name="&gt;&gt;t001DataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="tRDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
   </data>
-  <data name="factorDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+  <data name="pRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>pr</value>
+  </data>
+  <data name="pRDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
     <value>6</value>
   </data>
-  <data name="&gt;&gt;tRDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>tRDataGridViewTextBoxColumn</value>
+  <data name="pRDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Probability level for for linear correlation coefficent</value>
   </data>
-  <data name="nDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Observations (points) quantity</value>
+  <data name="pRDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <data name="etaDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>η</value>
+  </data>
+  <data name="etaDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="etaDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Non-linear correlation coefficient</value>
+  </data>
+  <data name="etaDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>tη</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>T criteria for non-linear correlation coefficent</value>
+  </data>
+  <data name="tHDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <data name="pHDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
+    <value>pη</value>
+  </data>
+  <data name="pHDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
+    <value>Probability level for for non-linear correlation coefficent</value>
+  </data>
+  <data name="pHDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
+    <value>125</value>
+  </data>
+  <metadata name="m_context_menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>206, 14</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_cmd_export.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 24</value>
+  </data>
+  <data name="m_cmd_export.Text" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
+    <value>122, 28</value>
+  </data>
+  <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
+    <value>m_context_menu</value>
+  </data>
+  <data name="&gt;&gt;m_context_menu.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_grid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1012, 594</value>
+  </data>
+  <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Name" xml:space="preserve">
+    <value>m_grid</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_grid.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>1012, 594</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -701,23 +737,11 @@
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
   </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
   </data>
-  <data name="&gt;&gt;rDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="m_cmd_export.Text" xml:space="preserve">
-    <value>Export</value>
-  </data>
-  <data name="rDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Linear correlation coefficient</value>
-  </data>
-  <data name="nDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>125</value>
-  </data>
-  <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 26</value>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>AncovaResultsForm</value>
@@ -725,67 +749,73 @@
   <data name="&gt;&gt;m_cmd_export.Name" xml:space="preserve">
     <value>m_cmd_export</value>
   </data>
-  <data name="&gt;&gt;tHDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>tHDataGridViewTextBoxColumn</value>
+  <data name="&gt;&gt;m_cmd_export.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="tHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>T criteria for non-linear correlation coefficent</value>
+  <data name="&gt;&gt;m_binding_source.Name" xml:space="preserve">
+    <value>m_binding_source</value>
+  </data>
+  <data name="&gt;&gt;m_binding_source.Type" xml:space="preserve">
+    <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>factorDataGridViewTextBoxColumn</value>
+  </data>
+  <data name="&gt;&gt;factorDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>nDataGridViewTextBoxColumn</value>
+  </data>
+  <data name="&gt;&gt;nDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tStandardColumn.Name" xml:space="preserve">
+    <value>tStandardColumn</value>
+  </data>
+  <data name="&gt;&gt;tStandardColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>rDataGridViewTextBoxColumn</value>
+  </data>
+  <data name="&gt;&gt;rDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tRDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>tRDataGridViewTextBoxColumn</value>
   </data>
   <data name="&gt;&gt;tRDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>pRDataGridViewTextBoxColumn</value>
+  </data>
+  <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;etaDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>etaDataGridViewTextBoxColumn</value>
   </data>
-  <data name="rDataGridViewTextBoxColumn.Width" type="System.Int32, mscorlib">
-    <value>125</value>
-  </data>
-  <data name="pHDataGridViewTextBoxColumn.ToolTipText" xml:space="preserve">
-    <value>Probability level for for non-linear correlation coefficent</value>
-  </data>
-  <data name="t005DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>T 5%</value>
-  </data>
-  <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="&gt;&gt;etaDataGridViewTextBoxColumn.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="factorDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>Factor</value>
+  <data name="&gt;&gt;tHDataGridViewTextBoxColumn.Name" xml:space="preserve">
+    <value>tHDataGridViewTextBoxColumn</value>
   </data>
-  <data name="t001DataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>T 1%</value>
-  </data>
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>759, 483</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>AncovaResultsForm</value>
-  </data>
-  <data name="&gt;&gt;t001DataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>t001DataGridViewTextBoxColumn</value>
-  </data>
-  <data name="&gt;&gt;pRDataGridViewTextBoxColumn.Name" xml:space="preserve">
-    <value>pRDataGridViewTextBoxColumn</value>
+  <data name="&gt;&gt;tHDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;pHDataGridViewTextBoxColumn.Name" xml:space="preserve">
     <value>pHDataGridViewTextBoxColumn</value>
   </data>
-  <data name="pRDataGridViewTextBoxColumn.HeaderText" xml:space="preserve">
-    <value>pr</value>
+  <data name="&gt;&gt;pHDataGridViewTextBoxColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="nDataGridViewTextBoxColumn.MinimumWidth" type="System.Int32, mscorlib">
-    <value>6</value>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>AncovaResultsForm</value>
   </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="m_binding_source.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="m_context_menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>206, 14</value>
-  </metadata>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

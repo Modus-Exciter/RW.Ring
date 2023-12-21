@@ -497,6 +497,24 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Standard F-criteria for {0}% probability.
+        /// </summary>
+        internal static string STANDARD_F_VALUE {
+            get {
+                return ResourceManager.GetString("STANDARD_F_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на T-criteria for {0}% probability.
+        /// </summary>
+        internal static string STANDARD_T_VALUE {
+            get {
+                return ResourceManager.GetString("STANDARD_T_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Standard tables.
         /// </summary>
         internal static string STANDARD_TABLES {

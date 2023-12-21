@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Anova;
+using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
@@ -41,6 +42,8 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
+      fCriticalColumn.HeaderText = string.Format("F {0}%", this.Probability * 100);
+      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, this.Probability * 100);
       m_grid.AutoResizeColumns();
     }
 
