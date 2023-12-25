@@ -16,7 +16,8 @@ namespace Schicksal.Helm
 {
     public partial class TableForm : Form
     {
-        TextBox[] customHeaderPanel;
+        TextBox[] filterTextBoxes;
+        List<string> columnNames;
 
         public TableForm()
         {
@@ -34,9 +35,10 @@ namespace Schicksal.Helm
 
                 m_grid.DataSource = value;
 
-                // инициализация массива полей
-                customHeaderPanel = new TextBox[m_grid.ColumnCount];
-
+                // инициализация массива полей и имен колонок
+                filterTextBoxes = new TextBox[m_grid.ColumnCount];
+                columnNames = GetColumnNames();
+                
                 if (value != null)
                 {
                     value.AcceptChanges();
@@ -45,6 +47,9 @@ namespace Schicksal.Helm
                     {
                         foreach (DataGridViewColumn col in m_grid.Columns)
                         {
+                            // Отступ для строки фильтра
+                            col.HeaderCell.Style.Padding = new Padding(0, 0, 0, 25);
+
                             if (col.ValueType == typeof(double) || col.ValueType == typeof(float))
                                 col.DefaultCellStyle.Format = "0.000";
                         }
@@ -73,8 +78,11 @@ namespace Schicksal.Helm
         {
             base.OnShown(e);
 
+            // Добавление полей поиска
+            AddSearchControlToColumnHeader(m_grid);
+
             if (m_grid.Rows.Count < (1 << 10))
-                m_grid.AutoResizeColumns();
+                m_grid.AutoResizeColumns();         
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -216,12 +224,6 @@ namespace Schicksal.Helm
         }
 
 
-
-
-
-
-
-
         private List<string> GetColumnNames()
         {
             List<string> names = new List<string>();
@@ -238,16 +240,40 @@ namespace Schicksal.Helm
             return names;
         }
 
+
+        private void AddSearchControlToColumnHeader(DataGridView dataGridView)
+        {
+            int i = 0;
+            foreach (DataGridViewColumn column in dataGridView.Columns)
+            {
+
+                // Создаем текстовое поле
+                TextBox textBox = new TextBox();
+
+                // Добавляем текстовое поле в массив
+                filterTextBoxes[i] = textBox;
+
+                // Позиционирование поля
+                Rectangle headerRect = m_grid.GetCellDisplayRectangle(column.Index, -1, true);
+                textBox.Location = new Point(headerRect.X, headerRect.Y + 50);
+                textBox.Size = new Size(headerRect.Width, headerRect.Height);
+
+                this.Controls.Add(textBox);
+                i++;
+            }
+            this.Controls.SetChildIndex(m_grid, Controls.Count - 1);
+        }
+
+
         private void reset_Click(object sender, EventArgs e)
         {
-            // очистка панли управления и массива полей
-            foreach (var textBox in customHeaderPanel)
-            {
-                m_grid.Parent.Controls.Remove(textBox);
-            }
-            Array.Clear(customHeaderPanel, 0, customHeaderPanel.Length);
+            // очистка полей поиска и сброс фильтра
+            foreach (var textBox in filterTextBoxes)
+                textBox.Text = "";
+
             (m_grid.DataSource as DataTable).DefaultView.RowFilter = "";
         }
+
 
         private void m_grid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -255,17 +281,19 @@ namespace Schicksal.Helm
             if (e.Button == MouseButtons.Left && e.RowIndex == -1)
             {
                 int index = e.ColumnIndex;
-                if (customHeaderPanel[index] == null)
+                if (filterTextBoxes[index] != null)
                 {
                     TextBox textBox = new TextBox();
 
                     // Добавляем текстовое поле в массив
-                    customHeaderPanel[index] = textBox;
+                    filterTextBoxes[index] = textBox;
 
                     // Позиционирование поля относительно щелкнутого заголовка столбца
-                    Rectangle headerRect = m_grid.GetCellDisplayRectangle(e.ColumnIndex, -1, true);
+                    Rectangle headerRect = m_grid.GetCellDisplayRectangle(index, -1, true);
                     textBox.Location = new Point(headerRect.X, headerRect.Y);
                     textBox.Size = new Size(headerRect.Width, headerRect.Height);
+
+                   
 
                     // Добавление поля к родительскому контейнеру DataGridView
                     m_grid.Parent.Controls.Add(textBox);
@@ -276,19 +304,33 @@ namespace Schicksal.Helm
         private void DoFilter_Click(object sender, EventArgs e)
         {
             string filterExpression = "";
-            List<string> columnNames = GetColumnNames();
 
-            for (int i = 0; i < customHeaderPanel.Length; i++)
+            for (int i = 0; i < filterTextBoxes.Length; i++)
             {
-                if (customHeaderPanel[i] != null)
+                if (filterTextBoxes[i] != null)
                 {
-                    filterExpression += $"Convert([{columnNames[i]}], 'System.String') LIKE '%{customHeaderPanel[i].Text}%' AND ";
+                    filterExpression += $"Convert([{columnNames[i]}], 'System.String') LIKE '%{filterTextBoxes[i].Text}%' AND ";
                 }
             }
 
             filterExpression = filterExpression.TrimEnd(" AND ".ToCharArray()); // Удалить последний " AND "
 
             (m_grid.DataSource as DataTable).DefaultView.RowFilter = filterExpression;
+        }
+
+        private void m_grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+        {
+            int i = 0;
+
+            foreach(var textBox in filterTextBoxes)
+            {
+                // Позиционирование поля
+                Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
+                textBox.Location = new Point(headerRect.X, headerRect.Y + 50);
+                textBox.Size = new Size(headerRect.Width, headerRect.Height);
+
+                i++;
+            }      
         }
     }
 }

@@ -57,6 +57,7 @@
             this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEndEdit);
             this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEnter);
             this.m_grid.ColumnHeaderMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_grid_ColumnHeaderMouseDoubleClick);
+            this.m_grid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.m_grid_ColumnWidthChanged);
             this.m_grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.Grid_DataError);
             this.m_grid.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.m_grid_UserDeletedRow);
             this.m_grid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.m_grid_MouseClick);
@@ -83,7 +84,7 @@
             // 
             // reset
             // 
-            this.reset.Location = new System.Drawing.Point(24, 0);
+            this.reset.Location = new System.Drawing.Point(33, 0);
             this.reset.Name = "reset";
             this.reset.Size = new System.Drawing.Size(25, 23);
             this.reset.TabIndex = 2;
