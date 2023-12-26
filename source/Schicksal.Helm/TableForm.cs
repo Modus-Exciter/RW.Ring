@@ -246,17 +246,11 @@ namespace Schicksal.Helm
             int i = 0;
             foreach (DataGridViewColumn column in dataGridView.Columns)
             {
-
                 // Создаем текстовое поле
                 TextBox textBox = new TextBox();
 
                 // Добавляем текстовое поле в массив
                 filterTextBoxes[i] = textBox;
-
-                // Позиционирование поля
-                Rectangle headerRect = m_grid.GetCellDisplayRectangle(column.Index, -1, true);
-                textBox.Location = new Point(headerRect.X, headerRect.Y + 50);
-                textBox.Size = new Size(headerRect.Width, headerRect.Height);
 
                 this.Controls.Add(textBox);
                 i++;
@@ -319,18 +313,17 @@ namespace Schicksal.Helm
         }
 
         private void m_grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
-        {
-            int i = 0;
-
-            foreach(var textBox in filterTextBoxes)
+        { 
+            for (int i = e.Column.Index; i < filterTextBoxes.Length; i++)
             {
+                var textBox = filterTextBoxes[i];
+
                 // Позиционирование поля
                 Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
-                textBox.Location = new Point(headerRect.X, headerRect.Y + 50);
-                textBox.Size = new Size(headerRect.Width, headerRect.Height);
+                textBox.Location = new Point(headerRect.X + 3, headerRect.Y + 50);
+                textBox.Size = new Size(headerRect.Width - 6, headerRect.Height);
 
-                i++;
-            }      
+            }
         }
     }
 }
