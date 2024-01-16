@@ -27,8 +27,6 @@ namespace Schicksal.VectorField
   {
     private readonly double[] m_values;
 
-    public double[] Values { get { return m_values; } }
-
     public VectorDataGroup(params double[] array)
     {
       if (array == null) throw new ArgumentNullException("array");
