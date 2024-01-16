@@ -17,10 +17,17 @@ namespace Notung.Data
 
     private int LastIndex { get { return m_count - (1 << m_domain.Count - 1); } }
 
-    public PriorityQueue()
+    public PriorityQueue(Comparer<TPriority> comparer = null)
     {
-      if (typeof(TPriority).IsValueType)
-        m_comparer = Comparer<TPriority>.Default;
+      if(comparer == null)
+      {
+        if (typeof(TPriority).IsValueType)
+          m_comparer = Comparer<TPriority>.Default;
+        else
+          throw new ArgumentException();
+      }
+      else
+        m_comparer = comparer;
 
       m_domain = new LinkedList<(TElement, TPriority)[]>();
       m_domain.AddFirst(new (TElement, TPriority)[START_SIZE]);
@@ -72,11 +79,12 @@ namespace Notung.Data
         while (currentLevel.Next != null)
         {
           var childLevel = currentLevel.Next;
-          int childIndex;
-          if (m_comparer.Compare(childLevel.Value[index << 1].priority, childLevel.Value[(index << 1) + 1].priority) < 0)
-            childIndex = index;
-          else
-            childIndex = index + 1;
+          int childIndex = index << 1;
+          if (childIndex + 1 < m_count)
+          {
+            if (m_comparer.Compare(childLevel.Value[childIndex].priority, childLevel.Value[childIndex + 1].priority) > 0)
+              childIndex = childIndex + 1;
+          }
 
           if (m_comparer.Compare(node.priority, childLevel.Value[childIndex].priority) > 0)
           {
