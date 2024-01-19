@@ -1,25 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace Notung.Data
 {
-  internal class PriorityQueue<TElement, TPriority>
+  public class PriorityQueue<TElement, TPriority>
   {
-    const int START_SIZE = 1;
+    const int ARITY = 4;
+    const int LOG2ARITY = 2;
+    const int START_GLOBAL_COUNT = 2;
+    const int DOMAIN_SIZE = 15;
 
-    private IComparer<TPriority> m_comparer;
-    private LinkedList<(TElement element, TPriority priority)[]> m_domain;
+    private readonly IComparer<TPriority> m_comparer;
+    private readonly (TElement element, TPriority priority)[][] m_domain;
+    private int m_last_domain_index = 0;
     private int m_count = 0;
-    private int m_capacity = 1;
+    private int m_last_local_index = -1;
     private int m_last_size = 1;
 
-    private int LastIndex { get { return m_count - (1 << m_domain.Count - 1); } }
+    public int Count { get { return m_count; } }
 
-    public PriorityQueue(Comparer<TPriority> comparer = null)
+    public PriorityQueue(IEnumerable<(TElement element, TPriority priority)> values = null, IComparer<TPriority> comparer = null)
     {
-      if(comparer == null)
+      if (comparer == null)
       {
         if (typeof(TPriority).IsValueType)
           m_comparer = Comparer<TPriority>.Default;
@@ -29,74 +34,98 @@ namespace Notung.Data
       else
         m_comparer = comparer;
 
-      m_domain = new LinkedList<(TElement, TPriority)[]>();
-      m_domain.AddFirst(new (TElement, TPriority)[START_SIZE]);
+      m_domain = new (TElement element, TPriority priority)[DOMAIN_SIZE][];
+      m_domain[m_last_domain_index] = new (TElement, TPriority)[1];
+
+      if (values != null)
+        foreach (var item in values)
+          this.Enqueue(item.element, item.priority);
+    }
+
+    public void Enqueue(IEnumerable<(TElement element, TPriority priority)> values)
+    {
+      foreach (var item in values)
+        this.Enqueue(item.element, item.priority);
     }
 
     public void Enqueue(TElement element, TPriority priority)
     {
-      if (m_capacity == m_count)
+      if (m_last_local_index == m_last_size - 1)
       {
-        m_last_size <<= 1;
-        m_capacity += m_last_size;
-        m_domain.AddLast(new (TElement, TPriority)[m_last_size]);
+        m_last_size = m_last_size == 0 ? 1 : m_last_size << LOG2ARITY;
+        m_last_domain_index++;
+        m_last_local_index = -1;
+        m_domain[m_last_domain_index] = new (TElement, TPriority)[m_last_size];
       }
+      m_last_local_index++;
       m_count++;
-      var currentLevel = m_domain.Last;
-      int index = this.LastIndex;
+      var level = m_last_domain_index;
+      int index = m_last_local_index;
       (TElement element, TPriority priority) newNode = (element, priority);
-      while (currentLevel.Previous != null)
+      while (level > 0)
       {
-        int parentIndex = index >> 1;
-        var parentLevel = currentLevel.Previous;
-        if (m_comparer.Compare(newNode.priority, parentLevel.Value[parentIndex].priority) < 0)
-        {
-          currentLevel.Value[index] = parentLevel.Value[parentIndex];
-          index = parentIndex;
-          currentLevel = parentLevel;
-        }
-        else break;
+        int parent = index >> LOG2ARITY;
+        var parentLevel = level - 1;
+        if (m_comparer.Compare(newNode.priority, m_domain[parentLevel][parent].priority) >= 0)
+          break;
+        m_domain[level][index] = m_domain[parentLevel][parent];
+        index = parent;
+        level = parentLevel;
       }
-
-      currentLevel.Value[index] = newNode;
+      m_domain[level][index] = newNode;
     }
 
     public TElement Dequeue()
     {
-      TElement result = m_domain.First.Value[0].element;
-      var node = m_domain.Last.Value[this.LastIndex];
+      TElement result = m_domain[0][0].element;
+      var node = m_domain[m_last_domain_index][m_last_local_index];
       m_count--;
-      if (m_capacity - m_count == m_last_size)
+      m_last_local_index--;
+      if (m_last_local_index == -1)
       {
-        m_capacity -= m_last_size;
-        m_last_size >>= 1;
-        m_domain.RemoveLast();
+        m_domain[m_last_domain_index] = null;
+        m_last_size >>= LOG2ARITY;
+        m_last_local_index = m_last_size - 1;
+        m_last_domain_index--;
       }
-      if (m_domain.Count != 0)
+      if (m_last_domain_index >= 0)
       {
         int index = 0;
-        var currentLevel = m_domain.First;
-        while (currentLevel.Next != null)
+        int minChild = 0;
+        int levelCount = 0;
+        int globalCount = START_GLOBAL_COUNT;
+        var level = 0;
+        var childLevel = 1;
+        while (globalCount + minChild <= m_count)
         {
-          var childLevel = currentLevel.Next;
-          int childIndex = index << 1;
-          if (childIndex + 1 < m_count)
+          int nextChild = minChild + 1;
+          int childThreshold = minChild + ARITY <= m_count - globalCount + 1 ? minChild + ARITY : m_count - globalCount + 1;
+          while (nextChild < childThreshold)
           {
-            if (m_comparer.Compare(childLevel.Value[childIndex].priority, childLevel.Value[childIndex + 1].priority) > 0)
-              childIndex = childIndex + 1;
+            if (m_comparer.Compare(m_domain[childLevel][nextChild].priority, m_domain[childLevel][minChild].priority) <= 0)
+              minChild = nextChild;
+            nextChild++;
           }
 
-          if (m_comparer.Compare(node.priority, childLevel.Value[childIndex].priority) > 0)
-          {
-            currentLevel.Value[index] = childLevel.Value[childIndex];
-            index = childIndex;
-            currentLevel = childLevel;
-          }
-          else break;
+          if (m_comparer.Compare(node.priority, m_domain[childLevel][minChild].priority) <= 0)
+            break;
+
+          m_domain[level][index] = m_domain[childLevel][minChild];
+          index = minChild;
+          minChild = index << LOG2ARITY;
+          level++;
+          levelCount++;
+          childLevel++;
+          globalCount = globalCount + (1 << LOG2ARITY * levelCount);
         }
-        currentLevel.Value[index] = node;
+        m_domain[level][index] = node;
       }
       return result;
+    }
+
+    public TElement Peek()
+    {
+      return m_domain[0][0].element;
     }
   }
 }

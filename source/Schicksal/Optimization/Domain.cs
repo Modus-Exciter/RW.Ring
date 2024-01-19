@@ -1,4 +1,5 @@
-﻿using Schicksal.Basic;
+﻿using Notung.Data;
+using Schicksal.Basic;
 using Schicksal.VectorField;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Schicksal.Optimization
       /// <summary>
       /// Домен всех прямоугольников. Представляет собой сортированные списки.
       /// </summary>
-      public readonly List<List<DividableRectangle>> domain;
+      public readonly List<PriorityQueue<DividableRectangle, double>> domain;
 
       /// <summary>
       /// Точка с минимальным значением функции с обратным преобразованием
@@ -28,7 +29,7 @@ namespace Schicksal.Optimization
       {
         get
         {
-          FuncPoint temp = domain.Select(rectList => rectList[0]).Min().Center;
+          FuncPoint temp = domain.Select(queue => queue.Peek()).Min().Center;
           return new FuncPoint(this.UnitCubeTransfer(temp.x), temp.y);
         }
       }
@@ -40,7 +41,7 @@ namespace Schicksal.Optimization
       {
         get
         {
-          return domain.Select(rectList => rectList[0]).Min().Center;
+          return domain.Select(queue => queue.Peek()).Min().Center;
         }
       }
 
@@ -67,8 +68,9 @@ namespace Schicksal.Optimization
         this.highBound = highBound; this.lowBound = lowBound;
         Func<VectorDataGroup, double> unitOptFunc = x => optFunc(this.UnitCubeTransfer(x));
         DividableRectangle startRect = new DividableRectangle(new FuncPoint(center, unitOptFunc), sizes, unitOptFunc);
-        domain = new List<List<DividableRectangle>>
-          { new List<DividableRectangle> { startRect } };
+        domain = new List<PriorityQueue<DividableRectangle, double>>
+          { new PriorityQueue<DividableRectangle, double>() };
+        domain[0].Enqueue(startRect, startRect.F);
       }
 
       /// <summary>
@@ -87,18 +89,17 @@ namespace Schicksal.Optimization
       /// <param name="rectangles">Множество прямоугольников</param>
       public void Distribute(in DividableRectangle[] rectangles)
       {
-        foreach (DividableRectangle rectangle in rectangles)
+        foreach (DividableRectangle rect in rectangles)
         {
           int i = 0;
-          while (i < domain.Count && rectangle.Diag > domain[i][0].Diag) i++;
-          if (rectangle.Diag == domain[i][0].Diag)
-          {
-            int j = 0;
-            while (j < domain[i].Count && rectangle.F > domain[i][j].F) j++;
-            domain[i].Insert(j, rectangle);
-          }
+          while (i < domain.Count && rect.Diag > domain[i].Peek().Diag) i++;
+          if (rect.Diag == domain[i].Peek().Diag)
+            domain[i].Enqueue(rect, rect.F);
           else
-            domain.Insert(i, new List<DividableRectangle>(new DividableRectangle[] { rectangle }));
+          {
+            domain.Insert(i, new PriorityQueue<DividableRectangle, double>());
+            domain[i].Enqueue(rect, rect.F);
+          }
         }
       }
 
@@ -109,9 +110,10 @@ namespace Schicksal.Optimization
       public void Delete(in DividableRectangle rectangle)
       {
         int i = 0;
-        while (i < domain.Count && rectangle.Diag != domain[i][0].Diag) i++;
-        domain[i].Remove(rectangle);
-        if (domain[i].Count == 0) domain.RemoveAt(i);
+        while (i < domain.Count && rectangle.Diag != domain[i].Peek().Diag) i++;
+        domain[i].Dequeue();
+        if (domain[i].Count == 0) 
+          domain.RemoveAt(i);
       }
 
       /// <summary>
@@ -124,14 +126,14 @@ namespace Schicksal.Optimization
         double minF = double.MaxValue;
         int indexMin = -1;
         for (int i = 0; i < domain.Count; i++)
-          if (minF >= domain[i][0].F)
+          if (minF >= domain[i].Peek().F)
           {
-            minF = domain[i][0].F;
+            minF = domain[i].Peek().F;
             indexMin = i;
           }
         result = new List<DividableRectangle>(domain.Count - indexMin + 1);
         for (int i = indexMin; i < domain.Count; i++)
-          result.Add(domain[i][0]);
+          result.Add(domain[i].Peek());
 
         return result.ToArray();
       }

@@ -9,6 +9,7 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
+    //TODO: выделить сравнение в интерйфейс IComparer<> для того, чтобы избежать боксинга!
     private struct DividableRectangle : IComparable<DividableRectangle>
     {
       /// <summary>
