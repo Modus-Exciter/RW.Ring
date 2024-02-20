@@ -9,7 +9,7 @@ using JetExcelOleDbImport.Properties;
 
 namespace JetExcelOleDbImport
 {
-  internal class Utils
+  public class Utils
   {
     private const string MASK = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=\"{0}\";Extended Properties=\"Excel 8.0;HDR=YES;IMEX=1\"";
 

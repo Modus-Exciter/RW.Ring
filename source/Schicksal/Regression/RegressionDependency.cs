@@ -224,6 +224,8 @@ namespace Schicksal.Regression
 
     public double B { get; private set; }
 
+    public IDataGroup Coefs { get { return new ArrayDataGroup(new double[] { B, A }); } }
+
     public override double[] GetGaps()
     {
       return m_gaps;
@@ -378,6 +380,8 @@ namespace Schicksal.Regression
     public double A { get { return m_param[0]; } }
 
     public double B { get { return m_param[1]; } }
+    
+    public IDataGroup Coefs { get { return m_param; } }
 
     public LikehoodMichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
@@ -419,6 +423,8 @@ namespace Schicksal.Regression
     public double A { get { return m_param[0]; } }
     public double B { get { return m_param[1]; } }
     public double C { get { return m_param[2]; } }
+
+    public IDataGroup Coefs { get { return m_param; } }
 
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
