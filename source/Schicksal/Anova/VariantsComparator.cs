@@ -20,6 +20,8 @@ namespace Schicksal.Anova
     private readonly string m_result;
     private readonly string[] m_ignorable_factors;
     private readonly string m_filter;
+    private double m_within_dispersion;
+    private double m_within_df;
 
     /// <summary>
     /// Инициализация детализации
@@ -114,7 +116,7 @@ namespace Schicksal.Anova
           {
             var sum = groupset[i].Sum(b => DescriptionStatistics.SquareDerivation(b));
             row["Std error"] = Math.Sqrt(sum / (join.Count - groupset[i].Count));
-            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt(join.Count) * 
+            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt((double)join.Count / groupset[i].Count) *
               SpecialFunctions.invstudenttdistribution(join.Count - groupset[i].Count, 1 - p / 2);
           }
           else
@@ -125,7 +127,11 @@ namespace Schicksal.Anova
 
           res.Rows.Add(row);
         }
+
+        m_within_dispersion = FisherCriteria.GetWithinDispersion(groupset);
+        m_within_df = (int)FisherCriteria.GetWithinDegreesOfFreedom(groupset);
       }
+
       return res;
     }
 
@@ -138,8 +144,7 @@ namespace Schicksal.Anova
     /// <returns>Результаты сравнения двух градаций фактора</returns>
     public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
     {
-      int df;
-      double error = this.GetError(row1, row2, out df);
+      double error = this.GetError(row1, row2);
       var result = new DifferenceInfo
       {
         Factor1 = row1["Factor"].ToString(),
@@ -151,10 +156,10 @@ namespace Schicksal.Anova
 
       result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
 
-      if (df > 0)
+      if (m_within_df > 0)
       {
-        result.MinimalDifference = error * SpecialFunctions.invstudenttdistribution(df, 1 - p / 2);
-        result.Probability = (1 - SpecialFunctions.studenttdistribution(df,
+        result.MinimalDifference = error * SpecialFunctions.invstudenttdistribution((int)m_within_df, 1 - p / 2);
+        result.Probability = (1 - SpecialFunctions.studenttdistribution((int)m_within_df,
           Math.Abs(result.Mean2 - result.Mean1) / error)) * 2;
       }
       else
@@ -195,17 +200,14 @@ namespace Schicksal.Anova
       return search;
     }
 
-    private double GetError(DataRowView row1, DataRowView row2, out int df)
+    private double GetError(DataRowView row1, DataRowView row2)
     {
-      double std_err1 = (double)row1["Std error"];
-      double std_err2 = (double)row2["Std error"];
       int count1 = (int)row1["Count"];
       int count2 = (int)row2["Count"];
       int ig1 = (int)row1["Ignorable"];
       int ig2 = (int)row2["Ignorable"];
 
-      df = count1 + count2 - ig1 - ig2; 
-      return Math.Sqrt(std_err1 * std_err1 / count1 + std_err2 * std_err2 / count2);
+      return Math.Sqrt(m_within_dispersion * ig1 / count1 + m_within_dispersion * ig2 / count2);
     }
   }
 
