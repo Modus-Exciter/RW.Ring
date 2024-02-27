@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Schicksal.Clustering
 {
+  /// <summary>
+  /// Класс для данных введённых пользователем на форме
+  /// </summary>
   public class ClusteringParameters
   {
     public ClusteringParameters(DataTable table)
@@ -18,6 +21,7 @@ namespace Schicksal.Clustering
 
       foreach (DataColumn column in table.Columns)
       {
+        // Если тип колонки числовой, то её можно использовать для кластеризации
         if ((column.DataType.IsPrimitive && column.DataType != typeof(bool)) || column.DataType == typeof(decimal))
           columns.Add(new ColumnWeight(column.ColumnName));
       }
@@ -82,7 +86,9 @@ namespace Schicksal.Clustering
       }
     }
   }
-
+  /// <summary>
+  ///     Определяет колонки как координаты пикселя изображения (По соседним) 
+  /// </summary>
   public class PixelColumns
   {
     private readonly List<string> m_columns;

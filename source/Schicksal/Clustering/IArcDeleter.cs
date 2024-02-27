@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Schicksal.Clustering
 {
+  /// <summary>
+  /// Метод удаления ребер из минимального остовного дерева для кластеризации
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
   public interface IArcDeleter<T> where T:IComparable<T>
   {
     void DeleteArcs(Tuple<int, int, T>[] arcs);

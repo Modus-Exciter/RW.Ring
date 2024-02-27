@@ -2,12 +2,26 @@
 
 namespace Schicksal.Clustering
 {
+  /// <summary>
+  /// Метод определения расстояния между двумя точками в многомерном пространстве
+  /// </summary>
+  /// <typeparam name="T">Может не являться числом, является выражением отношения порядка</typeparam>
   public interface IDistanceMetrics<T> where T : IComparable<T>
   {
+    /// <summary>
+    /// Начало расчёта расстояния между точками
+    /// </summary>
     void BeginCalculation();
-
+    /// <summary>
+    /// Расчёт расстояния по одному из измерений
+    /// </summary>
+    /// <param name="from">координата начальной точки по измерению</param>
+    /// <param name="to">координата конечной точки по измерению</param>
     void AddDifference(T from, T to);
-
+    /// <summary>
+    /// Расчёт итогового расстояния по всем измерениям
+    /// </summary>
+    /// <returns>Расстояние</returns>
     T GetResult();
   }
 
