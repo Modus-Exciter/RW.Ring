@@ -68,11 +68,12 @@
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
     <Compile Include="HtmlWriter.cs" />
     <Compile Include="Optimization\DirectSearch.cs" />
-    <Compile Include="Optimization\DividableRectangle.cs" />
     <Compile Include="Optimization\Domain.cs" />
     <Compile Include="Optimization\ExportDebugInfo.cs" />
     <Compile Include="Optimization\FuncPoint.cs" />
+    <Compile Include="Optimization\OptimalSet.cs" />
     <Compile Include="Optimization\OptimizationOptions.cs" />
+    <Compile Include="Optimization\Rectangle.cs" />
     <Compile Include="Optimization\SimplexSearch.cs" />
     <Compile Include="Optimization\VectorDataGroup.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

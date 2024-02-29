@@ -17,9 +17,9 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="func">Изменяемая параметрическая функция</param>
     /// <returns></returns>
-    public static Func<VectorDataGroup, double> ReverseOnF(Func<VectorDataGroup, double> func)
+    public static Func<IDataGroup, double> ReverseOnF(Func<IDataGroup, double> func)
     {
-      return (VectorDataGroup x) => -func(x);
+      return (IDataGroup x) => -func(x);
     }
     /// <summary>
     /// Логистическая параметрическая функция
@@ -189,5 +189,6 @@ namespace Schicksal.Regression
 
       return res;
     }
+
   }
 }

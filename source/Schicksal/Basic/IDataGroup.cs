@@ -208,4 +208,28 @@ namespace Schicksal.Basic
       return m_data.GetEnumerator();
     }
   }
+
+  public class DataGroupObserver : IDataGroup
+  {
+    private double[] m_source;
+
+    public double this[int index] => m_source[index];
+
+    public int Count => m_source.Length;
+
+    public void SetSource(double[] source)
+    {
+      m_source = source;
+    }
+
+    public IEnumerator<double> GetEnumerator()
+    {
+      return ((IEnumerable<double>)m_source).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return m_source.GetEnumerator();
+    }
+  }
 }

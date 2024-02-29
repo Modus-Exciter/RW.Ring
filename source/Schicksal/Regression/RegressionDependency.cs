@@ -76,8 +76,8 @@ namespace Schicksal.Regression
       types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
       types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
       types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
-      types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
-      types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
+      //types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
+      //types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
       types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
       return types;
     }
@@ -370,11 +370,11 @@ namespace Schicksal.Regression
     }
   }
 
-  public sealed class LikehoodMichaelisDependency : RegressionDependency
+  /*public sealed class LikehoodMichaelisDependency : RegressionDependency
   {
     const double Y_COEF = 2;
     const double X_COEF = 2;
-    private readonly VectorDataGroup m_param;
+    private readonly IDataGroup m_param;
     private readonly PolylineFit m_variance;
 
     public double A { get { return m_param[0]; } }
@@ -410,14 +410,14 @@ namespace Schicksal.Regression
     }
   }
 
-  public sealed class LogisticDependency : RegressionDependency
+  /*public sealed class LogisticDependency : RegressionDependency
   {
     const double MIN_BASE = 0.5;
     const double MAX_BASE = 5;
     const double Y_COEF = 2;
     const double X_COEF = 5;
     const double MAX_X = 100;
-    private readonly VectorDataGroup m_param;
+    private readonly IDataGroup m_param;
     private readonly PolylineFit m_variance;
 
     public double A { get { return m_param[0]; } }
@@ -448,7 +448,7 @@ namespace Schicksal.Regression
 
         //Инициализация функции правдоподобия и оптимизация
         likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
-        VectorDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
+        IDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
         //Преобразование коэффициентов
         m_param = new VectorDataGroup(
           scaleCoef*tempParam[0], 
@@ -466,10 +466,6 @@ namespace Schicksal.Regression
         likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
         m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
       }
-      /*
-      IDataGroup residual = Residual.Calculate(factor, result, this.Calculate);
-      m_variance = new PolylineFit(factor, residual);
-      */
     }
 
     public override double Calculate(double x)
@@ -482,5 +478,5 @@ namespace Schicksal.Regression
       return string.Format("{0} = {1} * {2} ^ {3} / ({4} + {2} ^ {3})", 
         this.Effect, ConvertNumber(A), ConvertNumber(B), this.Factor, ConvertNumber(C));
     }
-  }
+  }*/
 }

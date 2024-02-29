@@ -127,5 +127,12 @@ namespace Notung.Data
     {
       return m_domain[0][0].element;
     }
+
+    public bool IsEmpty()
+    {
+      if (m_count == 0)
+        return true;
+      return false;
+    }
   }
 }
