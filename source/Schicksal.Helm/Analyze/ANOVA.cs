@@ -10,10 +10,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Schicksal.Helm.IAnalyze
+namespace Schicksal.Helm.Analyze
 {
   public class ANOVA : IAnalyze
   {
+    public override string ToString()
+    {
+      return Resources.ANOVA;
+    }
     public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
     {
       var results_form = new AnovaResultsForm();
