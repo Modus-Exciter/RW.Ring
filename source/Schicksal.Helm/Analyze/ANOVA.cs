@@ -14,19 +14,16 @@ namespace Schicksal.Helm.IAnalyze
 {
   public class ANOVA : IAnalyze
   {
-    public override string ToString()
-    {
-      return Resources.ANOVA;
-    }
     public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
     {
       var results_form = new AnovaResultsForm();
       var currentProcessor = (FisherTableProcessor)processor;
-      var table = table_form.GetType().GetProperty("Text").GetValue(table_form, null); //??????????????
+      var tf = (TableForm)table_form;
+      var table = tf.DataSource;
       results_form.Text = string.Format("{0}: {1}, p={2}",
               Resources.ANOVA, table, data.Probability);
       results_form.DataSource = currentProcessor.Result;
-      results_form.SourceTable = null; //??????????????????????????
+      results_form.SourceTable = table;
       results_form.ResultColumn = data.Result;
       results_form.Filter = data.Filter;
       results_form.Probability = data.Probability;

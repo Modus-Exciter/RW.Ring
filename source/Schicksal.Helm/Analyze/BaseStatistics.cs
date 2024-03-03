@@ -13,11 +13,6 @@ namespace Schicksal.Helm.IAnalyze
 {
   public class BaseStatistics : IAnalyze
   {
-    public override string ToString()
-    {
-      return Resources.BASIC_STATISTICS;
-    }
-
     public Dictionary<string, string[]> GetSettings()
     {
       return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;

@@ -127,10 +127,10 @@
     <Compile Include="Dialogs\EditColumnsDialog.Designer.cs">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="IAnalyze\ANOVA.cs" />
-    <Compile Include="IAnalyze\BaseStatistics.cs" />
-    <Compile Include="IAnalyze\IAnalyze.cs" />
-    <Compile Include="IAnalyze\Regression.cs" />
+    <Compile Include="Analyze\ANOVA.cs" />
+    <Compile Include="Analyze\BaseStatistics.cs" />
+    <Compile Include="Analyze\IAnalyze.cs" />
+    <Compile Include="Analyze\Regression.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
