@@ -42,7 +42,7 @@ namespace Schicksal.Optimization
     /// <param name="tolY">Точность по результату</param>
     /// <param name="maxIter">Максимальное количество итераций</param>
     /// <param name="maxFunEval">Максимальное количество</param>
-    public OptimizationOptions(double tolX = 1E-20, double tolY = 1E-20, int maxIter = 500, int maxFunEval = 10000)
+    public OptimizationOptions(double tolX = 1E-10, double tolY = 1E-10, int maxIter = 500, int maxFunEval = 10000)
     {
       this.m_tolX = tolX;
       this.m_tolY = tolY;

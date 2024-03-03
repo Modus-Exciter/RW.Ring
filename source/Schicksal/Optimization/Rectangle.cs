@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -71,10 +73,10 @@ namespace Schicksal.Optimization
 
       private (double maxSize, int count) GetMaxDimensions()
       {
-        int count = 1;
-        double maxSize = m_size[0];
+        int count = 0;
+        double maxSize = double.MinValue;
         
-        for (int i = 1; i < m_dimension_count; i++)
+        for (int i = 0; i < m_dimension_count; i++)
           if (m_size[i] > maxSize)
           {
             maxSize = m_size[i];
@@ -140,6 +142,7 @@ namespace Schicksal.Optimization
       }
     }
 
+    [DebuggerDisplay("{ToString()}")]
     public class Rectangle
     {
       protected readonly double[] m_x;
@@ -160,7 +163,16 @@ namespace Schicksal.Optimization
       public double[] Size { get { return m_size; } }
 
       public double Diag { get { return Math.Sqrt(m_size.Select(s => s*s).Sum()); } }
-
+#if DEBUG
+      public override string ToString()
+      {
+        string xStr = this.X.Select(xi => xi.ToString("0.0")).
+          Aggregate((x1, x2) => x1 + " "+ x2 + " ");
+        string sStr = this.Size.Select(xi => xi.ToString("0.0")).
+          Aggregate((x1, x2) => x1 + " " + x2 + " ");
+        return String.Format("F:{0}; X:{1}; S:{2}; D:{3};", this.F.ToString("0.0"), xStr, sStr, this.Diag.ToString("0.0") );
+      }
+#endif
       /// <summary>
       /// Осуществляет полное изменение состояния объекта. Все массивы копируются.
       /// </summary>
@@ -183,7 +195,7 @@ namespace Schicksal.Optimization
 
       public RectangleProvider(int dimensionCount, int capacity) 
       {
-        throw new NotImplementedException();
+        m_dimension_count = dimensionCount;
       }
 
       public Rectangle GetInstance()

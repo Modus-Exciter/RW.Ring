@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using static Schicksal.Optimization.MathOptimization.Domain;
 
 namespace Schicksal.Optimization
@@ -18,7 +19,7 @@ namespace Schicksal.Optimization
 
       public Node this[int index] => m_domain[index];
 
-      public Node Min { get { throw new NotImplementedException(); } }
+      public Node Min { get => this.FindMin(); }
 
       public Domain(int size, Rectangle rectangle)
       {
@@ -63,6 +64,14 @@ namespace Schicksal.Optimization
         return parentNode.Value.Dequeue();
       }
 
+      private Node FindMin()
+      {
+        Node min = m_first;
+        foreach (Node node in this)
+          if (node.Value.Peek().F <= m_first.Value.Peek().F)
+            min = node;
+        return min;
+      }
 
       [DebuggerDisplay("{ToString()}")]
       public class Node

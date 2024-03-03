@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Notung.Data
 {
+  [DebuggerDisplay("{ToString()}")]
   public class PriorityQueue<TElement, TPriority>
   {
     const int ARITY = 4;
@@ -134,5 +135,12 @@ namespace Notung.Data
         return true;
       return false;
     }
+
+#if DEBUG
+    public override string ToString() 
+    {
+      return this.Peek().ToString();
+    }
+#endif
   }
 }

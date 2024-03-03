@@ -26,6 +26,7 @@ namespace Schicksal.Optimization
 
     private void GetHull()
     {
+      this.GetLast();
       double lastMetric = double.MaxValue;
       double metric;
       int i = 0;
@@ -33,7 +34,7 @@ namespace Schicksal.Optimization
       foreach (Node node in m_domain)
       {
         metric = node.Value.Peek().F / node.Value.Peek().Diag;
-        if(metric < lastMetric)
+        if(metric <= lastMetric)
         {
           m_set[i] = node;
           metric = lastMetric;
@@ -54,7 +55,7 @@ namespace Schicksal.Optimization
       foreach (Node node in m_domain)
       {
         metric = (node.Value.Peek().F - minF + m_tol * Math.Abs(minF)) / node.Value.Peek().Diag;
-        if (metric < minMetric)
+        if (metric <= minMetric)
         {
           minMetric = metric;
           m_last = node;

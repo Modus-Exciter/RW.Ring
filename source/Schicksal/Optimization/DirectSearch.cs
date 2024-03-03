@@ -39,18 +39,18 @@ namespace Schicksal.Optimization
         if (options == null)
           m_options = OptimizationOptions.Default;
 
+        m_dimension_count = lowBound.Length;
         m_function = function;
         m_low_bound = lowBound;
         m_high_bound = highBound;
         m_transform_coeff = this.TransformCoefficient();
         m_tolerance = this.Tolerance();
-        m_dimension_count = lowBound.Length;
         m_function_buffer = new double[m_dimension_count];
 
         m_provider = new RectangleProvider(m_dimension_count, this.StartPoolSize());
         m_divider = new RectangleDivider(this.Function, m_provider, m_dimension_count);
-        m_domain = new Domain(this.DomainSize(), this.InitialRectangle());
-        m_optimal_set = new OptimalSet(m_domain, this.DomainSize(), m_tolerance);
+        m_domain = new Domain(this.DomainSize() + m_dimension_count, this.InitialRectangle());
+        m_optimal_set = new OptimalSet(m_domain, this.DomainSize(), m_options.m_tolY);
       }
 
       public double[] Process()
@@ -80,7 +80,8 @@ namespace Schicksal.Optimization
       {
         double num = Math.Log(Math.Sqrt(m_dimension_count) * UNIT_SIZE / m_tolerance);
         double denum = Math.Log(3);
-        return (int)Math.Ceiling(num / denum);
+        int result = (int)Math.Floor(m_dimension_count * (num / denum));
+        return result;
       }
 
       private double[] TransformCoefficient()
@@ -133,5 +134,6 @@ namespace Schicksal.Optimization
       }
     }
   }
+
 }
 

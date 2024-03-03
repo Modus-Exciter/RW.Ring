@@ -17,9 +17,9 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="func">Изменяемая параметрическая функция</param>
     /// <returns></returns>
-    public static Func<IDataGroup, double> ReverseOnF(Func<IDataGroup, double> func)
+    public static Func<double[], double> ReverseOnF(Func<double[], double> func)
     {
-      return (IDataGroup x) => -func(x);
+      return (double[] x) => -func(x);
     }
     /// <summary>
     /// Логистическая параметрическая функция
@@ -28,9 +28,9 @@ namespace Schicksal.Regression
     /// <param name="t">Коэффициенты</param>
     /// <returns></returns>
     /// <exception cref="ArgumentException">Неправильный размер массива коэффициентов</exception>
-    public static double Logistic(double x, IDataGroup t)
+    public static double Logistic(double x, double[] t)
     {
-      if (t.Count != 3) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Length != 3) throw new ArgumentException("Wrong size of parameter t");
       double power = Math.Pow(t[1], x);
       return t[0] * power / (t[2] + power);
     }
@@ -42,9 +42,9 @@ namespace Schicksal.Regression
     /// <param name="t">Коэффициенты</param>
     /// <returns>Значение функции</returns>
     /// <exception cref="ArgumentException">Неправильный размер массива коэффициентов</exception>
-    public static double Michaelis(double x, IDataGroup t)
+    public static double Michaelis(double x, double[] t)
     {
-      if (t.Count != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x / (t[1] + x);
     }
 
@@ -55,9 +55,9 @@ namespace Schicksal.Regression
     /// <param name="t">Коэффициенты функции</param>
     /// <returns>Значение функции</returns>
     /// <exception cref="ArgumentException">Неправильный размер массива коэффициентов</exception>
-    public static double Linear(double x, IDataGroup t)
+    public static double Linear(double x, double[] t)
     {
-      if (t.Count != 2) throw new ArgumentException("Wrong size of parameter t");
+      if (t.Length != 2) throw new ArgumentException("Wrong size of parameter t");
       return t[0] * x + t[1];
     }
   }
@@ -82,11 +82,11 @@ namespace Schicksal.Regression
     /// <summary>
     /// Фактор
     /// </summary>
-    private readonly IDataGroup x;
+    private readonly double[] x;
     /// <summary>
     /// Результат
     /// </summary>
-    private readonly IDataGroup y;
+    private readonly double[] y;
     /// <summary>
     /// Среднее значение точек функции дисперсии
     /// </summary>
@@ -94,11 +94,11 @@ namespace Schicksal.Regression
     /// <summary>
     /// Исследуемая функция зависимости
     /// </summary>
-    private readonly Func<double, IDataGroup, double> dependencyFunction;
+    private readonly Func<double, double[], double> dependencyFunction;
     /// <summary>
     /// Интерфейс, содердащий актуальную функцию для расчета
     /// </summary>
-    private readonly Func<IDataGroup, double> calculate;
+    private readonly Func<double[], double> calculate;
     /// <summary>
     /// Ломанная функция дисперсии
     /// </summary>
@@ -106,7 +106,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Функция расчета значения функции правдоподобия
     /// </summary>
-    public Func<IDataGroup, double> Calculate { get { return calculate; } }
+    public Func<double[], double> Calculate { get { return calculate; } }
     /// <summary>
     /// Инициализация функции правдоподобия
     /// </summary>
@@ -114,11 +114,11 @@ namespace Schicksal.Regression
     /// <param name="y">Результат</param>
     /// <param name="dependencyFunction">Определяемая функциональная параметрическая зависимость</param>
     /// <exception cref="ArgumentOutOfRangeException">Размер массива фактора не совпадает с размером массива результатов</exception>
-    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, IDataGroup, double> dependencyFunction)
+    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> dependencyFunction)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      this.x = x;
-      this.y = y;
+      this.x = x.ToArray();
+      this.y = y.ToArray();
       this.dependencyFunction = dependencyFunction;
       ///ADD sorting
       variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
@@ -136,7 +136,7 @@ namespace Schicksal.Regression
     {
       double[] varVals = variance.Nodes.Select(point => point.y).ToArray();
 
-      if (x.Count >= SAMPLE_COUNT_THRESHOLD && x.Count / variance.Nodes.Length > SAMPLE_COUNT_PER_NODE_THRESHOLD)
+      if (x.Length >= SAMPLE_COUNT_THRESHOLD && x.Length / variance.Nodes.Length > SAMPLE_COUNT_PER_NODE_THRESHOLD)
       {
         midVar = varVals.Sum() / varVals.Length;
         double maxDiff = varVals.Max() - varVals.Min();
@@ -155,12 +155,12 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="t">Параметры исследуемой функции</param>
     /// <returns>Значение функции правдодобия</returns>
-    private double CalculateHet(IDataGroup t)
+    private double CalculateHet(double[] t)
     {
       double res = 0;
       double a, b;
 
-      for (int i = 0; i < x.Count; i++)
+      for (int i = 0; i < x.Length; i++)
       {
         a = y[i] - dependencyFunction(x[i], t);
         b = variance.Calculate(x[i]);
@@ -175,13 +175,13 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="t">Параметры исследуемой функции</param>
     /// <returns>Значение функции правдодобия</returns>
-    private double CalculateDef(IDataGroup t)
+    private double CalculateDef(double[] t)
     {
       double res = 0;
       double b = 2 * midVar * midVar;
       double a;
       
-      for (int i = 0; i < x.Count; i++)
+      for (int i = 0; i < x.Length; i++)
       {
         a = y[i] - dependencyFunction(x[i], t);
         res += (a * a) / b;
