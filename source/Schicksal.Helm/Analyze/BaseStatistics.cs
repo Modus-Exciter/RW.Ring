@@ -9,10 +9,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Schicksal.Helm.IAnalyze
+namespace Schicksal.Helm.Analyze
 {
   public class BaseStatistics : IAnalyze
   {
+    public override string ToString()
+    {
+      return Resources.BASIC_STATISTICS;
+    }
     public Dictionary<string, string[]> GetSettings()
     {
       return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;

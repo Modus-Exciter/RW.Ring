@@ -7,11 +7,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Schicksal.Helm.IAnalyze
+namespace Schicksal.Helm.Analyze
 {
   public interface IAnalyze
   {
-    string ToString();
     Dictionary<string, string[]> GetSettings();
     RunBase GetProcessor(DataTable table, AnovaDialogData data);
     LaunchParameters GetLaunchParameters();
