@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Notung;
+﻿using Notung;
 using Notung.ComponentModel;
 using Notung.Helm;
 using Notung.Helm.Dialogs;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Services;
-using Schicksal.Anova;
-using Schicksal.Basic;
 using Schicksal.Exchange;
+using Schicksal.Helm.Analyze;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using Schicksal.Regression;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Schicksal.Helm
 {
@@ -33,6 +31,10 @@ namespace Schicksal.Helm
       this.Size = new System.Drawing.Size(size.Width * 3 / 4, size.Height * 3 / 4);
 
       LanguageSwitcher.Switch(AppManager.Configurator.GetSection<Program.Preferences>().Language ?? "RU");
+
+      m_cmd_basic.Tag = new DescriptiveAnalyze();
+      m_cmd_anova.Tag = new AnovaAnalyze();
+      m_cmd_regression.Tag = new RegressionAnalyze();
     }
 
     internal void FillLastFilesMenu()
@@ -91,7 +93,7 @@ namespace Schicksal.Helm
       m_menu_analyze.Text = Resources.ANALYZE;
       m_cmd_basic.Text = Resources.BASIC_STATISTICS;
       m_cmd_anova.Text = Resources.ANOVA;
-      m_cmd_ancova.Text = Resources.ANCOVA;
+      m_cmd_regression.Text = Resources.REGRESSION_ANALYSIS;
       m_cmd_about.Text = Resources.ABOUT;
 
       foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)
@@ -253,51 +255,7 @@ namespace Schicksal.Helm
 
     private void Cmd_anova_Click(object sender, EventArgs e)
     {
-      var table_form = this.ActiveMdiChild as TableForm;
 
-      if (table_form == null)
-        return;
-
-      var table = table_form.DataSource;
-
-      if (table == null)
-        return;
-
-      using (var dlg = new StatisticsParametersDialog())
-      {
-        dlg.Text = Resources.ANOVA;
-        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
-        if (dlg.ShowDialog(this) == DialogResult.OK)
-        {
-          var processor = new FisherTableProcessor(table, dlg.DataSource.Predictors.ToArray(), 
-            dlg.DataSource.Result, dlg.DataSource.Probability);
-
-          if (!string.IsNullOrEmpty(dlg.DataSource.Filter))
-            processor.Filter = dlg.DataSource.Filter;
-
-          processor.RunInParrallel = true;
-
-          if (AppManager.OperationLauncher.Run(processor,
-            new LaunchParameters
-            {
-              Caption = Resources.ANOVA,
-              Bitmap = Resources.column_chart
-            }) == TaskStatus.RanToCompletion)
-          {
-            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().AnovaSettings);
-            var results_form = new AnovaResultsForm();
-            results_form.Text = string.Format("{0}: {1}, p={2}",
-              Resources.ANOVA, table_form.Text, dlg.DataSource.Probability);
-            results_form.DataSource = processor.Result;
-            results_form.SourceTable = table;
-            results_form.ResultColumn = dlg.DataSource.Result;
-            results_form.Filter = dlg.DataSource.Filter;
-            results_form.Probability = dlg.DataSource.Probability;
-            results_form.Factors = dlg.DataSource.Predictors.ToArray();
-            results_form.Show(this);
-          }
-        }
-      }
     }
 
     public IApplicationLoader[] GetLoaders()
@@ -398,8 +356,18 @@ namespace Schicksal.Helm
         box.ShowDialog(this);
     }
 
-    private void Cmd_basic_Click(object sender, EventArgs e)
+    private void HandleAnalyzeClick(object sender, EventArgs e)
     {
+      var item = sender as ToolStripMenuItem;
+
+      if (item == null) 
+        return;
+
+      var analyze = item.Tag as IAnalyze;
+
+      if (analyze == null)
+        return;
+
       var table_form = this.ActiveMdiChild as TableForm;
 
       if (table_form == null)
@@ -410,85 +378,25 @@ namespace Schicksal.Helm
       if (table == null)
         return;
 
-      using (var dlg = new StatisticsParametersDialog())
+      using (var dlg = new StatisticsParametersDialog()) 
       {
-        dlg.Text = Resources.BASIC_STATISTICS;
-        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
+        dlg.Text = analyze.ToString();
+        dlg.DataSource = new StatisticsParameters(table, analyze.GetSettings());
 
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          var processor = new DescriptionStatisticsCalculator(table, dlg.DataSource.Predictors.ToArray(),
-            dlg.DataSource.Result, dlg.DataSource.Filter, dlg.DataSource.Probability);
+          var processor = analyze.GetProcessor(table, dlg.DataSource);
 
-          if (AppManager.OperationLauncher.Run(processor,
-            new LaunchParameters
-            {
-              Caption = Resources.BASIC_STATISTICS,
-              Bitmap = Resources.column_chart
-            }) == TaskStatus.RanToCompletion)
+          if (AppManager.OperationLauncher.Run(processor, analyze.GetLaunchParameters()) 
+            == TaskStatus.RanToCompletion)
           {
-            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings);
-            var results_form = new BasicStatisticsForm();
-            results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-              Resources.BASIC_STATISTICS, table_form.Text, dlg.DataSource.Probability, dlg.DataSource.Filter);
-            results_form.DataSorce = processor.Result;
-            results_form.Factors = processor.Factors;
-            results_form.ResultColumn = dlg.DataSource.Result;
-            results_form.Show(this);
+            dlg.DataSource.Save(analyze.GetSettings());
+            analyze.BindTheResultForm(processor, table_form, dlg.DataSource);
           }
         }
       }
     }
 
-    private void AncovaToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      var table_form = this.ActiveMdiChild as TableForm;
-
-      if (table_form == null)
-        return;
-
-      var table = table_form.DataSource;
-
-      if (table == null)
-        return;
-
-      using (var dlg = new StatisticsParametersDialog())
-      {
-        dlg.Text = Resources.ANCOVA;
-        dlg.DataSource = new AnovaDialogData(table, AppManager.Configurator.GetSection<Program.Preferences>().AncovaSettings);
-
-        if (dlg.ShowDialog(this) == DialogResult.OK)
-        {
-          var processor = new CorrelationTestProcessor(table,
-            dlg.DataSource.Predictors.ToArray(), dlg.DataSource.Result, dlg.DataSource.Filter, dlg.DataSource.Probability);
-
-          if (AppManager.OperationLauncher.Run(processor,
-            new LaunchParameters
-            {
-              Caption = Resources.ANCOVA,
-              Bitmap = Resources.column_chart
-            }) == TaskStatus.RanToCompletion)
-          {
-            dlg.DataSource.Save(AppManager.Configurator.GetSection<Program.Preferences>().AncovaSettings);
-            var results_form = new AncovaResultsForm();
-            results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-              Resources.ANCOVA, table_form.Text, dlg.DataSource.Probability, dlg.DataSource.Result);
-            results_form.DataSource = processor.Results;
-            results_form.Factors = dlg.DataSource.Predictors.ToArray();
-            results_form.ResultColumn = dlg.DataSource.Result;
-            results_form.Filter = dlg.DataSource.Filter;
-            results_form.Probability = dlg.DataSource.Probability;
-            results_form.SourceTable = table;
-            results_form.Show(this);
-          }
-        }
-      }
-    }
-
-    private void m_menu_analyze_Click(object sender, EventArgs e)
-    {
-
-    }
     private void clusteringToolStripMenuItem_Click(object sender, EventArgs e)
     {
 

@@ -268,8 +268,8 @@
   <data name="REMOVE" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="ANCOVA" xml:space="preserve">
-    <value>Analysis of covariance</value>
+  <data name="REGRESSION_ANALYSIS" xml:space="preserve">
+    <value>Regression analysis</value>
   </data>
   <data name="TABLE_EDIT" xml:space="preserve">
     <value>Edit</value>

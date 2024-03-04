@@ -1,38 +1,35 @@
 ﻿using Notung;
 using Notung.Services;
 using Schicksal.Anova;
-using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace Schicksal.Helm.Analyze
 {
-  public class ANOVA : IAnalyze
+  public class AnovaAnalyze : IAnalyze
   {
     public override string ToString()
     {
       return Resources.ANOVA;
     }
-    public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
+    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new AnovaResultsForm();
       var currentProcessor = (FisherTableProcessor)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
       results_form.Text = string.Format("{0}: {1}, p={2}",
-              Resources.ANOVA, table, data.Probability);
+              Resources.ANOVA, tf.Text, data.Probability);
       results_form.DataSource = currentProcessor.Result;
       results_form.SourceTable = table;
       results_form.ResultColumn = data.Result;
       results_form.Filter = data.Filter;
       results_form.Probability = data.Probability;
       results_form.Factors = data.Predictors.ToArray();
-      results_form.Show();
+      results_form.Show(tf.MdiParent);
     }
 
     public LaunchParameters GetLaunchParameters()
@@ -44,10 +41,16 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-    public RunBase GetProcessor(DataTable table, AnovaDialogData data)
+    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      return new FisherTableProcessor(table, data.Predictors.ToArray(),
+      var processor = new FisherTableProcessor(table, data.Predictors.ToArray(),
              data.Result, data.Probability);
+      if (!string.IsNullOrEmpty(data.Filter))
+        processor.Filter = data.Filter;
+
+      processor.RunInParrallel = true;
+
+      return processor;
     }
 
     public Dictionary<string, string[]> GetSettings()

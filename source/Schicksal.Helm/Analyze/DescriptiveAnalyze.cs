@@ -3,15 +3,13 @@ using Notung.Services;
 using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 
 namespace Schicksal.Helm.Analyze
 {
-  public class BaseStatistics : IAnalyze
+  public class DescriptiveAnalyze : IAnalyze
   {
     public override string ToString()
     {
@@ -22,7 +20,7 @@ namespace Schicksal.Helm.Analyze
       return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;
     }
 
-    public RunBase GetProcessor(DataTable table, AnovaDialogData data)
+    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       return new DescriptionStatisticsCalculator(table, data.Predictors.ToArray(),
              data.Result, data.Filter, data.Probability);
@@ -37,17 +35,17 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-    public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
+    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new BasicStatisticsForm();
       var currentProcessor = (DescriptionStatisticsCalculator)processor;
+      var tf = (TableForm)table_form;
       results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-          Resources.BASIC_STATISTICS, table_form.GetType().GetProperty("Text").GetValue(table_form, null),
-          data.Probability, data.Filter);
+        Resources.BASIC_STATISTICS, tf.Text, data.Probability, data.Filter);
       results_form.DataSorce = currentProcessor.Result;
       results_form.Factors = currentProcessor.Factors;
       results_form.ResultColumn = data.Result;
-      results_form.Show();
+      results_form.Show(tf.MdiParent);
     }
   }
 }

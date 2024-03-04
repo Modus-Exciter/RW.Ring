@@ -5,6 +5,6 @@
     Renaming the file extension or editing the content of this file may   
     cause the file to be unrecognizable by the program.
 -->
-<GenericObjectDataSource DisplayName="AnovaDialogData" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
-   <TypeInfo>Schicksal.Helm.Dialogs.AnovaDialogData, Schicksal.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</TypeInfo>
+<GenericObjectDataSource DisplayName="StatisticsParameters" Version="1.0" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+   <TypeInfo>Schicksal.Helm.Dialogs.StatisticsParameters, Schicksal.Helm, Version=1.1.1.0, Culture=neutral, PublicKeyToken=66065c5a47595310</TypeInfo>
 </GenericObjectDataSource>
