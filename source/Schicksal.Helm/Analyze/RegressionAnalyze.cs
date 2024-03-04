@@ -1,51 +1,48 @@
 ﻿using Notung;
 using Notung.Services;
-using Schicksal.Anova;
-using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using System;
+using Schicksal.Regression;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using Schicksal.Regression;
 
 namespace Schicksal.Helm.Analyze
 {
-  public class Regression : IAnalyze
+  public class RegressionAnalyze : IAnalyze
   {
     public override string ToString()
     {
-      return Resources.ANCOVA;
+      return Resources.REGRESSION_ANALYSIS;
     }
-    public void BindTheResultForm(RunBase processor, object table_form, AnovaDialogData data)
+
+    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
     {
-      var results_form = new AncovaResultsForm();
       var currentProcessor = (CorrelationTestProcessor)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
+      var results_form = new AncovaResultsForm();
       results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-              Resources.ANCOVA, table_form.GetType().GetProperty("Text").GetValue(table_form, null)); //??????????????
+        Resources.REGRESSION_ANALYSIS, tf.Text, data.Probability, data.Result);
       results_form.DataSource = currentProcessor.Results;
       results_form.Factors = data.Predictors.ToArray();
       results_form.ResultColumn = data.Result;
       results_form.Filter = data.Filter;
       results_form.Probability = data.Probability;
       results_form.SourceTable = table;
-      results_form.Show();
+      results_form.Show(tf.MdiParent);
     }
 
     public LaunchParameters GetLaunchParameters()
     {
       return new LaunchParameters
       {
-        Caption = Resources.ANCOVA,
+        Caption = Resources.REGRESSION_ANALYSIS,
         Bitmap = Resources.column_chart
       };
     }
 
-    public RunBase GetProcessor(DataTable table, AnovaDialogData data)
+    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       return new CorrelationTestProcessor(table,
             data.Predictors.ToArray(), data.Result, data.Filter, data.Probability);

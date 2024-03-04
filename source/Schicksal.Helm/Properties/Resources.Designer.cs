@@ -19,7 +19,7 @@ namespace Schicksal.Helm.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -95,15 +95,6 @@ namespace Schicksal.Helm.Properties {
         internal static string ANALYZE {
             get {
                 return ResourceManager.GetString("ANALYZE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Analysis of covariance.
-        /// </summary>
-        internal static string ANCOVA {
-            get {
-                return ResourceManager.GetString("ANCOVA", resourceCulture);
             }
         }
         
@@ -429,6 +420,15 @@ namespace Schicksal.Helm.Properties {
         internal static string OPEN_SYSTEM_FOLDER {
             get {
                 return ResourceManager.GetString("OPEN_SYSTEM_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Regression analysis.
+        /// </summary>
+        internal static string REGRESSION_ANALYSIS {
+            get {
+                return ResourceManager.GetString("REGRESSION_ANALYSIS", resourceCulture);
             }
         }
         

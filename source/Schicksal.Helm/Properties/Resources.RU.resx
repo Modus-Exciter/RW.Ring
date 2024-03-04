@@ -123,9 +123,6 @@
   <data name="ANALYZE" xml:space="preserve">
     <value>Анализ</value>
   </data>
-  <data name="ANCOVA" xml:space="preserve">
-    <value>Регрессионный анализ</value>
-  </data>
   <data name="ANOVA" xml:space="preserve">
     <value>Дисперсионный анализ</value>
   </data>
@@ -200,6 +197,9 @@
   </data>
   <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
     <value>Открыть системную папку</value>
+  </data>
+  <data name="REGRESSION_ANALYSIS" xml:space="preserve">
+    <value>Регрессионный анализ</value>
   </data>
   <data name="REMOVE" xml:space="preserve">
     <value>Удалить</value>

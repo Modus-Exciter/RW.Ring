@@ -19,10 +19,10 @@ namespace Schicksal.Helm.Dialogs
       m_probability_edit.Items.AddRange(new object[] { 0.05, 0.01, 0.001 });
     }
 
-    public AnovaDialogData DataSource
+    public StatisticsParameters DataSource
     {
-      get { return m_binding_source.DataSource as AnovaDialogData; }
-      set { m_binding_source.DataSource = (object)value ?? typeof(AnovaDialogData); }
+      get { return m_binding_source.DataSource as StatisticsParameters; }
+      set { m_binding_source.DataSource = (object)value ?? typeof(StatisticsParameters); }
     }
 
     private void Button_left_Click(object sender, EventArgs e)
@@ -54,7 +54,7 @@ namespace Schicksal.Helm.Dialogs
     }
   }
 
-  public class AnovaDialogData : IValidator, INotifyPropertyChanged
+  public class StatisticsParameters : IValidator, INotifyPropertyChanged
   {
     private readonly BindingList<string> m_total_columns = new BindingList<string>();
     private readonly BindingList<string> m_predictors = new BindingList<string>();
@@ -67,7 +67,7 @@ namespace Schicksal.Helm.Dialogs
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public AnovaDialogData(DataTable table, Dictionary<string, string[]> settings)
+    public StatisticsParameters(DataTable table, Dictionary<string, string[]> settings)
     {
       if (table == null)
         throw new ArgumentNullException("table");
