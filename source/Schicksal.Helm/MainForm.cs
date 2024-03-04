@@ -382,6 +382,7 @@ namespace Schicksal.Helm
       {
         dlg.Text = analyze.ToString();
         dlg.DataSource = new StatisticsParameters(table, analyze.GetSettings());
+        dlg.OptionsType = analyze.OptionsType;
 
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {

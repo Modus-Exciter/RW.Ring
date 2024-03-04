@@ -12,6 +12,7 @@ namespace Schicksal.Helm.Analyze
   public interface IAnalyze
   {
     Dictionary<string, string[]> GetSettings();
+    Type OptionsType { get; }
     RunBase GetProcessor(DataTable table, StatisticsParameters data);
     LaunchParameters GetLaunchParameters();
     void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data);

@@ -120,8 +120,21 @@
   <data name="m_button_cancel.Text" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_label_probability.Location" type="System.Drawing.Point, System.Drawing">
+    <value>128, 0</value>
+  </data>
+  <data name="m_label_probability.Size" type="System.Drawing.Size, System.Drawing">
+    <value>172, 30</value>
+  </data>
   <data name="m_label_probability.Text" xml:space="preserve">
     <value>Уровень значимости   </value>
+  </data>
+  <data name="m_options_button.Size" type="System.Drawing.Size, System.Drawing">
+    <value>123, 30</value>
+  </data>
+  <data name="m_options_button.Text" xml:space="preserve">
+    <value>Дополнительно</value>
   </data>
   <data name="m_label_total.Text" xml:space="preserve">
     <value>Все колонки</value>
@@ -135,7 +148,6 @@
   <data name="m_label_filter.Text" xml:space="preserve">
     <value>Фильтр   </value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAgAEBAAAAEACABoBQAAhgAAABAQAAABACAAaAQAAO4FAAAYGAAAAQAIAMgGAABWCgAAGBgAAAEA

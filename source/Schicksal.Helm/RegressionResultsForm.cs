@@ -10,10 +10,10 @@ using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
-  public partial class AncovaResultsForm : Form
+  public partial class RegressionResultsForm : Form
   {
     private readonly Color m_significat_color;
-    public AncovaResultsForm()
+    public RegressionResultsForm()
     {
       this.InitializeComponent();
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;

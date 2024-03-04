@@ -13,6 +13,8 @@ namespace Schicksal.Helm.Dialogs
 {
   public partial class StatisticsParametersDialog : Form
   {
+    private Type m_options_type;
+
     public StatisticsParametersDialog()
     {
       this.InitializeComponent();
@@ -23,6 +25,17 @@ namespace Schicksal.Helm.Dialogs
     {
       get { return m_binding_source.DataSource as StatisticsParameters; }
       set { m_binding_source.DataSource = (object)value ?? typeof(StatisticsParameters); }
+    }
+
+    public Type OptionsType
+    {
+      get { return m_options_type; }
+      set 
+      {
+        m_options_type = value;
+        m_options_button.Visible = value != null && typeof(IAnalysisOptions).IsAssignableFrom(value)
+          && value.GetConstructor(Type.EmptyTypes) != null;
+      }
     }
 
     private void Button_left_Click(object sender, EventArgs e)
@@ -52,6 +65,25 @@ namespace Schicksal.Helm.Dialogs
           e.Cancel = !AppManager.Notificator.Confirm(buffer);
       }
     }
+
+    private void m_options_button_Click(object sender, EventArgs e)
+    {
+      IAnalysisOptions options = (IAnalysisOptions)Activator.CreateInstance(m_options_type);
+
+      options.Load(this.DataSource.OptionsXML);
+
+      if (options.ShowDialog())
+        this.DataSource.OptionsXML = options.Save();
+    }
+  }
+
+  public interface IAnalysisOptions
+  {
+    void Load(string xml);
+
+    string Save();
+
+    bool ShowDialog();
   }
 
   public class StatisticsParameters : IValidator, INotifyPropertyChanged
@@ -102,8 +134,13 @@ namespace Schicksal.Helm.Dialogs
         if (float.TryParse(array[2], NumberStyles.Any, CultureInfo.InvariantCulture, out p))
           this.Probability = p;
 
-        for (int i = 3; i < array.Length; i++)
+        for (int i = 3; i < array.Length - 1; i++)
           this.AddPredictor(array[i]);
+
+        if (m_total_columns.Contains(array[array.Length - 1]))
+          this.AddPredictor(array[array.Length - 1]);
+        else if (array[array.Length - 1].StartsWith("<"))
+          ;
       }
     }
 
@@ -143,7 +180,7 @@ namespace Schicksal.Helm.Dialogs
 
     public void Save(Dictionary<string, string[]> settings)
     {
-      var array = new string[m_predictors.Count + 3];
+      var array = new string[m_predictors.Count + (string.IsNullOrEmpty(this.OptionsXML) ? 3 : 4)];
       array[0] = this.Result;
       array[1] = this.Filter;
       array[2] = this.Probability.ToString(CultureInfo.InvariantCulture);
@@ -153,7 +190,16 @@ namespace Schicksal.Helm.Dialogs
       foreach (var item in m_predictors)
         array[i++] = item;
 
+      if (!string.IsNullOrEmpty(this.OptionsXML))
+        array[array.Length - 1] = this.OptionsXML;
+
       settings[m_hash] = array;
+    }
+
+    private void OnPropertyChanged(string propertyName)
+    {
+      if (this.PropertyChanged != null)
+        this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public string Result
@@ -166,11 +212,7 @@ namespace Schicksal.Helm.Dialogs
       }
     }
 
-    private void OnPropertyChanged(string propertyName)
-    {
-      if (this.PropertyChanged != null)
-        this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-    }
+    public string OptionsXML { get; set; }
 
     public string Filter
     {
