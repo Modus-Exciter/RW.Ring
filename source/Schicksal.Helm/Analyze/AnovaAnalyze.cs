@@ -3,6 +3,7 @@ using Notung.Services;
 using Schicksal.Anova;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,10 +12,16 @@ namespace Schicksal.Helm.Analyze
 {
   public class AnovaAnalyze : IAnalyze
   {
+    public Type OptionsType
+    {
+      get { return typeof(AnovaOptionsDialog); }
+    }
+
     public override string ToString()
     {
       return Resources.ANOVA;
     }
+
     public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new AnovaResultsForm();

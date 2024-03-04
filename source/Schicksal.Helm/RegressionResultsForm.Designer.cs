@@ -1,6 +1,6 @@
 ﻿namespace Schicksal.Helm
 {
-  partial class AncovaResultsForm
+  partial class RegressionResultsForm
   {
     /// <summary>
     /// Required designer variable.
@@ -30,11 +30,8 @@
     {
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AncovaResultsForm));
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegressionResultsForm));
       this.m_grid = new System.Windows.Forms.DataGridView();
-      this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
-      this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
-      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.factorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.nDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.tStandardColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -44,6 +41,9 @@
       this.etaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.tHDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.pHDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.m_cmd_export = new System.Windows.Forms.ToolStripMenuItem();
+      this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
       this.m_context_menu.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
@@ -69,24 +69,6 @@
       this.m_grid.Name = "m_grid";
       this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
       this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.Grid_CellPainting);
-      // 
-      // m_context_menu
-      // 
-      this.m_context_menu.ImageScalingSize = new System.Drawing.Size(20, 20);
-      this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.m_cmd_export});
-      this.m_context_menu.Name = "m_context_menu";
-      resources.ApplyResources(this.m_context_menu, "m_context_menu");
-      // 
-      // m_cmd_export
-      // 
-      this.m_cmd_export.Name = "m_cmd_export";
-      resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
-      this.m_cmd_export.Click += new System.EventHandler(this.m_cmd_export_Click);
-      // 
-      // m_binding_source
-      // 
-      this.m_binding_source.DataSource = typeof(Schicksal.Regression.CorrelationMetrics);
       // 
       // factorDataGridViewTextBoxColumn
       // 
@@ -156,12 +138,30 @@
       this.pHDataGridViewTextBoxColumn.Name = "pHDataGridViewTextBoxColumn";
       this.pHDataGridViewTextBoxColumn.ReadOnly = true;
       // 
-      // AncovaResultsForm
+      // m_context_menu
+      // 
+      this.m_context_menu.ImageScalingSize = new System.Drawing.Size(20, 20);
+      this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.m_cmd_export});
+      this.m_context_menu.Name = "m_context_menu";
+      resources.ApplyResources(this.m_context_menu, "m_context_menu");
+      // 
+      // m_cmd_export
+      // 
+      this.m_cmd_export.Name = "m_cmd_export";
+      resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
+      this.m_cmd_export.Click += new System.EventHandler(this.m_cmd_export_Click);
+      // 
+      // m_binding_source
+      // 
+      this.m_binding_source.DataSource = typeof(Schicksal.Regression.CorrelationMetrics);
+      // 
+      // RegressionResultsForm
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.m_grid);
-      this.Name = "AncovaResultsForm";
+      this.Name = "RegressionResultsForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
       this.m_context_menu.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();

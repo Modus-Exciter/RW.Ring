@@ -3,6 +3,7 @@ using Notung.Services;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 using Schicksal.Regression;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace Schicksal.Helm.Analyze
 {
   public class RegressionAnalyze : IAnalyze
   {
+    public Type OptionsType
+    {
+      get { return null; }
+    }
+
     public override string ToString()
     {
       return Resources.REGRESSION_ANALYSIS;
@@ -21,7 +27,7 @@ namespace Schicksal.Helm.Analyze
       var currentProcessor = (CorrelationTestProcessor)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
-      var results_form = new AncovaResultsForm();
+      var results_form = new RegressionResultsForm();
       results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
         Resources.REGRESSION_ANALYSIS, tf.Text, data.Probability, data.Result);
       results_form.DataSource = currentProcessor.Results;
@@ -50,7 +56,7 @@ namespace Schicksal.Helm.Analyze
 
     public Dictionary<string, string[]> GetSettings()
     {
-      return AppManager.Configurator.GetSection<Program.Preferences>().AncovaSettings;
+      return AppManager.Configurator.GetSection<Program.Preferences>().RegressionSettings;
     }
   }
 }

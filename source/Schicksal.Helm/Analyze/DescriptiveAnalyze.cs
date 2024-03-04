@@ -3,6 +3,7 @@ using Notung.Services;
 using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,10 +12,16 @@ namespace Schicksal.Helm.Analyze
 {
   public class DescriptiveAnalyze : IAnalyze
   {
+    public Type OptionsType
+    {
+      get { return null; }
+    }
+
     public override string ToString()
     {
       return Resources.BASIC_STATISTICS;
     }
+
     public Dictionary<string, string[]> GetSettings()
     {
       return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;

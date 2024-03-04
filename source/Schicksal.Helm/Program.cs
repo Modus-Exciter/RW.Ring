@@ -50,8 +50,8 @@ namespace Schicksal.Helm
       private Dictionary<string, string[]> m_anova_settings = new Dictionary<string, string[]>();
       [DataMember(Name = "BaseStatSettings")]
       private Dictionary<string, string[]> m_bs_settings = new Dictionary<string, string[]>();
-      [DataMember(Name = "AncovaSettings")]
-      private Dictionary<string, string[]> m_ancova_settings = new Dictionary<string, string[]>();
+      [DataMember(Name = "RegressionSettings")]
+      private Dictionary<string, string[]> m_regression_settings = new Dictionary<string, string[]>();
 
       public Dictionary<string, DateTime> LastFiles
       {
@@ -81,14 +81,14 @@ namespace Schicksal.Helm
         }
       }
 
-      public Dictionary<string, string[]> AncovaSettings
+      public Dictionary<string, string[]> RegressionSettings
       {
         get
         {
-          if (m_ancova_settings == null)
-            m_ancova_settings = new Dictionary<string, string[]>();
+          if (m_regression_settings == null)
+            m_regression_settings = new Dictionary<string, string[]>();
 
-          return m_ancova_settings;
+          return m_regression_settings;
         }
       }
 
