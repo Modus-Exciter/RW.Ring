@@ -168,7 +168,13 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.en.resx">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.resx">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.ru.resx">
       <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RegressionResultsForm.resx">
