@@ -66,7 +66,7 @@ namespace Schicksal.Optimization
     public IEnumerator<Node> GetEnumerator()
     {
       this.GetHull();
-      for (int i = 0; i < m_length; i++)
+      for (int i = m_length - 1; i >= 0; i--)
         yield return m_set[i];
     }
 

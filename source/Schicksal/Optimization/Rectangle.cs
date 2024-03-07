@@ -190,30 +190,47 @@ namespace Schicksal.Optimization
 
     public class RectangleProvider
     {
-      private readonly Queue<Rectangle> m_queue;
-      int m_dimension_count;
+      private readonly Queue<Rectangle> m_free;
+
+      readonly int m_dimension_count;
 
       public RectangleProvider(int dimensionCount, int capacity) 
       {
         m_dimension_count = dimensionCount;
+        m_free = new Queue<Rectangle>(capacity);
+        for (int i = 0; i < capacity; i++)
+          m_free.Enqueue(new Rectangle(m_dimension_count));
       }
 
       public Rectangle GetInstance()
       {
-        return new Rectangle(m_dimension_count);
+        if (m_free.Count == 0)
+        {
+          int count = m_free.Count;
+          for (int i = 0; i < count; i++)
+            m_free.Enqueue(new Rectangle(m_dimension_count));
+        }
+        return m_free.Dequeue();
       }
 
       public Rectangle[] GetInstances(int amount)
       {
         Rectangle[] result = new Rectangle[amount];
+        int count = m_free.Count;
+        if(m_free.Count - amount <= 0)
+        {
+          count = count > amount ? count : amount;
+          for (int i = 0; i < count; i++)
+            m_free.Enqueue(new Rectangle(m_dimension_count));
+        }
         for (int i = 0; i < amount; i++)
-          result[i] = new Rectangle(m_dimension_count);
+          result[i] = m_free.Dequeue();
         return result;
       }
 
       public void ReturnInstance(Rectangle rectangle)
       {
-        
+        m_free.Enqueue(rectangle);
       }
     }
   }

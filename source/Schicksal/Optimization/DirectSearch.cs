@@ -73,7 +73,7 @@ namespace Schicksal.Optimization
       //TODO: Find out actual formula for starting pool size!
       private int StartPoolSize()
       {
-        return 1000;
+        return 40000;
       }
 
       private int DomainSize()
