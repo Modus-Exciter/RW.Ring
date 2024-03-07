@@ -140,7 +140,7 @@ namespace Schicksal.Helm.Dialogs
         if (m_total_columns.Contains(array[array.Length - 1]))
           this.AddPredictor(array[array.Length - 1]);
         else if (array[array.Length - 1].StartsWith("<"))
-          ;
+          this.OptionsXML = array[array.Length - 1];
       }
     }
 

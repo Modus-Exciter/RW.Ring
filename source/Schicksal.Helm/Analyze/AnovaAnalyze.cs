@@ -52,6 +52,7 @@ namespace Schicksal.Helm.Analyze
     {
       var processor = new FisherTableProcessor(table, data.Predictors.ToArray(),
              data.Result, data.Probability);
+
       if (!string.IsNullOrEmpty(data.Filter))
         processor.Filter = data.Filter;
 
