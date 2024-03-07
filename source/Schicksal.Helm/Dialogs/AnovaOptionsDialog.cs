@@ -18,7 +18,7 @@ namespace Schicksal.Helm.Dialogs
 
     public string Save()
     {
-      return null;//throw new NotImplementedException();
+       return null;//throw new NotImplementedException();
     }
 
     void IAnalysisOptions.Load(string xml)
