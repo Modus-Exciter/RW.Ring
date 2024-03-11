@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
 using Schicksal.Basic;
 
 
@@ -25,5 +26,7 @@ namespace Schicksal.Regression
     }
 
     public double this[int index] => m_var_values[index];
+
+    public IDataGroup Values { get => m_var_values; }
   }
 }
