@@ -45,6 +45,7 @@ namespace Schicksal.Regression
         return (x - leftX) * slope + offsetY;
       }
     }
+    
     /// <summary>
     /// Точность операции эквивалентности фактора
     /// </summary>
@@ -52,14 +53,17 @@ namespace Schicksal.Regression
 
     private readonly Line[] m_lines;
     private readonly (double x, double y)[] m_nodes;
+
     /// <summary>
     /// Отрезки ломанной
     /// </summary>
     public Line[] Lines { get { return (Line[])m_lines.Clone(); } }
+    
     /// <summary>
     /// Узловые точки ломанной
     /// </summary>
     public (double x, double y)[] Nodes { get { return ((double, double)[])m_nodes.Clone(); } }
+    
     /// <summary>
     /// Инициализация ломанной
     /// </summary>
@@ -77,6 +81,7 @@ namespace Schicksal.Regression
       m_nodes = this.FitPoints(subsetsSizes, dataPoints);
       m_lines = this.CreateLines(dataPoints);
     }
+    
     /// <summary>
     /// Преобразование изначальной выборки в связанную структуру по уникальным иксам
     /// </summary>
@@ -100,6 +105,7 @@ namespace Schicksal.Regression
       });
       return uniqeX;
     }
+    
     /// <summary>
     /// Расчитывает размеры подвыборок
     /// </summary>
@@ -129,6 +135,7 @@ namespace Schicksal.Regression
       }
       return domain.ToArray();
     }
+    
     /// <summary>
     /// Расчет средних геометрических для подвыборок изначальной выборки.
     /// Расчет узлов ломанной
@@ -152,6 +159,7 @@ namespace Schicksal.Regression
       }
       return nodes;
     }
+    
     /// <summary>
     /// Расчет отрезков
     /// </summary>
@@ -165,6 +173,7 @@ namespace Schicksal.Regression
       lines[lines.Length - 1] = new Line(m_nodes[m_nodes.Length - 2], m_nodes.Last()) { rightX = dataPoints.Last().x };
       return lines;
     }
+
     /// <summary>
     /// Расчет значения ломанной
     /// </summary>

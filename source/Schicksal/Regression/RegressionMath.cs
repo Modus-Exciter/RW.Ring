@@ -102,7 +102,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Ломанная функция дисперсии
     /// </summary>
-    private PolylineFit variance;
+    private Dispersion variance;
     /// <summary>
     /// Функция расчета значения функции правдоподобия
     /// </summary>
@@ -117,18 +117,20 @@ namespace Schicksal.Regression
     public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> dependencyFunction)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
+
       this.x = x.ToArray();
       this.y = y.ToArray();
       this.dependencyFunction = dependencyFunction;
       ///ADD sorting
-      variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
+      //variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
+      variance = new Dispersion(x, y, new PolylineFit(x, y).Calculate);
 
-      if (this.IsHeteroscedascity()) 
+      if (/*this.IsHeteroscedascity()*/ true) 
         calculate = this.CalculateHet;
       else 
         calculate = this.CalculateDef;
     }
-    /// <summary>
+    /*/// <summary>
     /// Определение наличия гетероскедастичности
     /// </summary>
     /// <returns>Наличие гетероскедастичности</returns>
@@ -149,7 +151,7 @@ namespace Schicksal.Regression
         midVar = varVals.Max();
         return false;
       }
-    }
+    }*/
     /// <summary>
     /// Расчет функции правдоподобия с учетом гетероскедастичности для заданного параметра
     /// </summary>
@@ -163,7 +165,7 @@ namespace Schicksal.Regression
       for (int i = 0; i < x.Length; i++)
       {
         a = y[i] - dependencyFunction(x[i], t);
-        b = variance.Calculate(x[i]);
+        b = variance[i];
         if (b == 0) b = MIN_VAR;
         res += (a * a) / (2 * b * b);
       }
