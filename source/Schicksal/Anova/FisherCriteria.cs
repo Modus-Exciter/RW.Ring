@@ -70,7 +70,7 @@ namespace Schicksal.Anova
       var average = groups.SelectMany(g => g).SelectMany(g => g).Average();
 
       for (int i = 0; i < groups.Count; i++)
-        average_multi_group[i] = groups[i].SelectMany(g => g).Average();
+        average_multi_group[i] = groups[i].SelectMany(g => g).Any() ? groups[i].SelectMany(g => g).Average() : average;
 
       double outer_dispersion = 0;
       double inner_dispersion = 0;
