@@ -22,7 +22,7 @@ namespace Schicksal.Helm.Analyze
       return Resources.REGRESSION_ANALYSIS;
     }
 
-    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
+    public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
       var currentProcessor = (CorrelationTestProcessor)processor;
       var tf = (TableForm)table_form;
@@ -48,7 +48,7 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
+    public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       return new CorrelationTestProcessor(table,
             data.Predictors.ToArray(), data.Result, data.Filter, data.Probability);

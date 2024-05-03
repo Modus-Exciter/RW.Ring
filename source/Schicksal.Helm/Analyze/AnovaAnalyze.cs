@@ -22,7 +22,7 @@ namespace Schicksal.Helm.Analyze
       return Resources.ANOVA;
     }
 
-    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
+    public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new AnovaResultsForm();
       var currentProcessor = (FisherTableProcessor)processor;
@@ -48,7 +48,7 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
+    public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       var processor = new FisherTableProcessor(table, data.Predictors.ToArray(),
              data.Result, data.Probability);
