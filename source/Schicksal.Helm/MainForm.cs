@@ -358,41 +358,41 @@ namespace Schicksal.Helm
 
     private void HandleAnalyzeClick(object sender, EventArgs e)
     {
-      var item = sender as ToolStripMenuItem;
+      var item = sender as ToolStripMenuItem; // Получаем пункт меню, которым был запущен анализ
 
       if (item == null) 
         return;
 
-      var analyze = item.Tag as IAnalyze;
+      var analyze = item.Tag as IAnalyze; // К пункту меню привязан вид анализа (1)
 
       if (analyze == null)
         return;
 
-      var table_form = this.ActiveMdiChild as TableForm;
+      var table_form = this.ActiveMdiChild as TableForm; // Анализируем данные в открытой таблице
 
       if (table_form == null)
         return;
 
-      var table = table_form.DataSource;
+      var table = table_form.DataSource; // Берём таблицу для анализа (2)
 
       if (table == null)
         return;
 
-      using (var dlg = new StatisticsParametersDialog()) 
+      using (var dlg = new StatisticsParametersDialog()) // При любом анализе показываем один диалог
       {
-        dlg.Text = analyze.ToString();
-        dlg.DataSource = new StatisticsParameters(table, analyze.GetSettings());
-        dlg.OptionsType = analyze.OptionsType;
+        dlg.Text = analyze.ToString(); // Заголовок диалога - название вида анализа
+        dlg.DataSource = new StatisticsParameters(table, analyze.GetSettings()); // Настройки анализа
+        dlg.OptionsType = analyze.OptionsType; // Тип окна с дополнительными настройками
 
-        if (dlg.ShowDialog(this) == DialogResult.OK)
+        if (dlg.ShowDialog(this) == DialogResult.OK) // Если пользователь нажал ОК
         {
-          var processor = analyze.GetProcessor(table, dlg.DataSource);
+          var processor = analyze.GetProcessor(table, dlg.DataSource); // Получаем фоновую задачу, в которой будет проходить анализ
 
-          if (AppManager.OperationLauncher.Run(processor, analyze.GetLaunchParameters()) 
+          if (AppManager.OperationLauncher.Run(processor, analyze.GetLaunchParameters()) // Запускаем фоновую задачу и ждём завершения
             == TaskStatus.RanToCompletion)
           {
-            dlg.DataSource.Save(analyze.GetSettings());
-            analyze.BindTheResultForm(processor, table_form, dlg.DataSource);
+            dlg.DataSource.Save(analyze.GetSettings()); // При успешном завершении анализа сохраняем настройки для следующего запуска
+            analyze.BindTheResultForm(processor, table_form, dlg.DataSource); // Показываем результаты анализа
           }
         }
       }

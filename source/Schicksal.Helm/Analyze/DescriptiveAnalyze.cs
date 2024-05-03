@@ -27,7 +27,7 @@ namespace Schicksal.Helm.Analyze
       return AppManager.Configurator.GetSection<Program.Preferences>().BaseStatSettings;
     }
 
-    public RunBase GetProcessor(DataTable table, StatisticsParameters data)
+    public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       return new DescriptionStatisticsCalculator(table, data.Predictors.ToArray(),
              data.Result, data.Filter, data.Probability);
@@ -42,7 +42,7 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-    public void BindTheResultForm(RunBase processor, object table_form, StatisticsParameters data)
+    public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new BasicStatisticsForm();
       var currentProcessor = (DescriptionStatisticsCalculator)processor;
