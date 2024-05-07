@@ -189,76 +189,85 @@
   <data name="&gt;&gt;m_type_selector.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="m_label_metrics1.AutoSize" type="System.Boolean, mscorlib">
+  <data name="m_label_metrics.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="m_label_metrics1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+  <data name="m_label_metrics.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="m_label_metrics1.Font" type="System.Drawing.Font, System.Drawing">
+  <data name="m_label_metrics.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
-  <data name="m_label_metrics1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="m_label_metrics.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 1</value>
   </data>
-  <data name="m_label_metrics1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 14</value>
+  <data name="m_label_metrics.Size" type="System.Drawing.Size, System.Drawing">
+    <value>19, 28</value>
   </data>
-  <data name="m_label_metrics1.TabIndex" type="System.Int32, mscorlib">
+  <data name="m_label_metrics.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
-  <data name="m_label_metrics1.Text" xml:space="preserve">
+  <data name="m_label_metrics.Text" xml:space="preserve">
     <value>[ ]</value>
   </data>
-  <data name="m_label_metrics1.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+  <data name="m_label_metrics.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics1.Name" xml:space="preserve">
-    <value>m_label_metrics1</value>
+  <data name="&gt;&gt;m_label_metrics.Name" xml:space="preserve">
+    <value>m_label_metrics</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics1.Type" xml:space="preserve">
+  <data name="&gt;&gt;m_label_metrics.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;m_label_metrics.Parent" xml:space="preserve">
     <value>m_bottom_panel</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;m_label_metrics.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="m_bottom_panel.ColumnCount" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
-  <data name="m_label_metrics2.AutoSize" type="System.Boolean, mscorlib">
+  <data name="m_button_details.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="m_label_metrics2.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
+  <data name="m_button_details.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
   </data>
-  <data name="m_label_metrics2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 15</value>
+  <data name="m_button_details.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Left</value>
   </data>
-  <data name="m_label_metrics2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>19, 13</value>
+  <data name="m_button_details.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
   </data>
-  <data name="m_label_metrics2.TabIndex" type="System.Int32, mscorlib">
+  <data name="m_button_details.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Himalaya, 9pt, style=Bold</value>
+  </data>
+  <data name="m_button_details.Location" type="System.Drawing.Point, System.Drawing">
+    <value>31, 4</value>
+  </data>
+  <data name="m_button_details.Size" type="System.Drawing.Size, System.Drawing">
+    <value>26, 22</value>
+  </data>
+  <data name="m_button_details.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
-  <data name="m_label_metrics2.Text" xml:space="preserve">
-    <value>[ ]</value>
+  <data name="m_button_details.Text" xml:space="preserve">
+    <value>...</value>
   </data>
-  <data name="m_label_metrics2.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleLeft</value>
+  <data name="m_button_details.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomCenter</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics2.Name" xml:space="preserve">
-    <value>m_label_metrics2</value>
+  <data name="&gt;&gt;m_button_details.Name" xml:space="preserve">
+    <value>m_button_details</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;m_button_details.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;m_button_details.Parent" xml:space="preserve">
     <value>m_bottom_panel</value>
   </data>
-  <data name="&gt;&gt;m_label_metrics2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;m_button_details.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="m_bottom_panel.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
@@ -271,7 +280,7 @@
     <value>3, 1, 3, 3</value>
   </data>
   <data name="m_bottom_panel.RowCount" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
     <value>626, 32</value>
@@ -292,7 +301,7 @@
     <value>2</value>
   </data>
   <data name="m_bottom_panel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_type_selector" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_label_metrics1" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_label_metrics2" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="AutoSize,0,Percent,100,AutoSize,0" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_type_selector" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_label_metrics" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_button_details" Row="0" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="AutoSize,0,Percent,100,AutoSize,0" /&gt;&lt;Rows Styles="Percent,50,Percent,50" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

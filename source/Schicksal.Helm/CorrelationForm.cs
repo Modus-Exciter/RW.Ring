@@ -6,12 +6,15 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Notung.Configuration;
 using Notung.Services;
+using Schicksal.Helm.Dialogs;
 using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
   public partial class CorrelationForm : Form
   {
+    private RegressionDependency m_dependency;
+    
     public CorrelationForm()
     {
       this.InitializeComponent();
@@ -79,23 +82,25 @@ namespace Schicksal.Helm
       while (m_chart.Series.Count > 2)
         m_chart.Series.RemoveAt(m_chart.Series.Count - 1);
 
-      var dependency = CorrelationGraphUtils.FillPoints(this.Metrics.Formula, 
-        (Type)m_type_selector.SelectedValue, GetSeriesForRange);
+      m_dependency = CorrelationGraphUtils.FillPoints(this.Metrics.Formula, 
+        (Type)m_type_selector.SelectedValue, this.GetSeriesForRange);
 
-      ((TextAnnotation)m_chart.Annotations[0]).Text = dependency.ToString();
+      ((TextAnnotation)m_chart.Annotations[0]).Text = m_dependency.ToString();
 
       m_chart.Series[1].Points.ResumeUpdates();
 
-      m_label_metrics1.Text = string.Format("{0}: {1}; {2}: {3:0.0000}; {4}: {5:0.0000}",
-        SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity,
-        SchicksalResources.CONSISTENCY, dependency.Consistency,
-        SchicksalResources.CONSISTENCY_WEIGHTED, dependency.ConsistencyWeighted);
+      /* m_label_metrics1.Text = string.Format("{0}: {1}; {2}: {3:0.0000}; {4}: {5:0.0000}",
+         SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity,
+         SchicksalResources.CONSISTENCY, dependency.Consistency,
+         SchicksalResources.CONSISTENCY_WEIGHTED, dependency.ConsistencyWeighted);
 
-      m_label_metrics2.Text = string.Format("{0}: {1}; {2}: {3};",
-        SchicksalResources.RMS_ERROR, dependency.RMSError,
-        SchicksalResources.RMS_ERROR_WEIGHTED, dependency.RMSErrorWeighted);
+       m_label_metrics2.Text = string.Format("{0}: {1}; {2}: {3};",
+         SchicksalResources.RMS_ERROR, dependency.RMSError,
+         SchicksalResources.RMS_ERROR_WEIGHTED, dependency.RMSErrorWeighted);*/
 
-      this.MinimumSize = new Size(m_label_metrics1.Width 
+      m_label_metrics.Text = string.Format("{0}: {1}", SchicksalResources.HETEROSCEDASTICITY, m_dependency.Heteroscedasticity);
+
+      this.MinimumSize = new Size(m_label_metrics.Width 
         + m_type_selector.Width + 20, 200);
     }
 
@@ -114,6 +119,11 @@ namespace Schicksal.Helm
       }
 
       return (x,y) => series.Points.AddXY(x,y);
+    }
+
+    private void DetailsClick(object sender, EventArgs e)
+    {
+      new RegressionDetailsDialog(m_dependency).Show(this);
     }
   }
 }

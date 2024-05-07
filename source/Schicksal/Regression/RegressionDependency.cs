@@ -63,8 +63,8 @@ namespace Schicksal.Regression
       types.Add(typeof(LinearDependency), SchicksalResources.LINEAR);
       types.Add(typeof(ParabolicDependency), SchicksalResources.PARABOLIC);
       types.Add(typeof(HyperbolicDependency), SchicksalResources.HYPERBOLIC);
-      types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
-      types.Add(typeof(LikehoodMichaelisDependency), string.Format("{0}-2", SchicksalResources.MICHAELIS));
+      //types.Add(typeof(MichaelisDependency), SchicksalResources.MICHAELIS);
+      types.Add(typeof(LikehoodMichaelisDependency), SchicksalResources.MICHAELIS);
       types.Add(typeof(LogisticDependency), SchicksalResources.LOGISTIC);
       types.Add(typeof(ExponentialDependency), SchicksalResources.EXPONENT);
       return types;
@@ -162,7 +162,7 @@ namespace Schicksal.Regression
     }
   }
 
-  public sealed class MichaelisDependency : RegressionDependency
+  /*public sealed class MichaelisDependency : RegressionDependency
   {
     private readonly double[] m_gaps;
 
@@ -230,7 +230,7 @@ namespace Schicksal.Regression
         this.Effect, ConvertNumber(this.B), this.Factor,
         this.A >= 0 ? '+' : '-', ConvertNumber(Math.Abs(this.A)));
     }
-  }
+  }*/
 
   public sealed class HyperbolicDependency : RegressionDependency
   {
