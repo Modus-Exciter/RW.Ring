@@ -108,7 +108,7 @@ namespace Schicksal.Anova
       comparator.Run();
       comparator.Source.Columns.Remove("Factor");
 
-      writer.WriteTable(comparator.Source.DefaultView, descriptions);
+      writer.WriteTable(comparator.Source.DefaultView, descriptions, new HashSet<string> { "Ignorable" });
 
       writer.WriteHeader(string.Format("{0}:", Resources.SUMMARY), 3);
 
@@ -124,7 +124,7 @@ namespace Schicksal.Anova
         var max_dif = comparator.Results[0];
         var sig_dif = comparator.Results[0];
         var max_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1);  //comparator.Results[0];
-        var min_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1);//comparator.Results[0];
+        var min_val = new Tuple<string, double>(comparator.Results[0].Factor1, comparator.Results[0].Mean1); //comparator.Results[0];
 
         for (int i = 0; i < comparator.Results.Length; i++)
         {
@@ -186,7 +186,8 @@ namespace Schicksal.Anova
           { "Factor", Resources.FACTOR },
           { "Kdf", "K - 1" },
           { "Ndf", "N - K" },
-        });
+        },
+        new HashSet<string> { "IgnoredFactor" });
     }
 
     private void WriteCommonTestDescription(HtmlWriter writer)
