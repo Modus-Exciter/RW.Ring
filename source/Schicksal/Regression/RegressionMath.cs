@@ -78,35 +78,34 @@ namespace Schicksal.Regression
     /// Граница, определяющая, использовать ли константное значение дисперсии или функцию
     /// </summary>
     const double SAMPLE_COUNT_THRESHOLD = 20;
-    const double SAMPLE_COUNT_PER_NODE_THRESHOLD = 10;
     /// <summary>
     /// Фактор
     /// </summary>
-    private readonly double[] x;
+    private readonly double[] m_x;
     /// <summary>
     /// Результат
     /// </summary>
-    private readonly double[] y;
+    private readonly double[] m_y;
     /// <summary>
     /// Среднее значение точек функции дисперсии
     /// </summary>
-    private double midVar;
+    private double m_mid_var;
     /// <summary>
     /// Исследуемая функция зависимости
     /// </summary>
-    private readonly Func<double, double[], double> dependencyFunction;
+    private readonly Func<double, double[], double> m_dep_fun;
     /// <summary>
     /// Интерфейс, содердащий актуальную функцию для расчета
     /// </summary>
-    private readonly Func<double[], double> calculate;
+    private readonly Func<double[], double> m_calc;
     /// <summary>
     /// Ломанная функция дисперсии
     /// </summary>
-    private PolylineFit variance;
+    private Dispersion m_var;
     /// <summary>
     /// Функция расчета значения функции правдоподобия
     /// </summary>
-    public Func<double[], double> Calculate { get { return calculate; } }
+    public Func<double[], double> Calculate { get { return m_calc; } }
     /// <summary>
     /// Инициализация функции правдоподобия
     /// </summary>
@@ -117,16 +116,18 @@ namespace Schicksal.Regression
     public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> dependencyFunction)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
-      this.x = x.ToArray();
-      this.y = y.ToArray();
-      this.dependencyFunction = dependencyFunction;
+
+      this.m_x = x.ToArray();
+      this.m_y = y.ToArray();
+      this.m_dep_fun = dependencyFunction;
       ///ADD sorting
-      variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
+      //variance = new PolylineFit(x, Residual.Calculate(x, y, new PolylineFit(x, y).Calculate));
+      m_var = new Dispersion(x, y, new PolylineFit(x, y).Calculate);
 
       if (this.IsHeteroscedascity()) 
-        calculate = this.CalculateHet;
+        m_calc = this.CalculateHet;
       else 
-        calculate = this.CalculateDef;
+        m_calc = this.CalculateDef;
     }
     /// <summary>
     /// Определение наличия гетероскедастичности
@@ -134,19 +135,20 @@ namespace Schicksal.Regression
     /// <returns>Наличие гетероскедастичности</returns>
     private bool IsHeteroscedascity()
     {
-      double[] varVals = variance.Nodes.Select(point => point.y).ToArray();
+      double[] varVals = m_var.Values.ToArray();
 
-      if (x.Length >= SAMPLE_COUNT_THRESHOLD && x.Length / variance.Nodes.Length > SAMPLE_COUNT_PER_NODE_THRESHOLD)
+      if (m_x.Length >= SAMPLE_COUNT_THRESHOLD)
       {
-        midVar = varVals.Sum() / varVals.Length;
+        //Сделать зависимость от стандартного отклонения!
+        m_mid_var = varVals.Sum() / varVals.Length;
         double maxDiff = varVals.Max() - varVals.Min();
 
-        if (maxDiff / midVar <= HET_THRESHOLD) return false;
+        if (maxDiff / m_mid_var <= HET_THRESHOLD) return false;
         else return true;
       }
       else
       {
-        midVar = varVals.Max();
+        m_mid_var = varVals.Max();
         return false;
       }
     }
@@ -160,10 +162,10 @@ namespace Schicksal.Regression
       double res = 0;
       double a, b;
 
-      for (int i = 0; i < x.Length; i++)
+      for (int i = 0; i < m_x.Length; i++)
       {
-        a = y[i] - dependencyFunction(x[i], t);
-        b = variance.Calculate(x[i]);
+        a = m_y[i] - m_dep_fun(m_x[i], t);
+        b = m_var[i];
         if (b == 0) b = MIN_VAR;
         res += (a * a) / (2 * b * b);
       }
@@ -178,12 +180,12 @@ namespace Schicksal.Regression
     private double CalculateDef(double[] t)
     {
       double res = 0;
-      double b = 2 * midVar * midVar;
+      double b = 2 * m_mid_var * m_mid_var;
       double a;
       
-      for (int i = 0; i < x.Length; i++)
+      for (int i = 0; i < m_x.Length; i++)
       {
-        a = y[i] - dependencyFunction(x[i], t);
+        a = m_y[i] - m_dep_fun(m_x[i], t);
         res += (a * a) / b;
       }
 

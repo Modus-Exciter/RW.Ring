@@ -197,25 +197,26 @@ namespace Schicksal.Optimization
       public RectangleProvider(int dimensionCount, int capacity) 
       {
         m_dimension_count = dimensionCount;
-        m_free = new Queue<Rectangle>(capacity);
+        /*m_free = new Queue<Rectangle>(capacity);
         for (int i = 0; i < capacity; i++)
-          m_free.Enqueue(new Rectangle(m_dimension_count));
+          m_free.Enqueue(new Rectangle(m_dimension_count));*/
       }
 
       public Rectangle GetInstance()
       {
-        if (m_free.Count == 0)
+        /*if (m_free.Count == 0)
         {
           int count = m_free.Count;
           for (int i = 0; i < count; i++)
             m_free.Enqueue(new Rectangle(m_dimension_count));
         }
-        return m_free.Dequeue();
+        return m_free.Dequeue();*/
+        return new Rectangle(m_dimension_count);
       }
 
       public Rectangle[] GetInstances(int amount)
       {
-        Rectangle[] result = new Rectangle[amount];
+        /*Rectangle[] result = new Rectangle[amount];
         int count = m_free.Count;
         if(m_free.Count - amount <= 0)
         {
@@ -225,12 +226,16 @@ namespace Schicksal.Optimization
         }
         for (int i = 0; i < amount; i++)
           result[i] = m_free.Dequeue();
+        return result;*/
+        var result = new Rectangle[amount];
+        for (int i = 0; i < amount; i++)
+          result[i] = new Rectangle(m_dimension_count);
         return result;
       }
 
       public void ReturnInstance(Rectangle rectangle)
       {
-        m_free.Enqueue(rectangle);
+        //m_free.Enqueue(rectangle);
       }
     }
   }

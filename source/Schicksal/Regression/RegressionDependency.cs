@@ -414,26 +414,26 @@ namespace Schicksal.Regression
 
     public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
     {
-      VectorDataGroup lowBound;
-      VectorDataGroup highBound;
+      double[] lowBound;
+      double[] highBound;
       LikelyhoodFunction likelyhood;
-      IDataGroup x = new ArrayDataGroup(factor.ToArray());
-      IDataGroup y = new ArrayDataGroup(result.ToArray());
+      double[] x = factor.ToArray();
+      double[] y = result.ToArray();
       //Ветвление масштабирования изначальной выборки и преобразования полученных резульатов
       if (x.Max() >= MAX_X)
       {
         //Масштабирование выборки
         double scaleCoef = 0;
         scaleCoef = x.Max() / MAX_X;
-        x = new ArrayDataGroup(x.Select(xi => xi / scaleCoef).ToArray());
-        y = new ArrayDataGroup(y.Select(yi => yi / scaleCoef).ToArray());
+        x = x.Select(xi => xi / scaleCoef).ToArray();
+        y = y.Select(yi => yi / scaleCoef).ToArray();
 
         //Определение границ
-        lowBound = new VectorDataGroup(y.Min(), MIN_BASE, x.Min());
-        highBound = new VectorDataGroup(Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max());
+        lowBound = new double[] { y.Min(), MIN_BASE, x.Min() };
+        highBound = new double[] { Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max() };
 
         //Инициализация функции правдоподобия и оптимизация
-        likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
+        likelyhood = new LikelyhoodFunction(new ArrayDataGroup(x), new ArrayDataGroup(y), MathFunction.Logistic);
         //IDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
         var optimizator = new MathOptimization.Direct(likelyhood.Calculate, lowBound.ToArray(), highBound.ToArray());
         var tempParam = optimizator.Process();
@@ -447,11 +447,11 @@ namespace Schicksal.Regression
       else
       {
         //Определение границ
-        lowBound = new VectorDataGroup(y.Min(), MIN_BASE, x.Min());
-        highBound = new VectorDataGroup(Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max());
+        lowBound = new double[] { y.Min(), MIN_BASE, x.Min() };
+        highBound = new double[] { Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max() };
 
         //Инициализация функции правдоподобия и оптимизация
-        likelyhood = new LikelyhoodFunction(x, y, MathFunction.Logistic);
+        likelyhood = new LikelyhoodFunction(new ArrayDataGroup(x), new ArrayDataGroup(y), MathFunction.Logistic);
         //m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
         var optimizator = new MathOptimization.Direct(likelyhood.Calculate, lowBound.ToArray(), highBound.ToArray());
         m_param = optimizator.Process();

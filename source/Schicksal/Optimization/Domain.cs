@@ -129,7 +129,7 @@ namespace Schicksal.Optimization
           result += m_domain[i].Value.Count + " ";
         return result;
       }
-    }
 #endif
+    }
   }
 }
