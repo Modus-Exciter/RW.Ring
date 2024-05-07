@@ -16,7 +16,7 @@ namespace Schicksal.Basic
     {
       Debug.Assert(group != null);
 
-      return group.Average();
+      return group.Count > 0 ? group.Average() : double.NaN;
     }
 
     public static double Median(IDataGroup group)

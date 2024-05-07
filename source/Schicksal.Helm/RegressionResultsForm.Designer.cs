@@ -1,6 +1,6 @@
 ﻿namespace Schicksal.Helm
 {
-  partial class AncovaResultsForm
+  partial class RegressionResultsForm
   {
     /// <summary>
     /// Required designer variable.
@@ -29,13 +29,12 @@
     private void InitializeComponent()
     {
       this.components = new System.ComponentModel.Container();
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AncovaResultsForm));
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegressionResultsForm));
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.factorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.nDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.t005DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.t001DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.tStandardColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.rDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.tRDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.pRDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,14 +51,12 @@
       // 
       // m_grid
       // 
-      resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.AutoGenerateColumns = false;
       this.m_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.m_grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.factorDataGridViewTextBoxColumn,
             this.nDataGridViewTextBoxColumn,
-            this.t005DataGridViewTextBoxColumn,
-            this.t001DataGridViewTextBoxColumn,
+            this.tStandardColumn,
             this.rDataGridViewTextBoxColumn,
             this.tRDataGridViewTextBoxColumn,
             this.pRDataGridViewTextBoxColumn,
@@ -68,6 +65,7 @@
             this.pHDataGridViewTextBoxColumn});
       this.m_grid.ContextMenuStrip = this.m_context_menu;
       this.m_grid.DataSource = this.m_binding_source;
+      resources.ApplyResources(this.m_grid, "m_grid");
       this.m_grid.Name = "m_grid";
       this.m_grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
       this.m_grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.Grid_CellPainting);
@@ -89,20 +87,13 @@
       this.nDataGridViewTextBoxColumn.Name = "nDataGridViewTextBoxColumn";
       this.nDataGridViewTextBoxColumn.ReadOnly = true;
       // 
-      // t005DataGridViewTextBoxColumn
+      // tStandardColumn
       // 
-      this.t005DataGridViewTextBoxColumn.DataPropertyName = "T005";
-      resources.ApplyResources(this.t005DataGridViewTextBoxColumn, "t005DataGridViewTextBoxColumn");
-      this.t005DataGridViewTextBoxColumn.Name = "t005DataGridViewTextBoxColumn";
-      this.t005DataGridViewTextBoxColumn.ReadOnly = true;
-      // 
-      // t001DataGridViewTextBoxColumn
-      // 
-      this.t001DataGridViewTextBoxColumn.DataPropertyName = "T001";
-      this.t001DataGridViewTextBoxColumn.DividerWidth = 2;
-      resources.ApplyResources(this.t001DataGridViewTextBoxColumn, "t001DataGridViewTextBoxColumn");
-      this.t001DataGridViewTextBoxColumn.Name = "t001DataGridViewTextBoxColumn";
-      this.t001DataGridViewTextBoxColumn.ReadOnly = true;
+      this.tStandardColumn.DataPropertyName = "TStandard";
+      this.tStandardColumn.DividerWidth = 2;
+      resources.ApplyResources(this.tStandardColumn, "tStandardColumn");
+      this.tStandardColumn.Name = "tStandardColumn";
+      this.tStandardColumn.ReadOnly = true;
       // 
       // rDataGridViewTextBoxColumn
       // 
@@ -149,28 +140,28 @@
       // 
       // m_context_menu
       // 
-      resources.ApplyResources(this.m_context_menu, "m_context_menu");
       this.m_context_menu.ImageScalingSize = new System.Drawing.Size(20, 20);
       this.m_context_menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_cmd_export});
       this.m_context_menu.Name = "m_context_menu";
+      resources.ApplyResources(this.m_context_menu, "m_context_menu");
       // 
       // m_cmd_export
       // 
-      resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
       this.m_cmd_export.Name = "m_cmd_export";
+      resources.ApplyResources(this.m_cmd_export, "m_cmd_export");
       this.m_cmd_export.Click += new System.EventHandler(this.m_cmd_export_Click);
       // 
       // m_binding_source
       // 
       this.m_binding_source.DataSource = typeof(Schicksal.Regression.CorrelationMetrics);
       // 
-      // AncovaResultsForm
+      // RegressionResultsForm
       // 
       resources.ApplyResources(this, "$this");
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.m_grid);
-      this.Name = "AncovaResultsForm";
+      this.Name = "RegressionResultsForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
       this.m_context_menu.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
@@ -184,10 +175,11 @@
     private System.Windows.Forms.BindingSource m_binding_source;
     private System.Windows.Forms.ContextMenuStrip m_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
-    private System.Windows.Forms.DataGridViewTextBoxColumn factorDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn nDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn t005DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn t001DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn factorDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn nDataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn tStandardColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn rDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn tRDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn pRDataGridViewTextBoxColumn;

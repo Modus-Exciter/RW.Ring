@@ -30,25 +30,13 @@ namespace Schicksal.Regression
     public string Factor
     {
       get { return m_factor; }
-      set
-      {
-        if (string.IsNullOrWhiteSpace(value))
-          m_factor = "x";
-        else
-          m_factor = value.Trim();
-      }
+      set { m_factor = string.IsNullOrWhiteSpace(value) ? "x" : value.Trim(); }
     }
 
     public string Effect
     {
       get { return m_effect; }
-      set
-      {
-        if (string.IsNullOrWhiteSpace(value))
-          m_effect = "y";
-        else
-          m_effect = value.Trim();
-      }
+      set { m_effect = string.IsNullOrWhiteSpace(value) ? "y" : value.Trim(); }
     }
 
     public Heteroscedasticity Heteroscedasticity { get; internal set; }

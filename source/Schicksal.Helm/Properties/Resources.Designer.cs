@@ -19,7 +19,7 @@ namespace Schicksal.Helm.Properties {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -95,15 +95,6 @@ namespace Schicksal.Helm.Properties {
         internal static string ANALYZE {
             get {
                 return ResourceManager.GetString("ANALYZE", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Analysis of covariance.
-        /// </summary>
-        internal static string ANCOVA {
-            get {
-                return ResourceManager.GetString("ANCOVA", resourceCulture);
             }
         }
         
@@ -397,6 +388,24 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Factor columns not selected.
+        /// </summary>
+        internal static string NO_FACTOR_COLUMNS {
+            get {
+                return ResourceManager.GetString("NO_FACTOR_COLUMNS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Result column not selected.
+        /// </summary>
+        internal static string NO_RESULT_COUMN {
+            get {
+                return ResourceManager.GetString("NO_RESULT_COUMN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Open.
         /// </summary>
         internal static string OPEN {
@@ -411,6 +420,15 @@ namespace Schicksal.Helm.Properties {
         internal static string OPEN_SYSTEM_FOLDER {
             get {
                 return ResourceManager.GetString("OPEN_SYSTEM_FOLDER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Regression analysis.
+        /// </summary>
+        internal static string REGRESSION_ANALYSIS {
+            get {
+                return ResourceManager.GetString("REGRESSION_ANALYSIS", resourceCulture);
             }
         }
         
@@ -475,6 +493,24 @@ namespace Schicksal.Helm.Properties {
         internal static string SIGNIFICAT_COLOR {
             get {
                 return ResourceManager.GetString("SIGNIFICAT_COLOR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Standard F-criteria for {0}% probability.
+        /// </summary>
+        internal static string STANDARD_F_VALUE {
+            get {
+                return ResourceManager.GetString("STANDARD_F_VALUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на T-criteria for {0}% probability.
+        /// </summary>
+        internal static string STANDARD_T_VALUE {
+            get {
+                return ResourceManager.GetString("STANDARD_T_VALUE", resourceCulture);
             }
         }
         

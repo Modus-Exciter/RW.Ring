@@ -42,8 +42,7 @@
       this.kdfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.ndfDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.fDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.f005DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-      this.f001DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+      this.fCriticalColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       this.pDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
       this.m_context_menu.SuspendLayout();
@@ -59,8 +58,7 @@
             this.kdfDataGridViewTextBoxColumn,
             this.ndfDataGridViewTextBoxColumn,
             this.fDataGridViewTextBoxColumn,
-            this.f005DataGridViewTextBoxColumn,
-            this.f001DataGridViewTextBoxColumn,
+            this.fCriticalColumn,
             this.pDataGridViewTextBoxColumn});
       this.m_grid.ContextMenuStrip = this.m_context_menu;
       this.m_grid.DataSource = this.m_binding_source;
@@ -128,19 +126,12 @@
       this.fDataGridViewTextBoxColumn.Name = "fDataGridViewTextBoxColumn";
       this.fDataGridViewTextBoxColumn.ReadOnly = true;
       // 
-      // f005DataGridViewTextBoxColumn
+      // fCriticalColumn
       // 
-      this.f005DataGridViewTextBoxColumn.DataPropertyName = "F005";
-      resources.ApplyResources(this.f005DataGridViewTextBoxColumn, "f005DataGridViewTextBoxColumn");
-      this.f005DataGridViewTextBoxColumn.Name = "f005DataGridViewTextBoxColumn";
-      this.f005DataGridViewTextBoxColumn.ReadOnly = true;
-      // 
-      // f001DataGridViewTextBoxColumn
-      // 
-      this.f001DataGridViewTextBoxColumn.DataPropertyName = "F001";
-      resources.ApplyResources(this.f001DataGridViewTextBoxColumn, "f001DataGridViewTextBoxColumn");
-      this.f001DataGridViewTextBoxColumn.Name = "f001DataGridViewTextBoxColumn";
-      this.f001DataGridViewTextBoxColumn.ReadOnly = true;
+      this.fCriticalColumn.DataPropertyName = "FCritical";
+      resources.ApplyResources(this.fCriticalColumn, "fCriticalColumn");
+      this.fCriticalColumn.Name = "fCriticalColumn";
+      this.fCriticalColumn.ReadOnly = true;
       // 
       // pDataGridViewTextBoxColumn
       // 
@@ -174,8 +165,7 @@
     private System.Windows.Forms.DataGridViewTextBoxColumn kdfDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn ndfDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn fDataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn f005DataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn f001DataGridViewTextBoxColumn;
+    private System.Windows.Forms.DataGridViewTextBoxColumn fCriticalColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn pDataGridViewTextBoxColumn;
   }
 }

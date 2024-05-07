@@ -11,12 +11,14 @@ namespace Schicksal.Anova
     private readonly DataTable m_source;
     private readonly string[] m_factors;
     private readonly string m_result_column;
+    private readonly double m_probability;
 
-    public FisherTableProcessor(DataTable table, string[] factors, string result)
+    public FisherTableProcessor(DataTable table, string[] factors, string result, double p)
     {
       m_source = table;
       m_factors = factors;
       m_result_column = result;
+      m_probability = p;
     }
 
     public string Filter { get; set; }
@@ -50,31 +52,89 @@ namespace Schicksal.Anova
     private void ProcessFactor(int groupCount, List<FisherTestResult> result, int i)
     {
       var factors = new List<string>();
+      var ignoredFactors = new List<string>();
 
       for (int j = 0; j < m_factors.Length; j++)
       {
         if ((i & (1 << j)) != 0)
           factors.Add(m_factors[j]);
+        else
+          ignoredFactors.Add(m_factors[j]);
       }
 
       lock (result)
         this.ReportProgress(result.Count * 100 / groupCount, string.Join("+", factors));
 
+      if (ignoredFactors.Count > 0)
+      {
+        if (!this.DoubleFactorAnalysis(result, factors, ignoredFactors))
+          this.SingleFactorAnalysis(result, factors);
+      }
+      else
+        this.SingleFactorAnalysis(result, factors);
+    }
+
+    private bool DoubleFactorAnalysis(List<FisherTestResult> result, List<string> factors, List<string> ignoredFactors)
+    {
+      using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
+      {
+        FisherMetrics degrees = FisherCriteria.CalculateMultiplyCriteria(groups);
+
+        if (degrees.Ndf != 0)
+        {
+          var row = new FisherTestResult
+          {
+            F = degrees.F,
+            Kdf = degrees.Kdf,
+            Ndf = degrees.Ndf,
+            Factor = string.Join("+", factors),
+            IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors)),
+            FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
+            P = FisherCriteria.GetProbability(degrees)
+          };
+
+          lock (result)
+            result.Add(row);
+
+          return true;
+        }
+        else
+          return false;
+      }
+    }
+
+    private string[] GetIgnoredFactors(List<string> factors)
+    {
+      var result = new string[m_factors.Length - factors.Count];
+      int j = 0;
+
+      for (int i = 0; i < m_factors.Length; i++)
+      {
+        if (!factors.Contains(m_factors[i]))
+          result[j++] = m_factors[i];
+      }
+
+      return result;
+    }
+
+    private void SingleFactorAnalysis(List<FisherTestResult> result, List<string> factors)
+    {
       using (var group = new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter))
       {
         FisherMetrics degrees = FisherCriteria.CalculateCriteria(group);
 
         if (degrees.Ndf != 0)
         {
-          var row = new FisherTestResult();
-
-          row.F = degrees.F;
-          row.Kdf = degrees.Kdf;
-          row.Ndf = degrees.Ndf;
-          row.Factor = string.Join("+", factors);
-          row.F005 = FisherCriteria.GetCriticalValue(0.05, degrees.Kdf, degrees.Ndf);
-          row.F001 = FisherCriteria.GetCriticalValue(0.01, degrees.Kdf, degrees.Ndf);
-          row.P = FisherCriteria.GetProbability(degrees);
+          var row = new FisherTestResult
+          {
+            F = degrees.F,
+            Kdf = degrees.Kdf,
+            Ndf = degrees.Ndf,
+            Factor = string.Join("+", factors),
+            IgnoredFactor = string.Empty,
+            FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
+            P = FisherCriteria.GetProbability(degrees)
+          };
 
           lock (result)
             result.Add(row);

@@ -15,6 +15,7 @@ namespace Schicksal
     private bool m_closed;
 
     private static readonly Dictionary<string, string> _empty_columns = new Dictionary<string, string>();
+    private static readonly HashSet<string> _no_skip_columns = new HashSet<string>();
 
     public HtmlWriter(TextWriter writer, string caption)
     {
@@ -56,13 +57,16 @@ namespace Schicksal
       m_writer.WriteLine("<h{0}>{1}</h{0}>", level, caption);
     }
 
-    public void WriteTable(IList dataSource, Dictionary<string, string> columnNames = null)
+    public void WriteTable(IList dataSource, Dictionary<string, string> columnNames = null, ISet<string> skipColumns = null)
     {
       if (dataSource == null)
         throw new ArgumentNullException("dataSource");
 
       if (columnNames == null)
         columnNames = _empty_columns;
+
+      if (skipColumns == null)
+        skipColumns = _no_skip_columns;
 
       var desciptors = GetProperties(dataSource);
 
@@ -74,7 +78,7 @@ namespace Schicksal
 
       foreach (PropertyDescriptor pd in desciptors)
       {
-        if (pd.IsBrowsable)
+        if (pd.IsBrowsable && !skipColumns.Contains(pd.Name))
           m_writer.WriteLine("\t\t\t<td><strong>{0}</strong></td>", GetDisplayName(columnNames, pd));
       }
 
@@ -86,7 +90,7 @@ namespace Schicksal
 
         foreach (PropertyDescriptor pd in desciptors)
         {
-          if (pd.IsBrowsable)
+          if (pd.IsBrowsable && !skipColumns.Contains(pd.Name))
             m_writer.WriteLine("\t\t\t<td>{0}</td>", FormatValue(pd.GetValue(line)));
         }
 

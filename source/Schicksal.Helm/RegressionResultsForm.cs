@@ -5,14 +5,15 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
+using Schicksal.Helm.Properties;
 using Schicksal.Regression;
 
 namespace Schicksal.Helm
 {
-  public partial class AncovaResultsForm : Form
+  public partial class RegressionResultsForm : Form
   {
     private readonly Color m_significat_color;
-    public AncovaResultsForm()
+    public RegressionResultsForm()
     {
       this.InitializeComponent();
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
@@ -43,6 +44,9 @@ namespace Schicksal.Helm
 
       if (m_grid.DataSource == null)
         return;
+
+      tStandardColumn.HeaderText = string.Format("T {0}%", this.Probability * 100);
+      tStandardColumn.ToolTipText = string.Format(Resources.STANDARD_T_VALUE, this.Probability * 100);
 
       foreach (DataGridViewColumn col in m_grid.Columns)
       {

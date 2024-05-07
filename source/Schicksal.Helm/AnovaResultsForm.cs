@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Anova;
-using System.Threading.Tasks;
+using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
@@ -39,6 +42,8 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
+      fCriticalColumn.HeaderText = string.Format("F {0}%", this.Probability * 100);
+      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, this.Probability * 100);
       m_grid.AutoResizeColumns();
     }
 
@@ -52,7 +57,8 @@ namespace Schicksal.Helm
       if (fisher == null)
         return;
 
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor, this.ResultColumn, this.Filter, this.Probability))
+      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
+        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability))
       {
         compare.ShowDialog(this);
       }

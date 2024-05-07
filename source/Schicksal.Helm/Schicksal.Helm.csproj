@@ -73,11 +73,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AncovaResultsForm.cs">
+    <Compile Include="Dialogs\AnovaOptionsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AncovaResultsForm.Designer.cs">
-      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    <Compile Include="Dialogs\AnovaOptionsDialog.Designer.cs">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegressionResultsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RegressionResultsForm.Designer.cs">
+      <DependentUpon>RegressionResultsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="BasicStatisticsForm.cs">
       <SubType>Form</SubType>
@@ -127,6 +133,10 @@
     <Compile Include="Dialogs\EditColumnsDialog.Designer.cs">
       <DependentUpon>EditColumnsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Analyze\AnovaAnalyze.cs" />
+    <Compile Include="Analyze\DescriptiveAnalyze.cs" />
+    <Compile Include="Analyze\IAnalyze.cs" />
+    <Compile Include="Analyze\RegressionAnalyze.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,11 +168,20 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AncovaResultsForm.resx">
-      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.en.resx">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AncovaResultsForm.ru.resx">
-      <DependentUpon>AncovaResultsForm.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.resx">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.ru.resx">
+      <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegressionResultsForm.resx">
+      <DependentUpon>RegressionResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RegressionResultsForm.ru.resx">
+      <DependentUpon>RegressionResultsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AnovaResultsForm.RU.resx">
       <DependentUpon>AnovaResultsForm.cs</DependentUpon>
@@ -227,7 +246,7 @@
     <None Include="Properties\DataSources\Schicksal.Anova.DifferenceInfo.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
-    <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.AnovaDialogData.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.StatisticsParameters.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <Content Include="Resources\dot_chart.png" />
     <Content Include="Schicksal.Manual.pdf" />

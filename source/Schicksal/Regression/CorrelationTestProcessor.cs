@@ -11,6 +11,7 @@ namespace Schicksal.Regression
     private readonly string[] m_factors;
     private readonly string m_result;
     private readonly string m_filter;
+    private readonly double m_probability;
 
     public string Filter
     {
@@ -19,7 +20,7 @@ namespace Schicksal.Regression
 
     public CorrelationMetrics[] Results { get; private set; }
 
-    public CorrelationTestProcessor(DataTable table, string[] factors, string result, string filter)
+    public CorrelationTestProcessor(DataTable table, string[] factors, string result, string filter, double p)
     {
       if (table == null)
         throw new ArgumentNullException("table");
@@ -34,6 +35,7 @@ namespace Schicksal.Regression
       m_factors = factors;
       m_result = result;
       m_filter = string.IsNullOrWhiteSpace(filter) ? null : filter;
+      m_probability = p;
     }
 
     public override void Run()
@@ -47,7 +49,7 @@ namespace Schicksal.Regression
         var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], this.GetFilter(m_factors[i]));
         var y_column = new DataColumnGroup(m_table.Columns[m_result], this.GetFilter(m_factors[i]));
 
-        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column);
+        this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column, m_probability);
 
         if (m_factors.Length > 1)
           this.ReportProgress((i + 1) * 100 / m_factors.Length);

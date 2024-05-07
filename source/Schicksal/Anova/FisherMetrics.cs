@@ -42,9 +42,14 @@ namespace Schicksal.Anova
   public sealed class FisherTestResult
   {
     /// <summary>
-    /// Фактор, для которого рассчитывается влияние
+    /// Фактор, влияние которого оценивается
     /// </summary>
     public string Factor { get; internal set; }
+
+    /// <summary>
+    /// Фактор, влияние которого игнорируется
+    /// </summary>
+    public string IgnoredFactor { get; internal set; }
 
     /// <summary>
     /// Число степеней свободы для межгрупповой дисперсии
@@ -62,6 +67,11 @@ namespace Schicksal.Anova
     public double F { get; internal set; }
 
     /// <summary>
+    /// Критическое значение критерия F для указанного уровня значимости
+    /// </summary>
+    public double FCritical { get; internal set; }
+    /*
+    /// <summary>
     /// Критическое значение критерия F для 5% вероятности нулевой гипотезы
     /// </summary>
     [DisplayName("F 5%")]
@@ -72,7 +82,7 @@ namespace Schicksal.Anova
     /// </summary>
     [DisplayName("F 1%")]
     public double F001 { get; internal set; }
-
+    */
     /// <summary>
     /// Вероятность нулевой гипотезы для полученного значения критерия F
     /// </summary>
