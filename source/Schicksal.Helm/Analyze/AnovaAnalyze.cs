@@ -14,7 +14,7 @@ namespace Schicksal.Helm.Analyze
   {
     public Type OptionsType
     {
-      get { return typeof(AnovaOptionsDialog); }
+      get { return null /*typeof(AnovaOptionsDialog)*/; }
     }
 
     public override string ToString()
