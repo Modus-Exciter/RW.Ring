@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Schicksal.Helm")]
-[assembly: AssemblyDescription("Агрофизический научно-исследовательский институт")]
+[assembly: AssemblyDescription("Санкт-Петербургский государственный университет телекоммуникаций им. проф. М.А. Бонч-Бруевича")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ARI")]
+[assembly: AssemblyCompany("СПб ГУТ")]
 [assembly: AssemblyProduct("Schicksal")]
-[assembly: AssemblyCopyright("Copyright © ARI 2020")]
+[assembly: AssemblyCopyright("Copyright © СПб ГУТ 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
