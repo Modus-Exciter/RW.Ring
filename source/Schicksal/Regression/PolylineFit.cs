@@ -17,12 +17,12 @@ namespace Schicksal.Regression
       public double offsetY;
       public double slope;
 
-      public Line((double x, double y) left, (double x, double y) right)
+      public Line(Point2D left, Point2D right)
       {
-        this.leftX = left.x;
-        this.rightX = right.x;
-        this.offsetY = left.y;
-        this.slope = (right.y - left.y) / (right.x - left.x);
+        this.leftX = left.X;
+        this.rightX = right.X;
+        this.offsetY = left.Y;
+        this.slope = (right.Y - left.Y) / (right.X - left.X);
       }
       /// <summary>
       /// Принадлежит ли аргумент области определения отрезца
@@ -52,7 +52,7 @@ namespace Schicksal.Regression
     const int TOL = 4;
 
     private readonly Line[] m_lines;
-    private readonly (double x, double y)[] m_nodes;
+    private readonly Point2D[] m_nodes;
 
     /// <summary>
     /// Отрезки ломанной
@@ -62,7 +62,7 @@ namespace Schicksal.Regression
     /// <summary>
     /// Узловые точки ломанной
     /// </summary>
-    public (double x, double y)[] Nodes { get { return ((double, double)[])m_nodes.Clone(); } }
+    public Point2D[] Nodes { get { return (Point2D[])m_nodes.Clone(); } }
     
     /// <summary>
     /// Инициализация ломанной
@@ -74,10 +74,10 @@ namespace Schicksal.Regression
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
 
-      List<List<(double x, double y)>> uniqeDataPoints = this.GroupByUniqeX(x, y);
+      List<List<Point2D>> uniqeDataPoints = this.GroupByUniqeX(x, y);
       int[] subsetsSizes = this.SubsetsSizes(uniqeDataPoints);
-      
-      (double x, double y)[] dataPoints = uniqeDataPoints.SelectMany(i => i).ToArray();
+
+      Point2D[] dataPoints = uniqeDataPoints.SelectMany(i => i).ToArray();
       m_nodes = this.FitPoints(subsetsSizes, dataPoints);
       m_lines = this.CreateLines(dataPoints);
     }
@@ -88,19 +88,19 @@ namespace Schicksal.Regression
     /// <param name="x">Фактор</param>
     /// <param name="y">Результат</param>
     /// <returns>Список по x списков по y</returns>
-    private List<List<(double, double)>> GroupByUniqeX(IDataGroup x, IDataGroup y)
+    private List<List<Point2D>> GroupByUniqeX(IDataGroup x, IDataGroup y)
     {
-      var uniqeX = new List<List<(double x, double y)>> { new List<(double, double)> { (x[0], y[0]) } };
+      var uniqeX = new List<List<Point2D>> { new List<Point2D> { new Point2D { X = x[0], Y = y[0] } } };
       for (int i = 1; i < x.Count; i++)
       {
-        if (Math.Round(x[i], TOL) == Math.Round(uniqeX[uniqeX.Count - 1][0].x, TOL))
-          uniqeX[uniqeX.Count - 1].Add((x[i], y[i]));
+        if (Math.Round(x[i], TOL) == Math.Round(uniqeX[uniqeX.Count - 1][0].X, TOL))
+          uniqeX[uniqeX.Count - 1].Add(new Point2D { X = x[i], Y = y[i]});
         else
-          uniqeX.Add(new List<(double, double)> { (x[i], y[i]) });
+          uniqeX.Add(new List<Point2D> { new Point2D { X = x[i], Y = y[i] } });
       }
       uniqeX.Sort((firstList, secondList) => {
-        if (firstList[0].x < secondList[0].x) return -1;
-        if (firstList[0].x > secondList[0].x) return 1;
+        if (firstList[0].X < secondList[0].X) return -1;
+        if (firstList[0].X > secondList[0].X) return 1;
         return 0;
       });
       return uniqeX;
@@ -110,7 +110,7 @@ namespace Schicksal.Regression
     /// Расчитывает размеры подвыборок
     /// </summary>
     /// <returns>Размеры подвыборок для расчета узлов</returns>
-    private int[] SubsetsSizes(List<List<(double x, double y)>> dataPoints)
+    private int[] SubsetsSizes(List<List<Point2D>> dataPoints)
     {
       int nodeCount = 2*(int)Math.Sqrt(dataPoints.Count);
       var domain = new LinkedList<int>(dataPoints.Select(subset => subset.Count));
@@ -118,7 +118,7 @@ namespace Schicksal.Regression
       {
         int minSum = int.MaxValue;
         var node = domain.First;
-        var minSets = (First: node, Second: node.Next);
+        var minSets = new KeyValuePair<LinkedListNode<int>, LinkedListNode<int>>(node, node.Next);
         while(node.Next != null)
         {
           int sum = 0;
@@ -126,12 +126,12 @@ namespace Schicksal.Regression
           if (sum < minSum)
           {
             minSum = sum;
-            minSets = (node, node.Next);
+            minSets = new KeyValuePair<LinkedListNode<int>, LinkedListNode<int>>(node, node.Next);
           }
           node = node.Next;
         }
-        minSets.First.Value += minSets.Second.Value;
-        domain.Remove(minSets.Second);
+        minSets.Key.Value += minSets.Value.Value;
+        domain.Remove(minSets.Value);
       }
       return domain.ToArray();
     }
@@ -142,19 +142,19 @@ namespace Schicksal.Regression
     /// </summary>
     /// <param name="sectionCountCoef">Коэффициент количества выборок</param>
     /// <returns>Точки ломанной</returns>
-    private (double, double)[] FitPoints(int[] sizes, (double x, double y)[] dataPoints)
+    private Point2D[] FitPoints(int[] sizes, Point2D[] dataPoints)
     {
-      (double x, double y)[] nodes = new (double, double)[sizes.Length];
+      Point2D[] nodes = new Point2D[sizes.Length];
       int offset = 0;
       for (int i = 0; i < sizes.Length; i++)
       {
-        (double x, double y) sum = (0, 0);
+        Point2D sum = new Point2D { X = 0, Y = 0 };
         for (int j = offset; j < offset + sizes[i]; j++)
         {
-          sum.x += dataPoints[j].x;
-          sum.y += dataPoints[j].y;
+          sum.X += dataPoints[j].X;
+          sum.Y += dataPoints[j].Y;
         }
-        nodes[i] = (sum.x / sizes[i], sum.y / sizes[i]);
+        nodes[i] = new Point2D { X = sum.X / sizes[i], Y = sum.Y / sizes[i] };
         offset += sizes[i];
       }
       return nodes;
@@ -164,13 +164,13 @@ namespace Schicksal.Regression
     /// Расчет отрезков
     /// </summary>
     /// <returns>Отрезки, составляющие ломанную</returns>
-    private Line[] CreateLines((double x, double y)[] dataPoints)
+    private Line[] CreateLines(Point2D[] dataPoints)
     {
       Line[] lines = new Line[m_nodes.Length - 1];
-      lines[0] = new Line(m_nodes[0], m_nodes[1]) { leftX = dataPoints[0].x };
+      lines[0] = new Line(m_nodes[0], m_nodes[1]) { leftX = dataPoints[0].X };
       for (int i = 1; i < lines.Length - 1; i++)
         lines[i] = new Line(m_nodes[i], m_nodes[i + 1]);
-      lines[lines.Length - 1] = new Line(m_nodes[m_nodes.Length - 2], m_nodes.Last()) { rightX = dataPoints.Last().x };
+      lines[lines.Length - 1] = new Line(m_nodes[m_nodes.Length - 2], m_nodes.Last()) { rightX = dataPoints.Last().X };
       return lines;
     }
 

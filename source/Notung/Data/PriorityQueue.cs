@@ -14,8 +14,20 @@ namespace Notung.Data
     const int START_GLOBAL_COUNT = 2;
     const int DOMAIN_SIZE = 15;
 
+    private struct QueueTuple
+    {
+      public TElement Element;
+      public TPriority Priority;
+
+      public QueueTuple(TElement element, TPriority priority)
+      {
+        this.Element = element;
+        this.Priority = priority;
+      }
+    };
+
     private readonly IComparer<TPriority> m_comparer;
-    private readonly (TElement element, TPriority priority)[][] m_domain;
+    private readonly QueueTuple[][] m_domain;
     private int m_last_domain_index = 0;
     private int m_count = 0;
     private int m_last_local_index = -1;
@@ -23,7 +35,7 @@ namespace Notung.Data
 
     public int Count { get { return m_count; } }
 
-    public PriorityQueue(IEnumerable<(TElement element, TPriority priority)> values = null, IComparer<TPriority> comparer = null)
+    public PriorityQueue(IEnumerable<KeyValuePair<TElement, TPriority>> values = null, IComparer<TPriority> comparer = null)
     {
       if (comparer == null)
       {
@@ -35,18 +47,18 @@ namespace Notung.Data
       else
         m_comparer = comparer;
 
-      m_domain = new (TElement element, TPriority priority)[DOMAIN_SIZE][];
-      m_domain[m_last_domain_index] = new (TElement, TPriority)[1];
+      m_domain = new QueueTuple[DOMAIN_SIZE][];
+      m_domain[m_last_domain_index] = new QueueTuple[1];
 
       if (values != null)
         foreach (var item in values)
-          this.Enqueue(item.element, item.priority);
+          this.Enqueue(item.Key, item.Value);
     }
 
-    public void Enqueue(IEnumerable<(TElement element, TPriority priority)> values)
+    public void Enqueue(IEnumerable<KeyValuePair<TElement, TPriority>> values)
     {
       foreach (var item in values)
-        this.Enqueue(item.element, item.priority);
+        this.Enqueue(item.Key, item.Value);
     }
 
     public void Enqueue(TElement element, TPriority priority)
@@ -56,18 +68,18 @@ namespace Notung.Data
         m_last_size = m_last_size == 0 ? 1 : m_last_size << LOG2ARITY;
         m_last_domain_index++;
         m_last_local_index = -1;
-        m_domain[m_last_domain_index] = new (TElement, TPriority)[m_last_size];
+        m_domain[m_last_domain_index] = new QueueTuple[m_last_size];
       }
       m_last_local_index++;
       m_count++;
       var level = m_last_domain_index;
       int index = m_last_local_index;
-      (TElement element, TPriority priority) newNode = (element, priority);
+      QueueTuple newNode = new QueueTuple(element, priority);
       while (level > 0)
       {
         int parent = index >> LOG2ARITY;
         var parentLevel = level - 1;
-        if (m_comparer.Compare(newNode.priority, m_domain[parentLevel][parent].priority) >= 0)
+        if (m_comparer.Compare(newNode.Priority, m_domain[parentLevel][parent].Priority) >= 0)
           break;
         m_domain[level][index] = m_domain[parentLevel][parent];
         index = parent;
@@ -78,7 +90,7 @@ namespace Notung.Data
 
     public TElement Dequeue()
     {
-      TElement result = m_domain[0][0].element;
+      TElement result = m_domain[0][0].Element;
       var node = m_domain[m_last_domain_index][m_last_local_index];
       m_count--;
       m_last_local_index--;
@@ -103,12 +115,12 @@ namespace Notung.Data
           int childThreshold = minChild + ARITY <= m_count - globalCount + 1 ? minChild + ARITY : m_count - globalCount + 1;
           while (nextChild < childThreshold)
           {
-            if (m_comparer.Compare(m_domain[childLevel][nextChild].priority, m_domain[childLevel][minChild].priority) <= 0)
+            if (m_comparer.Compare(m_domain[childLevel][nextChild].Priority, m_domain[childLevel][minChild].Priority) <= 0)
               minChild = nextChild;
             nextChild++;
           }
 
-          if (m_comparer.Compare(node.priority, m_domain[childLevel][minChild].priority) <= 0)
+          if (m_comparer.Compare(node.Priority, m_domain[childLevel][minChild].Priority) <= 0)
             break;
 
           m_domain[level][index] = m_domain[childLevel][minChild];
@@ -126,7 +138,7 @@ namespace Notung.Data
 
     public TElement Peek()
     {
-      return m_domain[0][0].element;
+      return m_domain[0][0].Element;
     }
 
     public bool IsEmpty()

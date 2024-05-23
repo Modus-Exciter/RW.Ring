@@ -49,7 +49,9 @@ namespace Schicksal.Optimization
         Array.Copy(rect.X, m_x, m_dimension_count);
         Array.Copy(rect.Size, m_size, m_dimension_count);
 
-        (double newSize, int count) = this.GetMaxDimensions();
+        MaxDimensions max_dim = this.GetMaxDimensions();
+        var newSize = max_dim.maxSize;
+        var count = max_dim.count;
         newSize /= SPLIT_COUNT;
         this.Sampling(newSize, count);
         Array.Sort<Sample>(m_samples, 0, count, m_comparer);
@@ -71,11 +73,11 @@ namespace Schicksal.Optimization
         return result;
       }
 
-      private (double maxSize, int count) GetMaxDimensions()
+      private MaxDimensions GetMaxDimensions()
       {
         int count = 0;
         double maxSize = double.MinValue;
-        
+
         for (int i = 0; i < m_dimension_count; i++)
           if (m_size[i] > maxSize)
           {
@@ -89,7 +91,7 @@ namespace Schicksal.Optimization
             count++;
           }
 
-        return (maxSize, count);
+        return new MaxDimensions(maxSize, count);
       }
 
       private void Sampling(double delta, int count)
@@ -108,10 +110,28 @@ namespace Schicksal.Optimization
         }
       }
 
+      private struct MaxDimensions
+      {
+        public double maxSize;
+        public int count;
+
+        public MaxDimensions(double maxSize, int count)
+        {
+          this.maxSize = maxSize;
+          this.count = count;
+        }
+      }
+
+      private struct PointData
+      {
+        public double[] x;
+        public double f;
+      }
+
       struct Sample
       {
-        public (double[] x, double f) left;
-        public (double[] x, double f) right;
+        public PointData left;
+        public PointData right;
         public int index;
 
         public Sample(int dimensionCount)
