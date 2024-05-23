@@ -15,32 +15,8 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2783DCF6220415F81EAF131B64B1951C"
-        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3EC1DB5068BCAD96F5A57B0DD2FD5E68"
-        "OwnerKey" = "8:_5606F5BFB9584FA7915DEF1B952E3933"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_5606F5BFB9584FA7915DEF1B952E3933"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5CF7BDC717B1B7346413182F3A1B30E2"
-        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_5CF7BDC717B1B7346413182F3A1B30E2"
-        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,8 +27,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6E499112D2E93268B719A8160080B748"
+        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6E499112D2E93268B719A8160080B748"
+        "OwnerKey" = "8:_78731EA01964440C9070D0C142F0AC07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_78731EA01964440C9070D0C142F0AC07"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_85F3139AEA60EF15370DBC37C53FA77A"
+        "OwnerKey" = "8:_5606F5BFB9584FA7915DEF1B952E3933"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -63,56 +57,86 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA22D175AC4AB0023E1373064558E55B"
+        "MsmKey" = "8:_A16C16A47498E7B031AA10AF6779E46D"
+        "OwnerKey" = "8:_ABCEE98A057041C2E3A21D27DDAE28EF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A16C16A47498E7B031AA10AF6779E46D"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
-        "OwnerKey" = "8:_3EC1DB5068BCAD96F5A57B0DD2FD5E68"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
-        "OwnerKey" = "8:_2783DCF6220415F81EAF131B64B1951C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
+        "MsmKey" = "8:_ABCEE98A057041C2E3A21D27DDAE28EF"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
-        "OwnerKey" = "8:_CA22D175AC4AB0023E1373064558E55B"
+        "MsmKey" = "8:_CAE3A46990C7D615C4943502158E0E0C"
+        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
-        "OwnerKey" = "8:_DBD00D7FE9ED01A424520C772D08DEE4"
+        "MsmKey" = "8:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
+        "OwnerKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DA41F17FA555F462B377922EA7197148"
+        "MsmKey" = "8:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
+        "OwnerKey" = "8:_CAE3A46990C7D615C4943502158E0E0C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
+        "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
         "OwnerKey" = "8:_5606F5BFB9584FA7915DEF1B952E3933"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DBD00D7FE9ED01A424520C772D08DEE4"
-        "OwnerKey" = "8:_CA22D175AC4AB0023E1373064558E55B"
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "OwnerKey" = "8:_85F3139AEA60EF15370DBC37C53FA77A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_DBD00D7FE9ED01A424520C772D08DEE4"
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "OwnerKey" = "8:_5606F5BFB9584FA7915DEF1B952E3933"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "OwnerKey" = "8:_A16C16A47498E7B031AA10AF6779E46D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "OwnerKey" = "8:_ABCEE98A057041C2E3A21D27DDAE28EF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
         "OwnerKey" = "8:_6888718638E24DAC8A13D743F0CED36F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "OwnerKey" = "8:_CAE3A46990C7D615C4943502158E0E0C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,25 +154,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2783DCF6220415F81EAF131B64B1951C"
+        "OwnerKey" = "8:_CAE3A46990C7D615C4943502158E0E0C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_5CF7BDC717B1B7346413182F3A1B30E2"
+        "OwnerKey" = "8:_6E499112D2E93268B719A8160080B748"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CA22D175AC4AB0023E1373064558E55B"
+        "OwnerKey" = "8:_ABCEE98A057041C2E3A21D27DDAE28EF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DBD00D7FE9ED01A424520C772D08DEE4"
+        "OwnerKey" = "8:_A16C16A47498E7B031AA10AF6779E46D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -160,13 +184,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3EC1DB5068BCAD96F5A57B0DD2FD5E68"
+        "OwnerKey" = "8:_85F3139AEA60EF15370DBC37C53FA77A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DA41F17FA555F462B377922EA7197148"
+        "OwnerKey" = "8:_F1A583F745584DD0CC2C5F183348128A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -269,82 +299,51 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2783DCF6220415F81EAF131B64B1951C"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6E499112D2E93268B719A8160080B748"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Schicksal, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3fc1f84b92224dd1, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Schicksal.Exchange, Version=1.1.2.0, Culture=neutral, PublicKeyToken=fadaeb4ae3dbf01c, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_2783DCF6220415F81EAF131B64B1951C"
-                    {
-                    "Name" = "8:Schicksal.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Schicksal.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3EC1DB5068BCAD96F5A57B0DD2FD5E68"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Notung.Feuerzauber, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3EC1DB5068BCAD96F5A57B0DD2FD5E68"
-                    {
-                    "Name" = "8:Notung.Feuerzauber.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Notung.Feuerzauber.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5CF7BDC717B1B7346413182F3A1B30E2"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Schicksal.Exchange, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fadaeb4ae3dbf01c, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_5CF7BDC717B1B7346413182F3A1B30E2"
+                    "_6E499112D2E93268B719A8160080B748"
                     {
                     "Name" = "8:Schicksal.Exchange.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:Schicksal.Exchange.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_85F3139AEA60EF15370DBC37C53FA77A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Notung.Feuerzauber, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_85F3139AEA60EF15370DBC37C53FA77A"
+                    {
+                    "Name" = "8:Notung.Feuerzauber.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Notung.Feuerzauber.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
@@ -382,14 +381,45 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CA22D175AC4AB0023E1373064558E55B"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A16C16A47498E7B031AA10AF6779E46D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Notung.Helm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f704a8090d148f41, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Notung.Windows, Version=1.0.1.0, Culture=neutral, PublicKeyToken=731c9219ae4cca3f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CA22D175AC4AB0023E1373064558E55B"
+                    "_A16C16A47498E7B031AA10AF6779E46D"
+                    {
+                    "Name" = "8:Notung.Windows.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Notung.Windows.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ABCEE98A057041C2E3A21D27DDAE28EF"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Notung.Helm, Version=1.0.1.0, Culture=neutral, PublicKeyToken=f704a8090d148f41, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_ABCEE98A057041C2E3A21D27DDAE28EF"
                     {
                     "Name" = "8:Notung.Helm.dll"
                     "Attributes" = "3:512"
@@ -413,20 +443,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DA41F17FA555F462B377922EA7197148"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CAE3A46990C7D615C4943502158E0E0C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Notung, Version=1.0.0.0, Culture=neutral, PublicKeyToken=9a2e5a452b465810, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Schicksal, Version=1.1.2.0, Culture=neutral, PublicKeyToken=3fc1f84b92224dd1, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DA41F17FA555F462B377922EA7197148"
+                    "_CAE3A46990C7D615C4943502158E0E0C"
                     {
-                    "Name" = "8:Notung.dll"
+                    "Name" = "8:Schicksal.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Notung.dll"
+            "SourcePath" = "8:Schicksal.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
@@ -444,20 +474,51 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DBD00D7FE9ED01A424520C772D08DEE4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E9384CF5AF61EC8ABF9CEC6D75E832A4"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Notung.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=731c9219ae4cca3f, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_DBD00D7FE9ED01A424520C772D08DEE4"
+                    "_E9384CF5AF61EC8ABF9CEC6D75E832A4"
                     {
-                    "Name" = "8:Notung.Windows.dll"
+                    "Name" = "8:System.ValueTuple.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Notung.Windows.dll"
+            "SourcePath" = "8:System.ValueTuple.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F1A583F745584DD0CC2C5F183348128A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Notung, Version=1.0.1.0, Culture=neutral, PublicKeyToken=9a2e5a452b465810, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F1A583F745584DD0CC2C5F183348128A"
+                    {
+                    "Name" = "8:Notung.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Notung.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_198AC6EA061C4DF5A315A758051D9242"
@@ -576,15 +637,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Schicksal"
-        "ProductCode" = "8:{5E0B1A1E-D19F-49F5-B6D3-EF1EE0FE7128}"
-        "PackageCode" = "8:{00F6BE13-F0C5-4C5B-B283-D1C164F67868}"
+        "ProductCode" = "8:{66043412-0694-4967-813F-5124CC818967}"
+        "PackageCode" = "8:{8885654E-9402-4B4F-A264-22DB21450110}"
         "UpgradeCode" = "8:{CB8DEE96-41E6-43D7-AD37-B0A25CA37D1A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.1"
+        "ProductVersion" = "8:1.1.2"
         "Manufacturer" = "8:Агрофизический научно-исследовательский институт"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

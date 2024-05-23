@@ -190,9 +190,7 @@ namespace Schicksal.Optimization
 
     public class RectangleProvider
     {
-      private readonly Queue<Rectangle> m_free;
-
-      readonly int m_dimension_count;
+       private readonly int m_dimension_count;
 
       public RectangleProvider(int dimensionCount, int capacity) 
       {

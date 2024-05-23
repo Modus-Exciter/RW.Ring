@@ -406,7 +406,6 @@ namespace Schicksal.Regression
     const double X_COEF = 5;
     const double MAX_X = 100;
     private readonly double[] m_param;
-    private readonly PolylineFit m_variance;
 
     public double A { get { return m_param[0]; } }
     public double B { get { return m_param[1]; } }

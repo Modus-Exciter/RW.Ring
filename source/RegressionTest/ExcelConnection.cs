@@ -14,8 +14,8 @@ namespace RegressionTest
 
     public ExcelConnection(string filePath, int sheetIndex = 1)
     {
-      Workbook workbook = (new Application()).Workbooks.Open(filePath);
-      m_worksheet = workbook.Worksheets[sheetIndex];
+      m_workbook = (new Application()).Workbooks.Open(filePath);
+      m_worksheet = m_workbook.Worksheets[sheetIndex];
     }
 
     public object[,] GetRange(string start, string end)

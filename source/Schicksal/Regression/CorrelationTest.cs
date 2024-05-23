@@ -314,7 +314,6 @@ namespace Schicksal.Regression
     {
       double down = DescriptionStatistics.SquareDerivation(y);
       double up = 0;
-      double upW = 0;
       int i = 0;
       Predicate<double> condition = gap => gap == x[i];
 

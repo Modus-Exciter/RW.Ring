@@ -175,8 +175,6 @@
     private System.Windows.Forms.BindingSource m_binding_source;
     private System.Windows.Forms.ContextMenuStrip m_context_menu;
     private System.Windows.Forms.ToolStripMenuItem m_cmd_export;
-    private System.Windows.Forms.DataGridViewTextBoxColumn t005DataGridViewTextBoxColumn;
-    private System.Windows.Forms.DataGridViewTextBoxColumn t001DataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn factorDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn nDataGridViewTextBoxColumn;
     private System.Windows.Forms.DataGridViewTextBoxColumn tStandardColumn;

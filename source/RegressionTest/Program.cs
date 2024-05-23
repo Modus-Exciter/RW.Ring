@@ -87,10 +87,10 @@ namespace RegressionTest
       var dataFit = new DataFit();
       var startPoint = new MWNumericArray(new double[] { 0, 2, 0 });
 
-      var dependencyOld = new MichaelisDependency(_x, _yn);
-      var dependency = new LikehoodMichaelisDependency(_x, _yn);
+      //var dependencyOld = new MichaelisDependency(_x, _yn);
+      //var dependency = new LikehoodMichaelisDependency(_x, _yn);
 
-      var comparison = new ModelComparison(MathFunction.Michaelis, dependencyOld.Coefs, dependency.Coefs, _x, _yn);
+      //var comparison = new ModelComparison(MathFunction.Michaelis, dependencyOld.Coefs, dependency.Coefs, _x, _yn);
     }
     #endregion
   }
