@@ -347,3 +347,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/test/Schicksal/ClusteringTest/UnitTest1.cs
