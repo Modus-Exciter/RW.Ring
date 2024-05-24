@@ -129,6 +129,9 @@
   <data name="BASIC_STATISTICS" xml:space="preserve">
     <value>Описательные статистики</value>
   </data>
+  <data name="CLUSTERING" xml:space="preserve">
+    <value>Кластерный анализ</value>
+  </data>
   <data name="COMPARISON" xml:space="preserve">
     <value>Попарное сравнение</value>
   </data>

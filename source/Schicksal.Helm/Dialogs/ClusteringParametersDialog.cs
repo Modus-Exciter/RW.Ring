@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Schicksal.Clustering;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Schicksal.Helm.Dialogs
 {
   public partial class ClusteringParametersDialog : Form
   {
-    public ClusteringParametersDialog()
+    public ClusteringParametersDialog(DataTable table)
     {
       InitializeComponent();
+
+      m_biding_source.DataSource = new ClusteringParameters(table);
+      m_combo_metrics.DataSource = ((ClusteringParameters)m_biding_source.DataSource).GetAllDistanceMetrics().ToList();
+      m_combo_arc_deleter.DataSource = ((ClusteringParameters)m_biding_source.DataSource).GetAllArcDeleters().ToList();
     }
 
-    private void m_metric_combobox_SelectedIndexChanged(object sender, EventArgs e)
+    public ClusteringParameters Parameters
     {
-
+      get { return (ClusteringParameters)m_biding_source.DataSource; }
     }
   }
 }

@@ -120,6 +120,12 @@
   <data name="BOOL" xml:space="preserve">
     <value>Логический</value>
   </data>
+  <data name="CARTIS" xml:space="preserve">
+    <value>Картиса</value>
+  </data>
+  <data name="CHEBYSHEV" xml:space="preserve">
+    <value>Чебышева</value>
+  </data>
   <data name="CONSISTENCY" xml:space="preserve">
     <value>Согласованность</value>
   </data>
@@ -137,6 +143,9 @@
   </data>
   <data name="DOUBLE" xml:space="preserve">
     <value>Вещественное число (двойная точность)</value>
+  </data>
+  <data name="EUCLIDIAN" xml:space="preserve">
+    <value>Евклидова</value>
   </data>
   <data name="EXPONENT" xml:space="preserve">
     <value>Экспонента</value>
@@ -164,6 +173,9 @@
   </data>
   <data name="LOGISTIC" xml:space="preserve">
     <value>Логистическая кривая</value>
+  </data>
+  <data name="MANHATTAN" xml:space="preserve">
+    <value>Манхеттена</value>
   </data>
   <data name="MAX" xml:space="preserve">
     <value>Максимум</value>

@@ -186,6 +186,12 @@
     <EmbeddedResource Include="Dialogs\ClusteringParametersDialog.resx">
       <DependentUpon>ClusteringParametersDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ClusteringParametersDialog.ru-RU.resx">
+      <DependentUpon>ClusteringParametersDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ClusteringParametersDialog.ru.resx">
+      <DependentUpon>ClusteringParametersDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RegressionResultsForm.resx">
       <DependentUpon>RegressionResultsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -255,6 +261,7 @@
     <None Include="Properties\DataSources\Schicksal.Anova.DifferenceInfo.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Clustering.ClusteringParameters1.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.StatisticsParameters.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <Content Include="Resources\dot_chart.png" />
