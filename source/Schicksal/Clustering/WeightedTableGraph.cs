@@ -22,51 +22,39 @@ namespace Schicksal.Clustering
     /// <param name="metrics">Метод расчёта расстояний между строками таблицы</param>
     /// <param name="weights">Вес каждой колонки таблицы при расчёте расстояний</param>
     public WeightedTableGraph(DataTable table, string[] fields, 
-      IDistanceMetrics<double> metrics = null, double[] weights = null)
-    {
+      IDistanceMetrics<double> metrics = null, double[] weights = null){
       if (table == null)
         throw new ArgumentNullException("table");
-
       if (fields == null)
         throw new ArgumentNullException("fields");
-
       if (weights != null && weights.Length != fields.Length)
         throw new ArgumentException();
-
       m_table = table;
       m_fields = new int[fields.Length];
       m_metrics = metrics ?? new EuclidDistanceMetrics();
       m_weights = weights;
-      if (weights == null)
-      {
+      if (weights == null){
         m_weights = new double[fields.Length];
         m_weights.Fill(1);
       }
-
       for (int i = 0; i < fields.Length; i++)
         m_fields[i] = table.Columns[fields[i]].Ordinal;
     }
 
-    public double this[int from, int to]
-    {
-      get
-      {
+    public double this[int from, int to]{
+      get{
         if (from == to)
           return 0;
-
         m_metrics.BeginCalculation();
-
         for (int i = 0; i < m_fields.Length; i++)
         {
           m_metrics.AddDifference(
             Convert.ToDouble(m_table.Rows[from][m_fields[i]]) * m_weights[i],
             Convert.ToDouble(m_table.Rows[to][m_fields[i]]) * m_weights[i]);
         }
-
         return m_metrics.GetResult();
       }
-      set
-      {
+      set{
         throw new NotSupportedException();
       }
     }

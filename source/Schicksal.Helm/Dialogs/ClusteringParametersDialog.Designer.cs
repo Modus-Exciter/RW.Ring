@@ -67,7 +67,7 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(1, -1);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 66.26087F));
@@ -80,12 +80,12 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 82.45614F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.54386F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 195F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 197F));
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel4, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel8, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(2, 2);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -98,8 +98,8 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.dataGridView1, 0, 1);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(227, 2);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(225, 2);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.56911F));
@@ -123,7 +123,7 @@ namespace Schicksal.Helm.Dialogs
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(2, 27);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
@@ -137,12 +137,12 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel4.Controls.Add(this.label2, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.m_all_columns, 0, 1);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(2, 2);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.84011F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.15989F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(182, 239);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(180, 239);
             this.tableLayoutPanel4.TabIndex = 1;
             // 
             // label2
@@ -152,7 +152,7 @@ namespace Schicksal.Helm.Dialogs
             this.label2.Location = new System.Drawing.Point(2, 0);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 25);
+            this.label2.Size = new System.Drawing.Size(176, 25);
             this.label2.TabIndex = 0;
             this.label2.Text = "All columns";
             // 
@@ -161,9 +161,9 @@ namespace Schicksal.Helm.Dialogs
             this.m_all_columns.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_all_columns.FormattingEnabled = true;
             this.m_all_columns.Location = new System.Drawing.Point(2, 27);
-            this.m_all_columns.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_all_columns.Margin = new System.Windows.Forms.Padding(2);
             this.m_all_columns.Name = "m_all_columns";
-            this.m_all_columns.Size = new System.Drawing.Size(178, 210);
+            this.m_all_columns.Size = new System.Drawing.Size(176, 210);
             this.m_all_columns.TabIndex = 1;
             // 
             // tableLayoutPanel8
@@ -172,8 +172,8 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.Controls.Add(this.m_add_button, 0, 1);
             this.tableLayoutPanel8.Controls.Add(this.m_del_button, 0, 2);
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(188, 2);
-            this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(186, 2);
+            this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
             this.tableLayoutPanel8.RowCount = 4;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 56.61765F));
@@ -187,7 +187,7 @@ namespace Schicksal.Helm.Dialogs
             // 
             this.m_add_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_add_button.Location = new System.Drawing.Point(2, 52);
-            this.m_add_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_add_button.Margin = new System.Windows.Forms.Padding(2);
             this.m_add_button.Name = "m_add_button";
             this.m_add_button.Size = new System.Drawing.Size(31, 34);
             this.m_add_button.TabIndex = 0;
@@ -198,7 +198,7 @@ namespace Schicksal.Helm.Dialogs
             // 
             this.m_del_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_del_button.Location = new System.Drawing.Point(2, 90);
-            this.m_del_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_del_button.Margin = new System.Windows.Forms.Padding(2);
             this.m_del_button.Name = "m_del_button";
             this.m_del_button.Size = new System.Drawing.Size(31, 36);
             this.m_del_button.TabIndex = 1;
@@ -212,7 +212,7 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel7, 0, 0);
             this.tableLayoutPanel5.Location = new System.Drawing.Point(2, 249);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 71.80851F));
@@ -226,11 +226,11 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 55F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 51F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
             this.tableLayoutPanel6.Controls.Add(this.m_ok_button, 2, 0);
             this.tableLayoutPanel6.Controls.Add(this.m_cancel_button, 3, 0);
             this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 89);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 1;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -241,7 +241,7 @@ namespace Schicksal.Helm.Dialogs
             // 
             this.m_ok_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_ok_button.Location = new System.Drawing.Point(310, 2);
-            this.m_ok_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_ok_button.Margin = new System.Windows.Forms.Padding(2);
             this.m_ok_button.Name = "m_ok_button";
             this.m_ok_button.Size = new System.Drawing.Size(51, 27);
             this.m_ok_button.TabIndex = 0;
@@ -252,7 +252,7 @@ namespace Schicksal.Helm.Dialogs
             // 
             this.m_cancel_button.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_cancel_button.Location = new System.Drawing.Point(365, 2);
-            this.m_cancel_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_cancel_button.Margin = new System.Windows.Forms.Padding(2);
             this.m_cancel_button.Name = "m_cancel_button";
             this.m_cancel_button.Size = new System.Drawing.Size(48, 27);
             this.m_cancel_button.TabIndex = 1;
@@ -269,7 +269,7 @@ namespace Schicksal.Helm.Dialogs
             this.tableLayoutPanel7.Controls.Add(this.m_clust_algo_combobox, 1, 1);
             this.tableLayoutPanel7.Controls.Add(this.label5, 0, 1);
             this.tableLayoutPanel7.Location = new System.Drawing.Point(2, 2);
-            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 2;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 51.13636F));
@@ -294,7 +294,7 @@ namespace Schicksal.Helm.Dialogs
             this.m_metric_combobox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_metric_combobox.FormattingEnabled = true;
             this.m_metric_combobox.Location = new System.Drawing.Point(209, 2);
-            this.m_metric_combobox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_metric_combobox.Margin = new System.Windows.Forms.Padding(2);
             this.m_metric_combobox.Name = "m_metric_combobox";
             this.m_metric_combobox.Size = new System.Drawing.Size(204, 21);
             this.m_metric_combobox.TabIndex = 3;
@@ -305,7 +305,7 @@ namespace Schicksal.Helm.Dialogs
             this.m_clust_algo_combobox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_clust_algo_combobox.FormattingEnabled = true;
             this.m_clust_algo_combobox.Location = new System.Drawing.Point(209, 43);
-            this.m_clust_algo_combobox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_clust_algo_combobox.Margin = new System.Windows.Forms.Padding(2);
             this.m_clust_algo_combobox.Name = "m_clust_algo_combobox";
             this.m_clust_algo_combobox.Size = new System.Drawing.Size(204, 21);
             this.m_clust_algo_combobox.TabIndex = 5;
@@ -328,7 +328,7 @@ namespace Schicksal.Helm.Dialogs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(428, 371);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ClusteringParametersDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ClusteringParametersDialog";

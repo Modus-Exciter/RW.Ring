@@ -53,9 +53,20 @@
   <ItemGroup>
     <Compile Include="IDistanceMetricsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SEMST_test.cs" />
+    <Compile Include="cciMST_test.cs" />
     <Compile Include="WeightedTableGraphTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\source\Notung\Notung.csproj">
+      <Project>{acb28711-7615-48ef-8096-4be678e22e19}</Project>
+      <Name>Notung</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\source\Schicksal\Schicksal.csproj">
       <Project>{a9f7e49a-edbe-4048-80dc-9ee09d823a0e}</Project>
       <Name>Schicksal</Name>
@@ -63,7 +74,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\2blots.sks" />
+    <None Include="Resources\2moons.sks" />
+    <None Include="Resources\3circles.sks" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
