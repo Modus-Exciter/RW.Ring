@@ -67,6 +67,11 @@ namespace Schicksal.Clustering
       }
     }
 
+    public override string ToString()
+    {
+      return SchicksalResources.SEMST;
+    }
+
     private class TupleComparer : IComparer<Tuple<int, int, T>>
     {
       public int Compare(Tuple<int, int, T> x, Tuple<int, int, T> y)

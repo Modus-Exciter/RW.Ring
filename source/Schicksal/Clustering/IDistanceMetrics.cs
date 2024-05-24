@@ -43,6 +43,11 @@ namespace Schicksal.Clustering
     {
       return Math.Sqrt(m_result);
     }
+
+    public override string ToString()
+    {
+      return SchicksalResources.EUCLIDIAN;
+    }
   }
 
   public class ManhattanDistanceMetrics : IDistanceMetrics<double>
@@ -62,6 +67,11 @@ namespace Schicksal.Clustering
     public double GetResult()
     {
       return m_result;
+    }
+
+    public override string ToString()
+    {
+      return SchicksalResources.MANHATTAN;
     }
   }
 
@@ -84,6 +94,11 @@ namespace Schicksal.Clustering
     {
       return m_result;
     }
+
+    public override string ToString()
+    {
+      return SchicksalResources.CARTIS;
+    }
   }
 
   public class ChebyshevDistanceMetrics : IDistanceMetrics<double>
@@ -104,6 +119,11 @@ namespace Schicksal.Clustering
     public double GetResult()
     {
       return m_result;
+    }
+
+    public override string ToString()
+    {
+      return SchicksalResources.CHEBYSHEV;
     }
   }
 }

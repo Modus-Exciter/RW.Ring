@@ -289,4 +289,7 @@
   <data name="STANDARD_T_VALUE" xml:space="preserve">
     <value>T-criteria for {0}% probability</value>
   </data>
+  <data name="CLUSTERING" xml:space="preserve">
+    <value>Clustering</value>
+  </data>
 </root>

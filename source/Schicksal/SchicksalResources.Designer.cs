@@ -19,7 +19,7 @@ namespace Schicksal {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class SchicksalResources {
@@ -66,6 +66,24 @@ namespace Schicksal {
         public static string BOOL {
             get {
                 return ResourceManager.GetString("BOOL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cartis.
+        /// </summary>
+        public static string CARTIS {
+            get {
+                return ResourceManager.GetString("CARTIS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Chebyshev.
+        /// </summary>
+        public static string CHEBYSHEV {
+            get {
+                return ResourceManager.GetString("CHEBYSHEV", resourceCulture);
             }
         }
         
@@ -120,6 +138,15 @@ namespace Schicksal {
         public static string DOUBLE {
             get {
                 return ResourceManager.GetString("DOUBLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Euclidian.
+        /// </summary>
+        public static string EUCLIDIAN {
+            get {
+                return ResourceManager.GetString("EUCLIDIAN", resourceCulture);
             }
         }
         
@@ -205,6 +232,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Manhattan.
+        /// </summary>
+        public static string MANHATTAN {
+            get {
+                return ResourceManager.GetString("MANHATTAN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Maximum.
         /// </summary>
         public static string MAX {
@@ -255,6 +291,15 @@ namespace Schicksal {
         public static string PARABOLIC {
             get {
                 return ResourceManager.GetString("PARABOLIC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SEMST.
+        /// </summary>
+        public static string SEMST {
+            get {
+                return ResourceManager.GetString("SEMST", resourceCulture);
             }
         }
         

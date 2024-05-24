@@ -27,7 +27,7 @@ namespace Schicksal.Clustering
       }
 
       columns.TrimExcess();
-      this.ColumnWeights = new ReadOnlyCollection<ColumnWeight>(columns);
+      this.ColumnWeights = columns.ToArray();
     }
 
     public IEnumerable<IDistanceMetrics<double>> GetAllDistanceMetrics()
@@ -53,7 +53,7 @@ namespace Schicksal.Clustering
 
     public IArcDeleter<double> ArcDeleter { get; set; }
 
-    public ReadOnlyCollection<ColumnWeight> ColumnWeights { get; private set; }
+    public ColumnWeight[] ColumnWeights { get; private set; }
 
     public PixelColumns PixelColumns { get; set; }
   }

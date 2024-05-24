@@ -95,6 +95,7 @@ namespace Schicksal.Helm
       m_cmd_anova.Text = Resources.ANOVA;
       m_cmd_regression.Text = Resources.REGRESSION_ANALYSIS;
       m_cmd_about.Text = Resources.ABOUT;
+      m_cmd_clustering.Text = Resources.CLUSTERING;
 
       foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)
         item.Text = item.Tag.ToString();
@@ -400,7 +401,31 @@ namespace Schicksal.Helm
 
     private void clusteringToolStripMenuItem_Click(object sender, EventArgs e)
     {
+      var table_form = this.ActiveMdiChild as TableForm; // Анализируем данные в открытой таблице
 
+      if (table_form == null)
+        return;
+
+      var table = table_form.DataSource; // Берём таблицу для анализа (2)
+
+      if (table == null)
+        return;
+
+      using (var dialog = new ClusteringParametersDialog(table))
+      {
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+        {
+          /*
+           * var runBase = new ClusteringRunBase(table, dialog.Parameters);
+           * if (AppManager.OperationLauncher.Run(runBase) == TaskStatus.RanToCompletion)
+           * {
+           * SaveSetting(dialog.Parameters);
+           * var resultsForm = new ClusteringResultsForm(runBase.Results, table);
+           * resultsForm.Show(this);
+           * }
+           */
+        }
+      }
     }
   }
 }

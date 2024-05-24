@@ -120,6 +120,12 @@
   <data name="BOOL" xml:space="preserve">
     <value>Boolean</value>
   </data>
+  <data name="CARTIS" xml:space="preserve">
+    <value>Cartis</value>
+  </data>
+  <data name="CHEBYSHEV" xml:space="preserve">
+    <value>Chebyshev</value>
+  </data>
   <data name="CONSISTENCY" xml:space="preserve">
     <value>Consictency</value>
   </data>
@@ -137,6 +143,9 @@
   </data>
   <data name="DOUBLE" xml:space="preserve">
     <value>Real (double precision)</value>
+  </data>
+  <data name="EUCLIDIAN" xml:space="preserve">
+    <value>Euclidian</value>
   </data>
   <data name="EXPONENT" xml:space="preserve">
     <value>Exponent</value>
@@ -165,6 +174,9 @@
   <data name="LOGISTIC" xml:space="preserve">
     <value>Logistic curve</value>
   </data>
+  <data name="MANHATTAN" xml:space="preserve">
+    <value>Manhattan</value>
+  </data>
   <data name="MAX" xml:space="preserve">
     <value>Maximum</value>
   </data>
@@ -182,6 +194,9 @@
   </data>
   <data name="PARABOLIC" xml:space="preserve">
     <value>Parabola</value>
+  </data>
+  <data name="SEMST" xml:space="preserve">
+    <value>SEMST</value>
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Standard error</value>
