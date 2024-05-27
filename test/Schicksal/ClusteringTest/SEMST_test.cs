@@ -37,7 +37,7 @@ namespace ClusteringTest
           System.IO.FileStream fileStream=new System.IO.FileStream("C:\\Users\\Golik\\source\\repos\\Modus-Exciter\\RW.Ring\\test\\Schicksal\\ClusteringTest\\Resources\\2moons.sks",System.IO.FileMode.Open);
           DataTable data_table = Schicksal.DataTableSaver.ReadDataTable(fileStream);
           string[] fields = { "x", "y" };
-          SEMST semst = new SEMST(data_table,fields,2);
+           SEMST semst = new SEMST(data_table,fields,2);
           semst.start();
           List<DataRow[]> clusters = new List<DataRow[]>(); ;
           clusters.Add( data_table.Select("cluster_id = 0"));

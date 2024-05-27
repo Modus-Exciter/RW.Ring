@@ -85,6 +85,12 @@
     <Compile Include="Dialogs\ClusteringParametersDialog.Designer.cs">
       <DependentUpon>ClusteringParametersDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClusteringResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClusteringResults.Designer.cs">
+      <DependentUpon>ClusteringResults.cs</DependentUpon>
+    </Compile>
     <Compile Include="RegressionResultsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +180,9 @@
     <Compile Include="TableForm.Designer.cs">
       <DependentUpon>TableForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ClusteringResults.resx">
+      <DependentUpon>ClusteringResults.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.en.resx">
       <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -262,6 +271,7 @@
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Clustering.ClusteringParameters1.datasource" />
+    <None Include="Properties\DataSources\Schicksal.Clustering.ClusteringProcessor.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.StatisticsParameters.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <Content Include="Resources\dot_chart.png" />

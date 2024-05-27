@@ -77,6 +77,7 @@
     <None Include="Resources\2blots.sks" />
     <None Include="Resources\2moons.sks" />
     <None Include="Resources\3circles.sks" />
+    <None Include="Resources\simple.sks" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -5,6 +5,7 @@ using Notung.Helm.Dialogs;
 using Notung.Loader;
 using Notung.Logging;
 using Notung.Services;
+using Schicksal.Clustering;
 using Schicksal.Exchange;
 using Schicksal.Helm.Analyze;
 using Schicksal.Helm.Dialogs;
@@ -415,15 +416,15 @@ namespace Schicksal.Helm
       {
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
-          /*
-           * var runBase = new ClusteringRunBase(table, dialog.Parameters);
-           * if (AppManager.OperationLauncher.Run(runBase) == TaskStatus.RanToCompletion)
-           * {
-           * SaveSetting(dialog.Parameters);
-           * var resultsForm = new ClusteringResultsForm(runBase.Results, table);
-           * resultsForm.Show(this);
-           * }
-           */
+          
+            var runBase = new ClusteringProcessor(table, dialog.Parameters);
+            if (AppManager.OperationLauncher.Run(runBase) == TaskStatus.RanToCompletion)
+            {
+            //SaveSetting(dialog.Parameters);
+            var resultsForm = new ClusteringResults(runBase.GetResultClusters,runBase.GetResultClusterPoints);
+            resultsForm.Show();
+            }
+           
         }
       }
     }
