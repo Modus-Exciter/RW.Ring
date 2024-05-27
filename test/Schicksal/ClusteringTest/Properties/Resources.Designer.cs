@@ -89,5 +89,15 @@ namespace ClusteringTest.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        public static byte[] simple {
+            get {
+                object obj = ResourceManager.GetObject("simple", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

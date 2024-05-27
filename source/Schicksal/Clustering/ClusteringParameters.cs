@@ -12,6 +12,8 @@ namespace Schicksal.Clustering
   /// </summary>
   public class ClusteringParameters
   {
+    uint m_k;
+    DataTable m_table;
     public ClusteringParameters(DataTable table)
     {
       if (table == null)
@@ -28,6 +30,7 @@ namespace Schicksal.Clustering
 
       columns.TrimExcess();
       this.ColumnWeights = columns.ToArray();
+      this.m_table = table;
     }
 
     public IEnumerable<IDistanceMetrics<double>> GetAllDistanceMetrics()
@@ -48,7 +51,15 @@ namespace Schicksal.Clustering
       }
     }
 
+    public uint ClusterCount
+    {
+      get { return m_k; }
+      set {
+        if (value < 2)
+          throw new ArgumentOutOfRangeException("ClusterCount");
+        this.m_k = value; }
 
+    }
     public IDistanceMetrics<double> DistanceMetrics { get; set; }
 
     public IArcDeleter<double> ArcDeleter { get; set; }

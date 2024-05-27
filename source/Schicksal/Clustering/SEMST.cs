@@ -14,6 +14,8 @@ namespace Schicksal.Clustering
     Tuple<int, int, double>[] m_mst;
     public HashSet<int>[] m_clusters;
     HashSet<int> m_peaks_of_deleted_edges;
+
+    //public SimpleSEMST() { }
     public SEMST(DataTable table,string[] fields, int k){
       this.m_k = k;
       this.m_mst = Prim(new WeightedTableGraph(table, fields));

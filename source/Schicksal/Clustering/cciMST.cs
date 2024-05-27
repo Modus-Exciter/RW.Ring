@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using static System.Math;
 using static Notung.Data.MST;
 
 namespace Schicksal.Clustering
@@ -21,7 +22,7 @@ namespace Schicksal.Clustering
     Dictionary<int, double> m_local_delta = new Dictionary<int, double>();
     Dictionary<Tuple<int, int>, double> m_geodesic_distances = new Dictionary< Tuple<int, int>, double>();
     double m_local_s = 0.03;
-    double m_global_s = 0.002;
+    double m_global_s = 0.20;
     double m_global_variance;
     double m_local_variance;
     int m_k_global;
@@ -133,6 +134,7 @@ namespace Schicksal.Clustering
         int min_cluster_id = this.m_local_clusters.Length - 1;
         for (int i = 0; i < this.m_local_clusters.Length; i++)
         {
+          if (peak == i) { continue; };
           double distance = this.m_geodesic_distances[new Tuple<int, int>(peak, i)];
           if (distance < min)
           {
@@ -208,7 +210,7 @@ namespace Schicksal.Clustering
         for (int i = 0; i < this.m_global_clusters.Length; i++)
         {
           if (peak == i) { continue; };
-         double distance = this.m_geodesic_distances[new Tuple<int,int>(peak,i)];
+          double distance = this.m_geodesic_distances[new Tuple<int,int>(peak,i)];
           if (distance < min) {
             min = distance;
             min_cluster_id = i;
@@ -332,19 +334,19 @@ namespace Schicksal.Clustering
 
     void calculate_variance()
     {
-      double[] geodesicDistances = new double[this.m_geodesic_distances.Count];
-      int i = 0;
-      Dictionary<Tuple<int, int>, double>.ValueCollection values = this.m_geodesic_distances.Values;
-      foreach (var value in values) {
-        geodesicDistances[i] = value;
-        i++;
+      List<double> Distances = new List<double>();
+      for (int i = 0; i < this.m_graph.PeakCount; i++) {
+        for (int j = 0; j < this.m_graph.PeakCount; j++) {
+          if (i == j) { continue; }
+          Distances.Add(this.m_graph[i,j]);
+        }
       }
-      Array.Sort(geodesicDistances);
+      Distances.Sort();
       int n = m_graph.PeakCount;
       int th_local=(int)Math.Round(m_local_s*n*(n-1)/2,MidpointRounding.ToEven);
       int th_global = (int)Math.Round(m_global_s*n*(n - 1)/2, MidpointRounding.ToEven);
-      this.m_local_variance = geodesicDistances[th_local];
-      this.m_global_variance = geodesicDistances[th_global];
+      this.m_local_variance = Distances[th_local];
+      this.m_global_variance = Distances[th_global];
     }
     void calculate_rho()
     {
@@ -355,7 +357,7 @@ namespace Schicksal.Clustering
           double distance = this.m_geodesic_distances[peak_pair];
           if (!this.m_global_rho.ContainsKey(i))
           {
-            this.m_global_rho.Add(i, Math.Exp(-((distance * distance) / 2 * (this.m_global_variance * this.m_global_variance))));
+            this.m_global_rho.Add(i, Math.Exp(-(distance * distance / 2 * (this.m_global_variance * this.m_global_variance))));
           }
           else {
             this.m_global_rho[i] += Math.Exp(-((distance * distance) / 2 * (this.m_global_variance * this.m_global_variance)));
@@ -416,13 +418,40 @@ namespace Schicksal.Clustering
       global_gamma.Sort(new GammaComparer());
       local_gamma.Sort(new GammaComparer());
       while (this.check_neighbour(local_gamma.Last().Item1, this.m_local_rho,this.m_local_delta)) {
-        this.m_local_centroids.Add(local_gamma.Last().Item1);
-        local_gamma.Remove(local_gamma.Last());
+          if (this.m_local_centroids.Count == 0)
+          {
+            this.m_local_centroids.Add(local_gamma.Last().Item1);
+          }
+         else {
+        for (int i=0;i<m_local_centroids.Count;i++) {
+          if (local_gamma.Last().Item1 == m_local_centroids[i]) { continue; }
+          Tuple<int, int> pair = new Tuple<int, int>(local_gamma.Last().Item1,m_local_centroids[i]);
+          if (this.m_geodesic_distances[pair] > this.m_local_variance) {
+          this.m_local_centroids.Add(local_gamma.Last().Item1);
+          }
+          }
+        }
+          local_gamma.Remove(local_gamma.Last());
+        
       }
       while (this.check_neighbour(global_gamma.Last().Item1, this.m_global_rho, this.m_global_delta))
       {
-        this.m_global_centroids.Add(global_gamma.Last().Item1);
-        global_gamma.Remove(global_gamma.Last());
+          if (this.m_global_centroids.Count == 0)
+          {
+            this.m_global_centroids.Add(global_gamma.Last().Item1);
+          }
+          else {
+          for (int i = 0; i < m_global_centroids.Count; i++)
+          {
+            if (global_gamma.Last().Item1 == m_global_centroids[i]) { continue; }
+            Tuple<int, int> pair = new Tuple<int, int>(global_gamma.Last().Item1, m_global_centroids[i]);
+          if (this.m_geodesic_distances[pair] > this.m_global_variance)
+          {
+            this.m_global_centroids.Add(global_gamma.Last().Item1);
+          }
+          }
+        }
+            global_gamma.Remove(global_gamma.Last());
       }
     }
 
@@ -447,6 +476,22 @@ namespace Schicksal.Clustering
         return true; 
     }
 
+    private class GammaComparer : IComparer<Tuple<int, double>>
+    {
+      public int Compare(Tuple<int, double> x, Tuple<int, double> y)
+      {
+        if (x == null)
+        {
+          if (y == null)
+            return 0;
+          else
+            return 1;
+        }
+        else if (y == null)
+          return -1;
+        return x.Item2.CompareTo(y.Item2);
+      }
+    }
     private class TupleComparer : IComparer<Tuple<int, int, double>>
     {
       public int Compare(Tuple<int, int, double> x, Tuple<int, int, double> y)
@@ -462,22 +507,6 @@ namespace Schicksal.Clustering
           return -1;
 
         return x.Item3.CompareTo(y.Item3);
-      }
-    }
-    private class GammaComparer : IComparer<Tuple<int, double>>
-    {
-      public int Compare(Tuple<int, double> x, Tuple<int, double> y)
-      {
-        if (x == null)
-        {
-          if (y == null)
-            return 0;
-          else
-            return 1;
-        }
-        else if (y == null)
-          return -1;
-        return x.Item2.CompareTo(y.Item2);
       }
     }
   }

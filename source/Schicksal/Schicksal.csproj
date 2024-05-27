@@ -61,6 +61,7 @@
     <Compile Include="Basic\TableMultyDataGroup.cs" />
     <Compile Include="Basic\TableSetDataGroup.cs" />
     <Compile Include="Clustering\cciMST.cs" />
+    <Compile Include="Clustering\ClusteringProcessor.cs" />
     <Compile Include="Clustering\SEMST.cs" />
     <Compile Include="Clustering\ClusteringParameters.cs" />
     <Compile Include="Clustering\IArcDeleter.cs" />

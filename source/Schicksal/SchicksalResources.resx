@@ -123,6 +123,9 @@
   <data name="CARTIS" xml:space="preserve">
     <value>Cartis</value>
   </data>
+  <data name="CCIMST" xml:space="preserve">
+    <value>cciMST</value>
+  </data>
   <data name="CHEBYSHEV" xml:space="preserve">
     <value>Chebyshev</value>
   </data>

@@ -79,6 +79,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на cciMST.
+        /// </summary>
+        public static string CCIMST {
+            get {
+                return ResourceManager.GetString("CCIMST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Chebyshev.
         /// </summary>
         public static string CHEBYSHEV {
