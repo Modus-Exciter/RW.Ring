@@ -97,6 +97,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Clustering.
+        /// </summary>
+        public static string CLUSTERING_PROCESS {
+            get {
+                return ResourceManager.GetString("CLUSTERING_PROCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Consictency.
         /// </summary>
         public static string CONSISTENCY {

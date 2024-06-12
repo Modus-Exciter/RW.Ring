@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using Notung;
+using Schicksal.Properties;
 using static Notung.Data.MST;
 
 
@@ -172,6 +173,10 @@ namespace Schicksal.Clustering
 
       }
 
+    public override string ToString()
+    {
+      return SchicksalResources.CLUSTERING_PROCESS;
+    }
     double CalculateRadius(List<DataRow> cluster)
       {
       List<double> center = this.CalculateCenter(cluster);

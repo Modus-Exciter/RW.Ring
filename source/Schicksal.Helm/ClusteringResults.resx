@@ -117,4 +117,352 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_split_container.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_split_container.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="m_split_container.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
+  </data>
+  <data name="m_data_grid_view_clusters.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_data_grid_view_clusters.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_data_grid_view_clusters.Size" type="System.Drawing.Size, System.Drawing">
+    <value>785, 232</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_data_grid_view_clusters.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_clusters.Name" xml:space="preserve">
+    <value>m_data_grid_view_clusters</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_clusters.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_clusters.Parent" xml:space="preserve">
+    <value>m_split_container.Panel1</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_clusters.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel1.Name" xml:space="preserve">
+    <value>m_split_container.Panel1</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel1.Parent" xml:space="preserve">
+    <value>m_split_container</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_data_grid_view_points.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_data_grid_view_points.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_data_grid_view_points.Size" type="System.Drawing.Size, System.Drawing">
+    <value>785, 222</value>
+  </data>
+  <data name="m_data_grid_view_points.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_points.Name" xml:space="preserve">
+    <value>m_data_grid_view_points</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_points.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_points.Parent" xml:space="preserve">
+    <value>m_split_container.Panel2</value>
+  </data>
+  <data name="&gt;&gt;m_data_grid_view_points.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel2.Name" xml:space="preserve">
+    <value>m_split_container.Panel2</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel2.Parent" xml:space="preserve">
+    <value>m_split_container</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_split_container.Size" type="System.Drawing.Size, System.Drawing">
+    <value>785, 458</value>
+  </data>
+  <data name="m_split_container.SplitterDistance" type="System.Int32, mscorlib">
+    <value>232</value>
+  </data>
+  <data name="m_split_container.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Name" xml:space="preserve">
+    <value>m_split_container</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.Parent" xml:space="preserve">
+    <value>m_table_tab</value>
+  </data>
+  <data name="&gt;&gt;m_split_container.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_table_tab.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="m_table_tab.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="m_table_tab.Size" type="System.Drawing.Size, System.Drawing">
+    <value>791, 464</value>
+  </data>
+  <data name="m_table_tab.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="m_table_tab.Text" xml:space="preserve">
+    <value>Table</value>
+  </data>
+  <data name="&gt;&gt;m_table_tab.Name" xml:space="preserve">
+    <value>m_table_tab</value>
+  </data>
+  <data name="&gt;&gt;m_table_tab.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_table_tab.Parent" xml:space="preserve">
+    <value>m_tab_control</value>
+  </data>
+  <data name="&gt;&gt;m_table_tab.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_pictureBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_pictureBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 31</value>
+  </data>
+  <data name="m_pictureBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>785, 430</value>
+  </data>
+  <data name="m_pictureBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_pictureBox.Name" xml:space="preserve">
+    <value>m_pictureBox</value>
+  </data>
+  <data name="&gt;&gt;m_pictureBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_pictureBox.Parent" xml:space="preserve">
+    <value>m_tab_graphic</value>
+  </data>
+  <data name="&gt;&gt;m_pictureBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="m_tool_strip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="m_tool_strip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="m_tool_strip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>785, 28</value>
+  </data>
+  <data name="m_tool_strip.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="m_tool_strip.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;m_tool_strip.Name" xml:space="preserve">
+    <value>m_tool_strip</value>
+  </data>
+  <data name="&gt;&gt;m_tool_strip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tool_strip.Parent" xml:space="preserve">
+    <value>m_tab_graphic</value>
+  </data>
+  <data name="&gt;&gt;m_tool_strip.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_tab_graphic.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="m_tab_graphic.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="m_tab_graphic.Size" type="System.Drawing.Size, System.Drawing">
+    <value>791, 464</value>
+  </data>
+  <data name="m_tab_graphic.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_tab_graphic.Text" xml:space="preserve">
+    <value>Graphic</value>
+  </data>
+  <data name="&gt;&gt;m_tab_graphic.Name" xml:space="preserve">
+    <value>m_tab_graphic</value>
+  </data>
+  <data name="&gt;&gt;m_tab_graphic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tab_graphic.Parent" xml:space="preserve">
+    <value>m_tab_control</value>
+  </data>
+  <data name="&gt;&gt;m_tab_graphic.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_tab_control.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_tab_control.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_tab_control.Size" type="System.Drawing.Size, System.Drawing">
+    <value>799, 490</value>
+  </data>
+  <data name="m_tab_control.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_tab_control.Name" xml:space="preserve">
+    <value>m_tab_control</value>
+  </data>
+  <data name="&gt;&gt;m_tab_control.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tab_control.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_tab_control.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_toolStripLabel_abscissa.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 25</value>
+  </data>
+  <data name="m_toolStripLabel_abscissa.Text" xml:space="preserve">
+    <value>Abscissa</value>
+  </data>
+  <data name="m_ComboBox_abscissa.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 28</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 28</value>
+  </data>
+  <data name="m_toolStripLabel_ordinate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 25</value>
+  </data>
+  <data name="m_toolStripLabel_ordinate.Text" xml:space="preserve">
+    <value>Ordinate</value>
+  </data>
+  <data name="m_ComboBox_ordinate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 28</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 28</value>
+  </data>
+  <data name="m_toolStripButton.AutoSize" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="m_toolStripButton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIDSURBVDhPpZLrS5NhGMb3j4SWh0oRQVExD4gonkDpg4hG
+        YKxG6WBogkMZKgPNCEVJFBGdGETEvgwyO9DJE5syZw3PIlPEE9pgBCLZ5XvdMB8Ew8gXbl54nuf63dd9
+        0OGSnwCahxbPRNPAPMw9Xpg6ZmF46kZZ0xSKzJPIrhpDWsVnpBhGkKx3nAX8Pv7z1zg8OoY/cITdn4fw
+        bf/C0kYAN3Ma/w3gWfZL5kzTKBxjWyK2DftwI9tyMYCZKXbNHaD91bLYJrDXsYbrWfUKwJrPE9M2M1Oc
+        VzOOpHI7Jr376Hi9ogHqFIANO0/MmmmbmSmm9a8ze+I4MrNWAdjtoJgWcx+PSzg166yZZ8xM8XvXDix9
+        c4jIqFYAjoriBV9AhEPv1mH/sonogha0afbZMMZz+yreTGyhpusHwtNNCsA5U1zS4BLxzJIfg299qO32
+        Ir7UJtZfftyATqeT+8o2D8JSjQrAJblrncYL7ZJ2+bfaFnC/1S1NjL3diRat7qrO7wLRP3HjWsojBeCo
+        mDEo5mNjuweFGvjWg2EBhCbpkW78htSHHwRyNdmgAFzPEee2iFkzayy2OLXzT4gr6UdUnlXrullsxxQ+
+        kx0g8BTA3aZlButjSTyjODq/WcQcW/B/Je4OQhLvKQDnzN1mp0nnkvAhR8VuMzNrpm1mpjgkoVwB/v8D
+        TgDQASA1MVpwzwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="m_toolStripButton.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="m_toolStripButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 25</value>
+  </data>
+  <data name="m_toolStripButton.Text" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>799, 490</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>815, 529</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Clustering result</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripLabel_abscissa.Name" xml:space="preserve">
+    <value>m_toolStripLabel_abscissa</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripLabel_abscissa.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_ComboBox_abscissa.Name" xml:space="preserve">
+    <value>m_ComboBox_abscissa</value>
+  </data>
+  <data name="&gt;&gt;m_ComboBox_abscissa.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Name" xml:space="preserve">
+    <value>toolStripSeparator1</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripLabel_ordinate.Name" xml:space="preserve">
+    <value>m_toolStripLabel_ordinate</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripLabel_ordinate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_ComboBox_ordinate.Name" xml:space="preserve">
+    <value>m_ComboBox_ordinate</value>
+  </data>
+  <data name="&gt;&gt;m_ComboBox_ordinate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Name" xml:space="preserve">
+    <value>toolStripSeparator2</value>
+  </data>
+  <data name="&gt;&gt;toolStripSeparator2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripButton.Name" xml:space="preserve">
+    <value>m_toolStripButton</value>
+  </data>
+  <data name="&gt;&gt;m_toolStripButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>ClusteringResults</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

@@ -129,6 +129,9 @@
   <data name="CHEBYSHEV" xml:space="preserve">
     <value>Chebyshev</value>
   </data>
+  <data name="CLUSTERING_PROCESS" xml:space="preserve">
+    <value>Clustering</value>
+  </data>
   <data name="CONSISTENCY" xml:space="preserve">
     <value>Consictency</value>
   </data>

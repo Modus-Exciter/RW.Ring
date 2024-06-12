@@ -183,6 +183,9 @@
     <EmbeddedResource Include="ClusteringResults.resx">
       <DependentUpon>ClusteringResults.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ClusteringResults.ru.resx">
+      <DependentUpon>ClusteringResults.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.en.resx">
       <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
