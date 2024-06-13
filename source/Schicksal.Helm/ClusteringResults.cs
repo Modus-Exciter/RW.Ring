@@ -73,8 +73,8 @@ namespace Schicksal.Helm
         pen.Color = colors[i];
         brush.Color = colors[i];
       foreach (DataRow row in m_points[i].Rows) {
-        g.DrawEllipse(pen, int.Parse(row[m_abscissa].ToString()) - 3 + (m_pictureBox.Width / 2), (m_pictureBox.Height / 2) + int.Parse(row[m_ordinate].ToString()) - 3, 6, 6);
-        g.FillEllipse(brush, int.Parse(row[m_abscissa].ToString()) - 3 + (m_pictureBox.Width / 2), (m_pictureBox.Height / 2) + int.Parse(row[m_ordinate].ToString()) - 3, 6, 6);
+        g.DrawEllipse(pen, (int)double.Parse(row[m_abscissa].ToString()) - 3 + (m_pictureBox.Width / 2), (m_pictureBox.Height / 2) + (int)double.Parse(row[m_ordinate].ToString()) - 3, 6, 6);
+        g.FillEllipse(brush, (int)double.Parse(row[m_abscissa].ToString()) - 3 + (m_pictureBox.Width / 2), (m_pictureBox.Height / 2) + (int)double.Parse(row[m_ordinate].ToString()) - 3, 6, 6);
       }
       }
 

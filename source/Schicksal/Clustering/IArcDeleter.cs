@@ -589,9 +589,11 @@ namespace Schicksal.Clustering
       }
       for (int i = 0; i < this.ClusterCount; i++)
       {
-        this.result[i].Add(this.m_edge_list.First().Item1);
-        this.result[i].Add(this.m_edge_list.First().Item2);
-        this.AddChildsFromEdges(this.m_edge_list.First().Item1, i);
+        if (this.m_edge_list.Count!=0) {
+        this.result[i].Add(this.m_edge_list.FirstOrDefault().Item1);
+        this.result[i].Add(this.m_edge_list.FirstOrDefault().Item2);
+        this.AddChildsFromEdges(this.m_edge_list.FirstOrDefault().Item1, i);
+        }
       }
       while (this.m_edge_list.Count > 0)
       {
