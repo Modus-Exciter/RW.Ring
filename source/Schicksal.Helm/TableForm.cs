@@ -19,10 +19,20 @@ namespace Schicksal.Helm
         TextBox[] filterTextBoxes;
         List<string> columnNames;
 
+        private bool isDragging = false;
+        private Point dragStartPoint;
+        private DataGridViewCell startCell;
+        private List<DataGridViewCell> highlightedCells = new List<DataGridViewCell>();
+
         public TableForm()
         {
             this.Padding = new Padding(0, 25, 0, 0);
             this.InitializeComponent();
+
+            // Добавление обработчиков событий для функциональности перетаскивания
+            m_grid.MouseDown += m_grid_MouseDown;
+            m_grid.MouseMove += m_grid_MouseMove;
+            m_grid.MouseUp += m_grid_MouseUp;
         }
 
         public DataTable DataSource
@@ -38,7 +48,7 @@ namespace Schicksal.Helm
                 // инициализация массива полей и имен колонок
                 filterTextBoxes = new TextBox[m_grid.ColumnCount];
                 columnNames = GetColumnNames();
-                
+
                 if (value != null)
                 {
                     value.AcceptChanges();
@@ -82,7 +92,7 @@ namespace Schicksal.Helm
             AddSearchControlToColumnHeader(m_grid);
 
             if (m_grid.Rows.Count < (1 << 10))
-                m_grid.AutoResizeColumns();         
+                m_grid.AutoResizeColumns();
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -287,7 +297,7 @@ namespace Schicksal.Helm
                     textBox.Location = new Point(headerRect.X, headerRect.Y);
                     textBox.Size = new Size(headerRect.Width, headerRect.Height);
 
-                   
+
 
                     // Добавление поля к родительскому контейнеру DataGridView
                     m_grid.Parent.Controls.Add(textBox);
@@ -313,7 +323,7 @@ namespace Schicksal.Helm
         }
 
         private void m_grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
-        { 
+        {
             for (int i = e.Column.Index; i < filterTextBoxes.Length; i++)
             {
                 var textBox = filterTextBoxes[i];
@@ -322,7 +332,89 @@ namespace Schicksal.Helm
                 Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
                 textBox.Location = new Point(headerRect.X + 3, headerRect.Y + 50);
                 textBox.Size = new Size(headerRect.Width - 6, headerRect.Height);
+            }
+        }
 
+        // Событие нажатия кнопки мыши для начала перетаскивания
+        private void m_grid_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                var hitTestInfo = m_grid.HitTest(e.X, e.Y);
+                if (hitTestInfo.RowIndex >= 0 && hitTestInfo.ColumnIndex >= 0)
+                {
+                    isDragging = true;
+                    dragStartPoint = e.Location;
+                    startCell = m_grid.Rows[hitTestInfo.RowIndex].Cells[hitTestInfo.ColumnIndex];
+                }
+            }
+        }
+
+        // Событие перемещения мыши для выполнения перетаскивания
+        private void m_grid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                var hitTestInfo = m_grid.HitTest(e.X, e.Y);
+                if (hitTestInfo.RowIndex >= 0 && hitTestInfo.ColumnIndex == startCell.ColumnIndex)
+                {
+                    // Сброс предыдущего выделения
+                    foreach (var cell in highlightedCells)
+                    {
+                        cell.Style.BackColor = m_grid.DefaultCellStyle.BackColor;
+                    }
+                    highlightedCells.Clear();
+
+                    // Выделение ячеек
+                    int startRow = startCell.RowIndex;
+                    int endRow = hitTestInfo.RowIndex;
+                    for (int rowIndex = startRow + 1; rowIndex <= endRow; rowIndex++)
+                    {
+                        var cell = m_grid.Rows[rowIndex].Cells[startCell.ColumnIndex];
+                        cell.Style.BackColor = Color.LightBlue;
+                        highlightedCells.Add(cell);
+                    }
+                }
+            }
+        }
+
+        // Событие отпускания кнопки мыши для завершения перетаскивания
+        private void m_grid_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                isDragging = false;
+
+                var hitTestInfo = m_grid.HitTest(e.X, e.Y);
+                if (hitTestInfo.RowIndex >= 0 && hitTestInfo.ColumnIndex == startCell.ColumnIndex)
+                {
+                    int startRow = startCell.RowIndex;
+                    int endRow = hitTestInfo.RowIndex;
+                    var value = startCell.Value;
+
+                    var dataTable = m_grid.DataSource as DataTable;
+                    if (dataTable != null)
+                    {
+
+                        dataTable.BeginLoadData();
+
+                        for (int rowIndex = startRow + 1; rowIndex <= endRow; rowIndex++)
+                        {
+                            m_grid.Rows[rowIndex].Cells[startCell.ColumnIndex].Value = value;
+                        }
+                        dataTable.EndLoadData();
+
+                    }
+                    if (!this.Text.EndsWith("*"))
+                        this.Text += "*";
+                }
+
+                // Сброс выделения после завершения перетаскивания
+                foreach (var cell in highlightedCells)
+                {
+                    cell.Style.BackColor = m_grid.DefaultCellStyle.BackColor;
+                }
+                highlightedCells.Clear();
             }
         }
     }
