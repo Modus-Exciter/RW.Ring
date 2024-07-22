@@ -16,7 +16,7 @@ namespace Schicksal.Basic
     private readonly MultyViewGroup[] m_views;
     private readonly Dictionary<string, int> m_indexes;
 
-    public TableSetDataGroup(DataTable table, string[] factorColumns, string[] ignorableColumns, string resultColumn, string filter = null)
+    public TableSetDataGroup(DataTable table, string[] factorColumns, string[] ignorableColumns, string resultColumn, string filter = null, string conjugate = null)
     {
       CheckConstrictorParameters(table, factorColumns, ignorableColumns, resultColumn);
 
@@ -52,7 +52,7 @@ namespace Schicksal.Basic
           if (!sets.Add(sb.ToString()))
             continue;
 
-          var mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString());
+          var mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString(), conjugate);
           tuples.Add(mul);
 
           for (int i = 0; i < mul.Count; i++)
@@ -151,7 +151,7 @@ namespace Schicksal.Basic
 
       private readonly Dictionary<string, int> m_indexes;
 
-      public MultyViewGroup(DataTable m_table, string[] ignorableColumns, string resultColumn, string filter = null)
+      public MultyViewGroup(DataTable m_table, string[] ignorableColumns, string resultColumn, string filter, string conjugate)
       {
         var ignorableIndexes = new int[ignorableColumns.Length];
         var sets = new HashSet<string>();
@@ -181,7 +181,7 @@ namespace Schicksal.Basic
             if (!sets.Add(sb.ToString()))
               continue;
 
-            var view = new DataView(m_table, sb.ToString(), null, DataViewRowState.CurrentRows);
+            var view = new DataView(m_table, sb.ToString(), conjugate, DataViewRowState.CurrentRows);
 
             if (view.Count > 0)
             {

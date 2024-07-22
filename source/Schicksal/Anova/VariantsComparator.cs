@@ -20,6 +20,7 @@ namespace Schicksal.Anova
     private readonly string m_result;
     private readonly string[] m_ignorable_factors;
     private readonly string m_filter;
+    private readonly string m_conjugate;
     private double m_within_dispersion;
     private double m_within_df;
 
@@ -31,13 +32,14 @@ namespace Schicksal.Anova
     /// <param name="ignoredFactors">Факторы, градации которых игнорируются, но тоже влияют</param>
     /// <param name="result">Колонка таблицы с эффектом</param>
     /// <param name="filter">Фильтр по таблице</param>
-    public VariantsComparator(DataTable table, string factor, string ignoredFactors, string result, string filter)
+    public VariantsComparator(DataTable table, string factor, string ignoredFactors, string result, string filter, string conjugate)
     {
       m_source = table;
       m_factors = factor.Split('+');
       m_ignorable_factors = string.IsNullOrEmpty(ignoredFactors) ? ArrayExtensions.Empty<string>() : ignoredFactors.Split('+');
       m_result = result;
       m_filter = filter;
+      m_conjugate = conjugate;
     }
 
     /// <summary>
@@ -86,7 +88,7 @@ namespace Schicksal.Anova
       res.Columns.Add("Interval", typeof(double));
       res.Columns.Add("Ignorable", typeof(int));
 
-      using (var groupset = new TableSetDataGroup(m_source, m_factors, m_ignorable_factors, m_result, m_filter))
+      using (var groupset = new TableSetDataGroup(m_source, m_factors, m_ignorable_factors, m_result, m_filter, m_conjugate))
       {
         for (int i = 0; i < groupset.Count; i++)
         {
@@ -128,8 +130,17 @@ namespace Schicksal.Anova
           res.Rows.Add(row);
         }
 
-        m_within_dispersion = FisherCriteria.GetWithinDispersion(groupset);
-        m_within_df = (int)FisherCriteria.GetWithinDegreesOfFreedom(groupset);
+        if (string.IsNullOrEmpty(m_conjugate))
+        {
+          m_within_dispersion = FisherCriteria.GetWithinDispersion(groupset);
+          m_within_df = (int)FisherCriteria.GetWithinDegreesOfFreedom(groupset);
+        }
+        else 
+        {
+          var criteria = FisherCriteria.CalculateConjugate(groupset);
+          m_within_dispersion = criteria.MSw;
+          m_within_df = criteria.Ndf;
+        }
       }
 
       return res;
@@ -207,7 +218,10 @@ namespace Schicksal.Anova
       int ig1 = (int)row1["Ignorable"];
       int ig2 = (int)row2["Ignorable"];
 
-      return Math.Sqrt(m_within_dispersion * ig1 / count1 + m_within_dispersion * ig2 / count2);
+      if (string.IsNullOrEmpty(m_conjugate))
+        return Math.Sqrt(m_within_dispersion * ig1 / count1 + m_within_dispersion * ig2 / count2);
+      else
+        return Math.Sqrt(m_within_dispersion / count1 + m_within_dispersion / count2);
     }
   }
 

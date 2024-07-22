@@ -24,7 +24,8 @@ namespace Schicksal.Basic
     /// <param name="factorColumns">Колонки таблицы, которые будут использоваться для выделения выборок</param>
     /// <param name="resultColumn">Колонка таблицы, которая будет использоваться для получения результатов</param>
     /// <param name="filter">Дополнительная фильтрация строк таблицы</param>
-    public TableMultyDataGroup(DataTable table, string[] factorColumns, string resultColumn, string filter = null)
+    /// <param name="conjugate">Колонка, идентифицирующая сопряжённые наблюдения</param>
+    public TableMultyDataGroup(DataTable table, string[] factorColumns, string resultColumn, string filter = null, string conjugate = null)
     {
       CheckConstructorParameters(table, factorColumns, resultColumn);
       m_table = table;
@@ -59,7 +60,7 @@ namespace Schicksal.Basic
           if (!sets.Add(sb.ToString()))
             continue;
 
-          var view = new DataView(m_table, sb.ToString(), null, DataViewRowState.CurrentRows);
+          var view = new DataView(m_table, sb.ToString(), conjugate, DataViewRowState.CurrentRows);
 
           if (view.Count > 0)
           {

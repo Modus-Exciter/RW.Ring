@@ -23,7 +23,7 @@ namespace Schicksal.Helm
     private bool m_only_significant;
     private string m_selection = string.Empty;
 
-    public CompareVariantsForm(DataTable table, string factor, string ignoredFactors, string result, string filter, float p)
+    public CompareVariantsForm(DataTable table, string factor, string ignoredFactors, string result, string filter, float p, string conjugate)
     {
       this.InitializeComponent();
 
@@ -37,7 +37,7 @@ namespace Schicksal.Helm
       if (resolution.width != 0) 
         this.Width = resolution.width;
       
-      m_comparator = new VariantsComparator(table, factor, ignoredFactors, result, filter);
+      m_comparator = new VariantsComparator(table, factor, ignoredFactors, result, filter, conjugate);
       m_probability = p;
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
       m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;

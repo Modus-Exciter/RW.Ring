@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Xml;
 
 namespace Schicksal.Helm.Analyze
 {
@@ -14,7 +15,7 @@ namespace Schicksal.Helm.Analyze
   {
     public Type OptionsType
     {
-      get { return null /*typeof(AnovaOptionsDialog)*/; }
+      get { return typeof(AnovaOptionsDialog); }
     }
 
     public override string ToString()
@@ -33,6 +34,7 @@ namespace Schicksal.Helm.Analyze
       results_form.DataSource = currentProcessor.Result;
       results_form.SourceTable = table;
       results_form.ResultColumn = data.Result;
+      results_form.Conjugate = this.GetConjugate(data);
       results_form.Filter = data.Filter;
       results_form.Probability = data.Probability;
       results_form.Factors = data.Predictors.ToArray();
@@ -56,9 +58,22 @@ namespace Schicksal.Helm.Analyze
       if (!string.IsNullOrEmpty(data.Filter))
         processor.Filter = data.Filter;
 
+      processor.Conjugate = this.GetConjugate(data);
       processor.RunInParrallel = true;
 
       return processor;
+    }
+
+    private string GetConjugate(StatisticsParameters data)
+    {
+      if (!string.IsNullOrEmpty(data.OptionsXML))
+      {
+        var doc = new XmlDocument();
+        doc.LoadXml(data.OptionsXML);
+        return doc.DocumentElement.Attributes["Conjugate"].Value;
+      }
+
+      return null;
     }
 
     public Dictionary<string, string[]> GetSettings()

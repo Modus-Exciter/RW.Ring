@@ -23,6 +23,8 @@ namespace Schicksal.Anova
 
     public string Filter { get; set; }
 
+    public string Conjugate { get; set; }
+
     public bool RunInParrallel { get; set; }
 
     public FisherTestResult[] Result { get; private set; }
@@ -78,7 +80,9 @@ namespace Schicksal.Anova
     {
       using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
       {
-        FisherMetrics degrees = FisherCriteria.CalculateMultiplyCriteria(groups);
+        FisherMetrics degrees = string.IsNullOrEmpty(this.Conjugate)
+          ? FisherCriteria.CalculateMultiplyCriteria(groups)
+          : FisherCriteria.CalculateConjugate(groups);
 
         if (degrees.Ndf != 0)
         {
@@ -89,6 +93,7 @@ namespace Schicksal.Anova
             Ndf = degrees.Ndf,
             Factor = string.Join("+", factors),
             IgnoredFactor = string.Join("+", this.GetIgnoredFactors(factors)),
+            Conjugate = this.Conjugate,
             FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
             P = FisherCriteria.GetProbability(degrees)
           };
@@ -119,9 +124,11 @@ namespace Schicksal.Anova
 
     private void SingleFactorAnalysis(List<FisherTestResult> result, List<string> factors)
     {
-      using (var group = new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter))
+      using (var group = new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter, this.Conjugate))
       {
-        FisherMetrics degrees = FisherCriteria.CalculateCriteria(group);
+        FisherMetrics degrees = string.IsNullOrEmpty(this.Conjugate) 
+          ? FisherCriteria.CalculateCriteria(group)
+          : FisherCriteria.CalculateConjugate(group);
 
         if (degrees.Ndf != 0)
         {
@@ -132,6 +139,7 @@ namespace Schicksal.Anova
             Ndf = degrees.Ndf,
             Factor = string.Join("+", factors),
             IgnoredFactor = string.Empty,
+            Conjugate = this.Conjugate,
             FCritical = FisherCriteria.GetCriticalValue(m_probability, degrees.Kdf, degrees.Ndf),
             P = FisherCriteria.GetProbability(degrees)
           };

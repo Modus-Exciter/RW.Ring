@@ -17,39 +17,48 @@ namespace Schicksal.Helm.Dialogs
       this.InitializeComponent();
     }
 
-    public string Save()
+    string IAnalysisOptions.Save()
     {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       sb.Append("<AnovaParameters Normalization=\"");
       if (m_btn_no_norm.Checked)
         sb.Append("None");
-      else if (m_btn_non_parametric.Checked)
+      else if (m_btn_kruskal_wallis.Checked)
         sb.Append("NonParametric");
       else if (m_btn_box_cox.Checked)
         sb.Append("BoxCox");
+
+      if (!string.IsNullOrEmpty(m_cb_conjugate.SelectedItem as string))
+        sb.AppendFormat("\"\nConjugate=\"{0}", m_cb_conjugate.SelectedItem);
 
       sb.Append("\"/>");
 
       return sb.ToString();
     }
 
-    void IAnalysisOptions.Load(string xml)
+    void IAnalysisOptions.Load(string xml, StatisticsParameters context)
     {
+      m_cb_conjugate.DataSource = new string[] { string.Empty }.Union((context.Total).Except(
+        new string[] { context.Result })).ToList();
+
       if (string.IsNullOrWhiteSpace(xml))
         return;
 
-      XmlDocument doc = new XmlDocument();
+      var doc = new XmlDocument();
       doc.LoadXml(xml);
       switch (doc.DocumentElement.Attributes["Normalization"].Value)
       {
         case "NonParametric":
-          m_btn_non_parametric.Checked = true;
+          m_btn_kruskal_wallis.Checked = true;
           break;
 
         case "BoxCox":
           m_btn_box_cox.Checked = true;
           break;
       }
+
+      m_cb_conjugate.SelectedItem = doc.DocumentElement.HasAttribute("Conjugate") ?
+        doc.DocumentElement.Attributes["Conjugate"].Value : string.Empty;
     }
 
     bool IAnalysisOptions.ShowDialog()

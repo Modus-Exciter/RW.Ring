@@ -70,7 +70,7 @@ namespace Schicksal.Helm.Dialogs
     {
       IAnalysisOptions options = (IAnalysisOptions)Activator.CreateInstance(m_options_type);
 
-      options.Load(this.DataSource.OptionsXML);
+      options.Load(this.DataSource.OptionsXML, this.DataSource);
 
       if (options.ShowDialog())
         this.DataSource.OptionsXML = options.Save();
@@ -79,7 +79,7 @@ namespace Schicksal.Helm.Dialogs
 
   public interface IAnalysisOptions
   {
-    void Load(string xml);
+    void Load(string xml, StatisticsParameters context);
 
     string Save();
 

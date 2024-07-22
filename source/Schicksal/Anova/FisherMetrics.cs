@@ -52,6 +52,11 @@ namespace Schicksal.Anova
     public string IgnoredFactor { get; internal set; }
 
     /// <summary>
+    /// Фактор сопряжённых наблюдений
+    /// </summary>
+    public string Conjugate { get; internal set; }
+
+    /// <summary>
     /// Число степеней свободы для межгрупповой дисперсии
     /// </summary>
     public uint Kdf { get; internal set; }

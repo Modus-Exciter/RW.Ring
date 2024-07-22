@@ -38,6 +38,8 @@ namespace Schicksal.Helm
 
     public string[] Factors { get; set; }
 
+    public string Conjugate { get; set; }
+
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
@@ -58,7 +60,7 @@ namespace Schicksal.Helm
         return;
 
       using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
-        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability))
+        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability, this.Conjugate))
       {
         compare.ShowDialog(this);
       }

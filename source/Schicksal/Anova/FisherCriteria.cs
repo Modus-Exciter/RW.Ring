@@ -50,6 +50,80 @@ namespace Schicksal.Anova
       return degrees;
     }
 
+    public static FisherMetrics CalculateConjugate(IMultyDataGroup group)
+    {
+      var degrees = default(FisherMetrics);
+
+      int n = group.Sum(g => g.Count);
+      double sum_all = group.SelectMany(g => g).Sum();
+      double c = sum_all * sum_all / n;
+      double cy = group.SelectMany(g => g).Sum(a => a * a) - c;
+      int vars = group[0].Count;
+
+      double cp = 0;
+      
+      for (int i = 0; i < vars; i++)
+      {
+        double gp = group.Select(g => g[i]).Sum();
+        cp += gp * gp;
+      }
+
+      cp /= group.Count;
+      cp -= c;
+
+      double cv = group.Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+
+      double cz = cy - cp - cv;
+
+      degrees.Kdf = (uint)(group.Count - 1);
+      degrees.Ndf = (uint)(n - degrees.Kdf - vars);
+      degrees.MSb = cy / degrees.Kdf;
+      degrees.MSw = cz / degrees.Ndf;
+
+      return degrees;
+    }
+
+    public static FisherMetrics CalculateConjugate(ISetMultyDataGroup groups)
+    {
+      var degrees = default(FisherMetrics);
+
+      int n = groups.SelectMany(g => g).Sum(g => g.Count);
+      double sum_all = groups.SelectMany(g => g).SelectMany(g => g).Sum();
+      double c = sum_all * sum_all / n;
+      double cy = groups.SelectMany(g => g).SelectMany(g => g).Sum(a => a * a) - c;
+      int vars = groups[0][0].Count;
+
+      double cp = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        double gp = groups.SelectMany(g => g).Select(g => g[i]).Sum();
+        cp += gp * gp;
+      }
+      cp /= groups.Sum(g => g.Count);
+      cp -= c;
+      double cv = groups.SelectMany(g => g).Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+
+      double cz = cy - cp - cv;
+
+      double ca = 0;
+
+      foreach (var group in groups)
+      {
+        var sum = group.SelectMany(g => g).Sum();
+        ca += sum * sum / group.Sum(g => g.Count);
+      }
+
+      ca -= c;
+
+      degrees.Kdf = (uint)(groups.Count - 1);
+      degrees.Ndf = (uint)(n - groups.Sum(g => g.Count) - vars + 1);
+      degrees.MSb = ca / degrees.Kdf;
+      degrees.MSw = cz / degrees.Ndf;
+
+      return degrees;
+    }
+
     /// <summary>
     /// Сравнение внутригрупповой и межгрупповой дисперсии
     /// тестом Фишера (для многофакторного анализа)
