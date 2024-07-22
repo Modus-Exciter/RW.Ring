@@ -54,7 +54,7 @@ namespace Schicksal.Helm.Dialogs
 
       if (this.DialogResult == DialogResult.OK)
       {
-        InfoBuffer buffer = new InfoBuffer();
+        var buffer = new InfoBuffer();
 
         if (!this.DataSource.Validate(buffer))
         {
@@ -66,11 +66,11 @@ namespace Schicksal.Helm.Dialogs
       }
     }
 
-    private void m_options_button_Click(object sender, EventArgs e)
+    private void Options_button_Click(object sender, EventArgs e)
     {
-      IAnalysisOptions options = (IAnalysisOptions)Activator.CreateInstance(m_options_type);
+      var options = (IAnalysisOptions)Activator.CreateInstance(m_options_type);
 
-      options.Load(this.DataSource.OptionsXML, this.DataSource);
+      options.Load(this.DataSource);
 
       if (options.ShowDialog())
         this.DataSource.OptionsXML = options.Save();
@@ -79,7 +79,7 @@ namespace Schicksal.Helm.Dialogs
 
   public interface IAnalysisOptions
   {
-    void Load(string xml, StatisticsParameters context);
+    void Load(StatisticsParameters context);
 
     string Save();
 

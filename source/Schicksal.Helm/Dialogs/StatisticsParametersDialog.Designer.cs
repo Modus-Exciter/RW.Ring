@@ -149,7 +149,7 @@
       resources.ApplyResources(this.m_options_button, "m_options_button");
       this.m_options_button.Name = "m_options_button";
       this.m_options_button.UseVisualStyleBackColor = true;
-      this.m_options_button.Click += new System.EventHandler(this.m_options_button_Click);
+      this.m_options_button.Click += new System.EventHandler(this.Options_button_Click);
       // 
       // m_label_total
       // 

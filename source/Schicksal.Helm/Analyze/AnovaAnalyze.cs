@@ -70,7 +70,8 @@ namespace Schicksal.Helm.Analyze
       {
         var doc = new XmlDocument();
         doc.LoadXml(data.OptionsXML);
-        return doc.DocumentElement.Attributes["Conjugate"].Value;
+        return doc.DocumentElement.HasAttribute("Conjugate") ? 
+          doc.DocumentElement.Attributes["Conjugate"].Value : null;
       }
 
       return null;
