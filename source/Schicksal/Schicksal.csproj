@@ -52,6 +52,7 @@
     <Compile Include="Anova\FisherTableProcessor.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
+    <Compile Include="Basic\GroupNormalizer.cs" />
     <Compile Include="Basic\IDataGroup.cs" />
     <Compile Include="Basic\JoinedDataGroup.cs" />
     <Compile Include="Basic\MultiArrayDataGroup.cs" />

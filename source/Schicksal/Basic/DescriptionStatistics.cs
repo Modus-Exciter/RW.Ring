@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
@@ -81,6 +82,70 @@ namespace Schicksal.Basic
       Debug.Assert(group.Count > 1);
 
       return PlainDerivation(group) / Math.Sqrt(group.Count - 1);
+    }
+
+    public static IDataGroup Wrap(IDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      if (group is ArrayDataGroup)
+        return group;
+
+      var array = new double[group.Count];
+      var i = 0;
+
+      foreach (var value in group)
+        array[i++] = value;
+
+      return new ArrayDataGroup(array);
+    }
+
+    public static IMultyDataGroup Wrap(IMultyDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      if (group.All(g => g is ArrayDataGroup))
+      {
+        if (group is MultiArrayDataGroup)
+          return group;
+
+        var groups = new IDataGroup[group.Count];
+        var i = 0;
+
+        foreach (var value in group)
+          groups[i++] = value;
+
+        return new MultiArrayDataGroup(groups);
+      }
+      else
+      {
+        var groups = new IDataGroup[group.Count];
+        var i = 0;
+
+        foreach (var value in group)
+          groups[i++] = Wrap(value);
+
+        return new MultiArrayDataGroup(groups);
+      }
+    }
+
+    public static ISetMultyDataGroup Wrap(ISetMultyDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      if (group.SelectMany(g => g).All(g => g is ArrayDataGroup))
+      {
+        if (group is SetMultiArrayDataGroup && group.All(g => g is MultiArrayDataGroup))
+          return group;
+      }
+
+      var groups = new IMultyDataGroup[group.Count];
+      var i = 0;
+
+      foreach (var value in group)
+        groups[i++] = Wrap(value);
+
+      return new SetMultiArrayDataGroup(groups);
     }
   }
 

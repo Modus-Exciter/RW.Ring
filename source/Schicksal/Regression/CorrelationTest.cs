@@ -130,21 +130,6 @@ namespace Schicksal.Regression
       return Math.Sqrt(up_sum / dn_sum);
     }
 
-    public static Dictionary<double, float> CalculateSpearmanRanks(IEnumerable<double> data)
-    {
-      float rank = 1;
-      Dictionary<double, float> ranks = new Dictionary<double, float>();
-
-      foreach (var group in data.GroupBy(p => p).OrderBy(g => g.Key))
-      {
-        var count = group.Count();
-        ranks[group.Key] = rank + (count - 1f) / 2f;
-        rank += count;
-      }
-
-      return ranks;
-    }
-
     public static CorrelationFormula CalculateFormula(IDataGroup x, IDataGroup y, string factor, string effect)
     {
       double min_x = double.MaxValue;
@@ -288,8 +273,8 @@ namespace Schicksal.Regression
 
     private static void CalculateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
     {
-      var x_ranks = CalculateSpearmanRanks(x);
-      var y_ranks = CalculateSpearmanRanks(EnumeratePoints(x, y).Select(p =>
+      var x_ranks = GroupNormalizer.CalculateRanks(x);
+      var y_ranks = GroupNormalizer.CalculateRanks(EnumeratePoints(x, y).Select(p =>
         Math.Abs(p.Y - dependency.Calculate(p.X))));
 
       double dsum = 0;

@@ -268,7 +268,7 @@ namespace Schicksal.Basic
 
       public double this[int index]
       {
-        get { return (double)m_view[index][m_column]; }
+        get { return Convert.ToDouble(m_view[index][m_column]); }
       }
 
       public IEnumerator<double> GetEnumerator()
