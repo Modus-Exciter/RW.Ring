@@ -639,15 +639,15 @@ namespace Schicksal.Basic
         this.Source = group;
         this.Delta = delta;
 
-        m_log_sum = this.Source.Sum(Math.Log);
-        m_transform = a => this.Transform(a, this.Lambda);
+        m_log_sum = this.Source.Sum(a => Math.Log(a + delta));
+        m_transform = a => BoxCoxTransform(a, this.Lambda, this.Delta);
       }
 
       public double this[int index]
       {
         get
         {
-          return this.Transform(this.Source[index], this.Lambda);
+          return BoxCoxTransform(this.Source[index], this.Lambda, this.Delta);
         }
       }
 
@@ -656,14 +656,9 @@ namespace Schicksal.Basic
         get { return this.Source.Count; }
       }
 
-      public double Transform(double value, double lambda)
-      {
-        return BoxCoxTransform(value, lambda, this.Delta);
-      }
-
       public double GetLikehood(double lambda)
       {
-        IEnumerable<double> tmp = this.Source.Select(a => this.Transform(a, lambda));
+        IEnumerable<double> tmp = this.Source.Select(a => BoxCoxTransform(a, lambda, this.Delta));
         double likehood = 0;
         double average = tmp.Average();
 

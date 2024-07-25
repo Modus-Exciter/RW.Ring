@@ -108,6 +108,17 @@ namespace BasicStatisticsTest
     }
 
     [TestMethod]
+    public void NegativeAndPositive()
+    {
+      var group = new ArrayDataGroup(new double[] { -3, -1, 2, 5, 8, 12 });
+      var delta = GroupNormalizer.CalculateDelta(group);
+      var group2 = new ArrayDataGroup(group.Select(a => a + delta).ToArray());
+      var group3 = GroupNormalizer.NormalizeByBoxCox(group);
+      var lambda = (double)group3.GetType().GetField("Lambda").GetValue(group3);
+      Assert.AreEqual(lambda, GroupNormalizer.CalculateLambda(group2), 1e-5);
+    }
+
+    [TestMethod]
     public void TwoDimensionsGroup()
     {
       var group1 = new ArrayDataGroup(new double[] { 2, 4, 6 });
