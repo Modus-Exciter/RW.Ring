@@ -8,6 +8,7 @@ using Notung.ComponentModel;
 using Notung.Data;
 using Notung.Loader;
 using Notung.Services;
+using Schicksal.Basic;
 using Schicksal.Regression;
 
 namespace NotungTest
@@ -345,7 +346,7 @@ namespace NotungTest
     public void SpearmanRanksTest()
     {
       double[] nums = new double[5] { 9.5, 6, 8.7, 12, 1.1 };
-      var spear = CorrelationTest.CalculateSpearmanRanks(nums);
+      var spear = GroupNormalizer.CalculateRanks(nums);
      // for
       Assert.AreEqual(1, spear[1.1]);
       Assert.AreEqual(2, spear[6]);
@@ -358,7 +359,7 @@ namespace NotungTest
     public void SpearmanRanksTestWithDuplicates()
     {
       double[] nums = new double[9] { 9.5, 6, -3, 8.7, 12, 1.1, -3, 12, 0 };
-      var spear = CorrelationTest.CalculateSpearmanRanks(nums);
+      var spear = GroupNormalizer.CalculateRanks(nums);
       Assert.AreEqual(1.5f, spear[-3]);
       Assert.AreEqual(3, spear[0]);
       Assert.AreEqual(4, spear[1.1]);

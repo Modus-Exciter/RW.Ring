@@ -90,5 +90,51 @@ namespace Schicksal.Basic
     {
       return m_data.GetEnumerator();
     }
+
+    public override string ToString()
+    {
+      return string.Format("Named multy group, count={0}", m_data.Length);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as MultiArrayDataGroup<T>;
+
+      if (other == null)
+        return false;
+
+      if (!ReferenceEquals(m_data, other.m_data))
+      {
+        for (int i = 0; i < m_data.Length; i++)
+        {
+          if (!m_data[i].Equals(other.m_data[i]))
+            return false;
+        }
+      }
+
+      if (!ReferenceEquals(m_indexes, other.m_indexes))
+      {
+        for (int i = 0; i < m_keys.Length; i++)
+        {
+          if (!m_keys[i].Equals(other.m_keys[i]))
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+    public override int GetHashCode()
+    {
+      int res = m_data.Length;
+
+      for (int i = 0; i < m_data.Length; i++)
+        res ^= m_data[i].GetHashCode();
+
+      for (int i = 0; i < m_keys.Length; i++)
+        res ^= m_keys[i].GetHashCode();
+
+      return res;
+    }
   }
 }

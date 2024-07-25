@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Schicksal.Basic
 {
@@ -42,7 +41,7 @@ namespace Schicksal.Basic
   }
 
   /// <summary>
-  /// Набор данных, состоящий из нескольких выборок
+  /// Множество наборов данных, состоящих из нескольких выборок
   /// </summary>
   public interface ISetMultyDataGroup : IEnumerable<IMultyDataGroup>
   {
@@ -118,6 +117,26 @@ namespace Schicksal.Basic
     {
       return m_array.GetEnumerator();
     }
+
+    public override string ToString()
+    {
+      return string.Format("Array group, count={0}", m_array.Length);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as ArrayDataGroup;
+
+      if (other == null)
+        return false;
+
+      return m_array.Equals(other.m_array);
+    }
+
+    public override int GetHashCode()
+    {
+      return m_array.GetHashCode();
+    }
   }
 
   public sealed class MultiArrayDataGroup : IMultyDataGroup
@@ -168,6 +187,43 @@ namespace Schicksal.Basic
     {
       return m_data.GetEnumerator();
     }
+
+    public override string ToString()
+    {
+      return string.Format("Array muti group, count={0}", m_data.Length);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as MultiArrayDataGroup;
+
+      if (other == null)
+        return false;
+
+      if (m_data.Length != other.m_data.Length)
+        return false;
+
+      if (!ReferenceEquals(m_data, other.m_data))
+      {
+        for (int i = 0; i < m_data.Length; i++)
+        {
+          if (!m_data[i].Equals(other.m_data[i]))
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+    public override int GetHashCode()
+    {
+      int res = m_data.Length;
+
+      for (int i = 0; i < m_data.Length; i++)
+        res ^= m_data[i].GetHashCode();
+
+      return res;
+    }
   }
 
   public sealed class SetMultiArrayDataGroup : ISetMultyDataGroup
@@ -206,6 +262,43 @@ namespace Schicksal.Basic
     IEnumerator IEnumerable.GetEnumerator()
     {
       return m_data.GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+      return string.Format("Array group set, count={0}", m_data.Length);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as SetMultiArrayDataGroup;
+
+      if (other == null)
+        return false;
+
+      if (m_data.Length != other.m_data.Length)
+        return false;
+
+      if (ReferenceEquals(m_data, other.m_data))
+        return true;
+
+      for (int i = 0; i < m_data.Length; i++)
+      {
+        if (!m_data[i].Equals(other.m_data[i]))
+          return false;
+      }
+
+      return true;
+    }
+
+    public override int GetHashCode()
+    {
+      int res = m_data.Length;
+
+      for (int i = 0; i < m_data.Length; i++)
+        res ^= m_data[i].GetHashCode();
+
+      return res;
     }
   }
 }

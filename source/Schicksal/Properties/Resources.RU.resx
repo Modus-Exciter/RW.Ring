@@ -180,6 +180,12 @@
   <data name="MOST_SIGNIFICAT_DIFFERENCE" xml:space="preserve">
     <value>Наиболее статистически значимая разница наблюдалась между вариантами</value>
   </data>
+  <data name="NO_JOINT_BOX_COX" xml:space="preserve">
+    <value>Невозможно получить функцию обратного преобразования Бокса-Кокса. Группы не преобразованы совместно</value>
+  </data>
+  <data name="NO_JOINT_RANKS" xml:space="preserve">
+    <value>Невозможно получить функцию обратного ранжирования. Группы не ранжированы совместно</value>
+  </data>
   <data name="OTHER_UNSIGNIFICAT" xml:space="preserve">
     <value>а прочие различия оказались несущественными.</value>
   </data>

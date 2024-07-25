@@ -232,4 +232,10 @@
   <data name="MAX_CONSISTENCY" xml:space="preserve">
     <value>Maximal consistendy achieved for dependency type '{0}' equals {1}.</value>
   </data>
+  <data name="NO_JOINT_RANKS" xml:space="preserve">
+    <value>Unable to create the inverse rank handler. Groups are not ranked together</value>
+  </data>
+  <data name="NO_JOINT_BOX_COX" xml:space="preserve">
+    <value>Unable to create the inverse Box-Cox handler. Groups are not transformed together</value>
+  </data>
 </root>

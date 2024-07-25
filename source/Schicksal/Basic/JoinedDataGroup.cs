@@ -51,8 +51,31 @@ namespace Schicksal.Basic
     {
       return this.GetEnumerator();
     }
+
+    public override string ToString()
+    {
+      return string.Format("Joined {0}", m_group);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as JoinedDataGroup;
+
+      if (other == null)
+        return false;
+
+      return m_group.Equals(other.m_group);
+    }
+
+    public override int GetHashCode()
+    {
+      return m_group.GetHashCode();
+    }
   }
 
+  /// <summary>
+  /// Вспомогательный класс для объединения нескольких наборов выборок в один 
+  /// </summary>
   [ImmutableObject(true)]
   public sealed class JoinedMultiDataGroup : IMultyDataGroup
   {
@@ -94,6 +117,26 @@ namespace Schicksal.Basic
     IEnumerator IEnumerable.GetEnumerator()
     {
       return this.GetEnumerator();
+    }
+
+    public override string ToString()
+    {
+      return string.Format("Joined {0}", m_group);
+    }
+
+    public override bool Equals(object obj)
+    {
+      var other = obj as JoinedMultiDataGroup;
+
+      if (other == null)
+        return false;
+
+      return m_group.Equals(other.m_group);
+    }
+
+    public override int GetHashCode()
+    {
+      return m_group.GetHashCode();
     }
   }
 }
