@@ -496,7 +496,7 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Denormalizer(value => {0} value ^ (1 / {0}))", m_lambda);
+        return string.Format("Denormalizer(value => {0} value ^ {1}))", m_lambda, 1 / m_lambda);
       }
     }
 
