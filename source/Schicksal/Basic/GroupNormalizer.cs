@@ -280,7 +280,7 @@ namespace Schicksal.Basic
 
     #endregion
 
-    #region Inverse -------------------------------------------------------------------------------
+    #region Inverse handlers ----------------------------------------------------------------------
 
     /// <summary>
     /// Расчёт изначального значения по преобразованному
@@ -639,7 +639,7 @@ namespace Schicksal.Basic
         this.Source = group;
         this.Delta = delta;
 
-        m_log_sum = this.Source.Sum(a => Math.Log(a + delta));
+        m_log_sum = this.Source.Sum(this.LogWithDelta);
         m_transform = a => BoxCoxTransform(a, this.Lambda, this.Delta);
       }
 
@@ -710,6 +710,16 @@ namespace Schicksal.Basic
       public override int GetHashCode()
       {
         return this.Source.GetHashCode() ^ this.Lambda.GetHashCode() ^ this.Delta.GetHashCode();
+      }
+
+      private double LogWithDelta(double value)
+      {
+        double a = value + this.Delta;
+
+        if (a <= 0)
+          throw new ArgumentOutOfRangeException("delta");
+
+        return Math.Log(a);
       }
     }
 

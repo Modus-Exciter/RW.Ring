@@ -230,6 +230,22 @@ namespace BasicStatisticsTest
     }
 
     [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void NegativeValues()
+    {
+      ArrayDataGroup group = new ArrayDataGroup(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
+      GroupNormalizer.CalculateLambda(group);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentOutOfRangeException))]
+    public void NegativeValues2()
+    {
+      ArrayDataGroup group = new ArrayDataGroup(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
+      GroupNormalizer.CalculateLambda(group, 3);
+    }
+
+    [TestMethod]
     public void Delta()
     {
       double[] values = new double[] { -3, -2, -1, 0, 1, 2, 3, 4 };
