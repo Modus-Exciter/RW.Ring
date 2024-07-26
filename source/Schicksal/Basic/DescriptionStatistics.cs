@@ -13,6 +13,9 @@ namespace Schicksal.Basic
   /// </summary>
   public static class DescriptionStatistics
   {
+    /// <summary>
+    /// Среднее арифметическое
+    /// </summary>
     public static double Mean(IDataGroup group)
     {
       Debug.Assert(group != null);
@@ -20,12 +23,17 @@ namespace Schicksal.Basic
       return group.Count > 0 ? group.Average() : double.NaN;
     }
 
+    /// <summary>
+    /// Медиана
+    /// </summary>
     public static double Median(IDataGroup group)
     {
+      var ordered = OrderedGroup.Construct(group);
+
       if (group.Count % 2 == 0)
-        return group.OrderBy(d => d).Skip(group.Count / 2 - 1).Take(2).Average();
+        return (ordered[group.Count / 2 - 1] + ordered[group.Count / 2]) / 2;
       else
-        return group.OrderBy(d => d).Skip(group.Count / 2).First();
+        return ordered[group.Count / 2];
     }
 
     /// <summary>

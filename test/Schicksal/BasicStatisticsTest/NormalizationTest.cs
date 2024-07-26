@@ -61,6 +61,65 @@ namespace BasicStatisticsTest
     #endregion
 
     [TestMethod]
+    public void OrderGroup()
+    {
+      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
+
+      var gr2 = OrderedGroup.Construct(group);
+
+      for (int i = 1; i < group.Count; i++)
+        Assert.IsTrue(gr2[i - 1] <= gr2[i]);
+    }
+
+    [TestMethod]
+    public void OrderGroupDesc()
+    {
+      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
+
+      var gr2 = OrderedGroup.Construct(group, System.ComponentModel.ListSortDirection.Descending);
+
+      for (int i = 1; i < group.Count; i++)
+        Assert.IsTrue(gr2[i - 1] >= gr2[i]);
+    }
+
+    [TestMethod]
+    public void OrderedEnumeration()
+    {
+      var group1 = CreateRandomGroup(200);
+      var group2 = CreateRandomGroup(300);
+      var group3 = CreateRandomGroup(70000);
+
+      var ordered1 = OrderedGroup.Construct(group1);
+      var ordered2 = OrderedGroup.Construct(group2);
+      var ordered3 = OrderedGroup.Construct(group3);
+
+      var arr1 = group1.OrderBy(a => a).ToArray();
+      var arr2 = group2.OrderBy(a => a).ToArray();
+      var arr3 = group3.OrderBy(a => a).ToArray();
+
+      CheckEquality(ordered1, arr1);
+      CheckEquality(ordered2, arr2);
+      CheckEquality(ordered3, arr3);
+    }
+
+    private static void CheckEquality(IDataGroup group, double[] array)
+    {
+      for (int i = 0; i < array.Length; i++)
+        Assert.AreEqual(array[i], group[i]);
+    }
+
+    private static IDataGroup CreateRandomGroup(int size)
+    {
+      double[] array = new double[size];
+      Random rnd = new Random();
+
+      for (int i = 0; i < size; i++)
+        array[i] = rnd.Next() + rnd.NextDouble();
+
+      return new ArrayDataGroup(array);
+    }
+
+    [TestMethod]
     public void OneDimensionGroup()
     {
       var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4 });
