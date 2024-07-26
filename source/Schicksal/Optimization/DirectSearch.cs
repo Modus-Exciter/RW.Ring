@@ -35,6 +35,7 @@ namespace Schicksal.Optimization
       {
         if (lowBound.Length != highBound.Length)
           throw new ArgumentException();
+
         if (options == null)
           m_options = OptimizationOptions.Default;
 
@@ -133,6 +134,5 @@ namespace Schicksal.Optimization
       }
     }
   }
-
 }
 

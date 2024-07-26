@@ -1,4 +1,5 @@
-﻿using Schicksal.Basic;
+﻿using Notung.Data;
+using Schicksal.Basic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,26 +103,30 @@ namespace Schicksal.VectorField
 
     public static VectorDataGroup operator *(in VectorDataGroup a, in VectorDataGroup b)
     {
-      if (a.Count != b.Count) throw new ArgumentException("Sizes doesn't natch");
+      if (a.Count != b.Count) 
+        throw new ArgumentException("Sizes doesn't natch");
+
       double[] res = new double[a.Count];
+
       for (int i = 0; i < res.Length; i++)
         res[i] = a[i] * b[i];
+
       return new VectorDataGroup(res);
     }
 
     public static VectorDataGroup Zeros(int Dim)
     {
-      return new VectorDataGroup((new double[Dim]).Select(value => value = 0).ToArray());
+      return new VectorDataGroup(new double[Dim]);
     }
 
     public static VectorDataGroup Ones(int Dim)
     {
-      return new VectorDataGroup((new double[Dim]).Select(value => value = 1).ToArray());
+      return new VectorDataGroup(ArrayExtensions.CreateAndFill(Dim, () => 1.0));
     }
 
     public static VectorDataGroup Unit(int Dim, int Index)
     {
-      double[] res = Zeros(Dim).ToArray();
+      double[] res = new double[Dim];
       res[Index] = 1;
       return new VectorDataGroup(res);
     }
