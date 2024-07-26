@@ -67,6 +67,7 @@
   public sealed class DummyNormalizer : INormalizer
   {
     private static readonly DummyNormalizer _instance = new DummyNormalizer();
+    private static readonly DummyDenormalizer _denormalizer = new DummyDenormalizer();
 
     private DummyNormalizer() { }
 
@@ -83,7 +84,7 @@
     /// </summary>
     public static IDenormalizer Denormalizer
     {
-      get { return DummyDenormalizer.Instance; }
+      get { return _denormalizer; }
     }
     
     /// <summary>
@@ -93,7 +94,7 @@
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     public IDenormalizer GetDenormalizer(IDataGroup group)
     {
-      return DummyDenormalizer.Instance;
+      return _denormalizer;
     }
 
     /// <summary>
@@ -103,7 +104,7 @@
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     public IDenormalizer GetDenormalizer(IMultyDataGroup group)
     {
-      return DummyDenormalizer.Instance;
+      return _denormalizer;
     }
 
     /// <summary>
@@ -113,7 +114,7 @@
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     public IDenormalizer GetDenormalizer(ISetMultyDataGroup group)
     {
-      return DummyDenormalizer.Instance;
+      return _denormalizer;
     }
 
     /// <summary>
@@ -167,6 +168,7 @@
     /// <summary>
     /// Получение хеш-кода для преобразователя
     /// </summary>
+    /// <returns>Хеш-код типа данных</returns>
     public override int GetHashCode()
     {
       return this.GetType().GetHashCode();
@@ -174,8 +176,6 @@
 
     private sealed class DummyDenormalizer : IDenormalizer
     {
-      public static readonly DummyDenormalizer Instance = new DummyDenormalizer();
-
       public double Denormalize(double value)
       {
         return value;

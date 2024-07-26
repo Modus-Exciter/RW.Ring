@@ -52,6 +52,7 @@
     <Compile Include="NormalizationTest.cs" />
     <Compile Include="TableSetDataGroupTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MedianTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
