@@ -97,12 +97,12 @@ namespace Schicksal.Basic
       return m_direction.GetHashCode() ^ m_source.GetHashCode();
     }
 
-    protected abstract int GetIndex(int index);
-
     /// <summary>
     /// Запуск повторной сортировки (требуется при изменении данных в источнике)
     /// </summary>
     public abstract void Resort();
+
+    protected abstract int GetIndex(int index);
 
     /// <summary>
     /// Создание нового экземпляра отсортированной выборки
@@ -126,6 +126,8 @@ namespace Schicksal.Basic
 
       return new Int32OrderedGroup(group, direction);
     }
+
+    #region Implementation
 
     private sealed class Int32OrderedGroup : OrderedGroup
     {
@@ -255,5 +257,7 @@ namespace Schicksal.Basic
           Array.Sort(m_indexes, this.CompareBack);
       }
     }
+
+    #endregion
   }
 }

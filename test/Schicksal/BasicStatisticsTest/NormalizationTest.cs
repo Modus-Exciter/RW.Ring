@@ -100,6 +100,55 @@ namespace BasicStatisticsTest
       CheckEquality(ordered1, arr1);
       CheckEquality(ordered2, arr2);
       CheckEquality(ordered3, arr3);
+
+      ordered1 = OrderedGroup.Construct(group1, System.ComponentModel.ListSortDirection.Descending);
+      ordered2 = OrderedGroup.Construct(group2, System.ComponentModel.ListSortDirection.Descending);
+      ordered3 = OrderedGroup.Construct(group3, System.ComponentModel.ListSortDirection.Descending);
+
+      Array.Reverse(arr1);
+      Array.Reverse(arr2);
+      Array.Reverse(arr3);
+
+      CheckEquality(ordered1, arr1);
+      CheckEquality(ordered2, arr2);
+      CheckEquality(ordered3, arr3);
+    }
+
+    [TestMethod]
+    public void ResortGroup()
+    {
+      double[] array = new double[200];
+      Random rnd = new Random();
+
+      for (int i = 0; i < 200; i++)
+        array[i] = rnd.Next() + rnd.NextDouble();
+
+      var group = new ArrayDataGroup(array);
+
+      var ordered = OrderedGroup.Construct(group);
+
+      for (int i = 17; i < 200; i += rnd.Next(20))
+        array[i] = -array[i];
+
+      Array.Sort(array);
+
+      bool invert = false;
+
+      for (int i = 1; i < ordered.Count; i++)
+      {
+        if (ordered[i - 1] > ordered[i])
+        {
+          invert = true;
+          break;
+        }
+      }
+
+      Assert.IsTrue(invert);
+
+      ordered.Resort();
+
+      for (int i = 0; i < ordered.Count; i++)
+        Assert.IsTrue(array[i] == ordered[i]);
     }
 
     private static void CheckEquality(IDataGroup group, double[] array)
