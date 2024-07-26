@@ -208,7 +208,7 @@ namespace Schicksal.Basic
     /// <param name="data">Числовая последовательность</param>
     /// <param name="round">Количество знаков после запятой для округления</param>
     /// <returns>Каждому значению из числовой последовательности сопоставляется его ранг</returns>
-    public static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, int round)
+    public static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, int round = -1)
     {
       Debug.Assert(data != null, "data cannot be null");
 
