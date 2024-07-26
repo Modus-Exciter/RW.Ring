@@ -2,6 +2,7 @@
 using Schicksal.Basic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace BasicStatisticsTest
@@ -337,5 +338,177 @@ namespace BasicStatisticsTest
         }
       }
     }
+  }
+  public static class GroupNormalizer
+  {
+    #region Box-Cox -------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Вычисление фиксированного коэффициента смещения для преобразования Бокса-Кокса
+    /// </summary>
+    /// <param name="group">Числовая последовательность</param>
+    /// <returns>Коэффициент для смещения отрицательных значений</returns>
+    public static double CalculateDelta(IEnumerable<double> group)
+    {
+      return BoxCoxNormalizer.CalculateDelta(group);
+    }
+
+    /// <summary>
+    /// Вычисление коэффициента для преобразования Бокса-Кокса
+    /// </summary>
+    /// <param name="group">Числовая последовательность</param>
+    /// <param name="delta">Коэффициент для смещения отрицательных значений</param>
+    /// <returns>Коэффициент для преобразования</returns>
+    public static double CalculateLambda(IDataGroup group, double delta = 0)
+    {
+      return new BoxCoxNormalizer().CalculateLambda(group, delta);
+    }
+
+    /// <summary>
+    /// Преобразование Бокса-Кокса
+    /// </summary>
+    /// <param name="value">Преобразуемое значение</param>
+    /// <param name="lambda">Коэффициент для преобразования</param>
+    /// <param name="delta">Коэффициент для смещения отрицательных значений</param>
+    /// <returns>Преобразованное значение</returns>
+    public static double BoxCoxTransform(double value, double lambda, double delta = 0)
+    {
+      return BoxCoxNormalizer.BoxCoxTransform(value, lambda, delta);
+    }
+
+    /// <summary>
+    /// Нормирование группы значений методом Бокса-Кокса
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <returns>Нормированная группа</returns>
+    public static IDataGroup NormalizeByBoxCox(IDataGroup group)
+    {
+      return new BoxCoxNormalizer().Normalize(group);
+    }
+
+    /// <summary>
+    /// Нормирование группы значений второго порядка методом Бокса-Кокса
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <returns>Нормированная группа</returns>
+    public static IMultyDataGroup NormalizeByBoxCox(IMultyDataGroup group)
+    {
+      return new BoxCoxNormalizer().Normalize(group);
+    }
+
+    /// <summary>
+    /// Нормирование группы значений третьего порядка методом Бокса-Кокса
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <returns>Нормированная группа</returns>
+    public static ISetMultyDataGroup NormalizeByBoxCox(ISetMultyDataGroup group)
+    {
+      return new BoxCoxNormalizer().Normalize(group);
+    }
+
+    #endregion
+
+    #region Kruskal-Wallis ------------------------------------------------------------------------
+
+    /// <summary>
+    /// Расчёт рангов чисел в числовой последовательности
+    /// </summary>
+    /// <param name="data">Числовая последовательность</param>
+    /// <param name="round">Количество знаков после запятой для округления</param>
+    /// <returns>Каждому значению из числовой последовательности сопоставляется его ранг</returns>
+    public static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, int round = -1)
+    {
+      return RankNormalizer.CalculateRanks(data, round);
+    }
+
+    /// <summary>
+    /// Преобразование группы значений в группу рангов
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <param name="round">Количество знаков после запятой для округления</param>
+    /// <returns>Преобразованная группа</returns>
+    public static IDataGroup NormalizeByRanks(IDataGroup group, int round = -1)
+    {
+      return new RankNormalizer(round).Normalize(group);
+    }
+
+    /// <summary>
+    /// Преобразование группы значений второго порядка в группу рангов
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <param name="round">Количество знаков после запятой для округления</param>
+    /// <returns>Преобразованная группа</returns>
+    public static IMultyDataGroup NormalizeByRanks(IMultyDataGroup multyGroup, int round = -1)
+    {
+      return new RankNormalizer(round).Normalize(multyGroup);
+    }
+
+    /// <summary>
+    /// Преобразование группы значений третьего порядка в группу рангов
+    /// </summary>
+    /// <param name="group">Исходная группа</param>
+    /// <param name="round">Количество знаков после запятой для округления</param>
+    /// <returns>Преобразованная группа</returns>
+    public static ISetMultyDataGroup NormalizeByRanks(ISetMultyDataGroup group, int round = -1)
+    {
+      return new RankNormalizer(round).Normalize(group);
+    }
+
+    #endregion
+
+    #region Inverse handlers ----------------------------------------------------------------------
+
+    /// <summary>
+    /// Расчёт изначального значения по преобразованному
+    /// </summary>
+    /// <param name="group">Группа преобразованных значений</param>
+    /// <returns>Значение в исходной группе</returns>
+    public static Func<double, double> CreateInverseHandler(IDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      var ranked = new RankNormalizer().GetDenormalizer(group);
+
+      if (ranked != DummyNormalizer.Denormalizer)
+        return ranked.Denormalize;
+      else
+        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+    }
+
+    /// <summary>
+    /// Расчёт изначального значения по преобразованному
+    /// </summary>
+    /// <param name="group">Группа преобразованных значений второго порядка</param>
+    /// <returns>Значение в исходной группе</returns>
+    public static Func<double, double> CreateInverseHandler(IMultyDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      var ranked = new RankNormalizer().GetDenormalizer(group);
+
+      if (ranked != DummyNormalizer.Denormalizer)
+        return ranked.Denormalize;
+      else
+        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+    }
+
+    /// <summary>
+    /// Расчёт изначального значения по преобразованному
+    /// </summary>
+    /// <param name="group">Группа преобразованных значений третьего порядка</param>
+    /// <returns>Значение в исходной группе</returns>
+    public static Func<double, double> CreateInverseHandler(ISetMultyDataGroup group)
+    {
+      Debug.Assert(group != null, "group cannot be null");
+
+      var ranked = new RankNormalizer().GetDenormalizer(group);
+
+      if (ranked != DummyNormalizer.Denormalizer)
+        return ranked.Denormalize;
+      else
+        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+    }
+
+    #endregion
   }
 }

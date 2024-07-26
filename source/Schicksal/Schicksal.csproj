@@ -51,11 +51,13 @@
     <Compile Include="Anova\FisherMetrics.cs" />
     <Compile Include="Anova\FisherTableProcessor.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
+    <Compile Include="Basic\BoxCoxNormalizer.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
-    <Compile Include="Basic\GroupNormalizer.cs" />
     <Compile Include="Basic\IDataGroup.cs" />
+    <Compile Include="Basic\INormalizer.cs" />
     <Compile Include="Basic\JoinedDataGroup.cs" />
     <Compile Include="Basic\MultiArrayDataGroup.cs" />
+    <Compile Include="Basic\RankNormalizer.cs" />
     <Compile Include="Basic\TableMultyDataGroup.cs" />
     <Compile Include="Basic\TableSetDataGroup.cs" />
     <Compile Include="Clustering\ClusteringParameters.cs" />

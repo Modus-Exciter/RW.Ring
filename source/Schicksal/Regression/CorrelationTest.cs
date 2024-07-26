@@ -273,9 +273,9 @@ namespace Schicksal.Regression
 
     private static void CalculateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
     {
-      var x_ranks = GroupNormalizer.CalculateRanks(x);
-      var y_ranks = GroupNormalizer.CalculateRanks(EnumeratePoints(x, y).Select(p =>
-        Math.Abs(p.Y - dependency.Calculate(p.X))));
+      var x_ranks = RankNormalizer.CalculateRanks(x, -1);
+      var y_ranks = RankNormalizer.CalculateRanks(EnumeratePoints(x, y).Select(p =>
+        Math.Abs(p.Y - dependency.Calculate(p.X))), -1);
 
       double dsum = 0;
 
