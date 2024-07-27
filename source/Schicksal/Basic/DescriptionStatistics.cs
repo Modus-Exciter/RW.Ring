@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
@@ -91,70 +89,6 @@ namespace Schicksal.Basic
 
       return PlainDerivation(sample) / Math.Sqrt(sample.Count - 1);
     }
-
-    public static IPlainSample Wrap(IPlainSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (sample is ArrayPlainSample)
-        return sample;
-
-      var array = new double[sample.Count];
-      var i = 0;
-
-      foreach (var value in sample)
-        array[i++] = value;
-
-      return new ArrayPlainSample(array);
-    }
-
-    public static IDividedSample Wrap(IDividedSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (sample.All(g => g is ArrayPlainSample))
-      {
-        if (sample is ArrayDividedSample)
-          return sample;
-
-        var samples = new IPlainSample[sample.Count];
-        var i = 0;
-
-        foreach (var value in sample)
-          samples[i++] = value;
-
-        return new ArrayDividedSample(samples);
-      }
-      else
-      {
-        var samples = new IPlainSample[sample.Count];
-        var i = 0;
-
-        foreach (var value in sample)
-          samples[i++] = Wrap(value);
-
-        return new ArrayDividedSample(samples);
-      }
-    }
-
-    public static IComplexSample Wrap(IComplexSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (sample.SelectMany(g => g).All(g => g is ArrayPlainSample))
-      {
-        if (sample is ArrayComplexSample && sample.All(g => g is ArrayDividedSample))
-          return sample;
-      }
-
-      var samples = new IDividedSample[sample.Count];
-      var i = 0;
-
-      foreach (var value in sample)
-        samples[i++] = Wrap(value);
-
-      return new ArrayComplexSample(samples);
-    }
   }
 
   public class DescriptionStatisticsCalculator : RunBase
@@ -224,7 +158,6 @@ namespace Schicksal.Basic
       }
     }
   }
-
 
   public class DescriptionStatisticsEntry
   {

@@ -54,6 +54,7 @@
     <Compile Include="Basic\BoxCoxNormalizer.cs" />
     <Compile Include="Basic\DenormalizationHelper.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
+    <Compile Include="Basic\FactorInfo.cs" />
     <Compile Include="Basic\SampleRepack.cs" />
     <Compile Include="Basic\ISample.cs" />
     <Compile Include="Basic\INormalizer.cs" />
