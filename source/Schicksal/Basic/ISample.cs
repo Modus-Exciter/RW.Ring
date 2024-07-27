@@ -108,7 +108,7 @@ namespace Schicksal.Basic
 
     public IEnumerator<double> GetEnumerator()
     {
-      return ((IList<double>)m_array).GetEnumerator();
+      return (m_array as IList<double>).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -179,7 +179,7 @@ namespace Schicksal.Basic
 
     public IEnumerator<IPlainSample> GetEnumerator()
     {
-      return ((IList<IPlainSample>)m_data).GetEnumerator();
+      return (m_data as IList<IPlainSample>).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -256,7 +256,7 @@ namespace Schicksal.Basic
 
     public IEnumerator<IDividedSample> GetEnumerator()
     {
-      return ((IList<IDividedSample>)m_data).GetEnumerator();
+      return (m_data as IList <IDividedSample>).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()

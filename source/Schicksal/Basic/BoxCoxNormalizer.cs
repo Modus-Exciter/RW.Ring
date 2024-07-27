@@ -1,79 +1,71 @@
-﻿using Schicksal.Properties;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using Schicksal.Properties;
 
 namespace Schicksal.Basic
 {
   /// <summary>
   /// Преобразователь данных для нормирования методом Бокса-Кокса
   /// </summary>
-  public sealed class BoxCoxNormalizer : INormalizer
+  public sealed class BoxCoxNormalizer : INormalizer, IDenormalizerFactory
   {
+    private readonly double m_min;
+    private readonly double m_max;
+    private readonly double m_eps;
+
+    /// <summary>
+    /// Инициализация преобразователя данных для нормирования методом Бокса-Кокса
+    /// </summary>
+    /// <param name="min">Минимальное значение показателя степени для трансформации</param>
+    /// <param name="max">Максмальное значение показателя степени для трансформации</param>
+    /// <param name="eps">Точность вычисления показателя степени для трансформации</param>
+    public BoxCoxNormalizer(double min = -10, double max = 10, double eps = 1e-5)
+    {
+      Debug.Assert(min < max);
+      Debug.Assert(eps < (max - min) / 2);
+
+      m_min = min;
+      m_max = max;
+      m_eps = eps;
+    }
+
+    /// <summary>
+    /// Минимальное значение показателя степени для трансформации
+    /// </summary>
+    public double MinLambda
+    {
+      get { return m_min; }
+    }
+
+    /// <summary>
+    /// Максмальное значение показателя степени для трансформации
+    /// </summary>
+    public double MaxLambda
+    {
+      get { return m_max; }
+    }
+
+    /// <summary>
+    /// Точность вычисления показателя степени для трансформации
+    /// </summary>
+    public double Epsilon
+    {
+      get { return m_eps; }
+    }
+
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
     /// <param name="sample">Группа нормированных значений</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IPlainSample sample)
+    public IDenormalizer GetDenormalizer(ISample sample)
     {
       Debug.Assert(sample != null, "sample cannot be null");
 
-      var box_cox = sample as BoxCoxSample;
-
-      if (box_cox != null)
-        return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-      else
-        return DummyNormalizer.Denormalizer;
-    }
-
-    /// <summary>
-    /// Расчёт изначального значения по преобразованному
-    /// </summary>
-    /// <param name="sample">Группа нормированных значений второго порядка</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IDividedSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      var sub_sample = sample.FirstOrDefault();
-      var box_cox = sub_sample as BoxCoxSample;
-
-      if (box_cox != null)
-      {
-        if (RecreateRequired(sample))
-          throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
-        else
-          return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-      }
-      else
-        return DummyNormalizer.Denormalizer;
-    }
-
-    /// <summary>
-    /// Расчёт изначального значения по преобразованному
-    /// </summary>
-    /// <param name="sample">Группа нормированных значений третьего порядка</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IComplexSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      var sub_sample = sample.SelectMany(g => g).FirstOrDefault();
-      var box_cox = sub_sample as BoxCoxSample;
-
-      if (box_cox != null)
-      {
-        if (RecreateRequired(sample.SelectMany(g => g)))
-          throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
-        else
-          return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-      }
-      else
-        return DummyNormalizer.Denormalizer;
+      return DummyNormalizer.Instance.GetDenormalizer(sample, this);
     }
 
     /// <summary>
@@ -86,7 +78,7 @@ namespace Schicksal.Basic
       Debug.Assert(sample != null, "sample cannot be null");
 
       var bcg = new BoxCoxSample(sample, CalculateDelta(sample));
-      bcg.Lambda = TwoStageOptimization(-10, 10, 1e-5, bcg.GetLikehood);
+      bcg.Lambda = TwoStageOptimization(m_min, m_max, m_eps, bcg.GetLikehood);
 
       return bcg;
     }
@@ -103,12 +95,13 @@ namespace Schicksal.Basic
       if (RecreateRequired(sample))
       {
         var samples = new BoxCoxSample[sample.Count];
+
         double delta = CalculateDelta(sample.SelectMany(g => g));
 
         for (int i = 0; i < samples.Length; i++)
           samples[i] = new BoxCoxSample(sample[i], delta);
 
-        var lambda = TwoStageOptimization(-10, 10, 1e-5, l =>
+        var lambda = TwoStageOptimization(m_min, m_max, m_eps, l =>
         {
           return CalculateMultipleLikehood(l, samples);
         });
@@ -146,7 +139,7 @@ namespace Schicksal.Basic
           samples[i] = new ArrayDividedSample(array);
         }
 
-        var lambda = TwoStageOptimization(-10, 10, 1e-5, l =>
+        var lambda = TwoStageOptimization(m_min, m_max, m_eps, l =>
         {
           return CalculateMultipleLikehood(l, samples.SelectMany(g => g).Cast<BoxCoxSample>());
         });
@@ -186,7 +179,7 @@ namespace Schicksal.Basic
 
       var bcg = new BoxCoxSample(sample, delta);
 
-      return TwoStageOptimization(-10, 10, 1e-5, bcg.GetLikehood);
+      return TwoStageOptimization(m_min, m_max, m_eps, bcg.GetLikehood);
     }
 
     /// <summary>
@@ -255,6 +248,38 @@ namespace Schicksal.Basic
         else
           return (Math.Pow(value + delta, lambda) - 1) / lambda + 1 - delta;
       }
+    }
+
+    bool IDenormalizerFactory.IsNormalized(IPlainSample sample)
+    {
+      return sample is BoxCoxSample;
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IPlainSample sample)
+    {
+      var box_cox = sample as BoxCoxSample;
+
+      return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IDividedSample sample)
+    {
+      var box_cox = sample.FirstOrDefault() as BoxCoxSample;
+
+      if (RecreateRequired(sample))
+        throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
+      else
+        return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IComplexSample sample)
+    {
+      var box_cox = sample.SelectMany(g => g).FirstOrDefault() as BoxCoxSample;
+
+      if (RecreateRequired(sample.SelectMany(g => g)))
+        throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
+      else
+        return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
     }
 
     #region Implementation ------------------------------------------------------------------------

@@ -10,7 +10,7 @@ namespace Schicksal.Basic
   /// <summary>
   /// Преобразователь данных для нормирования с использованием рангов
   /// </summary>
-  public sealed class RankNormalizer : INormalizer
+  public sealed class RankNormalizer : INormalizer, IDenormalizerFactory
   {
     private readonly int m_round;
 
@@ -36,62 +36,11 @@ namespace Schicksal.Basic
     /// </summary>
     /// <param name="sample">Группа нормированных значений</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IPlainSample sample)
+    public IDenormalizer GetDenormalizer(ISample sample)
     {
       Debug.Assert(sample != null, "sample cannot be null");
 
-      var ranked = sample as RankedSample;
-
-      if (ranked != null)
-        return new RankInverse(ranked.Ranks);
-      else
-        return DummyNormalizer.Denormalizer;
-    }
-
-    /// <summary>
-    /// Расчёт изначального значения по преобразованному
-    /// </summary>
-    /// <param name="sample">Группа нормированных значений второго порядка</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IDividedSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      var sub_sample = sample.FirstOrDefault();
-      var ranked = sub_sample as RankedSample;
-
-      if (ranked != null)
-      {
-        if (RecreateRequired(sample, ranked.Round))
-          throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
-        else
-          return new RankInverse(ranked.Ranks);
-      }
-      else
-        return DummyNormalizer.Denormalizer;
-    }
-
-    /// <summary>
-    /// Расчёт изначального значения по преобразованному
-    /// </summary>
-    /// <param name="sample">Группа нормированных значений третьего порядка</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IComplexSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      var sub_sample = sample.SelectMany(g => g).FirstOrDefault();
-      var ranked = sub_sample as RankedSample;
-
-      if (ranked != null)
-      {
-        if (RecreateRequired(sample.SelectMany(g => g), ranked.Round))
-          throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
-        else
-          return new RankInverse(ranked.Ranks);
-      }
-      else
-        return DummyNormalizer.Denormalizer;
+      return DummyNormalizer.Instance.GetDenormalizer(sample, this);
     }
 
     /// <summary>
@@ -215,6 +164,38 @@ namespace Schicksal.Basic
     }
 
     #region Implementation ------------------------------------------------------------------------
+
+    bool IDenormalizerFactory.IsNormalized(IPlainSample sample)
+    {
+      return sample is RankedSample;
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IPlainSample sample)
+    {
+      var ranked = sample as RankedSample;
+
+      return new RankInverse(ranked.Ranks);
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IDividedSample sample)
+    {
+      var ranked = sample.FirstOrDefault() as RankedSample;
+
+      if (RecreateRequired(sample, ranked.Round))
+        throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
+      else
+        return new RankInverse(ranked.Ranks);
+    }
+
+    IDenormalizer IDenormalizerFactory.GetDenormalizer(IComplexSample sample)
+    {
+      var ranked = sample.SelectMany(g => g).FirstOrDefault() as RankedSample;
+
+      if (RecreateRequired(sample.SelectMany(g => g), ranked.Round))
+        throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
+      else
+        return new RankInverse(ranked.Ranks);
+    }
 
     private static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, out bool hasReason, int round)
     {

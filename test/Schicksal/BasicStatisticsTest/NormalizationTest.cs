@@ -577,7 +577,7 @@ namespace BasicStatisticsTest
 
       var ranked = new RankNormalizer().GetDenormalizer(group);
 
-      if (ranked != DummyNormalizer.Denormalizer)
+      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
         return ranked.Denormalize;
       else
         return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
@@ -594,7 +594,7 @@ namespace BasicStatisticsTest
 
       var ranked = new RankNormalizer().GetDenormalizer(group);
 
-      if (ranked != DummyNormalizer.Denormalizer)
+      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
         return ranked.Denormalize;
       else
         return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
@@ -611,7 +611,7 @@ namespace BasicStatisticsTest
 
       var ranked = new RankNormalizer().GetDenormalizer(group);
 
-      if (ranked != DummyNormalizer.Denormalizer)
+      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
         return ranked.Denormalize;
       else
         return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;

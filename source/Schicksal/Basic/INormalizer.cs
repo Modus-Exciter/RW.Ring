@@ -1,4 +1,6 @@
-﻿namespace Schicksal.Basic
+﻿using System.Diagnostics;
+
+namespace Schicksal.Basic
 {
   /// <summary>
   /// Объект для нормирования данных
@@ -31,6 +33,39 @@
     /// </summary>
     /// <param name="sample">Выборка нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
+    IDenormalizer GetDenormalizer(ISample sample);
+  }
+
+  /// <summary>
+  /// Преобразователь нормированных данных в не нормированные
+  /// </summary>
+  public interface IDenormalizer
+  {
+    /// <summary>
+    /// Преобразование нормированного значения в ненормированное
+    /// </summary>
+    /// <param name="value">Нормированное значение</param>
+    /// <returns>Не нормированное значение</returns>
+    double Denormalize(double value);
+  }
+
+  /// <summary>
+  /// Получение обратных преобразователей от прямого преобразователя для разных типов выборок
+  /// </summary>
+  public interface IDenormalizerFactory
+  {
+    /// <summary>
+    /// Проверка на то, является ли выборка нормированной нужным методом
+    /// </summary>
+    /// <param name="sample">Проверяемая выборка</param>
+    /// <returns>True, если выборка нормирована искомым методом. Иначе, false</returns>
+    bool IsNormalized(IPlainSample sample);
+
+    /// <summary>
+    /// Получение преобразователя для обратного нормирования данных
+    /// </summary>
+    /// <param name="sample">Выборка нормированных данных</param>
+    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     IDenormalizer GetDenormalizer(IPlainSample sample);
 
     /// <summary>
@@ -46,19 +81,6 @@
     /// <param name="sample">Множество наборов выборок нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     IDenormalizer GetDenormalizer(IComplexSample sample);
-  }
-
-  /// <summary>
-  /// Преобразователь нормированных данных в не нормированные
-  /// </summary>
-  public interface IDenormalizer
-  {
-    /// <summary>
-    /// Преобразование нормированного значения в ненормированное
-    /// </summary>
-    /// <param name="value">Нормированное значение</param>
-    /// <returns>Не нормированное значение</returns>
-    double Denormalize(double value);
   }
 
   /// <summary>
@@ -80,40 +102,37 @@
     }
 
     /// <summary>
-    /// Заглушка для фиктивного обратного преобразования нормированных данных
+    /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    public static IDenormalizer Denormalizer
+    /// <param name="sample">Выборка нормированных данных</param>
+    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
+    public IDenormalizer GetDenormalizer(ISample sample)
     {
-      get { return _denormalizer; }
+      return _denormalizer;
     }
-    
+
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
     /// <param name="sample">Выборка нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(IPlainSample sample)
+    public IDenormalizer GetDenormalizer(ISample sample, IDenormalizerFactory factory)
     {
-      return _denormalizer;
-    }
+      Debug.Assert(sample != null && factory != null);
 
-    /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Набор выборок нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(IDividedSample sample)
-    {
-      return _denormalizer;
-    }
+      var plain = sample as IPlainSample;
+      var divided = sample as IDividedSample;
+      var complex = sample as IComplexSample;
 
-    /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Множество наборов выборок нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(IComplexSample sample)
-    {
+      if (sample != null && factory.IsNormalized(plain))
+        return factory.GetDenormalizer(plain);
+
+      if (divided != null && divided.Count > 0 && factory.IsNormalized(divided[0]))
+        return factory.GetDenormalizer(divided);
+
+      if (complex != null && complex.Count > 0 && complex[0].Count > 0 && factory.IsNormalized(complex[0][0]))
+        return factory.GetDenormalizer(complex);
+
       return _denormalizer;
     }
 
@@ -153,25 +172,6 @@
     public override string ToString()
     {
       return "Dummy normalizer(a => a)";
-    }
-
-    /// <summary>
-    /// Сравнение преобразователя с другим объектом
-    /// </summary>
-    /// <param name="obj">Другой объект</param>
-    /// <returns>True, если другой объект - это тоже DummyNormalizer. Иначе, False</returns>
-    public override bool Equals(object obj)
-    {
-      return obj is DummyNormalizer;
-    }
-
-    /// <summary>
-    /// Получение хеш-кода для преобразователя
-    /// </summary>
-    /// <returns>Хеш-код типа данных</returns>
-    public override int GetHashCode()
-    {
-      return this.GetType().GetHashCode();
     }
 
     private sealed class DummyDenormalizer : IDenormalizer
