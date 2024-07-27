@@ -194,7 +194,7 @@ namespace Schicksal.Basic
     /// </summary>
     public override string ToString()
     {
-      return "Normalizer(value => value ^ lambda / lambda)";
+      return "Normalizer(value => BoxCox(value, λ, δ))";
     }
 
     /// <summary>
@@ -496,7 +496,7 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return "Denormalizer(value => (lambda * value) ^ (1 / lambda))";
+        return "Denormalizer(value => InverseBoxCox(value, λ, δ))";
       }
     }
 

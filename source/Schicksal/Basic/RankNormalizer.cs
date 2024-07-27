@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Notung.Threading;
 using Schicksal.Properties;
 
 namespace Schicksal.Basic

@@ -53,6 +53,7 @@
     <Compile Include="Anova\VariantsComparator.cs" />
     <Compile Include="Basic\BoxCoxNormalizer.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
+    <Compile Include="Basic\GroupRepack.cs" />
     <Compile Include="Basic\IDataGroup.cs" />
     <Compile Include="Basic\INormalizer.cs" />
     <Compile Include="Basic\JoinedDataGroup.cs" />
