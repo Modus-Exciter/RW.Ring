@@ -15,7 +15,7 @@ namespace Schicksal.Regression
     private string m_factor = "x";
     private string m_effect = "y";
 
-    protected RegressionDependency(IDataGroup factor, IDataGroup result)
+    protected RegressionDependency(IPlainSample factor, IPlainSample result)
     {
       if (factor == null)
         throw new ArgumentNullException("factor");
@@ -24,7 +24,7 @@ namespace Schicksal.Regression
         throw new ArgumentNullException("result");
 
       if (factor.Count != result.Count)
-        throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
+        throw new ArgumentException(Resources.DATA_SAMPLE_SIZE_MISMATCH);
     }
 
     public string Factor
@@ -81,7 +81,7 @@ namespace Schicksal.Regression
 
   public sealed class LinearDependency : RegressionDependency
   {
-    public LinearDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public LinearDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       double avg_x = DescriptionStatistics.Mean(factor);
       double avg_y = DescriptionStatistics.Mean(result);
@@ -121,7 +121,7 @@ namespace Schicksal.Regression
 
   public sealed class ParabolicDependency : RegressionDependency
   {
-    public ParabolicDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public ParabolicDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Count, 3);
 
@@ -135,7 +135,7 @@ namespace Schicksal.Regression
       IMatrix<double> x_t = TransposedMatrix.Transpose(x_m);
       CultureInfo ci = CultureInfo.CurrentCulture;
       IMatrix<double> b_m = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci)
-        .Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
+        .Multiply(x_t, ci).Multiply(new SampleMatrixColumn(result), ci);
 
       this.A = b_m[2, 0];
       this.B = b_m[1, 0];
@@ -166,7 +166,7 @@ namespace Schicksal.Regression
   {
     private readonly double[] m_gaps;
 
-    public MichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public MichaelisDependency(IPLainSample factor, IPLainSample result) : base(factor, result)
     {
       double avg_x = 0;
       double avg_y = 0;
@@ -212,7 +212,7 @@ namespace Schicksal.Regression
 
     public double B { get; private set; }
 
-    public IDataGroup Coefs { get { return new ArrayDataGroup(new double[] { B, A }); } }
+    public IPLainSample Coefs { get { return new ArrayDataGroup(new double[] { B, A }); } }
 
     public override double[] GetGaps()
     {
@@ -236,7 +236,7 @@ namespace Schicksal.Regression
   {
     private readonly double[] m_gaps;
 
-    public HyperbolicDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public HyperbolicDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       RectangleMatrix<double> x_m = new RectangleMatrix<double>(factor.Count, 4);
 
@@ -251,7 +251,7 @@ namespace Schicksal.Regression
       IMatrix<double> x_t = TransposedMatrix.Transpose(x_m);
       CultureInfo ci = CultureInfo.CurrentCulture;
       IMatrix<double> a = MatrixFunctions.Invert(x_t.Multiply(x_m, ci), ci)
-        .Multiply(x_t, ci).Multiply(new DataGroupColumn(result), ci);
+        .Multiply(x_t, ci).Multiply(new SampleMatrixColumn(result), ci);
 
       if (a[3, 0] == 0)
         throw new ArgumentException(Resources.IMPOSSSIBLE_DEPENDENCY);
@@ -294,7 +294,7 @@ namespace Schicksal.Regression
 
   public sealed class ExponentialDependency : RegressionDependency
   {
-    public ExponentialDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public ExponentialDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       double avg_x = 0;
       double avg_y = 0;
@@ -369,7 +369,7 @@ namespace Schicksal.Regression
 
     public double B { get { return m_param[1]; } }
 
-    public LikehoodMichaelisDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public LikehoodMichaelisDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       double maxY = result.Max(); double minY = result.Min();
       double minX = factor.Min(); double maxX = factor.Max();
@@ -382,7 +382,7 @@ namespace Schicksal.Regression
       var optimizator = new MathOptimization.Direct(likelyhood.Calculate, lowBound.ToArray(), highBound.ToArray());
       m_param = optimizator.Process();
 
-      IDataGroup residual = Residual.Calculate(factor, result, this.Calculate);
+      IPlainSample residual = Residual.Calculate(factor, result, this.Calculate);
       m_variance = new PolylineFit(factor, residual);
     }
 
@@ -411,7 +411,7 @@ namespace Schicksal.Regression
     public double B { get { return m_param[1]; } }
     public double C { get { return m_param[2]; } }
 
-    public LogisticDependency(IDataGroup factor, IDataGroup result) : base(factor, result)
+    public LogisticDependency(IPlainSample factor, IPlainSample result) : base(factor, result)
     {
       double[] lowBound;
       double[] highBound;
@@ -432,8 +432,8 @@ namespace Schicksal.Regression
         highBound = new double[] { Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max() };
 
         //Инициализация функции правдоподобия и оптимизация
-        likelyhood = new LikelyhoodFunction(new ArrayDataGroup(x), new ArrayDataGroup(y), MathFunction.Logistic);
-        //IDataGroup tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
+        likelyhood = new LikelyhoodFunction(new ArrayPlainSample(x), new ArrayPlainSample(y), MathFunction.Logistic);
+        //IPLainSample tempParam = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
         var optimizator = new MathOptimization.Direct(likelyhood.Calculate, lowBound.ToArray(), highBound.ToArray());
         var tempParam = optimizator.Process();
         //Преобразование коэффициентов
@@ -450,7 +450,7 @@ namespace Schicksal.Regression
         highBound = new double[] { Y_COEF * y.Max(), MAX_BASE, X_COEF * x.Max() };
 
         //Инициализация функции правдоподобия и оптимизация
-        likelyhood = new LikelyhoodFunction(new ArrayDataGroup(x), new ArrayDataGroup(y), MathFunction.Logistic);
+        likelyhood = new LikelyhoodFunction(new ArrayPlainSample(x), new ArrayPlainSample(y), MathFunction.Logistic);
         //m_param = MathOptimization.DIRECTSearch(likelyhood.Calculate, lowBound, highBound);
         var optimizator = new MathOptimization.Direct(likelyhood.Calculate, lowBound.ToArray(), highBound.ToArray());
         m_param = optimizator.Process();

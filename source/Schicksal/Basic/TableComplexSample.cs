@@ -10,19 +10,19 @@ namespace Schicksal.Basic
   /// <summary>
   /// Обёртка над таблицей для многофакторного анализа
   /// </summary>
-  public sealed class TableSetDataGroup : ISetMultyDataGroup, IDisposable
+  public sealed class TableComplexSample : IComplexSample, IDisposable
   {
     private readonly DataTable m_table;
-    private readonly MultyViewGroup[] m_views;
+    private readonly MultyViewSample[] m_views;
     private readonly Dictionary<string, int> m_indexes;
 
-    public TableSetDataGroup(DataTable table, string[] factorColumns, string[] ignorableColumns, string resultColumn, string filter = null, string conjugate = null)
+    public TableComplexSample(DataTable table, string[] factorColumns, string[] ignorableColumns, string resultColumn, string filter = null, string conjugate = null)
     {
       CheckConstrictorParameters(table, factorColumns, ignorableColumns, resultColumn);
 
       m_table = table;
 
-      var tuples = new List<MultyViewGroup>();
+      var tuples = new List<MultyViewSample>();
       var sets = new HashSet<string>();
       var columnIndexes = new int[factorColumns.Length];
 
@@ -46,13 +46,13 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], TableMultyDataGroup.GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], TableDividedSample.GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!sets.Add(sb.ToString()))
             continue;
 
-          var mul = new MultyViewGroup(table, ignorableColumns, resultColumn, sb.ToString(), conjugate);
+          var mul = new MultyViewSample(table, ignorableColumns, resultColumn, sb.ToString(), conjugate);
           tuples.Add(mul);
 
           for (int i = 0; i < mul.Count; i++)
@@ -106,19 +106,19 @@ namespace Schicksal.Basic
       }
     }
 
-    public IMultyDataGroup this[string rowFilter]
+    public IDividedSample this[string rowFilter]
     {
       get { return m_views[m_indexes[rowFilter]]; }
     }
 
-    public IMultyDataGroup this[int index]
+    public IDividedSample this[int index]
     {
       get { return m_views[index]; }
     }
 
     public int Count { get { return m_views.Length; } }
 
-    public IEnumerator<IMultyDataGroup> GetEnumerator()
+    public IEnumerator<IDividedSample> GetEnumerator()
     {
       return m_views.Select(v => v).GetEnumerator();
     }
@@ -140,18 +140,18 @@ namespace Schicksal.Basic
 
     public void Dispose()
     {
-      foreach (MultyViewGroup group in m_views)
-        group.Dispose();
+      foreach (MultyViewSample sample in m_views)
+        sample.Dispose();
     }
 
-    private class MultyViewGroup : IMultyDataGroup<string>, IDisposable
+    private class MultyViewSample : IDividedSample<string>, IDisposable
     {
-      private readonly DataViewGroup[] m_views;
+      private readonly DataViewSample[] m_views;
       private readonly string m_filter;
 
       private readonly Dictionary<string, int> m_indexes;
 
-      public MultyViewGroup(DataTable m_table, string[] ignorableColumns, string resultColumn, string filter, string conjugate)
+      public MultyViewSample(DataTable m_table, string[] ignorableColumns, string resultColumn, string filter, string conjugate)
       {
         var ignorableIndexes = new int[ignorableColumns.Length];
         var sets = new HashSet<string>();
@@ -159,7 +159,7 @@ namespace Schicksal.Basic
         for (int i = 0; i < ignorableColumns.Length; i++)
           ignorableIndexes[i] = m_table.Columns[ignorableColumns[i]].Ordinal;
 
-        var tuples = new List<DataViewGroup>();
+        var tuples = new List<DataViewSample>();
         m_indexes = new Dictionary<string, int>();
         
         using (var filtered_table = new DataView(m_table, filter, null, DataViewRowState.CurrentRows))
@@ -176,7 +176,7 @@ namespace Schicksal.Basic
               if (row.Row.IsNull(ignorableIndexes[i]))
                 sb.AppendFormat(" AND [{0}] IS NULL", ignorableColumns[i]);
               else
-                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], TableMultyDataGroup.GetInvariant(row[ignorableIndexes[i]]));
+                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], TableDividedSample.GetInvariant(row[ignorableIndexes[i]]));
             }
             if (!sets.Add(sb.ToString()))
               continue;
@@ -185,7 +185,7 @@ namespace Schicksal.Basic
 
             if (view.Count > 0)
             {
-              tuples.Add(new DataViewGroup(view, resultColumn));
+              tuples.Add(new DataViewSample(view, resultColumn));
               m_indexes[view.RowFilter] = m_indexes.Count;
             }
             else
@@ -202,12 +202,12 @@ namespace Schicksal.Basic
         return m_filter;
       }
 
-      public IDataGroup this[string rowFilter]
+      public IPlainSample this[string rowFilter]
       {
         get { return m_views[m_indexes[rowFilter]]; }
       }
 
-      public IDataGroup this[int index]
+      public IPlainSample this[int index]
       {
         get { return m_views[index]; }
       }
@@ -227,7 +227,7 @@ namespace Schicksal.Basic
         get { return m_views.Length; }
       }
 
-      public IEnumerator<IDataGroup> GetEnumerator()
+      public IEnumerator<IPlainSample> GetEnumerator()
       {
         return m_views.Select(v => v).GetEnumerator();
       }
@@ -239,18 +239,18 @@ namespace Schicksal.Basic
 
       public void Dispose()
       {
-        foreach (DataViewGroup group in m_views)
-          group.View.Dispose();
+        foreach (DataViewSample sample in m_views)
+          sample.View.Dispose();
       }
     }
 
-    private class DataViewGroup : IDataGroup
+    private class DataViewSample : IPlainSample
     {
       private readonly DataView m_view;
       private readonly int m_column;
       private string m_string;
 
-      public DataViewGroup(DataView view, string column)
+      public DataViewSample(DataView view, string column)
       {
         m_view = view;
         m_column = view.Table.Columns[column].Ordinal;

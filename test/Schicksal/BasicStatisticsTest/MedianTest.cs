@@ -7,7 +7,7 @@ namespace BasicStatisticsTest
   [TestClass]
   public class MedianTest
   {
-    public static double Median2(IDataGroup group)
+    public static double Median2(IPlainSample group)
     {
       int min_idx = 0;
 
@@ -90,7 +90,7 @@ namespace BasicStatisticsTest
       Random rnd = new Random();
 
       double[] values = new double[32];
-      var group = new ArrayDataGroup(values);
+      var group = new ArrayPlainSample(values);
 
       for (int i = 0; i < 10; i++)
       {
@@ -107,7 +107,7 @@ namespace BasicStatisticsTest
       Random rnd = new Random();
 
       double[] values = new double[31];
-      var group = new ArrayDataGroup(values);
+      var group = new ArrayPlainSample(values);
 
       for (int i = 0; i < 10; i++)
       {

@@ -16,13 +16,13 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений</param>
+    /// <param name="sample">Группа нормированных значений</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IDataGroup group)
+    public IDenormalizer GetDenormalizer(IPlainSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var box_cox = group as BoxCoxGroup;
+      var box_cox = sample as BoxCoxSample;
 
       if (box_cox != null)
         return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
@@ -33,18 +33,18 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений второго порядка</param>
+    /// <param name="sample">Группа нормированных значений второго порядка</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IDividedSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var sub_group = group.FirstOrDefault();
-      var box_cox = sub_group as BoxCoxGroup;
+      var sub_sample = sample.FirstOrDefault();
+      var box_cox = sub_sample as BoxCoxSample;
 
       if (box_cox != null)
       {
-        if (RecreateRequired(group))
+        if (RecreateRequired(sample))
           throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
         else
           return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
@@ -56,18 +56,18 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений третьего порядка</param>
+    /// <param name="sample">Группа нормированных значений третьего порядка</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(ISetMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IComplexSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var sub_group = group.SelectMany(g => g).FirstOrDefault();
-      var box_cox = sub_group as BoxCoxGroup;
+      var sub_sample = sample.SelectMany(g => g).FirstOrDefault();
+      var box_cox = sub_sample as BoxCoxSample;
 
       if (box_cox != null)
       {
-        if (RecreateRequired(group.SelectMany(g => g)))
+        if (RecreateRequired(sample.SelectMany(g => g)))
           throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
         else
           return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
@@ -79,13 +79,13 @@ namespace Schicksal.Basic
     /// <summary>
     /// Преобразование группы значений в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа</returns>
-    public IDataGroup Normalize(IDataGroup group)
+    public IPlainSample Normalize(IPlainSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var bcg = new BoxCoxGroup(group, CalculateDelta(group));
+      var bcg = new BoxCoxSample(sample, CalculateDelta(sample));
       bcg.Lambda = TwoStageOptimization(-10, 10, 1e-5, bcg.GetLikehood);
 
       return bcg;
@@ -94,97 +94,97 @@ namespace Schicksal.Basic
     /// <summary>
     /// Преобразование группы значений второго порядка в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа</returns>
-    public IMultyDataGroup Normalize(IMultyDataGroup group)
+    public IDividedSample Normalize(IDividedSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (RecreateRequired(group))
+      if (RecreateRequired(sample))
       {
-        var groups = new BoxCoxGroup[group.Count];
-        double delta = CalculateDelta(group.SelectMany(g => g));
+        var samples = new BoxCoxSample[sample.Count];
+        double delta = CalculateDelta(sample.SelectMany(g => g));
 
-        for (int i = 0; i < groups.Length; i++)
-          groups[i] = new BoxCoxGroup(group[i], delta);
+        for (int i = 0; i < samples.Length; i++)
+          samples[i] = new BoxCoxSample(sample[i], delta);
 
         var lambda = TwoStageOptimization(-10, 10, 1e-5, l =>
         {
-          return CalculateMultipleLikehood(l, groups);
+          return CalculateMultipleLikehood(l, samples);
         });
 
-        foreach (var b in groups)
+        foreach (var b in samples)
           b.Lambda = lambda;
 
-        return new MultiArrayDataGroup(groups);
+        return new ArrayDividedSample(samples);
       }
 
-      return group;
+      return sample;
     }
 
     /// <summary>
     /// Преобразование группы значений третьего порядка в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа третьего порядка</returns>
-    public ISetMultyDataGroup Normalize(ISetMultyDataGroup group)
+    public IComplexSample Normalize(IComplexSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (RecreateRequired(group.SelectMany(g => g)))
+      if (RecreateRequired(sample.SelectMany(g => g)))
       {
-        var groups = new IMultyDataGroup[group.Count];
-        double delta = CalculateDelta(group.SelectMany(g => g).SelectMany(g => g));
+        var samples = new IDividedSample[sample.Count];
+        double delta = CalculateDelta(sample.SelectMany(g => g).SelectMany(g => g));
 
-        for (int i = 0; i < groups.Length; i++)
+        for (int i = 0; i < samples.Length; i++)
         {
-          var array = new BoxCoxGroup[group[i].Count];
+          var array = new BoxCoxSample[sample[i].Count];
 
-          for (int j = 0; j < group[i].Count; j++)
-            array[j] = new BoxCoxGroup(group[i][j], delta);
+          for (int j = 0; j < sample[i].Count; j++)
+            array[j] = new BoxCoxSample(sample[i][j], delta);
 
-          groups[i] = new MultiArrayDataGroup(array);
+          samples[i] = new ArrayDividedSample(array);
         }
 
         var lambda = TwoStageOptimization(-10, 10, 1e-5, l =>
         {
-          return CalculateMultipleLikehood(l, groups.SelectMany(g => g).Cast<BoxCoxGroup>());
+          return CalculateMultipleLikehood(l, samples.SelectMany(g => g).Cast<BoxCoxSample>());
         });
 
-        for (int i = 0; i < groups.Length; i++)
+        for (int i = 0; i < samples.Length; i++)
         {
-          for (int j = 0; j < groups[i].Count; j++)
-            ((BoxCoxGroup)groups[i][j]).Lambda = lambda;
+          for (int j = 0; j < samples[i].Count; j++)
+            ((BoxCoxSample)samples[i][j]).Lambda = lambda;
         }
 
-        return new SetMultiArrayDataGroup(groups);
+        return new ArrayComplexSample(samples);
       }
 
-      return group;
+      return sample;
     }
 
     /// <summary>
     /// Вычисление коэффициента для преобразования Бокса-Кокса
     /// </summary>
-    /// <param name="group">Числовая последовательность</param>
+    /// <param name="sample">Числовая последовательность</param>
     /// <returns>Коэффициент для преобразования</returns>
-    public double CalculateLambda(IDataGroup group)
+    public double CalculateLambda(IPlainSample sample)
     {
-      return this.CalculateLambda(group, CalculateDelta(group));
+      return this.CalculateLambda(sample, CalculateDelta(sample));
     }
 
     /// <summary>
     /// Вычисление коэффициента для преобразования Бокса-Кокса
     /// </summary>
-    /// <param name="group">Числовая последовательность</param>
+    /// <param name="sample">Числовая последовательность</param>
     /// <param name="delta">Коэффициент для смещения отрицательных значений</param>
     /// <returns>Коэффициент для преобразования</returns>
-    public double CalculateLambda(IDataGroup group, double delta)
+    public double CalculateLambda(IPlainSample sample, double delta)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
       Debug.Assert(delta >= 0, "delta must be positive");
 
-      var bcg = new BoxCoxGroup(group, delta);
+      var bcg = new BoxCoxSample(sample, delta);
 
       return TwoStageOptimization(-10, 10, 1e-5, bcg.GetLikehood);
     }
@@ -200,20 +200,20 @@ namespace Schicksal.Basic
     /// <summary>
     /// Вычисление фиксированного коэффициента смещения для преобразования Бокса-Кокса
     /// </summary>
-    /// <param name="group">Числовая последовательность</param>
+    /// <param name="sample">Числовая последовательность</param>
     /// <returns>Коэффициент для смещения отрицательных значений</returns>
-    public static double CalculateDelta(IEnumerable<double> group)
+    public static double CalculateDelta(IEnumerable<double> sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (!group.Any())
+      if (!sample.Any())
         return 0;
 
-      double min = group.First();
+      double min = sample.First();
       double max = min;
       int count = 0;
 
-      foreach (var value in group.Skip(1))
+      foreach (var value in sample.Skip(1))
       {
         if (max < value)
           max = value;
@@ -259,15 +259,15 @@ namespace Schicksal.Basic
 
     #region Implementation ------------------------------------------------------------------------
 
-    private static bool RecreateRequired(IEnumerable<IDataGroup> multyGroup)
+    private static bool RecreateRequired(IEnumerable<IPlainSample> samples)
     {
       double delta = 0;
       double lambda = 1;
       bool first = true;
 
-      foreach (var group in multyGroup)
+      foreach (var sample in samples)
       {
-        var bcg = group as BoxCoxGroup;
+        var bcg = sample as BoxCoxSample;
 
         if (bcg == null)
           return true;
@@ -285,11 +285,11 @@ namespace Schicksal.Basic
       return false;
     }
 
-    private static double CalculateMultipleLikehood(double l, IEnumerable<BoxCoxGroup> groups)
+    private static double CalculateMultipleLikehood(double l, IEnumerable<BoxCoxSample> samples)
     {
       double likehood = 0;
 
-      foreach (var b in groups)
+      foreach (var b in samples)
         likehood += b.GetLikehood(l);
 
       return likehood;
@@ -378,17 +378,17 @@ namespace Schicksal.Basic
       Right
     }
 
-    private sealed class BoxCoxGroup : IDataGroup
+    private sealed class BoxCoxSample : IPlainSample
     {
-      public readonly IDataGroup Source;
+      public readonly IPlainSample Source;
       public readonly double Delta;
       public double Lambda;
       private readonly double m_log_sum;
       private readonly Func<double, double> m_transform;
 
-      public BoxCoxGroup(IDataGroup group, double delta)
+      public BoxCoxSample(IPlainSample sample, double delta)
       {
-        this.Source = group;
+        this.Source = sample;
         this.Delta = delta;
 
         m_log_sum = this.Source.Sum(this.LogWithDelta);
@@ -442,7 +442,7 @@ namespace Schicksal.Basic
 
       public override bool Equals(object obj)
       {
-        var other = obj as BoxCoxGroup;
+        var other = obj as BoxCoxSample;
 
         if (other == null)
           return false;

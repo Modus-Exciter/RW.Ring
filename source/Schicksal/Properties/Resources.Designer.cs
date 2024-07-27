@@ -116,11 +116,11 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Both groups must be equal for regression analysis.
+        ///   Ищет локализованную строку, похожую на Both number sequences must be equal for regression analysis.
         /// </summary>
-        internal static string DATA_GROUP_SIZE_MISMATCH {
+        internal static string DATA_SAMPLE_SIZE_MISMATCH {
             get {
-                return ResourceManager.GetString("DATA_GROUP_SIZE_MISMATCH", resourceCulture);
+                return ResourceManager.GetString("DATA_SAMPLE_SIZE_MISMATCH", resourceCulture);
             }
         }
         

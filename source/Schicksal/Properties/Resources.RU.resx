@@ -132,8 +132,8 @@
   <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
     <value>НСР</value>
   </data>
-  <data name="DATA_GROUP_SIZE_MISMATCH" xml:space="preserve">
-    <value>Обе группы данных для регрессионного анализа должны быть одинакового размера</value>
+  <data name="DATA_SAMPLE_SIZE_MISMATCH" xml:space="preserve">
+    <value>Обе числовые последовательности для регрессионного анализа должны быть одинакового размера</value>
   </data>
   <data name="DEPENDENCY_TYPE" xml:space="preserve">
     <value>Вид зависимости</value>

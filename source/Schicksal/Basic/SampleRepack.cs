@@ -8,85 +8,85 @@ namespace Schicksal.Basic
   /// <summary>
   /// Перепаковка выборок в базовые выборки на основе массивов
   /// </summary>
-  public static class GroupRepack
+  public static class SampleRepack
   {
     /// <summary>
     /// Перепаковка выборки
     /// </summary>
-    /// <param name="group">Исходная выборка</param>
+    /// <param name="sample">Исходная выборка</param>
     /// <returns>Выборка на основе массива</returns>
-    public static IDataGroup Wrap(IDataGroup group)
+    public static IPlainSample Wrap(IPlainSample sample)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      return WrapIfNeeded(group);
+      return WrapIfNeeded(sample);
     }
 
     /// <summary>
     /// Перепаковка выборки
     /// </summary>
-    /// <param name="group">Исходная выборка второго порядка</param>
+    /// <param name="sample">Исходная выборка второго порядка</param>
     /// <returns>Выборка второго порядка на основе массивов</returns>
-    public static IMultyDataGroup Wrap(IMultyDataGroup group)
+    public static IDividedSample Wrap(IDividedSample sample)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      var check_result = Check(group);
+      var check_result = Check(sample);
 
       if (!check_result.Repack)
-        return group;
+        return sample;
 
-      if (check_result.EqualGroups)
-        return RepackRectangleMultiDataGroup(group);
+      if (check_result.EqualPlainSamples)
+        return RepackRectangleMultiDataSample(sample);
 
-      var groups = new IDataGroup[group.Count];
+      var samples = new IPlainSample[sample.Count];
 
-      for (int i = 0; i < groups.Length; i++)
-        groups[i] = WrapIfNeeded(group[i]);
+      for (int i = 0; i < samples.Length; i++)
+        samples[i] = WrapIfNeeded(sample[i]);
 
-      return new MultiArrayDataGroup(groups);
+      return new ArrayDividedSample(samples);
     }
 
     /// <summary>
     /// Перепаковка выборки
     /// </summary>
-    /// <param name="group">Исходная выборка третьего порядка</param>
+    /// <param name="sample">Исходная выборка третьего порядка</param>
     /// <returns>Выборка третьего порядка на основе массивов</returns>
-    public static ISetMultyDataGroup Wrap(ISetMultyDataGroup group)
+    public static IComplexSample Wrap(IComplexSample sample)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      var check_result = Check(group);
+      var check_result = Check(sample);
 
       if (!check_result.Repack)
-        return group;
+        return sample;
 
-      if (check_result.EqualGroups && check_result.EqualMultiGroups)
-        return RepackRectangleSetMultiDataGroup(group);
+      if (check_result.EqualPlainSamples && check_result.EqualDividedSamples)
+        return RepackRectangleSetMultiDataSample(sample);
 
-      var groups = new IMultyDataGroup[group.Count];
+      var samples = new IDividedSample[sample.Count];
 
-      for (int i = 0; i < group.Count; i++)
+      for (int i = 0; i < sample.Count; i++)
       {
-        if (check_result.EqualGroups)
+        if (check_result.EqualPlainSamples)
         {
-          groups[i] = RepackRectangleMultiDataGroup(group[i]);
+          samples[i] = RepackRectangleMultiDataSample(sample[i]);
         }
         else
         {
-          var array = new IDataGroup[group[i].Count];
+          var array = new IPlainSample[sample[i].Count];
 
           for (int j = 0; j < array.Length; j++)
-            array[j] = WrapIfNeeded(group[i][j]);
+            array[j] = WrapIfNeeded(sample[i][j]);
 
-          groups[i] = new MultiArrayDataGroup(array);
+          samples[i] = new ArrayDividedSample(array);
         }
       }
 
-      return new SetMultiArrayDataGroup(groups);
+      return new ArrayComplexSample(samples);
     }
 
     #region Implementation ------------------------------------------------------------------------
@@ -94,88 +94,88 @@ namespace Schicksal.Basic
     private struct DimensionCheckResult
     {
       public bool Repack;
-      public bool EqualGroups;
-      public bool EqualMultiGroups;
+      public bool EqualPlainSamples;
+      public bool EqualDividedSamples;
 
-      public DimensionCheckResult(bool repack, bool equalGroups, bool equalMultiGroups)
+      public DimensionCheckResult(bool repack, bool equalPlain, bool equalDivided)
       {
         this.Repack = repack;
-        this.EqualGroups = equalGroups;
-        this.EqualMultiGroups = equalMultiGroups;
+        this.EqualPlainSamples = equalPlain;
+        this.EqualDividedSamples = equalDivided;
       }
     }
 
-    private static IDataGroup WrapIfNeeded(IDataGroup group)
+    private static IPlainSample WrapIfNeeded(IPlainSample sample)
     {
-      var adg = group as ArrayDataGroup;
+      var adg = sample as ArrayPlainSample;
 
       if (adg != null)
         return adg;
 
-      double[] array = new double[group.Count];
+      double[] array = new double[sample.Count];
 
       for (int i = 0; i < array.Length; i++)
-        array[i] = group[i];
+        array[i] = sample[i];
 
-      return new ArrayDataGroup(array);
+      return new ArrayPlainSample(array);
     }
 
-    private static IMultyDataGroup RepackRectangleMultiDataGroup(IMultyDataGroup group)
+    private static IDividedSample RepackRectangleMultiDataSample(IDividedSample sample)
     {
-      int count = group.Count > 0 ? group[0].Count : 0;
+      int count = sample.Count > 0 ? sample[0].Count : 0;
 
-      double[,] array = new double[group.Count, count];
+      double[,] array = new double[sample.Count, count];
 
-      for (int i = 0; i < group.Count; i++)
+      for (int i = 0; i < sample.Count; i++)
       {
         for (int j = 0; j < count; j++)
-          array[i, j] = group[i][j];
+          array[i, j] = sample[i][j];
       }
 
-      return new TwoDimensionsMultiDataGroup(array);
+      return new TwoDimensionsMultiDataSample(array);
     }
 
-    private static ISetMultyDataGroup RepackRectangleSetMultiDataGroup(ISetMultyDataGroup group)
+    private static IComplexSample RepackRectangleSetMultiDataSample(IComplexSample sample)
     {
-      int count1 = group.Count > 0 ? group[0].Count : 0;
-      int count2 = count1 > 0 ? group[0][0].Count : 0;
+      int count1 = sample.Count > 0 ? sample[0].Count : 0;
+      int count2 = count1 > 0 ? sample[0][0].Count : 0;
 
-      double[,,] array = new double[group.Count, count1, count2];
+      double[,,] array = new double[sample.Count, count1, count2];
 
-      for (int i = 0; i < group.Count; i++)
+      for (int i = 0; i < sample.Count; i++)
       {
-        for (int j = 0; j < group[i].Count; j++)
+        for (int j = 0; j < sample[i].Count; j++)
         {
-          for (int k = 0; k < group[i][j].Count; k++)
-            array[i, j, k] = group[i][j][k];
+          for (int k = 0; k < sample[i][j].Count; k++)
+            array[i, j, k] = sample[i][j][k];
         }
       }
 
-      return new ThreeDimensionsSetDataGroup(array);
+      return new ThreeDimensionsSetDataSample(array);
     }
 
-    private static DimensionCheckResult Check(IMultyDataGroup group)
+    private static DimensionCheckResult Check(IDividedSample sample)
     {
       bool first = true;
       bool repack = false;
       bool equal = true;
       int dimension = 0;
 
-      if (group is TwoDimensionsMultiDataGroup)
+      if (sample is TwoDimensionsMultiDataSample)
         return new DimensionCheckResult(false, true, true);
 
-      for (int i = 0; i < group.Count; i++)
+      for (int i = 0; i < sample.Count; i++)
       {
-        repack |= !(group[i] is ArrayDataGroup);
+        repack |= !(sample[i] is ArrayPlainSample);
 
         if (first)
         {
-          dimension = group[i].Count;
+          dimension = sample[i].Count;
           first = false;
         }
         else
         {
-          equal &= group[i].Count == dimension;
+          equal &= sample[i].Count == dimension;
 
           if (!equal && repack)
             break;
@@ -185,7 +185,7 @@ namespace Schicksal.Basic
       return new DimensionCheckResult(repack, equal, true);
     }
 
-    private static DimensionCheckResult Check(ISetMultyDataGroup group)
+    private static DimensionCheckResult Check(IComplexSample sample)
     {
       bool first = true;
       bool repack = false;
@@ -193,21 +193,21 @@ namespace Schicksal.Basic
       bool equal2 = true;
       int dimension = 0;
 
-      for (int i = 0; i < group.Count; i++)
+      for (int i = 0; i < sample.Count; i++)
       {
-        var inner_check = Check(group[i]);
+        var inner_check = Check(sample[i]);
 
         repack |= inner_check.Repack;
-        equal1 &= inner_check.EqualGroups;
+        equal1 &= inner_check.EqualPlainSamples;
 
         if (first)
         {
-          dimension = group[i].Count;
+          dimension = sample[i].Count;
           first = false;
         }
         else
         {
-          equal2 &= group[i].Count == dimension;
+          equal2 &= sample[i].Count == dimension;
 
           if (!equal2 && repack)
             break;
@@ -217,19 +217,19 @@ namespace Schicksal.Basic
       return new DimensionCheckResult(repack, equal1, equal2);
     }
 
-    private sealed class TwoDimensionsMultiDataGroup : IMultyDataGroup, IEqualSubGroups
+    private sealed class TwoDimensionsMultiDataSample : IDividedSample, IEqualSubSamples
     {
-      private readonly TwoDimensionsDataGroup[] m_array;
+      private readonly TwoDimensionsDataSample[] m_array;
 
-      public TwoDimensionsMultiDataGroup(double[,] array)
+      public TwoDimensionsMultiDataSample(double[,] array)
       {
-        m_array = new TwoDimensionsDataGroup[array.GetLength(0)];
+        m_array = new TwoDimensionsDataSample[array.GetLength(0)];
 
         for (int i = 0; i < m_array.Length; i++)
-          m_array[i] = new TwoDimensionsDataGroup(array, i);
+          m_array[i] = new TwoDimensionsDataSample(array, i);
       }
 
-      public IDataGroup this[int index]
+      public IPlainSample this[int index]
       {
         get { return m_array[index]; }
       }
@@ -239,14 +239,14 @@ namespace Schicksal.Basic
         get { return m_array.Length; }
       }
 
-      public int SubGroupSize
+      public int SubSampleSize
       {
         get { return m_array.Length > 0 ? m_array[0].Count : 0; }
       }
 
-      public IEnumerator<IDataGroup> GetEnumerator()
+      public IEnumerator<IPlainSample> GetEnumerator()
       {
-        return (m_array as IList<IDataGroup>).GetEnumerator();
+        return (m_array as IList<IPlainSample>).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -256,12 +256,12 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Array muti group, count={0}", m_array.Length);
+        return string.Format("Number sequence set, count={0}", m_array.Length);
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as TwoDimensionsMultiDataGroup;
+        var other = obj as TwoDimensionsMultiDataSample;
 
         if (other == null)
           return false;
@@ -281,12 +281,12 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class TwoDimensionsDataGroup : IDataGroup
+    private sealed class TwoDimensionsDataSample : IPlainSample
     {
       public readonly double[,] Array;
       private readonly int m_index;
 
-      public TwoDimensionsDataGroup(double[,] array, int index)
+      public TwoDimensionsDataSample(double[,] array, int index)
       {
         this.Array = array;
         m_index = index;
@@ -317,12 +317,12 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Array group, count={0}", this.Array.GetLength(1));
+        return string.Format("Number sequence, count={0}", this.Array.GetLength(1));
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as TwoDimensionsDataGroup;
+        var other = obj as TwoDimensionsDataSample;
 
         if (other == null)
           return false;
@@ -336,38 +336,38 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class ThreeDimensionsSetDataGroup : ISetMultyDataGroup, IEqualSubGroups
+    private sealed class ThreeDimensionsSetDataSample : IComplexSample, IEqualSubSamples
     {
-      private readonly ThreeDimensionsMultiDataGroup[] m_groups;
+      private readonly ThreeDimensionsMultiDataSample[] m_samples;
       private readonly double[,,] m_data;
 
-      public ThreeDimensionsSetDataGroup(double[,,] data)
+      public ThreeDimensionsSetDataSample(double[,,] data)
       {
         m_data = data;
-        m_groups = new ThreeDimensionsMultiDataGroup[data.GetLength(0)];
+        m_samples = new ThreeDimensionsMultiDataSample[data.GetLength(0)];
 
-        for (int i = 0; i < m_groups.Length; i++)
-          m_groups[i] = new ThreeDimensionsMultiDataGroup(data, i);
+        for (int i = 0; i < m_samples.Length; i++)
+          m_samples[i] = new ThreeDimensionsMultiDataSample(data, i);
       }
 
-      public IMultyDataGroup this[int index]
+      public IDividedSample this[int index]
       {
-        get { return m_groups[index]; }
+        get { return m_samples[index]; }
       }
 
       public int Count
       {
-        get { return m_groups.Length; }
+        get { return m_samples.Length; }
       }
 
-      public int SubGroupSize
+      public int SubSampleSize
       {
         get { return m_data.GetLength(1); }
       }
 
-      public IEnumerator<IMultyDataGroup> GetEnumerator()
+      public IEnumerator<IDividedSample> GetEnumerator()
       {
-        return (m_groups as IList<IMultyDataGroup>).GetEnumerator();
+        return (m_samples as IList<IDividedSample>).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -377,12 +377,12 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Array group set, count={0}", m_data.GetLength(0));
+        return string.Format("Number sequence complex, count={0}", m_data.GetLength(0));
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as ThreeDimensionsSetDataGroup;
+        var other = obj as ThreeDimensionsSetDataSample;
 
         if (other == null)
           return false;
@@ -396,19 +396,19 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class ThreeDimensionsMultiDataGroup : IMultyDataGroup, IEqualSubGroups
+    private sealed class ThreeDimensionsMultiDataSample : IDividedSample, IEqualSubSamples
     {
-      private readonly ThreeDimensionsDataGroup[] m_data;
+      private readonly ThreeDimensionsDataSample[] m_data;
 
-      public ThreeDimensionsMultiDataGroup(double[,,] data, int index)
+      public ThreeDimensionsMultiDataSample(double[,,] data, int index)
       {
-        m_data = new ThreeDimensionsDataGroup[data.GetLength(1)];
+        m_data = new ThreeDimensionsDataSample[data.GetLength(1)];
 
         for (int i = 0; i < m_data.Length; i++)
-          m_data[i] = new ThreeDimensionsDataGroup(data, index, i);
+          m_data[i] = new ThreeDimensionsDataSample(data, index, i);
       }
 
-      public IDataGroup this[int index]
+      public IPlainSample this[int index]
       {
         get { return m_data[index]; }
       }
@@ -418,14 +418,14 @@ namespace Schicksal.Basic
         get { return m_data.Length; }
       }
 
-      public int SubGroupSize
+      public int SubSampleSize
       {
         get { return m_data.Length > 0 ? m_data[0].Array.GetLength(2) : 0; }
       }
 
-      public IEnumerator<IDataGroup> GetEnumerator()
+      public IEnumerator<IPlainSample> GetEnumerator()
       {
-        return (m_data as IList<IDataGroup>).GetEnumerator();
+        return (m_data as IList<IPlainSample>).GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()
@@ -435,12 +435,12 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Array muti group, count={0}", m_data.Length);
+        return string.Format("Number sequence set, count={0}", m_data.Length);
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as ThreeDimensionsMultiDataGroup;
+        var other = obj as ThreeDimensionsMultiDataSample;
 
         if (other == null)
           return false;
@@ -463,13 +463,13 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class ThreeDimensionsDataGroup : IDataGroup
+    private sealed class ThreeDimensionsDataSample : IPlainSample
     {
       public readonly double[,,] Array;
       private readonly int m_index1;
       private readonly int m_index2;
 
-      public ThreeDimensionsDataGroup(double[,,] array, int index1, int index2)
+      public ThreeDimensionsDataSample(double[,,] array, int index1, int index2)
       {
         this.Array = array;
         m_index1 = index1;
@@ -506,12 +506,12 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Array group, count={0}", this.Array.GetLength(2));
+        return string.Format("Number sequence, count={0}", this.Array.GetLength(2));
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as ThreeDimensionsDataGroup;
+        var other = obj as ThreeDimensionsDataSample;
 
         if (other == null)
           return false;

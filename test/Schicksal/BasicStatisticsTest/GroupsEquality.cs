@@ -13,9 +13,9 @@ namespace BasicStatisticsTest
       double[] arr1 = new double[] { 1, 2, 3, 4, 5 };
       double[] arr2 = new double[] { 1, 2, 3, 4, 5 };
 
-      ArrayDataGroup g1 = new ArrayDataGroup(arr1);
-      ArrayDataGroup g2 = new ArrayDataGroup(arr2);
-      ArrayDataGroup g3 = new ArrayDataGroup(arr2);
+      ArrayPlainSample g1 = new ArrayPlainSample(arr1);
+      ArrayPlainSample g2 = new ArrayPlainSample(arr2);
+      ArrayPlainSample g3 = new ArrayPlainSample(arr2);
 
       Assert.AreNotEqual(g1, g2);
       Assert.AreEqual(g2, g3);
@@ -28,11 +28,11 @@ namespace BasicStatisticsTest
       double[] arr1 = new double[] { 1, 2, 3, 4, 5 };
       double[] arr2 = new double[] { 1, 2, 3, 4, 5 };
       double[] arr3 = new double[] { 1, 2, 3, 4, 5 };
-      ArrayDataGroup g1 = new ArrayDataGroup(arr1);
-      ArrayDataGroup g2 = new ArrayDataGroup(arr2);
-      MultiArrayDataGroup g3 = new MultiArrayDataGroup(new IDataGroup[] { g1, g2 });
-      MultiArrayDataGroup g4 = new MultiArrayDataGroup(new[] { arr1, arr2 });
-      MultiArrayDataGroup g5 = new MultiArrayDataGroup(new[] { arr1, arr3 });
+      ArrayPlainSample g1 = new ArrayPlainSample(arr1);
+      ArrayPlainSample g2 = new ArrayPlainSample(arr2);
+      ArrayDividedSample g3 = new ArrayDividedSample(new IPlainSample[] { g1, g2 });
+      ArrayDividedSample g4 = new ArrayDividedSample(new[] { arr1, arr2 });
+      ArrayDividedSample g5 = new ArrayDividedSample(new[] { arr1, arr3 });
 
       Assert.AreEqual(g3, g4);
       Assert.AreEqual(g3.GetHashCode(), g4.GetHashCode());
@@ -44,9 +44,9 @@ namespace BasicStatisticsTest
     {
       double[] arr1 = new double[] { 1, 2, 3, 4, 5 };
       double[] arr2 = new double[] { 1, 2, 3, 4, 5 };
-      MultiArrayDataGroup<string> g1 = new MultiArrayDataGroup<string>(new double[][] { arr1, arr2 }, new[] { "one", "two" });
-      MultiArrayDataGroup<string> g2 = new MultiArrayDataGroup<string>(new double[][] { arr1, arr2 }, new[] { "one", "two" });
-      MultiArrayDataGroup<string> g3 = new MultiArrayDataGroup<string>(new double[][] { arr1, arr2 }, new[] { "ONE", "TWO" });
+      ArrayDividedSample<string> g1 = new ArrayDividedSample<string>(new double[][] { arr1, arr2 }, new[] { "one", "two" });
+      ArrayDividedSample<string> g2 = new ArrayDividedSample<string>(new double[][] { arr1, arr2 }, new[] { "one", "two" });
+      ArrayDividedSample<string> g3 = new ArrayDividedSample<string>(new double[][] { arr1, arr2 }, new[] { "ONE", "TWO" });
       Assert.AreEqual(g1, g2);
       Assert.AreEqual(g1.GetHashCode(), g2.GetHashCode());
       Assert.AreNotEqual(g2, g3);

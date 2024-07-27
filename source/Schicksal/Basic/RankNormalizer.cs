@@ -20,10 +20,7 @@ namespace Schicksal.Basic
     /// <param name="round">Количество знаков после запятой для округления</param>
     public RankNormalizer(int round = -1)
     {
-      if (round >= -1 && round <= 15)
-        m_round = round;
-      else
-        m_round = -1;
+      m_round = round >= -1 && round <= 15 ? round : -1;
     }
 
     /// <summary>
@@ -37,13 +34,13 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений</param>
+    /// <param name="sample">Группа нормированных значений</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IDataGroup group)
+    public IDenormalizer GetDenormalizer(IPlainSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var ranked = group as RankedGroup;
+      var ranked = sample as RankedSample;
 
       if (ranked != null)
         return new RankInverse(ranked.Ranks);
@@ -54,18 +51,18 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений второго порядка</param>
+    /// <param name="sample">Группа нормированных значений второго порядка</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(IMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IDividedSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var sub_group = group.FirstOrDefault();
-      var ranked = sub_group as RankedGroup;
+      var sub_sample = sample.FirstOrDefault();
+      var ranked = sub_sample as RankedSample;
 
       if (ranked != null)
       {
-        if (RecreateRequired(group, ranked.Round))
+        if (RecreateRequired(sample, ranked.Round))
           throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
         else
           return new RankInverse(ranked.Ranks);
@@ -77,18 +74,18 @@ namespace Schicksal.Basic
     /// <summary>
     /// Расчёт изначального значения по преобразованному
     /// </summary>
-    /// <param name="group">Группа нормированных значений третьего порядка</param>
+    /// <param name="sample">Группа нормированных значений третьего порядка</param>
     /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(ISetMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IComplexSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      var sub_group = group.SelectMany(g => g).FirstOrDefault();
-      var ranked = sub_group as RankedGroup;
+      var sub_sample = sample.SelectMany(g => g).FirstOrDefault();
+      var ranked = sub_sample as RankedSample;
 
       if (ranked != null)
       {
-        if (RecreateRequired(group.SelectMany(g => g), ranked.Round))
+        if (RecreateRequired(sample.SelectMany(g => g), ranked.Round))
           throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
         else
           return new RankInverse(ranked.Ranks);
@@ -100,84 +97,84 @@ namespace Schicksal.Basic
     /// <summary>
     /// Преобразование группы значений в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа</returns>
-    public IDataGroup Normalize(IDataGroup group)
+    public IPlainSample Normalize(IPlainSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (group is RankedGroup)
+      if (sample is RankedSample)
       {
-        if (((RankedGroup)group).Round == m_round && ((RankedGroup)group).Internal)
-          return group;
+        if (((RankedSample)sample).Round == m_round && ((RankedSample)sample).Internal)
+          return sample;
 
-        return new RankedGroup(((RankedGroup)group).Source, m_round);
+        return new RankedSample(((RankedSample)sample).Source, m_round);
       }
 
-      return new RankedGroup(group, m_round);
+      return new RankedSample(sample, m_round);
     }
 
     /// <summary>
     /// Преобразование группы значений второго порядка в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа</returns>
-    public IMultyDataGroup Normalize(IMultyDataGroup group)
+    public IDividedSample Normalize(IDividedSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (RecreateRequired(group, m_round))
+      if (RecreateRequired(sample, m_round))
       {
         bool has_reason;
-        var ranks = CalculateRanks(group.SelectMany(g => g), out has_reason, m_round);
+        var ranks = CalculateRanks(sample.SelectMany(g => g), out has_reason, m_round);
 
         if (has_reason)
         {
-          var groups = new IDataGroup[group.Count];
+          var samples = new IPlainSample[sample.Count];
 
-          for (int i = 0; i < groups.Length; i++)
-            groups[i] = new RankedGroup(group[i], m_round, ranks);
+          for (int i = 0; i < samples.Length; i++)
+            samples[i] = new RankedSample(sample[i], m_round, ranks);
 
-          return new MultiArrayDataGroup(groups);
+          return new ArrayDividedSample(samples);
         }
       }
 
-      return group;
+      return sample;
     }
 
     /// <summary>
     /// Преобразование группы значений третьего порядка в группу рангов
     /// </summary>
-    /// <param name="group">Исходная группа</param>
+    /// <param name="sample">Исходная группа</param>
     /// <returns>Преобразованная группа третьего порядка</returns>
-    public ISetMultyDataGroup Normalize(ISetMultyDataGroup group)
+    public IComplexSample Normalize(IComplexSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (RecreateRequired(group.SelectMany(g => g), m_round))
+      if (RecreateRequired(sample.SelectMany(g => g), m_round))
       {
         bool has_reason;
-        var ranks = CalculateRanks(group.SelectMany(g => g).SelectMany(g => g), out has_reason, m_round);
+        var ranks = CalculateRanks(sample.SelectMany(g => g).SelectMany(g => g), out has_reason, m_round);
 
         if (has_reason)
         {
-          var groups = new IMultyDataGroup[group.Count];
+          var samples = new IDividedSample[sample.Count];
 
-          for (int i = 0; i < group.Count; i++)
+          for (int i = 0; i < sample.Count; i++)
           {
-            var array = new IDataGroup[group[i].Count];
+            var array = new IPlainSample[sample[i].Count];
 
-            for (int j = 0; j < group[i].Count; j++)
-              array[j] = new RankedGroup(group[i][j], m_round, ranks);
+            for (int j = 0; j < sample[i].Count; j++)
+              array[j] = new RankedSample(sample[i][j], m_round, ranks);
 
-            groups[i] = new MultiArrayDataGroup(array);
+            samples[i] = new ArrayDividedSample(array);
           }
 
-          return new SetMultiArrayDataGroup(groups);
+          return new ArrayComplexSample(samples);
         }
       }
 
-      return group;
+      return sample;
     }
 
     /// <summary>
@@ -259,14 +256,14 @@ namespace Schicksal.Basic
       return ranks;
     }
 
-    private static bool RecreateRequired(IEnumerable<IDataGroup> multyGroup, int round)
+    private static bool RecreateRequired(IEnumerable<IPlainSample> samples, int round)
     {
       Dictionary<double, float> ranks = null;
       bool first = true;
 
-      foreach (var group in multyGroup)
+      foreach (var sample in samples)
       {
-        var ranked = group as RankedGroup;
+        var ranked = sample as RankedSample;
 
         if (ranked == null)
           return true;
@@ -286,21 +283,21 @@ namespace Schicksal.Basic
       return false;
     }
 
-    private sealed class RankedGroup : IDataGroup
+    private sealed class RankedSample : IPlainSample
     {
       public readonly Dictionary<double, float> Ranks;
       public readonly int Round;
-      public readonly IDataGroup Source;
+      public readonly IPlainSample Source;
       public readonly bool Internal;
 
-      public RankedGroup(IDataGroup source, int round, Dictionary<double, float> ranks)
+      public RankedSample(IPlainSample source, int round, Dictionary<double, float> ranks)
       {
         this.Source = source;
         this.Round = round;
         this.Ranks = ranks;
       }
 
-      public RankedGroup(IDataGroup source, int round)
+      public RankedSample(IPlainSample source, int round)
         : this(source, round, CalculateRanks(source, out _, round))
       {
         this.Internal = true;
@@ -333,7 +330,7 @@ namespace Schicksal.Basic
 
       public override bool Equals(object obj)
       {
-        var other = obj as RankedGroup;
+        var other = obj as RankedSample;
 
         if (other == null)
           return false;

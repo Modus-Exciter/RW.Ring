@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Schicksal.Basic
 {
   /// <summary>
-  /// Набор данных для статистического анализа
+  /// Выборка для статистического анализа
   /// </summary>
-  public interface IDataGroup : IEnumerable<double>
+  public interface ISample : IEnumerable
   {
     /// <summary>
     /// Объём выборки
     /// </summary>
     int Count { get; }
-
+  }
+  
+  /// <summary>
+  /// Выборка чисел для статистического анализа
+  /// </summary>
+  public interface IPlainSample : IEnumerable<double>, ISample
+  {
     /// <summary>
     /// Обращение к элементу выборки по номеру
     /// </summary>
@@ -25,51 +32,41 @@ namespace Schicksal.Basic
   /// <summary>
   /// Набор данных, состоящий из нескольких выборок
   /// </summary>
-  public interface IMultyDataGroup : IEnumerable<IDataGroup>
+  public interface IDividedSample : IEnumerable<IPlainSample>, ISample
   {
-    /// <summary>
-    /// Количество выборок
-    /// </summary>
-    int Count { get; }
-
     /// <summary>
     /// Получение выборки по порядковому номеру
     /// </summary>
     /// <param name="index">Порядковый номер выборки в наборе данных</param>
     /// <returns>Выборка для анализа</returns>
-    IDataGroup this[int index] { get; }
+    IPlainSample this[int index] { get; }
   }
 
   /// <summary>
   /// Множество наборов данных, состоящих из нескольких выборок
   /// </summary>
-  public interface ISetMultyDataGroup : IEnumerable<IMultyDataGroup>
+  public interface IComplexSample : IEnumerable<IDividedSample>, ISample
   {
-    /// <summary>
-    /// Количество выборок
-    /// </summary>
-    int Count { get; }
-
     /// <summary>
     /// Получение выборки по порядковому номеру
     /// </summary>
     /// <param name="index">Порядковый номер набора выборок данных</param>
     /// <returns>Выборка для анализа</returns>
-    IMultyDataGroup this[int index] { get; }
+    IDividedSample this[int index] { get; }
   }
 
   /// <summary>
   /// Набор данных, состоящий из нескольких выборок, с поиском по ключу
   /// </summary>
   /// <typeparam name="T">Тип ключа выборки</typeparam>
-  public interface IMultyDataGroup<T> : IMultyDataGroup
+  public interface IDividedSample<T> : IDividedSample
   {
     /// <summary>
     /// Получение выборки по ключу
     /// </summary>
     /// <param name="key">Значение ключа выборки</param>
     /// <returns>Выборка для анализа</returns>
-    IDataGroup this[T key] { get; }
+    IPlainSample this[T key] { get; }
 
     /// <summary>
     /// Получение ключа выборки по порядковому номеру
@@ -86,11 +83,12 @@ namespace Schicksal.Basic
     int GetIndex(T key);
   }
 
-  public sealed class ArrayDataGroup : IDataGroup
+  [ImmutableObject(true)]
+  public sealed class ArrayPlainSample : IPlainSample
   {
     private readonly double[] m_array;
 
-    public ArrayDataGroup(double[] array)
+    public ArrayPlainSample(double[] array)
     {
       if (array == null)
         throw new ArgumentNullException("array");
@@ -120,12 +118,12 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Array group, count={0}", m_array.Length);
+      return string.Format("Number sequence, count={0}", m_array.Length);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as ArrayDataGroup;
+      var other = obj as ArrayPlainSample;
 
       if (other == null)
         return false;
@@ -139,11 +137,12 @@ namespace Schicksal.Basic
     }
   }
 
-  public sealed class MultiArrayDataGroup : IMultyDataGroup
+  [ImmutableObject(true)]
+  public sealed class ArrayDividedSample : IDividedSample
   {
-    private readonly IDataGroup[] m_data;
+    private readonly IPlainSample[] m_data;
 
-    public MultiArrayDataGroup(IDataGroup[] data)
+    public ArrayDividedSample(IPlainSample[] data)
     {
       if (data == null)
         throw new ArgumentNullException("data");
@@ -157,18 +156,18 @@ namespace Schicksal.Basic
       m_data = data;
     }
 
-    public MultiArrayDataGroup(double[][] data)
+    public ArrayDividedSample(double[][] data)
     {
       if (data == null)
         throw new ArgumentNullException("data");
 
-      m_data = new IDataGroup[data.Length];
+      m_data = new IPlainSample[data.Length];
 
       for (int i = 0; i < data.Length; i++)
-        m_data[i] = new ArrayDataGroup(data[i]);
+        m_data[i] = new ArrayPlainSample(data[i]);
     }
 
-    public IDataGroup this[int index]
+    public IPlainSample this[int index]
     {
       get { return m_data[index]; }
     }
@@ -178,9 +177,9 @@ namespace Schicksal.Basic
       get { return m_data.Length; }
     }
 
-    public IEnumerator<IDataGroup> GetEnumerator()
+    public IEnumerator<IPlainSample> GetEnumerator()
     {
-      return ((IList<IDataGroup>)m_data).GetEnumerator();
+      return ((IList<IPlainSample>)m_data).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -190,12 +189,12 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Array muti group, count={0}", m_data.Length);
+      return string.Format("Number sequence set, count={0}", m_data.Length);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as MultiArrayDataGroup;
+      var other = obj as ArrayDividedSample;
 
       if (other == null)
         return false;
@@ -226,11 +225,12 @@ namespace Schicksal.Basic
     }
   }
 
-  public sealed class SetMultiArrayDataGroup : ISetMultyDataGroup
+  [ImmutableObject(true)]
+  public sealed class ArrayComplexSample : IComplexSample
   {
-    private readonly IMultyDataGroup[] m_data;
+    private readonly IDividedSample[] m_data;
 
-    public SetMultiArrayDataGroup(IMultyDataGroup[] data)
+    public ArrayComplexSample(IDividedSample[] data)
     {
       if (data == null)
         throw new ArgumentNullException("data");
@@ -244,7 +244,7 @@ namespace Schicksal.Basic
       m_data = data;
     }
 
-    public IMultyDataGroup this[int index]
+    public IDividedSample this[int index]
     {
       get { return m_data[index]; }
     }
@@ -254,9 +254,9 @@ namespace Schicksal.Basic
       get { return m_data.Length; }
     }
 
-    public IEnumerator<IMultyDataGroup> GetEnumerator()
+    public IEnumerator<IDividedSample> GetEnumerator()
     {
-      return ((IList<IMultyDataGroup>)m_data).GetEnumerator();
+      return ((IList<IDividedSample>)m_data).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -266,12 +266,12 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Array group set, count={0}", m_data.Length);
+      return string.Format("Number sequence complex, count={0}", m_data.Length);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as SetMultiArrayDataGroup;
+      var other = obj as ArrayComplexSample;
 
       if (other == null)
         return false;

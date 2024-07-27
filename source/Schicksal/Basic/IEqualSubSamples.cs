@@ -9,51 +9,51 @@ namespace Schicksal.Basic
   /// <summary>
   /// Набор выборок одинакового размера
   /// </summary>
-  public interface IEqualSubGroups
+  public interface IEqualSubSamples : ISample
   {
     /// <summary>
     /// Размер всех выборок
     /// </summary>
-    int SubGroupSize { get; }
+    int SubSampleSize { get; }
   }
   
   /// <summary>
   /// Вспомогательный класс для объединения нескольких выборок в одну 
   /// </summary>
   [ImmutableObject(true)]
-  public sealed class JoinedDataGroup : IDataGroup
+  public sealed class JoinedSample : IPlainSample
   {
-    private readonly IMultyDataGroup m_group;
+    private readonly IDividedSample m_sample;
     private readonly int m_total_count;
 
-    public JoinedDataGroup(IMultyDataGroup group)
+    public JoinedSample(IDividedSample sample)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      m_group = group;
-      m_total_count = m_group.Sum(g => g.Count);
+      m_sample = sample;
+      m_total_count = m_sample.Sum(g => g.Count);
     }
 
     public double this[int index]
     {
       get
       {
-        int group_index = 0;
-        var sub = m_group as IEqualSubGroups;
+        int part_index = 0;
+        var sub = m_sample as IEqualSubSamples;
 
         if (sub == null)
         {
-          while (index >= m_group[group_index].Count)
-            index -= m_group[group_index++].Count;
+          while (index >= m_sample[part_index].Count)
+            index -= m_sample[part_index++].Count;
         }
         else
         {
-          group_index = index / sub.SubGroupSize;
-          index %= sub.SubGroupSize;
+          part_index = index / sub.SubSampleSize;
+          index %= sub.SubSampleSize;
         }
 
-        return m_group[group_index][index];
+        return m_sample[part_index][index];
       }
     }
 
@@ -64,7 +64,7 @@ namespace Schicksal.Basic
 
     public IEnumerator<double> GetEnumerator()
     {
-      return m_group.SelectMany(g => g).GetEnumerator();
+      return m_sample.SelectMany(g => g).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -74,22 +74,22 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Joined {0}", m_group);
+      return string.Format("Joined {0}", m_sample);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as JoinedDataGroup;
+      var other = obj as JoinedSample;
 
       if (other == null)
         return false;
 
-      return m_group.Equals(other.m_group);
+      return m_sample.Equals(other.m_sample);
     }
 
     public override int GetHashCode()
     {
-      return m_group.GetHashCode();
+      return m_sample.GetHashCode();
     }
   }
 
@@ -97,39 +97,39 @@ namespace Schicksal.Basic
   /// Вспомогательный класс для объединения нескольких наборов выборок в один 
   /// </summary>
   [ImmutableObject(true)]
-  public sealed class JoinedMultiDataGroup : IMultyDataGroup
+  public sealed class PartiallyJoinedSample : IDividedSample
   {
-    private readonly ISetMultyDataGroup m_group;
+    private readonly IComplexSample m_sample;
     private readonly int m_total_count;
 
-    public JoinedMultiDataGroup(ISetMultyDataGroup group)
+    public PartiallyJoinedSample(IComplexSample sample)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      m_group = group;
-      m_total_count = m_group.Sum(g => g.Count);
+      m_sample = sample;
+      m_total_count = m_sample.Sum(g => g.Count);
     }
 
-    public IDataGroup this[int index]
+    public IPlainSample this[int index]
     {
       get
       {
-        int group_index = 0;
-        var sub = m_group as IEqualSubGroups;
+        int part_index = 0;
+        var sub = m_sample as IEqualSubSamples;
 
         if (sub == null)
         {
-          while (index >= m_group[group_index].Count)
-            index -= m_group[group_index++].Count;
+          while (index >= m_sample[part_index].Count)
+            index -= m_sample[part_index++].Count;
         }
         else
         {
-          group_index = index / sub.SubGroupSize;
-          index %= sub.SubGroupSize;
+          part_index = index / sub.SubSampleSize;
+          index %= sub.SubSampleSize;
         }
 
-        return m_group[group_index][index];
+        return m_sample[part_index][index];
       }
     }
 
@@ -138,9 +138,9 @@ namespace Schicksal.Basic
       get { return m_total_count; } 
     }
 
-    public IEnumerator<IDataGroup> GetEnumerator()
+    public IEnumerator<IPlainSample> GetEnumerator()
     {
-      return m_group.SelectMany(g => g).GetEnumerator();
+      return m_sample.SelectMany(g => g).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -150,22 +150,22 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Joined {0}", m_group);
+      return string.Format("Joined {0}", m_sample);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as JoinedMultiDataGroup;
+      var other = obj as PartiallyJoinedSample;
 
       if (other == null)
         return false;
 
-      return m_group.Equals(other.m_group);
+      return m_sample.Equals(other.m_sample);
     }
 
     public override int GetHashCode()
     {
-      return m_group.GetHashCode();
+      return m_sample.GetHashCode();
     }
   }
 }

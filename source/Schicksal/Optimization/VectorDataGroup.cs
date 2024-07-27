@@ -24,7 +24,7 @@ namespace Schicksal.VectorField
   /// <summary>
   /// Структура, осуществляющая векторные операции
   /// </summary>
-  public struct VectorDataGroup : IDataGroup
+  public struct VectorDataGroup : IPlainSample
   {
     private readonly double[] m_values;
 
@@ -34,7 +34,7 @@ namespace Schicksal.VectorField
       m_values = array;
     }
 
-    public VectorDataGroup(IDataGroup array)
+    public VectorDataGroup(IPlainSample array)
     {
       if(array.Count == 0) throw new ArgumentNullException("array");
       m_values = array.ToArray();

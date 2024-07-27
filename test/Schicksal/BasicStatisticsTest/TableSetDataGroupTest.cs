@@ -128,7 +128,7 @@ namespace BasicStatisticsTest
       double e10 = Convert.ToDouble(dt.Rows[10].ItemArray[2]);
       double e11 = Convert.ToDouble(dt.Rows[11].ItemArray[2]);
 
-      TableSetDataGroup tsdg = new TableSetDataGroup(dt, fc, ic, rc);
+      TableComplexSample tsdg = new TableComplexSample(dt, fc, ic, rc);
 
       double a0 = tsdg[0][0][0];
       double a1 = tsdg[0][0][1];
@@ -265,7 +265,7 @@ namespace BasicStatisticsTest
       double e6 = Convert.ToDouble(dt.Rows[6].ItemArray[3]);
       double e7 = Convert.ToDouble(dt.Rows[7].ItemArray[3]);
 
-      TableSetDataGroup tsdg = new TableSetDataGroup(dt, fc, ic, rc);
+      TableComplexSample tsdg = new TableComplexSample(dt, fc, ic, rc);
 
       double a0 = tsdg[0][0][0];
       double a1 = tsdg[1][0][0];

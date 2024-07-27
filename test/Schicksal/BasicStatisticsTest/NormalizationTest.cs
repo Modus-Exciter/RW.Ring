@@ -63,9 +63,9 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void OrderGroup()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
 
-      var gr2 = OrderedGroup.Construct(group);
+      var gr2 = OrderedSample.Construct(group);
 
       for (int i = 1; i < group.Count; i++)
         Assert.IsTrue(gr2[i - 1] <= gr2[i]);
@@ -74,9 +74,9 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void OrderGroupDesc()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 9.2, 7, 4, 4, 4, 3 });
 
-      var gr2 = OrderedGroup.Construct(group, System.ComponentModel.ListSortDirection.Descending);
+      var gr2 = OrderedSample.Construct(group, System.ComponentModel.ListSortDirection.Descending);
 
       for (int i = 1; i < group.Count; i++)
         Assert.IsTrue(gr2[i - 1] >= gr2[i]);
@@ -89,9 +89,9 @@ namespace BasicStatisticsTest
       var group2 = CreateRandomGroup(300);
       var group3 = CreateRandomGroup(70000);
 
-      var ordered1 = OrderedGroup.Construct(group1);
-      var ordered2 = OrderedGroup.Construct(group2);
-      var ordered3 = OrderedGroup.Construct(group3);
+      var ordered1 = OrderedSample.Construct(group1);
+      var ordered2 = OrderedSample.Construct(group2);
+      var ordered3 = OrderedSample.Construct(group3);
 
       var arr1 = group1.OrderBy(a => a).ToArray();
       var arr2 = group2.OrderBy(a => a).ToArray();
@@ -101,9 +101,9 @@ namespace BasicStatisticsTest
       CheckEquality(ordered2, arr2);
       CheckEquality(ordered3, arr3);
 
-      ordered1 = OrderedGroup.Construct(group1, System.ComponentModel.ListSortDirection.Descending);
-      ordered2 = OrderedGroup.Construct(group2, System.ComponentModel.ListSortDirection.Descending);
-      ordered3 = OrderedGroup.Construct(group3, System.ComponentModel.ListSortDirection.Descending);
+      ordered1 = OrderedSample.Construct(group1, System.ComponentModel.ListSortDirection.Descending);
+      ordered2 = OrderedSample.Construct(group2, System.ComponentModel.ListSortDirection.Descending);
+      ordered3 = OrderedSample.Construct(group3, System.ComponentModel.ListSortDirection.Descending);
 
       Array.Reverse(arr1);
       Array.Reverse(arr2);
@@ -123,9 +123,9 @@ namespace BasicStatisticsTest
       for (int i = 0; i < 200; i++)
         array[i] = rnd.Next() + rnd.NextDouble();
 
-      var group = new ArrayDataGroup(array);
+      var group = new ArrayPlainSample(array);
 
-      var ordered = OrderedGroup.Construct(group);
+      var ordered = OrderedSample.Construct(group);
 
       for (int i = 17; i < 200; i += rnd.Next(20))
         array[i] = -array[i];
@@ -151,13 +151,13 @@ namespace BasicStatisticsTest
         Assert.IsTrue(array[i] == ordered[i]);
     }
 
-    private static void CheckEquality(IDataGroup group, double[] array)
+    private static void CheckEquality(IPlainSample group, double[] array)
     {
       for (int i = 0; i < array.Length; i++)
         Assert.AreEqual(array[i], group[i]);
     }
 
-    private static IDataGroup CreateRandomGroup(int size)
+    private static IPlainSample CreateRandomGroup(int size)
     {
       double[] array = new double[size];
       Random rnd = new Random();
@@ -165,13 +165,13 @@ namespace BasicStatisticsTest
       for (int i = 0; i < size; i++)
         array[i] = rnd.Next() + rnd.NextDouble();
 
-      return new ArrayDataGroup(array);
+      return new ArrayPlainSample(array);
     }
 
     [TestMethod]
     public void OneDimensionGroup()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 4 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 9.2, 7, 4, 4, 4 });
       var ranked = GroupNormalizer.NormalizeByRanks(group, 2);
 
       Assert.AreEqual(7, ranked.Count);
@@ -204,7 +204,7 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void SeveralMaxes()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 9.2, 7, 4, 4, 9.2, 9.2 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 9.2, 7, 4, 4, 9.2, 9.2 });
       var ranked = GroupNormalizer.NormalizeByRanks(group, 2);
       Assert.AreEqual(8, ranked.Count);
       Assert.AreEqual(1, ranked[0], 0.01);
@@ -219,9 +219,9 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void NegativeAndPositive()
     {
-      var group = new ArrayDataGroup(new double[] { -3, -1, 2, 5, 8, 12 });
+      var group = new ArrayPlainSample(new double[] { -3, -1, 2, 5, 8, 12 });
       var delta = GroupNormalizer.CalculateDelta(group);
-      var group2 = new ArrayDataGroup(group.Select(a => a + delta).ToArray());
+      var group2 = new ArrayPlainSample(group.Select(a => a + delta).ToArray());
       var group3 = GroupNormalizer.NormalizeByBoxCox(group);
       var lambda = (double)group3.GetType().GetField("Lambda").GetValue(group3);
       Assert.AreEqual(lambda, GroupNormalizer.CalculateLambda(group2), 1e-5);
@@ -230,11 +230,11 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void TwoDimensionsGroup()
     {
-      var group1 = new ArrayDataGroup(new double[] { 2, 4, 6 });
-      var group2 = new ArrayDataGroup(new double[] { 4, 5, 7});
-      var group3 = new ArrayDataGroup(new double[] { 6, 7, 7, 8 });
+      var group1 = new ArrayPlainSample(new double[] { 2, 4, 6 });
+      var group2 = new ArrayPlainSample(new double[] { 4, 5, 7});
+      var group3 = new ArrayPlainSample(new double[] { 6, 7, 7, 8 });
 
-      var group = new MultiArrayDataGroup(new IDataGroup[] { group1, group2, group3 });
+      var group = new ArrayDividedSample(new IPlainSample[] { group1, group2, group3 });
 
       var ranked = GroupNormalizer.NormalizeByRanks(group);
 
@@ -259,7 +259,7 @@ namespace BasicStatisticsTest
       var ranked2 = GroupNormalizer.NormalizeByRanks(ranked);
       Assert.AreSame(ranked2, ranked);
 
-      var group5 = new MultiArrayDataGroup(new IDataGroup[] { ranked[0], ranked[1], group4 });
+      var group5 = new ArrayDividedSample(new IPlainSample[] { ranked[0], ranked[1], group4 });
 
       var ranked3 = GroupNormalizer.NormalizeByRanks(group5);
       Assert.AreNotSame(ranked3, group5);
@@ -271,7 +271,7 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void BoxCoxTestOneDimension()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 8, 7, 4, 4, 4 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 8, 7, 4, 4, 4 });
       var lambda = GroupNormalizer.CalculateLambda(group);
       Assert.AreEqual(0.705, lambda, 0.00025);
       var group2 = GroupNormalizer.NormalizeByBoxCox(group);
@@ -282,11 +282,11 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void BoxCoxTestTwoDimensions()
     {
-      var group1 = new ArrayDataGroup(new double[] { 3, 4, 6 });
-      var group2 = new ArrayDataGroup(new double[] { 4, 5, 7 });
-      var group3 = new ArrayDataGroup(new double[] { 6, 7, 7, 8 });
+      var group1 = new ArrayPlainSample(new double[] { 3, 4, 6 });
+      var group2 = new ArrayPlainSample(new double[] { 4, 5, 7 });
+      var group3 = new ArrayPlainSample(new double[] { 6, 7, 7, 8 });
 
-      var group4 = new MultiArrayDataGroup(new IDataGroup[] { group1, group2, group3 });
+      var group4 = new ArrayDividedSample(new IPlainSample[] { group1, group2, group3 });
 
       var group5 = GroupNormalizer.NormalizeByBoxCox(group4);
       var lambda = (double)group5[0].GetType().GetField("Lambda").GetValue(group5[0]);
@@ -297,7 +297,7 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void InverseBoxCox()
     {
-      var group = new ArrayDataGroup(new double[] { 2, 7, 8, 7, 4, 4, 4 });
+      var group = new ArrayPlainSample(new double[] { 2, 7, 8, 7, 4, 4, 4 });
       var group2 = GroupNormalizer.NormalizeByBoxCox(group);
       var handler = GroupNormalizer.CreateInverseHandler(group2);
 
@@ -314,13 +314,13 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void InverseBoxCoxInSet()
     {
-      var group1 = new ArrayDataGroup(new double[] { 9, 4, 6 });
-      var group2 = new ArrayDataGroup(new double[] { 10, 5, 7 });
-      var group3 = new ArrayDataGroup(new double[] { 8, 11, 15 });
-      var group4 = new ArrayDataGroup(new double[] { 12, 13, 14 });
-      var mg1 = new MultiArrayDataGroup(new[] { group1, group2 });
-      var mg2 = new MultiArrayDataGroup(new[] { group3, group4 });
-      var group = new SetMultiArrayDataGroup(new IMultyDataGroup[] { mg1, mg2 });
+      var group1 = new ArrayPlainSample(new double[] { 9, 4, 6 });
+      var group2 = new ArrayPlainSample(new double[] { 10, 5, 7 });
+      var group3 = new ArrayPlainSample(new double[] { 8, 11, 15 });
+      var group4 = new ArrayPlainSample(new double[] { 12, 13, 14 });
+      var mg1 = new ArrayDividedSample(new[] { group1, group2 });
+      var mg2 = new ArrayDividedSample(new[] { group3, group4 });
+      var group = new ArrayComplexSample(new IDividedSample[] { mg1, mg2 });
       var group5 = GroupNormalizer.NormalizeByBoxCox(group);
       var handler = GroupNormalizer.CreateInverseHandler(group5);
 
@@ -342,7 +342,7 @@ namespace BasicStatisticsTest
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void NegativeValues()
     {
-      ArrayDataGroup group = new ArrayDataGroup(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
+      ArrayPlainSample group = new ArrayPlainSample(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
       GroupNormalizer.CalculateLambda(group);
     }
 
@@ -350,7 +350,7 @@ namespace BasicStatisticsTest
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void NegativeValues2()
     {
-      ArrayDataGroup group = new ArrayDataGroup(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
+      ArrayPlainSample group = new ArrayPlainSample(new double[] { -3, -2, -1, 0, 1, 2, 3, 4 });
       GroupNormalizer.CalculateLambda(group, 3);
     }
 
@@ -377,16 +377,16 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void BoxCoxTestThreeDimensions()
     {
-      var group1 = new ArrayDataGroup(new double[] { 9, 4, 6 });
-      var group2 = new ArrayDataGroup(new double[] { 10, 5, 7 });
-      var group3 = new ArrayDataGroup(new double[] { 8, 11, 15 });
-      var group4 = new ArrayDataGroup(new double[] { 12, 13, 14 });
+      var group1 = new ArrayPlainSample(new double[] { 9, 4, 6 });
+      var group2 = new ArrayPlainSample(new double[] { 10, 5, 7 });
+      var group3 = new ArrayPlainSample(new double[] { 8, 11, 15 });
+      var group4 = new ArrayPlainSample(new double[] { 12, 13, 14 });
 
-      var mg1 = new MultiArrayDataGroup(new[] { group1, group2 });
-      var mg2 = new MultiArrayDataGroup(new[] { group3, group4 });
-      var mg3 = new MultiArrayDataGroup(new[] { group1, group2, group3, group4 });
+      var mg1 = new ArrayDividedSample(new[] { group1, group2 });
+      var mg2 = new ArrayDividedSample(new[] { group3, group4 });
+      var mg3 = new ArrayDividedSample(new[] { group1, group2, group3, group4 });
 
-      var group = new SetMultiArrayDataGroup(new IMultyDataGroup[] { mg1, mg2 });
+      var group = new ArrayComplexSample(new IDividedSample[] { mg1, mg2 });
 
       var group5 = GroupNormalizer.NormalizeByBoxCox(mg3);
       var group6 = GroupNormalizer.NormalizeByBoxCox(group);
@@ -403,15 +403,15 @@ namespace BasicStatisticsTest
     [TestMethod]
     public void ThreeDimensionsGroup()
     {
-      var group1 = new ArrayDataGroup(new double[] { 9, 4, 6 });
-      var group2 = new ArrayDataGroup(new double[] { 10, 5, 7 });
-      var group3 = new ArrayDataGroup(new double[] { 8, 11, 15 });
-      var group4 = new ArrayDataGroup(new double[] { 12, 13, 14 });
+      var group1 = new ArrayPlainSample(new double[] { 9, 4, 6 });
+      var group2 = new ArrayPlainSample(new double[] { 10, 5, 7 });
+      var group3 = new ArrayPlainSample(new double[] { 8, 11, 15 });
+      var group4 = new ArrayPlainSample(new double[] { 12, 13, 14 });
 
-      var mg1 = new MultiArrayDataGroup(new[] { group1, group2 });
-      var mg2 = new MultiArrayDataGroup(new[] { group3, group4 });
+      var mg1 = new ArrayDividedSample(new[] { group1, group2 });
+      var mg2 = new ArrayDividedSample(new[] { group3, group4 });
 
-      var group = new SetMultiArrayDataGroup(new IMultyDataGroup[] { mg1, mg2 });
+      var group = new ArrayComplexSample(new IDividedSample[] { mg1, mg2 });
       var ranked = GroupNormalizer.NormalizeByRanks(group);
 
       Assert.AreEqual(group.Count, ranked.Count);
@@ -467,7 +467,7 @@ namespace BasicStatisticsTest
     /// <param name="group">Числовая последовательность</param>
     /// <param name="delta">Коэффициент для смещения отрицательных значений</param>
     /// <returns>Коэффициент для преобразования</returns>
-    public static double CalculateLambda(IDataGroup group, double delta = 0)
+    public static double CalculateLambda(IPlainSample group, double delta = 0)
     {
       return new BoxCoxNormalizer().CalculateLambda(group, delta);
     }
@@ -489,7 +489,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Исходная группа</param>
     /// <returns>Нормированная группа</returns>
-    public static IDataGroup NormalizeByBoxCox(IDataGroup group)
+    public static IPlainSample NormalizeByBoxCox(IPlainSample group)
     {
       return new BoxCoxNormalizer().Normalize(group);
     }
@@ -499,7 +499,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Исходная группа</param>
     /// <returns>Нормированная группа</returns>
-    public static IMultyDataGroup NormalizeByBoxCox(IMultyDataGroup group)
+    public static IDividedSample NormalizeByBoxCox(IDividedSample group)
     {
       return new BoxCoxNormalizer().Normalize(group);
     }
@@ -509,7 +509,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Исходная группа</param>
     /// <returns>Нормированная группа</returns>
-    public static ISetMultyDataGroup NormalizeByBoxCox(ISetMultyDataGroup group)
+    public static IComplexSample NormalizeByBoxCox(IComplexSample group)
     {
       return new BoxCoxNormalizer().Normalize(group);
     }
@@ -535,7 +535,7 @@ namespace BasicStatisticsTest
     /// <param name="group">Исходная группа</param>
     /// <param name="round">Количество знаков после запятой для округления</param>
     /// <returns>Преобразованная группа</returns>
-    public static IDataGroup NormalizeByRanks(IDataGroup group, int round = -1)
+    public static IPlainSample NormalizeByRanks(IPlainSample group, int round = -1)
     {
       return new RankNormalizer(round).Normalize(group);
     }
@@ -546,7 +546,7 @@ namespace BasicStatisticsTest
     /// <param name="group">Исходная группа</param>
     /// <param name="round">Количество знаков после запятой для округления</param>
     /// <returns>Преобразованная группа</returns>
-    public static IMultyDataGroup NormalizeByRanks(IMultyDataGroup multyGroup, int round = -1)
+    public static IDividedSample NormalizeByRanks(IDividedSample multyGroup, int round = -1)
     {
       return new RankNormalizer(round).Normalize(multyGroup);
     }
@@ -557,7 +557,7 @@ namespace BasicStatisticsTest
     /// <param name="group">Исходная группа</param>
     /// <param name="round">Количество знаков после запятой для округления</param>
     /// <returns>Преобразованная группа</returns>
-    public static ISetMultyDataGroup NormalizeByRanks(ISetMultyDataGroup group, int round = -1)
+    public static IComplexSample NormalizeByRanks(IComplexSample group, int round = -1)
     {
       return new RankNormalizer(round).Normalize(group);
     }
@@ -571,7 +571,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Группа преобразованных значений</param>
     /// <returns>Значение в исходной группе</returns>
-    public static Func<double, double> CreateInverseHandler(IDataGroup group)
+    public static Func<double, double> CreateInverseHandler(IPlainSample group)
     {
       Debug.Assert(group != null, "group cannot be null");
 
@@ -588,7 +588,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Группа преобразованных значений второго порядка</param>
     /// <returns>Значение в исходной группе</returns>
-    public static Func<double, double> CreateInverseHandler(IMultyDataGroup group)
+    public static Func<double, double> CreateInverseHandler(IDividedSample group)
     {
       Debug.Assert(group != null, "group cannot be null");
 
@@ -605,7 +605,7 @@ namespace BasicStatisticsTest
     /// </summary>
     /// <param name="group">Группа преобразованных значений третьего порядка</param>
     /// <returns>Значение в исходной группе</returns>
-    public static Func<double, double> CreateInverseHandler(ISetMultyDataGroup group)
+    public static Func<double, double> CreateInverseHandler(IComplexSample group)
     {
       Debug.Assert(group != null, "group cannot be null");
 

@@ -14,52 +14,52 @@ namespace ANOVATest
     {
       //Три фактора
       //A1
-      ArrayDataGroup groupA1B1C1 = new ArrayDataGroup(new double[] { 2, 5, 4 });
-      ArrayDataGroup groupA1B1C2 = new ArrayDataGroup(new double[] { 3, 6, 1 });
-      ArrayDataGroup groupA1B2C1 = new ArrayDataGroup(new double[] { 2, 2, 3 });
-      ArrayDataGroup groupA1B2C2 = new ArrayDataGroup(new double[] { 4, 7, 2 });
-      ArrayDataGroup groupA1B3C1 = new ArrayDataGroup(new double[] { 2, 5, 6 });
-      ArrayDataGroup groupA1B3C2 = new ArrayDataGroup(new double[] { 4, 8, 3 });
-      MultiArrayDataGroup threeMultiA1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B1C1, groupA1B1C2, groupA1B2C1, groupA1B2C2, groupA1B3C1, groupA1B3C2 });
+      ArrayPlainSample groupA1B1C1 = new ArrayPlainSample(new double[] { 2, 5, 4 });
+      ArrayPlainSample groupA1B1C2 = new ArrayPlainSample(new double[] { 3, 6, 1 });
+      ArrayPlainSample groupA1B2C1 = new ArrayPlainSample(new double[] { 2, 2, 3 });
+      ArrayPlainSample groupA1B2C2 = new ArrayPlainSample(new double[] { 4, 7, 2 });
+      ArrayPlainSample groupA1B3C1 = new ArrayPlainSample(new double[] { 2, 5, 6 });
+      ArrayPlainSample groupA1B3C2 = new ArrayPlainSample(new double[] { 4, 8, 3 });
+      ArrayDividedSample threeMultiA1 = new ArrayDividedSample(new IPlainSample[] { groupA1B1C1, groupA1B1C2, groupA1B2C1, groupA1B2C2, groupA1B3C1, groupA1B3C2 });
 
       //A2
-      ArrayDataGroup groupA2B1C1 = new ArrayDataGroup(new double[] { 3, 5, 5 });
-      ArrayDataGroup groupA2B1C2 = new ArrayDataGroup(new double[] { 6, 1, 2 });
-      ArrayDataGroup groupA2B2C1 = new ArrayDataGroup(new double[] { 2, 3, 5 });
-      ArrayDataGroup groupA2B2C2 = new ArrayDataGroup(new double[] { 4, 7, 5 });
-      ArrayDataGroup groupA2B3C1 = new ArrayDataGroup(new double[] { 8, 1, 2 });
-      ArrayDataGroup groupA2B3C2 = new ArrayDataGroup(new double[] { 4, 3, 4 });
-      MultiArrayDataGroup threeMultiA2 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B1C1, groupA2B1C2, groupA2B2C1, groupA2B2C2, groupA2B3C1, groupA2B3C2 });
+      ArrayPlainSample groupA2B1C1 = new ArrayPlainSample(new double[] { 3, 5, 5 });
+      ArrayPlainSample groupA2B1C2 = new ArrayPlainSample(new double[] { 6, 1, 2 });
+      ArrayPlainSample groupA2B2C1 = new ArrayPlainSample(new double[] { 2, 3, 5 });
+      ArrayPlainSample groupA2B2C2 = new ArrayPlainSample(new double[] { 4, 7, 5 });
+      ArrayPlainSample groupA2B3C1 = new ArrayPlainSample(new double[] { 8, 1, 2 });
+      ArrayPlainSample groupA2B3C2 = new ArrayPlainSample(new double[] { 4, 3, 4 });
+      ArrayDividedSample threeMultiA2 = new ArrayDividedSample(new IPlainSample[] { groupA2B1C1, groupA2B1C2, groupA2B2C1, groupA2B2C2, groupA2B3C1, groupA2B3C2 });
 
-      SetMultiArrayDataGroup threeSet = new SetMultiArrayDataGroup(new IMultyDataGroup[] { threeMultiA1, threeMultiA2 });
+      ArrayComplexSample threeSet = new ArrayComplexSample(new IDividedSample[] { threeMultiA1, threeMultiA2 });
       FisherMetrics f3 = FisherCriteria.CalculateMultiplyCriteria(threeSet);
 
-      MultiArrayDataGroup twoMultiA1B1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B1C1, groupA1B1C2 });
-      MultiArrayDataGroup twoMultiA1B2 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B2C1, groupA1B2C2 });
-      MultiArrayDataGroup twoMultiA1B3 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B3C1, groupA1B3C2 });
+      ArrayDividedSample twoMultiA1B1 = new ArrayDividedSample(new IPlainSample[] { groupA1B1C1, groupA1B1C2 });
+      ArrayDividedSample twoMultiA1B2 = new ArrayDividedSample(new IPlainSample[] { groupA1B2C1, groupA1B2C2 });
+      ArrayDividedSample twoMultiA1B3 = new ArrayDividedSample(new IPlainSample[] { groupA1B3C1, groupA1B3C2 });
 
-      MultiArrayDataGroup twoMultiA2B1 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B1C1, groupA2B1C2 });
-      MultiArrayDataGroup twoMultiA2B2 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B2C1, groupA2B2C2 });
-      MultiArrayDataGroup twoMultiA2B3 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B3C1, groupA2B3C2 });
+      ArrayDividedSample twoMultiA2B1 = new ArrayDividedSample(new IPlainSample[] { groupA2B1C1, groupA2B1C2 });
+      ArrayDividedSample twoMultiA2B2 = new ArrayDividedSample(new IPlainSample[] { groupA2B2C1, groupA2B2C2 });
+      ArrayDividedSample twoMultiA2B3 = new ArrayDividedSample(new IPlainSample[] { groupA2B3C1, groupA2B3C2 });
 
-      SetMultiArrayDataGroup twoSet = new SetMultiArrayDataGroup(new IMultyDataGroup[] { twoMultiA1B1, twoMultiA1B2, twoMultiA1B3, twoMultiA2B1, twoMultiA2B2, twoMultiA2B3 });
+      ArrayComplexSample twoSet = new ArrayComplexSample(new IDividedSample[] { twoMultiA1B1, twoMultiA1B2, twoMultiA1B3, twoMultiA2B1, twoMultiA2B2, twoMultiA2B3 });
       FisherMetrics f2 = FisherCriteria.CalculateMultiplyCriteria(twoSet);
 
-      MultiArrayDataGroup oneMultiA1B1C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B1C1 });
-      MultiArrayDataGroup oneMultiA1B1C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B1C2 });
-      MultiArrayDataGroup oneMultiA1B2C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B2C1 });
-      MultiArrayDataGroup oneMultiA1B2C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B2C2 });
-      MultiArrayDataGroup oneMultiA1B3C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B3C1 });
-      MultiArrayDataGroup oneMultiA1B3C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B3C2 });
+      ArrayDividedSample oneMultiA1B1C1 = new ArrayDividedSample(new IPlainSample[] { groupA1B1C1 });
+      ArrayDividedSample oneMultiA1B1C2 = new ArrayDividedSample(new IPlainSample[] { groupA1B1C2 });
+      ArrayDividedSample oneMultiA1B2C1 = new ArrayDividedSample(new IPlainSample[] { groupA1B2C1 });
+      ArrayDividedSample oneMultiA1B2C2 = new ArrayDividedSample(new IPlainSample[] { groupA1B2C2 });
+      ArrayDividedSample oneMultiA1B3C1 = new ArrayDividedSample(new IPlainSample[] { groupA1B3C1 });
+      ArrayDividedSample oneMultiA1B3C2 = new ArrayDividedSample(new IPlainSample[] { groupA1B3C2 });
 
-      MultiArrayDataGroup oneMultiA2B1C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B1C1 });
-      MultiArrayDataGroup oneMultiA2B1C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B1C2 });
-      MultiArrayDataGroup oneMultiA2B2C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B2C1 });
-      MultiArrayDataGroup oneMultiA2B2C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B2C2 });
-      MultiArrayDataGroup oneMultiA2B3C1 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B3C1 });
-      MultiArrayDataGroup oneMultiA2B3C2 = new MultiArrayDataGroup(new IDataGroup[] { groupA2B3C2 });
+      ArrayDividedSample oneMultiA2B1C1 = new ArrayDividedSample(new IPlainSample[] { groupA2B1C1 });
+      ArrayDividedSample oneMultiA2B1C2 = new ArrayDividedSample(new IPlainSample[] { groupA2B1C2 });
+      ArrayDividedSample oneMultiA2B2C1 = new ArrayDividedSample(new IPlainSample[] { groupA2B2C1 });
+      ArrayDividedSample oneMultiA2B2C2 = new ArrayDividedSample(new IPlainSample[] { groupA2B2C2 });
+      ArrayDividedSample oneMultiA2B3C1 = new ArrayDividedSample(new IPlainSample[] { groupA2B3C1 });
+      ArrayDividedSample oneMultiA2B3C2 = new ArrayDividedSample(new IPlainSample[] { groupA2B3C2 });
 
-      SetMultiArrayDataGroup oneSet = new SetMultiArrayDataGroup(new IMultyDataGroup[] { oneMultiA1B1C1, oneMultiA1B1C2, oneMultiA1B2C1, oneMultiA1B2C2, oneMultiA1B3C1, oneMultiA1B3C2, oneMultiA2B1C1, oneMultiA2B1C2, oneMultiA2B2C1, oneMultiA2B2C2, oneMultiA2B3C1, oneMultiA2B3C2 });
+      ArrayComplexSample oneSet = new ArrayComplexSample(new IDividedSample[] { oneMultiA1B1C1, oneMultiA1B1C2, oneMultiA1B2C1, oneMultiA1B2C2, oneMultiA1B3C1, oneMultiA1B3C2, oneMultiA2B1C1, oneMultiA2B1C2, oneMultiA2B2C1, oneMultiA2B2C2, oneMultiA2B3C1, oneMultiA2B3C2 });
       FisherMetrics f1 = FisherCriteria.CalculateMultiplyCriteria(oneSet);
 
       Assert.AreEqual(f3.Ndf, f2.Ndf);
@@ -71,17 +71,17 @@ namespace ANOVATest
     [TestMethod]
     public void Dospehov228pageTest()
     {
-      ArrayDataGroup groupA0B0 = new ArrayDataGroup(new double[] { 24.1, 25.8, 23, 27 });
-      ArrayDataGroup groupA0B1 = new ArrayDataGroup(new double[] { 28.4, 29.7, 30.1, 27.4 });
-      ArrayDataGroup groupA0B2 = new ArrayDataGroup(new double[] { 28.7, 30.4, 32, 27 });
-      MultiArrayDataGroup multiA0 = new MultiArrayDataGroup(new IDataGroup[] { groupA0B0, groupA0B1, groupA0B2 });
+      ArrayPlainSample groupA0B0 = new ArrayPlainSample(new double[] { 24.1, 25.8, 23, 27 });
+      ArrayPlainSample groupA0B1 = new ArrayPlainSample(new double[] { 28.4, 29.7, 30.1, 27.4 });
+      ArrayPlainSample groupA0B2 = new ArrayPlainSample(new double[] { 28.7, 30.4, 32, 27 });
+      ArrayDividedSample multiA0 = new ArrayDividedSample(new IPlainSample[] { groupA0B0, groupA0B1, groupA0B2 });
 
-      ArrayDataGroup groupA1B0 = new ArrayDataGroup(new double[] { 30.7, 34.4, 34, 31 });
-      ArrayDataGroup groupA1B1 = new ArrayDataGroup(new double[] { 46.7, 45.5, 47.1, 46.3 });
-      ArrayDataGroup groupA1B2 = new ArrayDataGroup(new double[] { 59.4, 50.7, 64.5, 60.1 });
-      MultiArrayDataGroup multiA1 = new MultiArrayDataGroup(new IDataGroup[] { groupA1B0, groupA1B1, groupA1B2 });
+      ArrayPlainSample groupA1B0 = new ArrayPlainSample(new double[] { 30.7, 34.4, 34, 31 });
+      ArrayPlainSample groupA1B1 = new ArrayPlainSample(new double[] { 46.7, 45.5, 47.1, 46.3 });
+      ArrayPlainSample groupA1B2 = new ArrayPlainSample(new double[] { 59.4, 50.7, 64.5, 60.1 });
+      ArrayDividedSample multiA1 = new ArrayDividedSample(new IPlainSample[] { groupA1B0, groupA1B1, groupA1B2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA0, multiA1 });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA0, multiA1 });
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       Assert.AreEqual(Math.Round(249.88), Math.Round(f.F));
     }

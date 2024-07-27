@@ -9,12 +9,12 @@ namespace Schicksal.Basic
   /// <summary>
   /// Выборка данных, отсортированная по возрастанию
   /// </summary>
-  public abstract class OrderedGroup : IDataGroup
+  public abstract class OrderedSample : IPlainSample
   {
-    private readonly IDataGroup m_source;
+    private readonly IPlainSample m_source;
     private readonly ListSortDirection m_direction;
 
-    private OrderedGroup(IDataGroup source, ListSortDirection direction)
+    private OrderedSample(IPlainSample source, ListSortDirection direction)
     {
       m_source = source;
       m_direction = direction;
@@ -77,7 +77,7 @@ namespace Schicksal.Basic
     /// <returns>True, если другой объект - это та же выборка, отсортированная в том же направлении. Иначе, False</returns>
     public override bool Equals(object obj)
     {
-      var other = obj as OrderedGroup;
+      var other = obj as OrderedSample;
 
       if (other == null)
         return false;
@@ -107,33 +107,33 @@ namespace Schicksal.Basic
     /// <summary>
     /// Создание нового экземпляра отсортированной выборки
     /// </summary>
-    /// <param name="group">Не отсортированная выборка</param>
+    /// <param name="sample">Не отсортированная выборка</param>
     /// <param name="direction">Направление сортировки</param>
     /// <returns>Выборка, отсортированная в указанном направлении</returns>
-    public static OrderedGroup Construct(IDataGroup group, ListSortDirection direction = ListSortDirection.Ascending)
+    public static OrderedSample Construct(IPlainSample sample, ListSortDirection direction = ListSortDirection.Ascending)
     {
-      if (group == null)
-        throw new ArgumentNullException("group");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      if (group is OrderedGroup && ((OrderedGroup)group).m_direction == direction)
-        return (OrderedGroup)group;
+      if (sample is OrderedSample && ((OrderedSample)sample).m_direction == direction)
+        return (OrderedSample)sample;
       
-      if (group.Count <= byte.MaxValue)
-        return new ByteOrderedGroup(group, direction);
+      if (sample.Count <= byte.MaxValue)
+        return new ByteOrderedSample(sample, direction);
 
-      if (group.Count <= ushort.MaxValue)
-        return new UInt16OrderedGroup(group, direction);
+      if (sample.Count <= ushort.MaxValue)
+        return new UInt16OrderedSample(sample, direction);
 
-      return new Int32OrderedGroup(group, direction);
+      return new Int32OrderedSample(sample, direction);
     }
 
     #region Implementation
 
-    private sealed class Int32OrderedGroup : OrderedGroup
+    private sealed class Int32OrderedSample : OrderedSample
     {
       private readonly int[] m_indexes;
 
-      public Int32OrderedGroup(IDataGroup source, ListSortDirection direction) : base(source, direction)
+      public Int32OrderedSample(IPlainSample source, ListSortDirection direction) : base(source, direction)
       {
         m_indexes = new int[source.Count];
 
@@ -172,11 +172,11 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class UInt16OrderedGroup : OrderedGroup
+    private sealed class UInt16OrderedSample : OrderedSample
     {
       private readonly ushort[] m_indexes;
 
-      public UInt16OrderedGroup(IDataGroup source, ListSortDirection direction) : base(source, direction)
+      public UInt16OrderedSample(IPlainSample source, ListSortDirection direction) : base(source, direction)
       {
         m_indexes = new ushort[source.Count];
 
@@ -215,11 +215,11 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class ByteOrderedGroup : OrderedGroup
+    private sealed class ByteOrderedSample: OrderedSample
     {
       private readonly byte[] m_indexes;
 
-      public ByteOrderedGroup(IDataGroup source, ListSortDirection direction) : base(source, direction)
+      public ByteOrderedSample(IPlainSample source, ListSortDirection direction) : base(source, direction)
       {
         m_indexes = new byte[source.Count];
 

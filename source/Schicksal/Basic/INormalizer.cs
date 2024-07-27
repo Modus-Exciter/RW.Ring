@@ -8,44 +8,44 @@
     /// <summary>
     /// Нормирование одной выборки
     /// </summary>
-    /// <param name="group">Выборка не нормированных данных</param>
+    /// <param name="sample">Выборка не нормированных данных</param>
     /// <returns>Выборка нормированных данных</returns>
-    IDataGroup Normalize(IDataGroup group);
+    IPlainSample Normalize(IPlainSample sample);
 
     /// <summary>
     /// Нормирование набора выборок
     /// </summary>
-    /// <param name="group">Набор выборок не нормированных данных</param>
+    /// <param name="sample">Набор выборок не нормированных данных</param>
     /// <returns>Набор выборок нормированных данных</returns>
-    IMultyDataGroup Normalize(IMultyDataGroup group);
+    IDividedSample Normalize(IDividedSample sample);
 
     /// <summary>
     /// Нормирование нескольких наборов выборок
     /// </summary>
-    /// <param name="group">Множество наборов выборок не нормированных данных</param>
+    /// <param name="sample">Множество наборов выборок не нормированных данных</param>
     /// <returns>Множество наборов выборок нормированных данных</returns>
-    ISetMultyDataGroup Normalize(ISetMultyDataGroup group);
+    IComplexSample Normalize(IComplexSample sample);
 
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Выборка нормированных данных</param>
+    /// <param name="sample">Выборка нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(IDataGroup group);
+    IDenormalizer GetDenormalizer(IPlainSample sample);
 
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Набор выборок нормированных данных</param>
+    /// <param name="sample">Набор выборок нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(IMultyDataGroup group);
+    IDenormalizer GetDenormalizer(IDividedSample sample);
 
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Множество наборов выборок нормированных данных</param>
+    /// <param name="sample">Множество наборов выборок нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(ISetMultyDataGroup group);
+    IDenormalizer GetDenormalizer(IComplexSample sample);
   }
 
   /// <summary>
@@ -90,9 +90,9 @@
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Выборка нормированных данных</param>
+    /// <param name="sample">Выборка нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(IDataGroup group)
+    public IDenormalizer GetDenormalizer(IPlainSample sample)
     {
       return _denormalizer;
     }
@@ -100,9 +100,9 @@
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Набор выборок нормированных данных</param>
+    /// <param name="sample">Набор выборок нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(IMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IDividedSample sample)
     {
       return _denormalizer;
     }
@@ -110,9 +110,9 @@
     /// <summary>
     /// Получение преобразователя для обратного нормирования данных
     /// </summary>
-    /// <param name="group">Множество наборов выборок нормированных данных</param>
+    /// <param name="sample">Множество наборов выборок нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(ISetMultyDataGroup group)
+    public IDenormalizer GetDenormalizer(IComplexSample sample)
     {
       return _denormalizer;
     }
@@ -120,31 +120,31 @@
     /// <summary>
     /// Нормирование одной выборки
     /// </summary>
-    /// <param name="group">Выборка не нормированных данных</param>
+    /// <param name="sample">Выборка не нормированных данных</param>
     /// <returns>Выборка нормированных данных</returns>
-    public IDataGroup Normalize(IDataGroup group)
+    public IPlainSample Normalize(IPlainSample sample)
     {
-      return group;
+      return sample;
     }
 
     /// <summary>
     /// Нормирование набора выборок
     /// </summary>
-    /// <param name="group">Набор выборок не нормированных данных</param>
+    /// <param name="sample">Набор выборок не нормированных данных</param>
     /// <returns>Набор выборок нормированных данных</returns>
-    public IMultyDataGroup Normalize(IMultyDataGroup group)
+    public IDividedSample Normalize(IDividedSample sample)
     {
-      return group;
+      return sample;
     }
 
     /// <summary>
     /// Нормирование нескольких наборов выборок
     /// </summary>
-    /// <param name="group">Множество наборов выборок не нормированных данных</param>
+    /// <param name="sample">Множество наборов выборок не нормированных данных</param>
     /// <returns>Множество наборов выборок нормированных данных</returns>
-    public ISetMultyDataGroup Normalize(ISetMultyDataGroup group)
+    public IComplexSample Normalize(IComplexSample sample)
     {
-      return group;
+      return sample;
     }
 
     /// <summary>

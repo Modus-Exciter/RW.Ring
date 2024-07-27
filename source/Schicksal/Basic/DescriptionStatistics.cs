@@ -16,37 +16,37 @@ namespace Schicksal.Basic
     /// <summary>
     /// Среднее арифметическое
     /// </summary>
-    public static double Mean(IDataGroup group)
+    public static double Mean(IPlainSample sample)
     {
-      Debug.Assert(group != null);
+      Debug.Assert(sample != null);
 
-      return group.Count > 0 ? group.Average() : double.NaN;
+      return sample.Count > 0 ? sample.Average() : double.NaN;
     }
 
     /// <summary>
     /// Медиана
     /// </summary>
-    public static double Median(IDataGroup group)
+    public static double Median(IPlainSample sample)
     {
-      var ordered = OrderedGroup.Construct(group);
+      var ordered = OrderedSample.Construct(sample);
 
-      if (group.Count % 2 == 0)
-        return (ordered[group.Count / 2 - 1] + ordered[group.Count / 2]) / 2;
+      if (sample.Count % 2 == 0)
+        return (ordered[sample.Count / 2 - 1] + ordered[sample.Count / 2]) / 2;
       else
-        return ordered[group.Count / 2];
+        return ordered[sample.Count / 2];
     }
 
     /// <summary>
     /// Сумма квадратов отклонений
     /// </summary>
-    public static double SquareDerivation(IDataGroup group)
+    public static double SquareDerivation(IPlainSample sample)
     {
-      Debug.Assert(group != null);
+      Debug.Assert(sample != null);
 
-      var mean = Mean(group);
+      var mean = Mean(sample);
       double sum = 0;
 
-      foreach (var value in group)
+      foreach (var value in sample)
       {
         var derivation = value - mean;
         sum += derivation * derivation;
@@ -58,14 +58,14 @@ namespace Schicksal.Basic
     /// <summary>
     /// Сумма модулей отклонений
     /// </summary>
-    public static double PlainDerivation(IDataGroup group)
+    public static double PlainDerivation(IPlainSample sample)
     {
-      Debug.Assert(group != null);
+      Debug.Assert(sample != null);
 
-      var mean = Mean(group);
+      var mean = Mean(sample);
       double sum = 0;
 
-      foreach (var value in group)
+      foreach (var value in sample)
         sum += Math.Abs(value - mean);
 
       return sum;
@@ -74,86 +74,86 @@ namespace Schicksal.Basic
     /// <summary>
     /// Выборочная дисперсия
     /// </summary>
-    public static double Dispresion(IDataGroup group)
+    public static double Dispresion(IPlainSample sample)
     {
-      Debug.Assert(group != null);
-      Debug.Assert(group.Count > 1);
+      Debug.Assert(sample != null);
+      Debug.Assert(sample.Count > 1);
 
-      return SquareDerivation(group) / (group.Count - 1);
+      return SquareDerivation(sample) / (sample.Count - 1);
     }
     /// <summary>
     /// Упрощенная выборочная дисперсия
     /// </summary>
-    public static double PlainDispersion(IDataGroup group)
+    public static double PlainDispersion(IPlainSample sample)
     {
-      Debug.Assert(group != null);
-      Debug.Assert(group.Count > 1);
+      Debug.Assert(sample != null);
+      Debug.Assert(sample.Count > 1);
 
-      return PlainDerivation(group) / Math.Sqrt(group.Count - 1);
+      return PlainDerivation(sample) / Math.Sqrt(sample.Count - 1);
     }
 
-    public static IDataGroup Wrap(IDataGroup group)
+    public static IPlainSample Wrap(IPlainSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (group is ArrayDataGroup)
-        return group;
+      if (sample is ArrayPlainSample)
+        return sample;
 
-      var array = new double[group.Count];
+      var array = new double[sample.Count];
       var i = 0;
 
-      foreach (var value in group)
+      foreach (var value in sample)
         array[i++] = value;
 
-      return new ArrayDataGroup(array);
+      return new ArrayPlainSample(array);
     }
 
-    public static IMultyDataGroup Wrap(IMultyDataGroup group)
+    public static IDividedSample Wrap(IDividedSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (group.All(g => g is ArrayDataGroup))
+      if (sample.All(g => g is ArrayPlainSample))
       {
-        if (group is MultiArrayDataGroup)
-          return group;
+        if (sample is ArrayDividedSample)
+          return sample;
 
-        var groups = new IDataGroup[group.Count];
+        var samples = new IPlainSample[sample.Count];
         var i = 0;
 
-        foreach (var value in group)
-          groups[i++] = value;
+        foreach (var value in sample)
+          samples[i++] = value;
 
-        return new MultiArrayDataGroup(groups);
+        return new ArrayDividedSample(samples);
       }
       else
       {
-        var groups = new IDataGroup[group.Count];
+        var samples = new IPlainSample[sample.Count];
         var i = 0;
 
-        foreach (var value in group)
-          groups[i++] = Wrap(value);
+        foreach (var value in sample)
+          samples[i++] = Wrap(value);
 
-        return new MultiArrayDataGroup(groups);
+        return new ArrayDividedSample(samples);
       }
     }
 
-    public static ISetMultyDataGroup Wrap(ISetMultyDataGroup group)
+    public static IComplexSample Wrap(IComplexSample sample)
     {
-      Debug.Assert(group != null, "group cannot be null");
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (group.SelectMany(g => g).All(g => g is ArrayDataGroup))
+      if (sample.SelectMany(g => g).All(g => g is ArrayPlainSample))
       {
-        if (group is SetMultiArrayDataGroup && group.All(g => g is MultiArrayDataGroup))
-          return group;
+        if (sample is ArrayComplexSample && sample.All(g => g is ArrayDividedSample))
+          return sample;
       }
 
-      var groups = new IMultyDataGroup[group.Count];
+      var samples = new IDividedSample[sample.Count];
       var i = 0;
 
-      foreach (var value in group)
-        groups[i++] = Wrap(value);
+      foreach (var value in sample)
+        samples[i++] = Wrap(value);
 
-      return new SetMultiArrayDataGroup(groups);
+      return new ArrayComplexSample(samples);
     }
   }
 
@@ -183,13 +183,13 @@ namespace Schicksal.Basic
 
     public override void Run()
     {
-      using (var group = new TableMultyDataGroup(m_table, m_factors, m_result, m_filter))
+      using (var sample = new TableDividedSample(m_table, m_factors, m_result, m_filter))
       {
-        var res = new DescriptionStatisticsEntry[group.Count];
+        var res = new DescriptionStatisticsEntry[sample.Count];
 
         for (int i = 0; i < res.Length; i++)
         {
-          var name = group.GetKey(i);
+          var name = sample.GetKey(i);
 
           if (name.Contains(" AND "))
             name = name.Substring(name.IndexOf(" AND ") + 5);
@@ -200,18 +200,18 @@ namespace Schicksal.Basic
           res[i] = new DescriptionStatisticsEntry
           {
             Description = name.Replace(" AND ", ", ").Replace("[", "").Replace("]", ""),
-            Mean = DescriptionStatistics.Mean(group[i]),
-            Median = DescriptionStatistics.Median(group[i]),
-            Min = group[i].Min(),
-            Max = group[i].Max(),
-            Count = group[i].Count
+            Mean = DescriptionStatistics.Mean(sample[i]),
+            Median = DescriptionStatistics.Median(sample[i]),
+            Min = sample[i].Min(),
+            Max = sample[i].Max(),
+            Count = sample[i].Count
           };
 
           if (res[i].Count > 1)
           {
-            res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(group[i]));
-            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(group[i].Count) *
-              SpecialFunctions.invstudenttdistribution(group[i].Count - 1, 1 - m_probability / 2);
+            res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(sample[i]));
+            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(sample[i].Count) *
+              SpecialFunctions.invstudenttdistribution(sample[i].Count - 1, 1 - m_probability / 2);
           }
           else
           {

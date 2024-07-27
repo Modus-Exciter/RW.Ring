@@ -10,13 +10,13 @@ namespace Schicksal.Basic
   /// </summary>
   /// <typeparam name="T">Тип ключа</typeparam>
   [ImmutableObject(true)]
-  public sealed class MultiArrayDataGroup<T> : IMultyDataGroup<T>
+  public sealed class ArrayDividedSample<T> : IDividedSample<T>
   {
-    private readonly IDataGroup[] m_data;
+    private readonly IPlainSample[] m_data;
     private readonly T[] m_keys;
     private readonly Dictionary<T, int> m_indexes;
 
-    public MultiArrayDataGroup(IDataGroup[] data, T[] keys)
+    public ArrayDividedSample(IPlainSample[] data, T[] keys)
     {
       if (data == null)
         throw new ArgumentNullException("data");
@@ -41,7 +41,7 @@ namespace Schicksal.Basic
       m_keys = keys;
     }
 
-    public MultiArrayDataGroup(double[][] data, T[] keys)
+    public ArrayDividedSample(double[][] data, T[] keys)
     {
       if (data == null)
         throw new ArgumentNullException("data");
@@ -52,12 +52,12 @@ namespace Schicksal.Basic
       if (data.Length != keys.Length)
         throw new ArgumentException("Data and keys count mismatch");
 
-      m_data = new IDataGroup[data.Length];
+      m_data = new IPlainSample[data.Length];
       m_indexes = new Dictionary<T, int>(m_data.Length);
 
       for (int i = 0; i < data.Length; i++)
       {
-        m_data[i] = new ArrayDataGroup(data[i]);
+        m_data[i] = new ArrayPlainSample(data[i]);
 
         m_indexes.Add(keys[i], i);
       }
@@ -65,9 +65,9 @@ namespace Schicksal.Basic
       m_keys = keys;
     }
 
-    public IDataGroup this[T key] { get { return m_data[m_indexes[key]]; } }
+    public IPlainSample this[T key] { get { return m_data[m_indexes[key]]; } }
 
-    public IDataGroup this[int index] { get { return m_data[index]; } }
+    public IPlainSample this[int index] { get { return m_data[index]; } }
 
     public int Count { get { return m_data.Length; } }
 
@@ -81,9 +81,9 @@ namespace Schicksal.Basic
       return m_indexes[key];
     }
 
-    public IEnumerator<IDataGroup> GetEnumerator()
+    public IEnumerator<IPlainSample> GetEnumerator()
     {
-      return ((IList<IDataGroup>)m_data).GetEnumerator();
+      return ((IList<IPlainSample>)m_data).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -93,12 +93,12 @@ namespace Schicksal.Basic
 
     public override string ToString()
     {
-      return string.Format("Named multy group, count={0}", m_data.Length);
+      return string.Format("Number sequence set, count={0}", m_data.Length);
     }
 
     public override bool Equals(object obj)
     {
-      var other = obj as MultiArrayDataGroup<T>;
+      var other = obj as ArrayDividedSample<T>;
 
       if (other == null)
         return false;

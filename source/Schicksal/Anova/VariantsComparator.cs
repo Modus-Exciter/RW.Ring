@@ -88,7 +88,7 @@ namespace Schicksal.Anova
       res.Columns.Add("Interval", typeof(double));
       res.Columns.Add("Ignorable", typeof(int));
 
-      using (var groupset = new TableSetDataGroup(m_source, m_factors, m_ignorable_factors, m_result, m_filter, m_conjugate))
+      using (var groupset = new TableComplexSample(m_source, m_factors, m_ignorable_factors, m_result, m_filter, m_conjugate))
       {
         for (int i = 0; i < groupset.Count; i++)
         {
@@ -107,7 +107,7 @@ namespace Schicksal.Anova
               m_source.Columns[factor].DataType).ConvertFromInvariantString(search);
           }
 
-          var join = new JoinedDataGroup(groupset[i]);
+          var join = new JoinedSample(groupset[i]);
 
           row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
           row["Mean"] = DescriptionStatistics.Mean(join);

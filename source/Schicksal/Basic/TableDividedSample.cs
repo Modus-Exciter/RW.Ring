@@ -11,10 +11,10 @@ namespace Schicksal.Basic
   /// <summary>
   /// Обёртка над таблицей данных для статистического анализа
   /// </summary>
-  public sealed class TableMultyDataGroup : IMultyDataGroup<string>, IDisposable
+  public sealed class TableDividedSample : IDividedSample<string>, IDisposable
   {
     private readonly DataTable m_table;
-    private readonly DataViewGroup[] m_views;
+    private readonly DataViewSample[] m_views;
     private readonly Dictionary<string, int> m_indexes;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Schicksal.Basic
     /// <param name="resultColumn">Колонка таблицы, которая будет использоваться для получения результатов</param>
     /// <param name="filter">Дополнительная фильтрация строк таблицы</param>
     /// <param name="conjugate">Колонка, идентифицирующая сопряжённые наблюдения</param>
-    public TableMultyDataGroup(DataTable table, string[] factorColumns, string resultColumn, string filter = null, string conjugate = null)
+    public TableDividedSample(DataTable table, string[] factorColumns, string resultColumn, string filter = null, string conjugate = null)
     {
       CheckConstructorParameters(table, factorColumns, resultColumn);
       m_table = table;
@@ -36,7 +36,7 @@ namespace Schicksal.Basic
       for (int i = 0; i < factorColumns.Length; i++)
         columnIndexes[i] = m_table.Columns[factorColumns[i]].Ordinal;
 
-      var tuples = new List<DataViewGroup>();
+      var tuples = new List<DataViewSample>();
       m_indexes = new Dictionary<string, int>();
 
       using (var filtered_table = new DataView(m_table, filter, null, DataViewRowState.CurrentRows))
@@ -64,7 +64,7 @@ namespace Schicksal.Basic
 
           if (view.Count > 0)
           {
-            tuples.Add(new DataViewGroup(view, resultColumn));
+            tuples.Add(new DataViewSample(view, resultColumn));
             m_indexes[view.RowFilter] = m_indexes.Count;
           }
           else
@@ -131,12 +131,12 @@ namespace Schicksal.Basic
       get { return m_views.Length; }
     }
 
-    public IDataGroup this[string rowFilter]
+    public IPlainSample this[string rowFilter]
     {
       get { return m_views[m_indexes[rowFilter]]; }
     }
 
-    public IDataGroup this[int index]
+    public IPlainSample this[int index]
     {
       get { return m_views[index]; }
     }
@@ -151,7 +151,7 @@ namespace Schicksal.Basic
       return m_indexes[rowFilter];
     }
 
-    public IEnumerator<IDataGroup> GetEnumerator()
+    public IEnumerator<IPlainSample> GetEnumerator()
     {
       return m_views.Select(v => v).GetEnumerator();
     }
@@ -163,17 +163,17 @@ namespace Schicksal.Basic
 
     public void Dispose()
     {
-      foreach (DataViewGroup group in m_views)
-        group.View.Dispose();
+      foreach (DataViewSample sample in m_views)
+        sample.View.Dispose();
     }
 
-    private class DataViewGroup : IDataGroup
+    private class DataViewSample : IPlainSample
     {
       private readonly DataView m_view;
       private readonly int m_column;
       private string m_string;
 
-      public DataViewGroup(DataView view, string column)
+      public DataViewSample(DataView view, string column)
       {
         m_view = view;
         m_column = view.Table.Columns[column].Ordinal;

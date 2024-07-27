@@ -20,7 +20,7 @@ namespace Schicksal.Regression
 
     #region Public methods ------------------------------------------------------------------------
 
-    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IDataGroup x, IDataGroup y, double p)
+    public static CorrelationMetrics CalculateMetrics(string factor, string effect, IPlainSample x, IPlainSample y, double p)
     {
       var result = new CorrelationMetrics
       {
@@ -46,7 +46,7 @@ namespace Schicksal.Regression
       return result;
     }
 
-    public static double CalculateR(IDataGroup factor, IDataGroup result)
+    public static double CalculateR(IPlainSample factor, IPlainSample result)
     {
       if (factor == null)
         throw new ArgumentNullException("factor");
@@ -55,7 +55,7 @@ namespace Schicksal.Regression
         throw new ArgumentNullException("result");
 
       if (factor.Count != result.Count)
-        throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
+        throw new ArgumentException(Resources.DATA_SAMPLE_SIZE_MISMATCH);
 
       if (factor.Count < 3)
         throw new ArgumentOutOfRangeException("factor.Count");
@@ -76,7 +76,7 @@ namespace Schicksal.Regression
       return up_sum / Math.Sqrt(x_sum * y_sum);
     }
 
-    public static double CalculateEta(IDataGroup factor, IDataGroup result)
+    public static double CalculateEta(IPlainSample factor, IPlainSample result)
     {
       if (factor == null)
         throw new ArgumentNullException("factor");
@@ -85,7 +85,7 @@ namespace Schicksal.Regression
         throw new ArgumentNullException("result");
 
       if (factor.Count != result.Count)
-        throw new ArgumentException(Resources.DATA_GROUP_SIZE_MISMATCH);
+        throw new ArgumentException(Resources.DATA_SAMPLE_SIZE_MISMATCH);
 
       if (factor.Count < 6)
         return double.NaN;
@@ -130,7 +130,7 @@ namespace Schicksal.Regression
       return Math.Sqrt(up_sum / dn_sum);
     }
 
-    public static CorrelationFormula CalculateFormula(IDataGroup x, IDataGroup y, string factor, string effect)
+    public static CorrelationFormula CalculateFormula(IPlainSample x, IPlainSample y, string factor, string effect)
     {
       double min_x = double.MaxValue;
       double max_x = double.MinValue;
@@ -271,7 +271,7 @@ namespace Schicksal.Regression
       return true;
     }
 
-    private static void CalculateHeteroscedasticity(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    private static void CalculateHeteroscedasticity(IPlainSample x, IPlainSample y, RegressionDependency dependency)
     {
       var x_ranks = RankNormalizer.CalculateRanks(x);
       var y_ranks = RankNormalizer.CalculateRanks(EnumeratePoints(x, y).Select(p =>
@@ -295,7 +295,7 @@ namespace Schicksal.Regression
       };
     }
 
-    private static void CalculateConsistency(IDataGroup x, IDataGroup y, RegressionDependency dependency)
+    private static void CalculateConsistency(IPlainSample x, IPlainSample y, RegressionDependency dependency)
     {
       double down = DescriptionStatistics.SquareDerivation(y);
       double up = 0;
@@ -314,7 +314,7 @@ namespace Schicksal.Regression
       dependency.Consistency = (down - up) / down;
     }
 
-    private static void CalculateConsistencyWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep, Dispersion disp)
+    private static void CalculateConsistencyWeighted(IPlainSample x, IPlainSample y, RegressionDependency dep, Dispersion disp)
     {
       double mean = DescriptionStatistics.Mean(y);
       double num = 0, denum = 0;
@@ -334,7 +334,7 @@ namespace Schicksal.Regression
       dep.ConsistencyWeighted = 1 - num / denum;
     }
 
-    private static void CalculateRMSError(IDataGroup x, IDataGroup y, RegressionDependency dep)
+    private static void CalculateRMSError(IPlainSample x, IPlainSample y, RegressionDependency dep)
     {
       double result = 0;
       double residual;
@@ -348,7 +348,7 @@ namespace Schicksal.Regression
       dep.RMSError = Math.Sqrt(result / x.Count);
     }
 
-    private static void CalculateRMSErrorWeighted(IDataGroup x, IDataGroup y, RegressionDependency dep, Dispersion disp)
+    private static void CalculateRMSErrorWeighted(IPlainSample x, IPlainSample y, RegressionDependency dep, Dispersion disp)
     {
       double num = 0;
       double denum = 0;
@@ -364,7 +364,7 @@ namespace Schicksal.Regression
       dep.RMSErrorWeighted = Math.Sqrt(num / denum);
     }
 
-    private static void AddType(Type type, List<RegressionDependency> dependencies, IDataGroup x, IDataGroup y, string factor, string effect)
+    private static void AddType(Type type, List<RegressionDependency> dependencies, IPlainSample x, IPlainSample y, string factor, string effect)
     {
       try
       {
@@ -399,7 +399,7 @@ namespace Schicksal.Regression
       }
     }
 
-    private static IEnumerable<Point2D> EnumeratePoints(IDataGroup factor, IDataGroup result)
+    private static IEnumerable<Point2D> EnumeratePoints(IPlainSample factor, IPlainSample result)
     {
       for (int i = 0; i < factor.Count; i++)
         yield return new Point2D { X = factor[i], Y = result[i] };

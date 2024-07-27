@@ -46,8 +46,8 @@ namespace Schicksal.Regression
       {
         this.ReportProgress(m_factors[i]);
 
-        var x_column = new DataColumnGroup(m_table.Columns[m_factors[i]], this.GetFilter(m_factors[i]));
-        var y_column = new DataColumnGroup(m_table.Columns[m_result], this.GetFilter(m_factors[i]));
+        var x_column = new DataColumnSample(m_table.Columns[m_factors[i]], this.GetFilter(m_factors[i]));
+        var y_column = new DataColumnSample(m_table.Columns[m_result], this.GetFilter(m_factors[i]));
 
         this.Results[i] = CorrelationTest.CalculateMetrics(m_factors[i], m_result, x_column, y_column, m_probability);
 

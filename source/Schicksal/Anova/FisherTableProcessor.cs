@@ -78,7 +78,7 @@ namespace Schicksal.Anova
 
     private bool DoubleFactorAnalysis(List<FisherTestResult> result, List<string> factors, List<string> ignoredFactors)
     {
-      using (var groups = new TableSetDataGroup(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
+      using (var groups = new TableComplexSample(m_source, factors.ToArray(), ignoredFactors.ToArray(), m_result_column, this.Filter))
       {
         FisherMetrics degrees = string.IsNullOrEmpty(this.Conjugate)
           ? FisherCriteria.CalculateMultiplyCriteria(groups)
@@ -124,7 +124,7 @@ namespace Schicksal.Anova
 
     private void SingleFactorAnalysis(List<FisherTestResult> result, List<string> factors)
     {
-      using (var group = new TableMultyDataGroup(m_source, factors.ToArray(), m_result_column, this.Filter, this.Conjugate))
+      using (var group = new TableDividedSample(m_source, factors.ToArray(), m_result_column, this.Filter, this.Conjugate))
       {
         FisherMetrics degrees = string.IsNullOrEmpty(this.Conjugate) 
           ? FisherCriteria.CalculateCriteria(group)
