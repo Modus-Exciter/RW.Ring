@@ -38,38 +38,12 @@ namespace Schicksal.Basic
   }
 
   /// <summary>
-  /// Вспомогательный класс с общей логикой получения денормированных данных
+  /// Извлечение заданного объекта из определённых выборок
   /// </summary>
-  public static class DenormalizationHelper
+  public static class SamplePropertyExtractor
   {
     /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Выборка нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public static IDenormalizer GetDenormalizer(ISample sample, IDenormalizerFactory factory)
-    {
-      Debug.Assert(sample != null);
-      Debug.Assert(factory != null);
-
-      var plain = sample as IPlainSample;
-      var divided = sample as IDividedSample;
-      var complex = sample as IComplexSample;
-
-      if (sample != null && factory.IsNormalized(plain))
-        return factory.GetDenormalizer(plain);
-
-      if (divided != null && divided.Count > 0 && factory.IsNormalized(divided[0]))
-        return factory.GetDenormalizer(divided);
-
-      if (complex != null && complex.Count > 0 && complex[0].Count > 0 && factory.IsNormalized(complex[0][0]))
-        return factory.GetDenormalizer(complex);
-
-      return DummyNormalizer.Denormalizer;
-    }
-
-    /// <summary>
-    /// Обобщение логики денормирования на произвольное действие
+    /// Извлечение заданного объекта из определённых выборок
     /// </summary>
     /// <typeparam name="T">Тип объекта, который можно извлечь из некоторых выборок</typeparam>
     /// <param name="sample">Выборка, из которой пытаемся извлечь</param>

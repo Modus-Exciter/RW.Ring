@@ -48,40 +48,6 @@
   }
 
   /// <summary>
-  /// Получение обратных преобразователей от прямого преобразователя для разных типов выборок
-  /// </summary>
-  public interface IDenormalizerFactory
-  {
-    /// <summary>
-    /// Проверка на то, является ли выборка нормированной нужным методом
-    /// </summary>
-    /// <param name="sample">Проверяемая выборка</param>
-    /// <returns>True, если выборка нормирована искомым методом. Иначе, false</returns>
-    bool IsNormalized(IPlainSample sample);
-
-    /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Выборка нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(IPlainSample sample);
-
-    /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Набор выборок нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(IDividedSample sample);
-
-    /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
-    /// </summary>
-    /// <param name="sample">Множество наборов выборок нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    IDenormalizer GetDenormalizer(IComplexSample sample);
-  }
-
-  /// <summary>
   /// Заглушка для фиктивного нормирования данных
   /// </summary>
   public sealed class DummyNormalizer : INormalizer
@@ -97,14 +63,6 @@
     public static DummyNormalizer Instance
     {
       get { return _instance; }
-    }
-
-    /// <summary>
-    /// Заглушка для фиктивного обратного преобразования нормированных данных
-    /// </summary>
-    public static IDenormalizer Denormalizer
-    {
-      get { return _denormalizer; }
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ namespace Schicksal.Basic
   /// <summary>
   /// Преобразователь данных для нормирования с использованием рангов
   /// </summary>
-  public sealed class RankNormalizer : INormalizer, IDenormalizerFactory
+  public sealed class RankNormalizer : INormalizer, ISamplePropertyExtractor<IDenormalizer>
   {
     private readonly int m_round;
 
@@ -40,7 +40,7 @@ namespace Schicksal.Basic
     {
       Debug.Assert(sample != null, "sample cannot be null");
 
-      return DenormalizationHelper.GetDenormalizer(sample, this);
+      return this.ExtractProperty(sample) ?? DummyNormalizer.Instance.GetDenormalizer(sample);
     }
 
     /// <summary>
@@ -165,19 +165,19 @@ namespace Schicksal.Basic
 
     #region Implementation ------------------------------------------------------------------------
 
-    bool IDenormalizerFactory.IsNormalized(IPlainSample sample)
+    bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
     {
       return sample is RankedSample;
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IPlainSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IPlainSample sample)
     {
       var ranked = sample as RankedSample;
 
       return new RankInverse(ranked.Ranks);
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IDividedSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IDividedSample sample)
     {
       var ranked = sample.FirstOrDefault() as RankedSample;
 
@@ -187,7 +187,7 @@ namespace Schicksal.Basic
         return new RankInverse(ranked.Ranks);
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IComplexSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IComplexSample sample)
     {
       var ranked = sample.SelectMany(g => g).FirstOrDefault() as RankedSample;
 

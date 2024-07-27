@@ -10,7 +10,7 @@ namespace Schicksal.Basic
   /// <summary>
   /// Преобразователь данных для нормирования методом Бокса-Кокса
   /// </summary>
-  public sealed class BoxCoxNormalizer : INormalizer, IDenormalizerFactory
+  public sealed class BoxCoxNormalizer : INormalizer, ISamplePropertyExtractor<IDenormalizer>
   {
     private readonly double m_min;
     private readonly double m_max;
@@ -65,7 +65,7 @@ namespace Schicksal.Basic
     {
       Debug.Assert(sample != null, "sample cannot be null");
 
-      return DenormalizationHelper.GetDenormalizer(sample, this);
+      return this.ExtractProperty(sample) ?? DummyNormalizer.Instance.GetDenormalizer(sample);
     }
 
     /// <summary>
@@ -250,19 +250,19 @@ namespace Schicksal.Basic
       }
     }
 
-    bool IDenormalizerFactory.IsNormalized(IPlainSample sample)
+    bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
     {
       return sample is BoxCoxSample;
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IPlainSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IPlainSample sample)
     {
       var box_cox = sample as BoxCoxSample;
 
       return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IDividedSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IDividedSample sample)
     {
       var box_cox = sample.FirstOrDefault() as BoxCoxSample;
 
@@ -272,7 +272,7 @@ namespace Schicksal.Basic
         return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
     }
 
-    IDenormalizer IDenormalizerFactory.GetDenormalizer(IComplexSample sample)
+    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IComplexSample sample)
     {
       var box_cox = sample.SelectMany(g => g).FirstOrDefault() as BoxCoxSample;
 
