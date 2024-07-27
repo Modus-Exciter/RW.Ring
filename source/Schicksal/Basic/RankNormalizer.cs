@@ -40,7 +40,7 @@ namespace Schicksal.Basic
     {
       Debug.Assert(sample != null, "sample cannot be null");
 
-      return DummyNormalizer.Instance.GetDenormalizer(sample, this);
+      return DenormalizationHelper.GetDenormalizer(sample, this);
     }
 
     /// <summary>

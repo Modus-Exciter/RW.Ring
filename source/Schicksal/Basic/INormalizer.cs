@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Schicksal.Basic
+﻿namespace Schicksal.Basic
 {
   /// <summary>
   /// Объект для нормирования данных
@@ -102,13 +100,11 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
+    /// Заглушка для фиктивного обратного преобразования нормированных данных
     /// </summary>
-    /// <param name="sample">Выборка нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(ISample sample)
+    public static IDenormalizer Denormalizer
     {
-      return _denormalizer;
+      get { return _denormalizer; }
     }
 
     /// <summary>
@@ -116,23 +112,8 @@ namespace Schicksal.Basic
     /// </summary>
     /// <param name="sample">Выборка нормированных данных</param>
     /// <returns>Преобразователь нормированных значений в ненормированные</returns>
-    public IDenormalizer GetDenormalizer(ISample sample, IDenormalizerFactory factory)
+    public IDenormalizer GetDenormalizer(ISample sample)
     {
-      Debug.Assert(sample != null && factory != null);
-
-      var plain = sample as IPlainSample;
-      var divided = sample as IDividedSample;
-      var complex = sample as IComplexSample;
-
-      if (sample != null && factory.IsNormalized(plain))
-        return factory.GetDenormalizer(plain);
-
-      if (divided != null && divided.Count > 0 && factory.IsNormalized(divided[0]))
-        return factory.GetDenormalizer(divided);
-
-      if (complex != null && complex.Count > 0 && complex[0].Count > 0 && factory.IsNormalized(complex[0][0]))
-        return factory.GetDenormalizer(complex);
-
       return _denormalizer;
     }
 
@@ -172,6 +153,25 @@ namespace Schicksal.Basic
     public override string ToString()
     {
       return "Dummy normalizer(a => a)";
+    }
+
+    /// <summary>
+    /// Сравнение преобразователя с другим объектом
+    /// </summary>
+    /// <param name="obj">Другой объект</param>
+    /// <returns>True, если другой объект - это тоже DummyNormalizer. Иначе, False</returns>
+    public override bool Equals(object obj)
+    {
+      return obj is DummyNormalizer;
+    }
+
+    /// <summary>
+    /// Получение хеш-кода для преобразователя
+    /// </summary>
+    /// <returns>Хеш-код типа данных</returns>
+    public override int GetHashCode()
+    {
+      return this.GetType().GetHashCode();
     }
 
     private sealed class DummyDenormalizer : IDenormalizer
