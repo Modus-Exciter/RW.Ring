@@ -7,6 +7,17 @@ using System.Linq;
 namespace Schicksal.Basic
 {
   /// <summary>
+  /// Набор выборок одинакового размера
+  /// </summary>
+  public interface IEqualSubGroups
+  {
+    /// <summary>
+    /// Размер всех выборок
+    /// </summary>
+    int SubGroupSize { get; }
+  }
+  
+  /// <summary>
   /// Вспомогательный класс для объединения нескольких выборок в одну 
   /// </summary>
   [ImmutableObject(true)]
@@ -29,9 +40,18 @@ namespace Schicksal.Basic
       get
       {
         int group_index = 0;
+        var sub = m_group as IEqualSubGroups;
 
-        while (index >= m_group[group_index].Count)
-          index -= m_group[group_index++].Count;
+        if (sub == null)
+        {
+          while (index >= m_group[group_index].Count)
+            index -= m_group[group_index++].Count;
+        }
+        else
+        {
+          group_index = index / sub.SubGroupSize;
+          index %= sub.SubGroupSize;
+        }
 
         return m_group[group_index][index];
       }
@@ -96,9 +116,18 @@ namespace Schicksal.Basic
       get
       {
         int group_index = 0;
+        var sub = m_group as IEqualSubGroups;
 
-        while (index >= m_group[group_index].Count)
-          index -= m_group[group_index++].Count;
+        if (sub == null)
+        {
+          while (index >= m_group[group_index].Count)
+            index -= m_group[group_index++].Count;
+        }
+        else
+        {
+          group_index = index / sub.SubGroupSize;
+          index %= sub.SubGroupSize;
+        }
 
         return m_group[group_index][index];
       }
