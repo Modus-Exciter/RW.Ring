@@ -7,7 +7,7 @@ using System.Linq;
 namespace Schicksal.Basic
 {
   /// <summary>
-  /// Выборка данных, отсортированная по возрастанию
+  /// Выборка данных, отсортированная по возрастанию или убыванию
   /// </summary>
   public abstract class OrderedSample : IPlainSample
   {

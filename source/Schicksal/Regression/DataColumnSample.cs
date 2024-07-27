@@ -7,6 +7,9 @@ using Schicksal.Properties;
 
 namespace Schicksal.Regression
 {
+  /// <summary>
+  /// Выборка на основе определённой колонки таблицы
+  /// </summary>
   class DataColumnSample : IPlainSample
   {
     private readonly DataColumn m_column;
