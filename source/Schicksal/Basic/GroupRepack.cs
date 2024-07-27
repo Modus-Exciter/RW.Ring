@@ -35,10 +35,10 @@ namespace Schicksal.Basic
 
       var check_result = Check(group);
 
-      if (check_result == DimensionCheckResult.NoRepack)
+      if (!check_result.Repack)
         return group;
 
-      if (check_result == DimensionCheckResult.SingleDimensions)
+      if (check_result.SingleDimension)
       {
         double[,] array = new double[group.Count, group[0].Count];
 
@@ -48,7 +48,7 @@ namespace Schicksal.Basic
             array[i, j] = group[i][j];
         }
 
-        return new TwoDimensionMultiDataGroup(array);
+        return new TwoDimensionsMultiDataGroup(array);
       }
 
       var groups = new IDataGroup[group.Count];
@@ -87,11 +87,16 @@ namespace Schicksal.Basic
       return new SetMultiArrayDataGroup(groups);
     }
 
-    private enum DimensionCheckResult
+    private struct DimensionCheckResult
     {
-      NoRepack,
-      SingleDimensions,
-      DifferentDimensions
+      public bool Repack;
+      public bool SingleDimension;
+
+      public DimensionCheckResult(bool repack, bool singleDimension)
+      {
+        this.Repack = repack;
+        this.SingleDimension = singleDimension;
+      }
     }
 
     private static IDataGroup WrapIfNeeded(IDataGroup group)
@@ -116,6 +121,9 @@ namespace Schicksal.Basic
       bool single = true;
       int dimension = 0;
 
+      if (group is TwoDimensionsMultiDataGroup)
+        return new DimensionCheckResult(false, true);
+
       for (int i = 0; i < group.Count; i++)
       {
         repack |= !(group[i] is ArrayDataGroup);
@@ -134,24 +142,19 @@ namespace Schicksal.Basic
         }
       }
 
-      if (!repack)
-        return DimensionCheckResult.NoRepack;
-      else if (single)
-        return DimensionCheckResult.SingleDimensions;
-      else
-        return DimensionCheckResult.DifferentDimensions;
+      return new DimensionCheckResult(repack, single);
     }
 
-    private sealed class TwoDimensionMultiDataGroup : IMultyDataGroup
+    private sealed class TwoDimensionsMultiDataGroup : IMultyDataGroup
     {
-      private readonly TwoDimensionDataGroup[] m_array;
+      private readonly TwoDimensionsDataGroup[] m_array;
 
-      public TwoDimensionMultiDataGroup(double[,] array)
+      public TwoDimensionsMultiDataGroup(double[,] array)
       {
-        m_array = new TwoDimensionDataGroup[array.GetLength(0)];
+        m_array = new TwoDimensionsDataGroup[array.GetLength(0)];
 
         for (int i = 0; i < m_array.Length; i++)
-          m_array[i] = new TwoDimensionDataGroup(array, i);
+          m_array[i] = new TwoDimensionsDataGroup(array, i);
       }
 
       public IDataGroup this[int index]
@@ -179,31 +182,54 @@ namespace Schicksal.Basic
         return string.Format("Array muti group, count={0}", m_array.Length);
       }
 
-      private sealed class TwoDimensionDataGroup : IDataGroup
+      public override bool Equals(object obj)
       {
-        private readonly double[,] m_array;
+        var other = obj as TwoDimensionsMultiDataGroup;
+
+        if (other == null)
+          return false;
+
+        if (m_array.Length == 0 && other.m_array.Length == 0)
+          return true;
+
+        return m_array[0].Array == other.m_array[0].Array;
+      }
+
+      public override int GetHashCode()
+      {
+        if (m_array.Length == 0)
+          return 0;
+        else
+          return m_array[0].Array.GetHashCode();
+      }
+
+      private sealed class TwoDimensionsDataGroup : IDataGroup
+      {
+        public readonly double[,] Array;
         private readonly int m_index;
 
-        public TwoDimensionDataGroup(double[,] array, int index)
+        public TwoDimensionsDataGroup(double[,] array, int index)
         {
-          m_array = array;
+          this.Array = array;
           m_index = index;
         }
 
         public double this[int index]
         {
-          get { return m_array[m_index, index]; }
+          get { return this.Array[m_index, index]; }
         }
 
         public int Count
         {
-          get { return m_array.GetLength(1); }
+          get { return this.Array.GetLength(1); }
         }
 
         public IEnumerator<double> GetEnumerator()
         {
-          for (int i =0; i < m_array.GetLength(1); i++)
-            yield return m_array[m_index, i];
+          int size = this.Array.GetLength(1);
+
+          for (int i =0; i < size; i++)
+            yield return this.Array[m_index, i];
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -213,7 +239,22 @@ namespace Schicksal.Basic
 
         public override string ToString()
         {
-          return string.Format("Array group, count={0}", m_array.GetLength(1));
+          return string.Format("Array group, count={0}", this.Array.GetLength(1));
+        }
+
+        public override bool Equals(object obj)
+        {
+          var other = obj as TwoDimensionsDataGroup;
+
+          if (other == null)
+            return false;
+
+          return this.Array == other.Array && m_index == other.m_index;
+        }
+
+        public override int GetHashCode()
+        {
+          return (m_index + 1) ^ this.Array.GetHashCode();
         }
       }
     }
