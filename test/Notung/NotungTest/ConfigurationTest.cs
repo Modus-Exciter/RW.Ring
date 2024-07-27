@@ -68,7 +68,7 @@ namespace NotungTest
     {
       var finder = new ProductVersionConfigFileFinder(typeof(ProductVersionConfigFileFinder).Assembly);
       Assert.AreEqual(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "ARI\\Notung Library\\1.0.0.0"), finder.WorkingPath);
+        "ARI\\Notung Library\\1.0.1.0"), finder.WorkingPath);
       finder = new ProductVersionConfigFileFinder(this.GetType().Assembly);
       Assert.AreEqual(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "ARI\\NotungTest\\1.0.0.0"), finder.WorkingPath);
