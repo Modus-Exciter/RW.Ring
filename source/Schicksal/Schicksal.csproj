@@ -52,7 +52,7 @@
     <Compile Include="Anova\FisherTableProcessor.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
     <Compile Include="Basic\BoxCoxNormalizer.cs" />
-    <Compile Include="Basic\DenormalizationHelper.cs" />
+    <Compile Include="Basic\ISamplePropertyExtractor.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
     <Compile Include="Basic\FactorInfo.cs" />
     <Compile Include="Basic\SampleRepack.cs" />

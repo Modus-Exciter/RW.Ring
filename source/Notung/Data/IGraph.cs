@@ -28,7 +28,7 @@ namespace Notung.Data
     bool HasArc(int from, int to);
 
     /// <summary>
-    /// Удаление вершины из графа
+    /// Удаление дуги из графа
     /// </summary>
     /// <param name="from">Номер вершины, из которой исходит дуга</param>
     /// <param name="to">Номер вершины, в которую приходит дуга</param>
@@ -93,7 +93,7 @@ namespace Notung.Data
     void AddArc(int from, int to, T weight);
 
     /// <summary>
-    /// Получение веса дуги
+    /// Получение и задание веса дуги
     /// </summary>
     /// <param name="from">Номер вершины, из которой исходит дуга</param>
     /// <param name="to">Номер вершины, в которую приходит дуга</param>
