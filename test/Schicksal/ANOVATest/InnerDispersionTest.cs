@@ -2,12 +2,161 @@
 using System;
 using Schicksal.Anova;
 using Schicksal.Basic;
+using System.Linq;
 
 namespace ANOVATest
 {
   [TestClass]
   public class InnerDispersionTest
   {
+    [TestMethod]
+    public void ConjugateMoment()
+    {
+      double[][] data = new double[11][];
+
+      for (int i = 0; i < data.Length; i++)
+        data[i] = new double[5];
+
+      Random rnd = new Random();
+      ArrayDividedSample sample = new ArrayDividedSample(data);
+
+      for (int i = 0; i < data.Length; i++)
+        for (int j = 0; j < data[i].Length; j++)
+          data[i][j] = rnd.Next(40) + 5 + rnd.NextDouble();
+
+      int n = sample.Sum(g => g.Count);
+      double sum_all = sample.SelectMany(g => g).Sum();
+      double c = sum_all * sum_all / n;
+      double cy = sample.SelectMany(g => g).Sum(a => a * a) - c;
+      int vars = sample[0].Count;
+
+
+      var average = sample.SelectMany(g => g).Average();
+
+      Assert.AreEqual(sample.SelectMany(g => g).Sum(a => (a - average) * (a - average)), cy, 1e-5);
+
+      double cp = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        double gp = sample.Select(g => g[i]).Sum();
+        cp += gp * gp;
+      }
+
+      cp /= sample.Count;
+      cp -= c;
+
+      double cv = sample.Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+      double cz = cy - cp - cv;
+
+      double cp2 = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        var avg = sample.Select(s => s[i]).Average();
+        cp2 += (avg - average) * (avg - average);
+      }
+
+      cp2 *= sample.Count;
+
+      Assert.AreEqual(cp, cp2, 1e-5);
+      Assert.AreEqual(cz, FisherTest.MSw(sample).SumOfSquares - cp2, 1e-5);
+    }
+
+    [TestMethod]
+    public void ConjugateMoment2()
+    {
+      double[] a1 = new double[] { 1, 1, 1 };
+      double[] a2= new double[] { 2, 2, 2 };
+      double[] a3 = new double[] { 3, 3, 3 };
+
+      ArrayDividedSample sample = new ArrayDividedSample(new double[][] { a1, a2, a3 });
+      int n = sample.Sum(g => g.Count);
+      double sum_all = sample.SelectMany(g => g).Sum();
+      double c = sum_all * sum_all / n;
+      double cy = sample.SelectMany(g => g).Sum(a => a * a) - c;
+      int vars = sample[0].Count;
+
+
+      var average = sample.SelectMany(g => g).Average();
+
+      Assert.AreEqual(sample.SelectMany(g => g).Sum(a => (a - average) * (a - average)), cy, 1e-5);
+
+      double cp = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        double gp = sample.Select(g => g[i]).Sum();
+        cp += gp * gp;
+      }
+
+      cp /= sample.Count;
+      cp -= c;
+
+      double cv = sample.Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+      double cz = cy - cp - cv;
+
+      double cp2 = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        var avg = sample.Select(s => s[i]).Average();
+        cp2 += (avg - average) * (avg - average);
+      }
+
+      cp2 *= sample.Count;
+
+      Assert.AreEqual(cp, cp2, 1e-5);
+      Assert.AreEqual(cz, FisherTest.MSw(sample).SumOfSquares - cp2, 1e-5);
+    }
+
+    [TestMethod]
+    public void ConjugateMoment3()
+    {
+      double[] a1 = new double[] { 1, 2, 3 };
+      double[] a2 = new double[] { 1, 2, 3 };
+      double[] a3 = new double[] { 1, 2, 3 };
+
+      ArrayDividedSample sample = new ArrayDividedSample(new double[][] { a1, a2, a3 });
+      int n = sample.Sum(g => g.Count);
+      double sum_all = sample.SelectMany(g => g).Sum();
+      double c = sum_all * sum_all / n;
+      double cy = sample.SelectMany(g => g).Sum(a => a * a) - c;
+      int vars = sample[0].Count;
+
+
+      var average = sample.SelectMany(g => g).Average();
+
+      Assert.AreEqual(sample.SelectMany(g => g).Sum(a => (a - average) * (a - average)), cy, 1e-5);
+
+      double cp = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        double gp = sample.Select(g => g[i]).Sum();
+        cp += gp * gp;
+      }
+
+      cp /= sample.Count;
+      cp -= c;
+
+      double cv = sample.Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+      double cz = cy - cp - cv;
+
+      double cp2 = 0;
+
+      for (int i = 0; i < vars; i++)
+      {
+        var avg = sample.Select(s => s[i]).Average();
+        cp2 += (avg - average) * (avg - average);
+      }
+
+      cp2 *= sample.Count;
+
+      Assert.AreEqual(cp, cp2, 1e-5);
+      Assert.AreEqual(cz, FisherTest.MSw(sample).SumOfSquares - cp2, 1e-5);
+    }
+
     //В наборе данных есть 3 фактора (A-2уровня, B-3уровня, C-2уровня), необходимо выполнить многофакторный дисперсионный анализ для одной, двух и трех факторов и проверить, одинакова ли внутренняя дисперсия в результатах анализа с одним, двумя и тремя факторами.
     [TestMethod]
     public void NdfTestInThreeGroups()
@@ -84,6 +233,113 @@ namespace ANOVATest
       ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA0, multiA1 });
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       Assert.AreEqual(Math.Round(249.88), Math.Round(f.F));
+    }
+
+    private struct FisherMetrics
+    {
+      /// <summary>
+      /// Число степеней свободы для межгрупповой дисперсии
+      /// </summary>
+      public uint Kdf { get; internal set; }
+
+      /// <summary>
+      /// Число степеней свободы для внутригрупповой дисперсии
+      /// </summary>
+      public uint Ndf { get; internal set; }
+
+      /// <summary>
+      /// Межгрупповая дисперсия
+      /// </summary>
+      public double MSb { get; internal set; }
+
+      /// <summary>
+      /// Суммарная внутригрупповая дисперсия
+      /// </summary>
+      public double MSw { get; internal set; }
+
+      /// <summary>
+      /// Отношение межгрупповой дисперсии к внутригрупповой
+      /// </summary>
+      public double F
+      {
+        get { return this.MSb / this.MSw; }
+      }
+    }
+
+    private class FisherCriteria
+    {
+
+      public static FisherMetrics CalculateConjugate(IComplexSample sample)
+      {
+        var degrees = default(FisherMetrics);
+
+        int n = sample.SelectMany(g => g).Sum(g => g.Count);
+        double sum_all = sample.SelectMany(g => g).SelectMany(g => g).Sum();
+        double c = sum_all * sum_all / n;
+        double cy = sample.SelectMany(g => g).SelectMany(g => g).Sum(a => a * a) - c;
+        int vars = sample[0][0].Count;
+
+        double cp = 0;
+
+        for (int i = 0; i < vars; i++)
+        {
+          double gp = sample.SelectMany(g => g).Select(g => g[i]).Sum();
+          cp += gp * gp;
+        }
+        cp /= sample.Sum(g => g.Count);
+        cp -= c;
+        double cv = sample.SelectMany(g => g).Sum(g => System.Math.Pow(g.Sum(), 2)) / vars - c;
+
+        double cz = cy - cp - cv;
+
+        double ca = 0;
+
+        foreach (var sub_sample in sample)
+        {
+          var sum = sub_sample.SelectMany(g => g).Sum();
+          ca += sum * sum / sub_sample.Sum(g => g.Count);
+        }
+
+        ca -= c;
+
+        degrees.Kdf = (uint)(sample.Count - 1);
+        degrees.Ndf = (uint)(n - sample.Sum(g => g.Count) - vars + 1);
+        degrees.MSb = ca / degrees.Kdf;
+        degrees.MSw = cz / degrees.Ndf;
+
+        return degrees;
+      }
+      
+      internal static FisherMetrics CalculateCriteria(IDividedSample multi)
+      {
+        var msw = FisherTest.MSw(multi);
+        var msb = FisherTest.MSb(multi);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
+
+      internal static FisherMetrics CalculateMultiplyCriteria(IComplexSample set)
+      {
+        var between = new ArrayDividedSample(set.Select(s => new JoinedSample(s)).ToArray());
+        var within = new PartiallyJoinedSample(set);
+
+        var msw = FisherTest.MSw(within);
+        var msb = FisherTest.MSb(between);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
     }
   }
 }

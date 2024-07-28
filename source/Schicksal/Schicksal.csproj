@@ -46,11 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Anova\AnovaHtmlSaver.cs" />
+    <Compile Include="Anova\AnovaParameters.cs" />
     <Compile Include="Anova\DifferenceInfo.cs" />
-    <Compile Include="Anova\FisherCriteria.cs" />
+    <Compile Include="Anova\FisherTest.cs" />
     <Compile Include="Anova\FisherMetrics.cs" />
-    <Compile Include="Anova\FisherTableProcessor.cs" />
+    <Compile Include="Anova\IResudualsCalculator.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
+    <Compile Include="Basic\TableAnalysisParameters.cs" />
     <Compile Include="Basic\BoxCoxNormalizer.cs" />
     <Compile Include="Basic\ISamplePropertyExtractor.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />

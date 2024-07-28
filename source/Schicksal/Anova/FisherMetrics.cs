@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Schicksal.Basic;
+using System.ComponentModel;
 
 namespace Schicksal.Anova
 {
@@ -44,7 +45,7 @@ namespace Schicksal.Anova
     /// <summary>
     /// Фактор, влияние которого оценивается
     /// </summary>
-    public string Factor { get; internal set; }
+    public FactorInfo Factor { get; internal set; }
 
     /// <summary>
     /// Фактор, влияние которого игнорируется

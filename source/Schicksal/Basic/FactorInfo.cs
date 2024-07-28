@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Notung.Data;
 
 namespace Schicksal.Basic
 {
@@ -12,6 +10,11 @@ namespace Schicksal.Basic
   /// </summary>
   public sealed class FactorInfo : IEnumerable<string>
   {
+    /// <summary>
+    /// Пустой список предикторов
+    /// </summary>
+    public static readonly FactorInfo Empty = new FactorInfo(Enumerable.Empty<string>());
+
     private readonly HashSet<string> m_data;
     private string m_text;
 
@@ -30,6 +33,16 @@ namespace Schicksal.Basic
     public int Count
     {
       get { return m_data.Count; }
+    }
+
+    /// <summary>
+    /// Проверка наличия предиктора в списке предикторов
+    /// </summary>
+    /// <param name="factor">Название колонки, являющейся предикторов</param>
+    /// <returns>True, если название присутствует в списке. Иначе, False</returns>
+    public bool Contains(string factor)
+    {
+      return m_data.Contains(factor);
     }
 
     /// <summary>
@@ -82,6 +95,104 @@ namespace Schicksal.Basic
     public override int GetHashCode()
     {
       return m_data.Aggregate(0, (i, s) => i ^ s.GetHashCode());
+    }
+
+    /// <summary>
+    /// Разбиение множества предикторов на непустые подмножества
+    /// </summary>
+    /// <returns>Коллекция непустых наборов предикторов</returns>
+    public IEnumerable<FactorInfo> Split()
+    {
+      string[] factors = new string[m_data.Count];
+      int group_count = (1 << factors.Length);
+
+      m_data.CopyTo(factors);
+
+      var details = new List<string>(this.Count);
+      var result = new FactorInfo[group_count - 1];
+
+      for (int i = 1; i < group_count; i++)
+      {
+        details.Clear();
+
+        for (int j = 0; j < factors.Length; j++)
+        {
+          if ((i & (1 << j)) != 0)
+            details.Add(factors[j]);
+        }
+
+        yield return new FactorInfo(details);
+      }
+    }
+
+    /// <summary>
+    /// Сравнение двух списков предикторов на равенство
+    /// </summary>
+    /// <param name="left">Первый список предикторов</param>
+    /// <param name="right">Второй список предикторов</param>
+    /// <returns>True, если списки содержат одни и те же колонки. Иначе, False</returns>
+    public static bool operator ==(FactorInfo left, FactorInfo right)
+    {
+      if (ReferenceEquals(left, null))
+        return ReferenceEquals(right, null);
+      else
+        return left.Equals(right);
+    }
+
+    /// <summary>
+    /// Сравнение двух списков предикторов на неравенство
+    /// </summary>
+    /// <param name="left">Первый список предикторов</param>
+    /// <param name="right">Второй список предикторов</param>
+    /// <returns>False, если списки содержат одни и те же колонки. Иначе, True</returns>
+    public static bool operator !=(FactorInfo left, FactorInfo right)
+    {
+      if (ReferenceEquals(left, null))
+        return !ReferenceEquals(right, null);
+      else
+        return !left.Equals(right);
+    }
+
+    /// <summary>
+    /// Объединение двух списков предикторов в один
+    /// </summary>
+    /// <param name="left">Первый список предикторов</param>
+    /// <param name="right">Второй список предикторов</param>
+    /// <returns>Список, содержащий предикторы из обоих списков без повторений</returns>
+    public static FactorInfo operator +(FactorInfo left, FactorInfo right)
+    {
+      if (left == null)
+        throw new ArgumentNullException("left");
+
+      if (right == null)
+        throw new ArgumentNullException("right");
+
+      var result = new FactorInfo(left.m_data);
+
+      result.m_data.UnionWith(right.m_data);
+
+      return result;
+    }
+
+    /// <summary>
+    /// Удаление из одного списка предикторов содержимого второго списка
+    /// </summary>
+    /// <param name="left">Первый список предикторов</param>
+    /// <param name="right">Второй список предикторов</param>
+    /// <returns>Список, содержащий предикторы из первого списка, отсутствующие во втором списке</returns>
+    public static FactorInfo operator -(FactorInfo left, FactorInfo right)
+    {
+      if (left == null)
+        throw new ArgumentNullException("left");
+
+      if (right == null)
+        throw new ArgumentNullException("right");
+
+      var result = new FactorInfo(left.m_data);
+
+      result.m_data.ExceptWith(right.m_data);
+
+      return result;
     }
 
     /// <summary>

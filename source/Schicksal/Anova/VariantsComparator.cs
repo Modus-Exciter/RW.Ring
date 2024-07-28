@@ -15,6 +15,7 @@ namespace Schicksal.Anova
   /// </summary>
   public class VariantsComparator
   {
+ /*
     private readonly DataTable m_source;
     private readonly string[] m_factors;
     private readonly string m_result;
@@ -223,14 +224,14 @@ namespace Schicksal.Anova
       else
         return Math.Sqrt(m_within_dispersion / count1 + m_within_dispersion / count2);
     }
+ */
   }
-
   /// <summary>
   /// Задача, запускающая сравнение градаций фактора
   /// </summary>
   public sealed class MultiVariantsComparator : RunBase, IServiceProvider
   {
-    private readonly VariantsComparator m_comparator;
+/*    private readonly VariantsComparator m_comparator;
     private readonly double m_probability;
     private string m_factor1_max;
     private string m_factor2_max;
@@ -250,7 +251,7 @@ namespace Schicksal.Anova
       m_factor1_max = string.Empty;
       m_factor2_max = string.Empty;
     }
-
+*/
     /// <summary>
     /// Результаты попарного сравнения градаций фактора
     /// </summary>
@@ -266,7 +267,7 @@ namespace Schicksal.Anova
     /// </summary>
     public override void Run()
     {
-      this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField,
+/*      this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField,
         string.Join(", ", m_comparator.Factors), m_comparator.Filter));
 
       if (this.Source == null)
@@ -293,8 +294,9 @@ namespace Schicksal.Anova
       }
 
       this.Results = result;
+*/
     }
-
+/*
     /// <summary>
     /// Создание примера строки для быстрой настройки ширины колонок таблицы
     /// </summary>
@@ -315,7 +317,7 @@ namespace Schicksal.Anova
         Probability = this.Results.Select(m => m.Probability).FirstOrDefault(m => !double.IsNaN(m) && !double.IsInfinity(m))
       };
     }
-
+*/
     public override string ToString()
     {
       return Resources.VARIANTS_COMPARISON;

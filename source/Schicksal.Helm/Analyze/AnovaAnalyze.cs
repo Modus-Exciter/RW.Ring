@@ -1,6 +1,7 @@
 ﻿using Notung;
 using Notung.Services;
 using Schicksal.Anova;
+using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 using System;
@@ -26,7 +27,7 @@ namespace Schicksal.Helm.Analyze
     public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
       var results_form = new AnovaResultsForm();
-      var currentProcessor = (FisherTableProcessor)processor;
+      var currentProcessor = (AnovaCalculator)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
       results_form.Text = string.Format("{0}: {1}, p={2}",
@@ -52,16 +53,25 @@ namespace Schicksal.Helm.Analyze
 
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      var processor = new FisherTableProcessor(table, data.Predictors.ToArray(),
-             data.Result, data.Probability);
+      //var processor = new FisherTableProcessor()/*table, data.Predictors.ToArray(),
+      //       data.Result, data.Probability);
 
-      if (!string.IsNullOrEmpty(data.Filter))
-        processor.Filter = data.Filter;
+      //if (!string.IsNullOrEmpty(data.Filter))
+      //  processor.Filter = data.Filter;
 
-      processor.Conjugate = this.GetConjugate(data);
-      processor.RunInParrallel = true;
+      //processor.Conjugate = this.GetConjugate(data);
+      //processor.RunInParrallel = true*/;
 
-      return processor;
+      //return processor;
+      return new AnovaCalculator(
+        new AnovaParameters
+        (
+          table, data.Filter, 
+          new FactorInfo(data.Predictors),
+          data.Result, data.Probability,
+          DummyNormalizer.Instance,
+          this.GetConjugate(data), false)
+        );
     }
 
     private string GetConjugate(StatisticsParameters data)

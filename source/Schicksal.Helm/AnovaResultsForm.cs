@@ -59,7 +59,7 @@ namespace Schicksal.Helm
       if (fisher == null)
         return;
 
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
+      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor.ToString(),
         fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability, this.Conjugate))
       {
         compare.ShowDialog(this);
@@ -86,16 +86,16 @@ namespace Schicksal.Helm
         dlg.Filter = "Html files|*.html";
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          var saver = new AnovaHtmlSaver(
+          var saver = new AnovaHtmlSaver(/*
             dlg.FileName,
             this.SourceTable,
             this.DataSource,
             this.Probability,
-            string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
+            string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", "")*/)
           {
-            Factors = this.Factors,
-            Result = this.ResultColumn,
-            Filter = this.Filter
+            //Factors = this.Factors,
+            //Result = this.ResultColumn,
+            //Filter = this.Filter
           };
 
           if (AppManager.OperationLauncher.Run(saver) == TaskStatus.RanToCompletion)

@@ -48,7 +48,8 @@
   }
 
   /// <summary>
-  /// Заглушка для фиктивного нормирования данных
+  /// Заглушка для фиктивного нормирования данных. Предназначена для алгоритмов,
+  /// где используется нормирование, когда реальное нормирование не требуется
   /// </summary>
   public sealed class DummyNormalizer : INormalizer
   {
@@ -66,10 +67,10 @@
     }
 
     /// <summary>
-    /// Получение преобразователя для обратного нормирования данных
+    /// Получение преобразователя нормированных значений в ненормированные
     /// </summary>
     /// <param name="sample">Выборка нормированных данных</param>
-    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
+    /// <returns>Преобразователь, который никак не обрабатывает данные</returns>
     public IDenormalizer GetDenormalizer(ISample sample)
     {
       return _denormalizer;
@@ -108,6 +109,7 @@
     /// <summary>
     /// Строковое представление объекта
     /// </summary>
+    /// <returns>Dummy normalizer(a => a)</returns>
     public override string ToString()
     {
       return "Dummy normalizer(a => a)";

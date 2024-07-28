@@ -37,7 +37,7 @@ namespace Schicksal.Helm
       if (resolution.width != 0) 
         this.Width = resolution.width;
       
-      m_comparator = new VariantsComparator(table, factor, ignoredFactors, result, filter, conjugate);
+      m_comparator = new VariantsComparator(/*table, factor, ignoredFactors, result, filter, conjugate*/);
       m_probability = p;
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
       m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;
@@ -63,7 +63,7 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
-      var mult = new MultiVariantsComparator(m_comparator, m_probability);
+      var mult = new MultiVariantsComparator(/*m_comparator, m_probability*/);
 
       if (AppManager.OperationLauncher.Run(mult) == System.Threading.Tasks.TaskStatus.RanToCompletion)
       {
@@ -97,7 +97,7 @@ namespace Schicksal.Helm
           series_m.Points.AddXY(row["Factor"], mean);
         }
 
-        this.AutoResizeColumnsByExample(mult.CreateExample());
+        //this.AutoResizeColumnsByExample(mult.CreateExample());
         m_binding_source.DataSource = new DifferenceInfoList(m_all_data = mult.Results);
       }
     }

@@ -250,6 +250,8 @@ namespace Schicksal.Basic
       }
     }
 
+    #region ISamplePropertyExtractor<IDenormalizer> members----------------------------------------
+
     bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
     {
       return sample is BoxCoxSample;
@@ -281,6 +283,8 @@ namespace Schicksal.Basic
       else
         return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
     }
+
+    #endregion
 
     #region Implementation ------------------------------------------------------------------------
 

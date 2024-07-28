@@ -1,12 +1,12 @@
-﻿using Notung;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Notung;
 using Notung.Services;
 using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 
 namespace Schicksal.Helm.Analyze
 {
@@ -29,8 +29,13 @@ namespace Schicksal.Helm.Analyze
 
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      return new DescriptionStatisticsCalculator(table, data.Predictors.ToArray(),
-             data.Result, data.Filter, data.Probability);
+      return new DescriptionStatisticsCalculator(
+        new DescriptionStatisticsParameters(
+          table,
+          data.Filter,
+          new FactorInfo(data.Predictors),
+          data.Result,
+          data.Probability));
     }
 
     public LaunchParameters GetLaunchParameters()
@@ -50,7 +55,7 @@ namespace Schicksal.Helm.Analyze
       results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
         Resources.BASIC_STATISTICS, tf.Text, data.Probability, data.Filter);
       results_form.DataSorce = currentProcessor.Result;
-      results_form.Factors = currentProcessor.Factors;
+      results_form.Factors = currentProcessor.Parameters.Predictors.ToArray();
       results_form.ResultColumn = data.Result;
       results_form.Show(tf.MdiParent);
     }

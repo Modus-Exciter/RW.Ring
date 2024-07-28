@@ -163,7 +163,7 @@ namespace Schicksal.Basic
       return CalculateRanks(data, out _, round);
     }
 
-    #region Implementation ------------------------------------------------------------------------
+    #region ISamplePropertyExtractor<IDenormalizer> members ---------------------------------------
 
     bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
     {
@@ -196,6 +196,10 @@ namespace Schicksal.Basic
       else
         return new RankInverse(ranked.Ranks);
     }
+
+    #endregion
+
+    #region Implementation ------------------------------------------------------------------------
 
     private static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, out bool hasReason, int round)
     {

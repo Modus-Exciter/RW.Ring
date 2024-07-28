@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using Schicksal.Anova;
 using Schicksal.Basic;
 
@@ -8,7 +9,7 @@ namespace ANOVATest
   [TestClass]
   public class CalcMultyCritTest
   {
-    /// <summary>
+  /// <summary>
     /// Сопоставление результатов, рассчитаных с помощью Excel (1 эксперимент) и языка R для фактора B "сорт"
     /// </summary>
     [TestMethod]
@@ -235,6 +236,71 @@ namespace ANOVATest
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 1.680;
       Assert.AreEqual(fExp, f.F, 1e-3);
+    }
+
+    private struct FisherMetrics
+    {
+      /// <summary>
+      /// Число степеней свободы для межгрупповой дисперсии
+      /// </summary>
+      public uint Kdf { get; internal set; }
+
+      /// <summary>
+      /// Число степеней свободы для внутригрупповой дисперсии
+      /// </summary>
+      public uint Ndf { get; internal set; }
+
+      /// <summary>
+      /// Межгрупповая дисперсия
+      /// </summary>
+      public double MSb { get; internal set; }
+
+      /// <summary>
+      /// Суммарная внутригрупповая дисперсия
+      /// </summary>
+      public double MSw { get; internal set; }
+
+      /// <summary>
+      /// Отношение межгрупповой дисперсии к внутригрупповой
+      /// </summary>
+      public double F
+      {
+        get { return this.MSb / this.MSw; }
+      }
+    }
+
+    private class FisherCriteria
+    {
+      internal static FisherMetrics CalculateCriteria(IDividedSample multi)
+      {
+        var msw = FisherTest.MSw(multi);
+        var msb = FisherTest.MSb(multi);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
+
+      internal static FisherMetrics CalculateMultiplyCriteria(IComplexSample set)
+      {
+        var between = new ArrayDividedSample(set.Select(s => new JoinedSample(s)).ToArray());
+        var within = new PartiallyJoinedSample(set);
+
+        var msw = FisherTest.MSw(within);
+        var msb = FisherTest.MSb(between);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
     }
   }
 }

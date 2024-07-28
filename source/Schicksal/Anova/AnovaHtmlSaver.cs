@@ -11,7 +11,7 @@ namespace Schicksal.Anova
 {
   public class AnovaHtmlSaver : RunBase, IServiceProvider
   {
-    private readonly string m_file;
+    /*private readonly string m_file;
     private readonly DataTable m_table;
     private readonly FisherTestResult[] m_results;
     private readonly double m_probability;
@@ -43,10 +43,10 @@ namespace Schicksal.Anova
     public string Result { get; set; }
 
     public string Filter { get; set; }
-
+    */
     public override void Run()
     {
-      this.ReportProgress(Resources.BASIC_METRICS);
+      /*this.ReportProgress(Resources.BASIC_METRICS);
 
       using (var writer = new HtmlWriter(m_file, Encoding.UTF8, Resources.REPORT))
       {
@@ -80,7 +80,7 @@ namespace Schicksal.Anova
 
         using (writer.CreateParagraph())
           writer.WriteSpace();
-      }
+      }*/
     }
 
     public override string ToString()
@@ -95,7 +95,7 @@ namespace Schicksal.Anova
 
       return base.GetService(serviceType);
     }
-
+    /*
     private void WriteFactorResults(HtmlWriter writer, FisherTestResult factor, Dictionary<string, string> descriptions, int number)
     {
       writer.WriteHeader(factor.Factor, 2);
@@ -228,6 +228,6 @@ namespace Schicksal.Anova
             min.Factor, HtmlWriter.FormatValue(min.P * 100)));
         }
       }
-    }
+    }*/
   }
 }

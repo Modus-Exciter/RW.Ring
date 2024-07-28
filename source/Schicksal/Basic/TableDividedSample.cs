@@ -20,31 +20,35 @@ namespace Schicksal.Basic
     /// <summary>
     /// Инициализация новой обёртки над таблицей для статистического анализа
     /// </summary>
-    /// <param name="table">Таблица, помещаемая в обёртку</param>
-    /// <param name="factorColumns">Колонки таблицы, которые будут использоваться для выделения выборок</param>
-    /// <param name="resultColumn">Колонка таблицы, которая будет использоваться для получения результатов</param>
-    /// <param name="filter">Дополнительная фильтрация строк таблицы</param>
+    /// <param name="tableParameters">Таблица, помещаемая в обёртку, с параметрами</param>
     /// <param name="conjugate">Колонка, идентифицирующая сопряжённые наблюдения</param>
-    public TableDividedSample(DataTable table, string[] factorColumns, string resultColumn, string filter = null, string conjugate = null)
+    public TableDividedSample(PredictedResponseParameters tableParameters, string conjugate = null)
     {
-      CheckConstructorParameters(table, factorColumns, resultColumn);
-      m_table = table;
+      if (tableParameters == null)
+        throw new ArgumentNullException("tableParameters");
+      
+      if (!tableParameters.Table.Columns[tableParameters.Response].DataType.IsPrimitive
+        || tableParameters.Table.Columns[tableParameters.Response].DataType == typeof(bool))
+        throw new ArgumentException("Result column must be numeric");
+
+      m_table = tableParameters.Table;
 
       var sets = new HashSet<string>();
-      var columnIndexes = new int[factorColumns.Length];
+      var columnIndexes = new int[tableParameters.Predictors.Count];
+      var factorColumns = tableParameters.Predictors.ToArray();
 
-      for (int i = 0; i < factorColumns.Length; i++)
+      for (int i = 0; i < tableParameters.Predictors.Count; i++)
         columnIndexes[i] = m_table.Columns[factorColumns[i]].Ordinal;
 
       var tuples = new List<DataViewSample>();
       m_indexes = new Dictionary<string, int>();
 
-      using (var filtered_table = new DataView(m_table, filter, null, DataViewRowState.CurrentRows))
+      using (var filtered_table = new DataView(m_table, tableParameters.Filter, null, DataViewRowState.CurrentRows))
       {
         foreach (DataRowView row in filtered_table)
         {
           var sb = new StringBuilder();
-          sb.AppendFormat("[{0}] is not null", resultColumn);
+          sb.AppendFormat("[{0}] is not null", tableParameters.Response);
 
           for (int i = 0; i < factorColumns.Length; i++)
           {
@@ -54,8 +58,8 @@ namespace Schicksal.Basic
               sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
           }
 
-          if (!string.IsNullOrEmpty(filter))
-            sb.AppendFormat(" AND {0}", filter);
+          if (!string.IsNullOrEmpty(tableParameters.Filter))
+            sb.AppendFormat(" AND {0}", tableParameters.Filter);
 
           if (!sets.Add(sb.ToString()))
             continue;
@@ -64,7 +68,7 @@ namespace Schicksal.Basic
 
           if (view.Count > 0)
           {
-            tuples.Add(new DataViewSample(view, resultColumn));
+            tuples.Add(new DataViewSample(view, tableParameters.Response));
             m_indexes[view.RowFilter] = m_indexes.Count;
           }
           else
@@ -94,36 +98,6 @@ namespace Schicksal.Basic
         return value.ToString();
       else
         return "NULL";
-    }
-
-    private static void CheckConstructorParameters(DataTable table, string[] factorColumns, string resultColumn)
-    {
-      if (table == null)
-        throw new ArgumentNullException("table");
-
-      if (factorColumns == null)
-        throw new ArgumentNullException("factorColumns");
-
-      if (factorColumns.Length == 0)
-        throw new ArgumentException("Factor columns list is empty");
-
-      if (string.IsNullOrEmpty(resultColumn))
-        throw new ArgumentNullException("resultColumn");
-
-      if (!table.Columns.Contains(resultColumn))
-        throw new ArgumentException("Result column not found in the table");
-
-      if (!table.Columns[resultColumn].DataType.IsPrimitive || table.Columns[resultColumn].DataType == typeof(bool))
-        throw new ArgumentException("Result column must be numeric");
-
-      if (factorColumns.Contains(resultColumn))
-        throw new ArgumentException("Result column intercects with factor columns");
-
-      foreach (var fc in factorColumns)
-      {
-        if (!table.Columns.Contains(fc))
-          throw new ArgumentException(string.Format("Column {0} not found in the table", fc));
-      }
     }
 
     public int Count

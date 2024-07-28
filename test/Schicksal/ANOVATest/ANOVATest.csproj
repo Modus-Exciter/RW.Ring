@@ -48,6 +48,7 @@
     <Compile Include="CalcMultyCritTest.cs" />
     <Compile Include="InnerDispersionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FactorInfoTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
