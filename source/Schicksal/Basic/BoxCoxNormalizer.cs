@@ -56,6 +56,38 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
+    /// Текстовая информация об объекте
+    /// </summary>
+    public override string ToString()
+    {
+      return string.Format("Normalizer(value => BoxCox(value, λ, δ), method={0})", m_method);
+    }
+
+    /// <summary>
+    /// Сравнение двух нормализаторов на равенство
+    /// </summary>
+    /// <param name="obj">Второй объект</param>
+    /// <returns>True, если второй объект такой же нормализатор с теми же настройками. Иначе, False</returns>
+    public override bool Equals(object obj)
+    {
+      var other = obj as BoxCoxNormalizer;
+
+      if (other == null)
+        return false;
+
+      return m_min == other.m_min && m_max == other.m_max && m_eps == other.m_eps && m_method.Equals(other.m_method);
+    }
+
+    /// <summary>
+    /// Получение хеш-кода нормализатора
+    /// </summary>
+    /// <returns>Побитное исключающее "или" от хеш-кодов настроек</returns>
+    public override int GetHashCode()
+    {
+      return m_min.GetHashCode() ^ m_max.GetHashCode() ^ m_eps.GetHashCode() ^ m_method.GetHashCode();
+    }
+
+    /// <summary>
     /// Настройка преобразователя для нормирования данных
     /// </summary>
     /// <param name="sample">Выборка нормированных данных</param>
@@ -74,40 +106,7 @@ namespace Schicksal.Basic
       if (sample is IComplexSample)
         return this.PrepareTransform(sample as IComplexSample);
 
-      return DummyNormalizer.Instance.Prepare(sample);
-    }
-
-    /// <summary>
-    /// Текстовая информация об объекте
-    /// </summary>
-    public override string ToString()
-    {
-      return "Normalizer(value => BoxCox(value, λ, δ))";
-    }
-
-    /// <summary>
-    /// Сравнение двух нормализаторов на равенство
-    /// </summary>
-    /// <param name="obj">Второй объект</param>
-    /// <returns>True, если второй объект такой же нормализатор с теми же настройками. Иначе, False</returns>
-    public override bool Equals(object obj)
-    {
-      var other = obj as BoxCoxNormalizer;
-
-      if (other == null)
-        return false;
-
-      return m_min == other.m_min && m_max == other.m_max
-        && m_eps == other.m_eps && m_method.Equals(other.m_method);
-    }
-
-    /// <summary>
-    /// Получение хеш-кода нормализатора
-    /// </summary>
-    /// <returns>Побитное исключающее "или" от хеш-кодов настроек</returns>
-    public override int GetHashCode()
-    {
-      return m_min.GetHashCode() ^ m_max.GetHashCode() ^ m_eps.GetHashCode() ^ m_method.GetHashCode();
+      return DummyNormalizer.Transform;
     }
 
     /// <summary>
@@ -251,7 +250,7 @@ namespace Schicksal.Basic
       else if (sample.Count > 0)
         return GetValueTransform(sample[0]);
       else
-        return DummyNormalizer.Instance.Prepare(sample);
+        return DummyNormalizer.Transform;
     }
 
     private IValueTransform PrepareTransform(IComplexSample sample)
@@ -268,7 +267,7 @@ namespace Schicksal.Basic
       else if (sample.Count > 0 && sample[0].Count > 0)
         return GetValueTransform(sample[0][0]);
       else
-        return DummyNormalizer.Instance.Prepare(sample);
+        return DummyNormalizer.Transform;
     }
 
     private static bool RecreateRequired(IEnumerable<IPlainSample> samples, string method)
@@ -477,7 +476,7 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Box-Cox(λ={0}, δ={1}, method={2})", m_lambda, m_delta, m_method);
+        return string.Format("Box-Cox(λ={0}), δ={1}, method={2}", m_lambda, m_delta, m_method);
       }
 
       public override bool Equals(object obj)

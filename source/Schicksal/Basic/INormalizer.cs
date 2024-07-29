@@ -89,7 +89,7 @@ namespace Schicksal.Basic
     {
       CheckParameters(transform, sample);
 
-      if (transform.Equals(DummyNormalizer.Instance.Prepare(sample)))
+      if (transform.Equals(DummyNormalizer.Transform))
         return sample;
 
       var ns = sample as NormalizedSample;
@@ -110,7 +110,7 @@ namespace Schicksal.Basic
     {
       CheckParameters(transform, sample);
 
-      if (transform.Equals(DummyNormalizer.Instance.Prepare(sample)))
+      if (transform.Equals(DummyNormalizer.Transform))
         return sample;
 
       if (RecreateRequired(sample, transform))
@@ -126,11 +126,17 @@ namespace Schicksal.Basic
       return sample;
     }
 
+    /// <summary>
+    /// Преобразование выборки в нормированную выборку
+    /// </summary>
+    /// <param name="transform">Объект для нормирования данных</param>
+    /// <param name="sample">Выборка</param>
+    /// <returns>Выборка нормированных данных</returns>
     public static IComplexSample Normalize(this IValueTransform transform, IComplexSample sample)
     {
       CheckParameters(transform, sample);
 
-      if (transform.Equals(DummyNormalizer.Instance.Prepare(sample)))
+      if (transform.Equals(DummyNormalizer.Transform))
         return sample;
 
       if (RecreateRequired(sample, transform))
@@ -152,6 +158,8 @@ namespace Schicksal.Basic
 
       return sample;
     }
+
+    #region Implementation ------------------------------------------------------------------------
 
     private static bool RecreateRequired(IDividedSample sample, IValueTransform transform)
     {
@@ -185,7 +193,7 @@ namespace Schicksal.Basic
     private static IValueTransform Prepare(INormalizer normalizer, ISample sample)
     {
       if (sample.Count == 0)
-        return DummyNormalizer.Instance.Prepare(sample);
+        return DummyNormalizer.Transform;
 
       return normalizer.Prepare(sample);
     }
@@ -207,6 +215,8 @@ namespace Schicksal.Basic
       if (sample == null)
         throw new ArgumentNullException("sample");
     }
+
+    #endregion
   }
 
   /// <summary>
@@ -222,7 +232,7 @@ namespace Schicksal.Basic
     /// Инициализация нормированной выборки
     /// </summary>
     /// <param name="sample">Исходная выборка</param>
-    /// <param name="transform"></param>
+    /// <param name="transform">Преобразователь ненормированных данных в нормированные</param>
     public NormalizedSample(IPlainSample sample, IValueTransform transform)
     {
       if (sample is null)
@@ -259,6 +269,14 @@ namespace Schicksal.Basic
     public IValueTransform ValueTransform
     {
       get { return m_transform; }
+    }
+
+    /// <summary>
+    /// Исходные (не нормированные) данные
+    /// </summary>
+    public IPlainSample Source
+    {
+      get { return m_sample; }
     }
 
     /// <summary>
@@ -329,6 +347,14 @@ namespace Schicksal.Basic
     public static DummyNormalizer Instance
     {
       get { return _instance; }
+    } 
+    
+    /// <summary>
+    /// Экземпляр преобразователя-заглушки
+    /// </summary>
+    public static IValueTransform Transform
+    {
+      get { return _denormalizer; }
     }
 
     /// <summary>
@@ -369,6 +395,8 @@ namespace Schicksal.Basic
       return this.GetType().GetHashCode();
     }
 
+    #region Implementation ------------------------------------------------------------------------
+
     private sealed class DummyTransform : IValueTransform
     {
       public double Normalize(double value)
@@ -396,5 +424,7 @@ namespace Schicksal.Basic
         return this.GetType().GetHashCode();
       }
     }
+
+    #endregion
   }
 }

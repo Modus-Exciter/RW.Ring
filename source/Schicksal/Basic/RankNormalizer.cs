@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Schicksal.Properties;
 
 namespace Schicksal.Basic
 {
@@ -31,6 +29,39 @@ namespace Schicksal.Basic
       get { return m_round; }
     }
 
+    /// <summary>
+    /// Текстовая информация об объекте
+    /// </summary>
+    /// <returns>Вид преобразования и количество знаков после запятой</returns>
+    public override string ToString()
+    {
+      return string.Format("Normalizer(value => rank, round: {0})", m_round);
+    }
+
+    /// <summary>
+    /// Сравнение двух нормализаторов на равенство
+    /// </summary>
+    /// <param name="obj">Второй объект</param>
+    /// <returns>True, если второй объект такой же нормализатор с теми же настройками. Иначе, False</returns>
+    public override bool Equals(object obj)
+    {
+      var other = obj as RankNormalizer;
+
+      if (other == null)
+        return false;
+
+      return m_round == other.m_round;
+    }
+
+    /// <summary>
+    /// Получение хеш-кода нормализатора
+    /// </summary>
+    /// <returns>Побитное исключающее "или" от хеш-кодов настроек</returns>
+    public override int GetHashCode()
+    {
+      return this.GetType().GetHashCode() ^ m_round;
+    }
+
     public IValueTransform Prepare(ISample sample)
     {
       if (sample == null)
@@ -45,16 +76,7 @@ namespace Schicksal.Basic
       if (sample is IComplexSample)
         return this.PrepareTransform(sample as IComplexSample);
 
-      return DummyNormalizer.Instance.Prepare(sample);
-    }
-
-    /// <summary>
-    /// Текстовая информация об объекте
-    /// </summary>
-    /// <returns>Вид преобразования и количество знаков после запятой</returns>
-    public override string ToString()
-    {
-      return string.Format("Normalizer(value => rank, round: {0})", m_round);
+      return DummyNormalizer.Transform;
     }
 
     /// <summary>
@@ -85,6 +107,8 @@ namespace Schicksal.Basic
       return CalculateRanks(data, out _, round);
     }
 
+    #region Implementation ------------------------------------------------------------------------
+
     private static RankTransform GetValueTransform(IPlainSample sample)
     {
       var ns = sample as NormalizedSample;
@@ -108,7 +132,8 @@ namespace Schicksal.Basic
       if (has_reason)
         return new RankTransform(ranks, m_round, true);
       else
-        return transform != null ? new RankTransform(transform.Ranks, m_round, true) : DummyNormalizer.Instance.Prepare(sample);
+        return transform != null ? new RankTransform(transform.Ranks, m_round, true) 
+          : DummyNormalizer.Transform;
     }
 
     private IValueTransform PrepareTransform(IDividedSample sample)
@@ -123,12 +148,12 @@ namespace Schicksal.Basic
         if (has_reason)
           return new RankTransform(ranks, m_round, false);
         else
-          return DummyNormalizer.Instance.Prepare(sample);
+          return DummyNormalizer.Transform;
       }
       else if (sample.Count > 0)
         return GetValueTransform(sample[0]);
       else
-        return DummyNormalizer.Instance.Prepare(sample);
+        return DummyNormalizer.Transform;
     }
 
     private IValueTransform PrepareTransform(IComplexSample sample)
@@ -143,12 +168,12 @@ namespace Schicksal.Basic
         if (has_reason)
           return new RankTransform(ranks, m_round, false);
         else
-          return DummyNormalizer.Instance.Prepare(sample);
+          return DummyNormalizer.Transform;
       }
       else if (sample.Count > 0 && sample[0].Count > 0)
         return GetValueTransform(sample[0][0]);
       else
-        return DummyNormalizer.Instance.Prepare(sample);
+        return DummyNormalizer.Transform;
     }
 
     private static bool RecreateRequired(IEnumerable<IPlainSample> samples, int round)
@@ -196,6 +221,7 @@ namespace Schicksal.Basic
         return ranks;
 
       list.Sort();
+
       double last = list[0];
       int count = 1;
 
@@ -221,12 +247,13 @@ namespace Schicksal.Basic
       return ranks;
     }
 
-    private class RankTransform : IValueTransform
+    private sealed class RankTransform : IValueTransform
     {
       private readonly Dictionary<double, float> m_ranks;
       private readonly int m_round;
+      private readonly bool m_internal;
+
       private RankInverse m_inverse;
-      private bool m_internal;
 
       public RankTransform(Dictionary<double, float> ranks, int round, bool isInternal)
       {
@@ -281,7 +308,7 @@ namespace Schicksal.Basic
         if (other == null)
           return false;
         
-        return m_ranks.Equals(other.m_ranks) && m_round == other.m_round && m_internal == other.m_internal;
+        return m_ranks.Equals(other.Ranks) && m_round == other.Round && m_internal == other.Internal;
       }
 
       public override int GetHashCode()
@@ -357,5 +384,7 @@ namespace Schicksal.Basic
         return (value - m_ranks[l]) / (m_ranks[l + 1] - m_ranks[l]) * (m_values[l + 1] - m_values[l]) + m_values[l];
       }
     }
+
+    #endregion
   }
 }
