@@ -351,7 +351,7 @@ namespace Notung.Services
 
     private AppDomain CreateDomain(string friendlyName)
     {
-      AppDomainSetup setup = new AppDomainSetup();
+      var setup = new AppDomainSetup();
 
       foreach (var pi in typeof(AppDomainSetup).GetProperties())
       {
@@ -361,7 +361,7 @@ namespace Notung.Services
 
       setup.PrivateBinPath = this.PluginsDirectory ?? setup.PrivateBinPath;
 
-      AppDomain ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
+      var ret = AppDomain.CreateDomain(friendlyName, m_domain.Evidence, setup);
       this.ShareServices(ret);
       return ret;
     }

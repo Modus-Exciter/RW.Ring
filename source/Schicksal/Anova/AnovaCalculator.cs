@@ -55,10 +55,7 @@ namespace Schicksal.Anova
     /// </summary>
     public override void Run()
     {
-      m_residuals_calculator = this.HasRepetitions() ?
-        (string.IsNullOrEmpty(m_parameters.Conjugation) ? new IndenepdentResudualsCalculator() :
-        (IResudualsCalculator)new ConjugatedResudualsCalculator()) :
-        (IResudualsCalculator)new UnrepeatedResudualsCalculator();
+      var transformed = this.GetInitialData();
 
       m_residuals_calculator.Start(m_parameters, this);
 
@@ -69,28 +66,45 @@ namespace Schicksal.Anova
         var parameters = new PredictedResponseParameters(m_parameters.Table,
           m_parameters.Filter, p, m_parameters.Response);
 
-        using (var tableSample = new TableDividedSample(parameters, m_parameters.Conjugation))
+        var sample = GroupKey.Repack(transformed, p);
+
+        var ms_w = m_residuals_calculator.GetWithinVariance(p, this);
+        var ms_b = FisherTest.MSb(sample);
+
+        if (ms_w.MeanSquare != 0 && ms_w.DegreesOfFreedom != 0)
         {
-          IDividedSample sample = SampleRepack.Wrap(m_parameters.Normalizer.Normalize(tableSample));
-
-          var ms_w = m_residuals_calculator.GetWithinVariance(p, this);
-          var ms_b = FisherTest.MSb(sample);
-
-          if (ms_w.MeanSquare != 0 && ms_w.DegreesOfFreedom != 0)
+          list.Add(new TestResult
           {
-            list.Add(new TestResult
-            {
-              Between = ms_b,
-              Within = ms_w,
-              Factor = p
-            });
-          }
+            Between = ms_b,
+            Within = ms_w,
+            Factor = p
+          });
         }
       }
 
       FindInteraction(list);
 
       this.Result = this.ConvertResult(list);
+    }
+
+    private IDividedSample<GroupKey> GetInitialData()
+    {
+      using (var table = new TableDividedSample(m_parameters, m_parameters.Conjugation))
+      {
+        m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
+
+        if (table.Sum(g => g.Count) > table.Count)
+        {
+          if (string.IsNullOrEmpty(m_parameters.Conjugation))
+            m_residuals_calculator = new IndenepdentResudualsCalculator();
+          else
+            m_residuals_calculator = new ConjugatedResudualsCalculator();
+        }
+        else
+          m_residuals_calculator = new UnrepeatedResudualsCalculator();
+
+        return new ArrayDividedSample<GroupKey>(SampleRepack.Wrap(m_transform.Normalize(table)), table.GetKey);
+      }
     }
 
     void IProgressIndicator.ReportProgress(int percentage, string state)
@@ -140,7 +154,7 @@ namespace Schicksal.Anova
         if (predictors.Count == 1)
           continue;
 
-        foreach (var p in predictors.Split().Where(px => px != predictors))
+        foreach (var p in predictors.Split(false))
         {
           if (dic.ContainsKey(p))
             graph.AddArc(dic[p], i);
@@ -156,7 +170,7 @@ namespace Schicksal.Anova
         if (result.Factor.Count == 1)
           continue;
 
-        foreach (var p in result.Factor.Split().Where(px => px != result.Factor))
+        foreach (var p in result.Factor.Split(false))
         {
           if (!dic.ContainsKey(p))
             continue;
@@ -175,16 +189,6 @@ namespace Schicksal.Anova
       public SampleVariance Between;
 
       public SampleVariance Within;
-    }
-
-    private bool HasRepetitions()
-    {
-      using (var sample = new TableDividedSample(m_parameters, m_parameters.Conjugation))
-      {
-        m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(sample));
-
-        return sample.Sum(g => g.Count) > sample.Count;
-      }
     }
   }
 }

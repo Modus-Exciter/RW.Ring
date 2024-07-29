@@ -46,7 +46,7 @@ namespace Schicksal.Basic
             if (row.Row.IsNull(columnIndexes[i]))
               sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
             else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], TableDividedSample.GetInvariant(row[columnIndexes[i]]));
+              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GroupKey.GetInvariant(row[columnIndexes[i]]));
           }
 
           if (!sets.Add(sb.ToString()))
@@ -176,7 +176,7 @@ namespace Schicksal.Basic
               if (row.Row.IsNull(ignorableIndexes[i]))
                 sb.AppendFormat(" AND [{0}] IS NULL", ignorableColumns[i]);
               else
-                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], TableDividedSample.GetInvariant(row[ignorableIndexes[i]]));
+                sb.AppendFormat(" AND [{0}] = {1}", ignorableColumns[i], GroupKey.GetInvariant(row[ignorableIndexes[i]]));
             }
             if (!sets.Add(sb.ToString()))
               continue;

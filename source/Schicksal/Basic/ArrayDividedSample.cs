@@ -65,6 +65,28 @@ namespace Schicksal.Basic
       m_keys = keys;
     }
 
+    public ArrayDividedSample(IDividedSample data, Func<int, T> keys)
+    {
+      if (data == null)
+        throw new ArgumentNullException("data");
+
+      if (keys == null)
+        throw new ArgumentNullException("keys");
+
+      m_data = new IPlainSample[data.Count];
+      m_keys = new T[data.Count];
+      m_indexes = new Dictionary<T, int>();
+
+      for (int i = 0; i < m_data.Length; i++)
+      {
+        var key = keys(i);
+
+        m_indexes.Add(key, i);
+        m_data[i] = data[i];
+        m_keys[i] = key;
+      }
+    }
+
     public IPlainSample this[T key] { get { return m_data[m_indexes[key]]; } }
 
     public IPlainSample this[int index] { get { return m_data[index]; } }

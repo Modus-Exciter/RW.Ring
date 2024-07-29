@@ -57,7 +57,7 @@ namespace Schicksal.Basic
 
       if (checkNullable && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         type = type.GetGenericArguments()[0];
-      
+
       return (type.IsPrimitive && type != typeof(bool)) || type == typeof(decimal);
     }
   }
@@ -136,13 +136,14 @@ namespace Schicksal.Basic
     /// <param name="predictors">Набор имён колонок, которые будут предикторами</param>
     /// <param name="response">Имя колонки, которая будет откликом</param>
     /// <param name="probability">Уровень значимости для анализа</param>
-    public PredictedWithProbabilityResponseParameters(
+    public PredictedWithProbabilityResponseParameters
+    (
       DataTable table,
       string filter,
       FactorInfo predictors,
       string response,
-      double probability)
-      : base(table, filter, predictors, response)
+      double probability
+    ) : base(table, filter, predictors, response)
     {
       if (probability < 0 || probability > 1)
         throw new ArgumentOutOfRangeException("probability");

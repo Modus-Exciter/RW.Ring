@@ -2,74 +2,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Schicksal.Basic
 {
   /// <summary>
   /// Обёртка над таблицей данных для статистического анализа
   /// </summary>
-  public sealed class TableDividedSample : IDividedSample<string>, IDisposable
+  public sealed class TableDividedSample : IDividedSample<GroupKey>, IDisposable
   {
-    private readonly DataTable m_table;
     private readonly DataViewSample[] m_views;
-    private readonly Dictionary<string, int> m_indexes;
+    private readonly Dictionary<GroupKey, int> m_indexes;
+    private readonly GroupKey[] m_keys;
 
     /// <summary>
     /// Инициализация новой обёртки над таблицей для статистического анализа
     /// </summary>
     /// <param name="tableParameters">Таблица, помещаемая в обёртку, с параметрами</param>
-    /// <param name="conjugate">Колонка, идентифицирующая сопряжённые наблюдения</param>
-    public TableDividedSample(PredictedResponseParameters tableParameters, string conjugate = null)
+    /// <param name="sort">Колонка, по которой сортируются данные</param>
+    public TableDividedSample(PredictedResponseParameters tableParameters, string sort = null)
     {
       if (tableParameters == null)
         throw new ArgumentNullException("tableParameters");
-      
-      if (!tableParameters.Table.Columns[tableParameters.Response].DataType.IsPrimitive
+
+      if ((!tableParameters.Table.Columns[tableParameters.Response].DataType.IsPrimitive
         || tableParameters.Table.Columns[tableParameters.Response].DataType == typeof(bool))
+        && tableParameters.Table.Columns[tableParameters.Response].DataType != typeof(decimal))
         throw new ArgumentException("Result column must be numeric");
 
-      m_table = tableParameters.Table;
-
-      var sets = new HashSet<string>();
+      var sets = new HashSet<GroupKey>();
       var columnIndexes = new int[tableParameters.Predictors.Count];
       var factorColumns = tableParameters.Predictors.ToArray();
+      var tuples = new List<DataViewSample>();
 
       for (int i = 0; i < tableParameters.Predictors.Count; i++)
-        columnIndexes[i] = m_table.Columns[factorColumns[i]].Ordinal;
+        columnIndexes[i] = tableParameters.Table.Columns[factorColumns[i]].Ordinal;
 
-      var tuples = new List<DataViewSample>();
-      m_indexes = new Dictionary<string, int>();
+      m_indexes = new Dictionary<GroupKey, int>();
 
-      using (var filtered_table = new DataView(m_table, tableParameters.Filter, null, DataViewRowState.CurrentRows))
+      using (var filtered_table = new DataView(tableParameters.Table, tableParameters.Filter, null, DataViewRowState.CurrentRows))
       {
         foreach (DataRowView row in filtered_table)
         {
-          var sb = new StringBuilder();
-          sb.AppendFormat("[{0}] is not null", tableParameters.Response);
+          Dictionary<string, object> values = new Dictionary<string, object>();
 
           for (int i = 0; i < factorColumns.Length; i++)
-          {
-            if (row.Row.IsNull(columnIndexes[i]))
-              sb.AppendFormat(" AND [{0}] IS NULL", factorColumns[i]);
-            else
-              sb.AppendFormat(" AND [{0}] = {1}", factorColumns[i], GetInvariant(row[columnIndexes[i]]));
-          }
+            values.Add(factorColumns[i], row[columnIndexes[i]]);
 
-          if (!string.IsNullOrEmpty(tableParameters.Filter))
-            sb.AppendFormat(" AND {0}", tableParameters.Filter);
+          var gk = new GroupKey(tableParameters, values);
 
-          if (!sets.Add(sb.ToString()))
+          if (!sets.Add(gk))
             continue;
 
-          var view = new DataView(m_table, sb.ToString(), conjugate, DataViewRowState.CurrentRows);
+          var view = new DataView(tableParameters.Table, gk.ToString(), sort, DataViewRowState.CurrentRows);
 
           if (view.Count > 0)
           {
             tuples.Add(new DataViewSample(view, tableParameters.Response));
-            m_indexes[view.RowFilter] = m_indexes.Count;
+            m_indexes[gk] = m_indexes.Count;
           }
           else
             view.Dispose();
@@ -77,54 +67,73 @@ namespace Schicksal.Basic
       }
 
       m_views = tuples.ToArray();
+      m_keys = new GroupKey[m_indexes.Count];
+
+      foreach (var kv in m_indexes)
+        m_keys[kv.Value] = kv.Key;
     }
 
     /// <summary>
-    /// Преобразование значения в строку для выражения фильтра
+    /// Количество подвыборок в выборке
     /// </summary>
-    /// <param name="value">Значение</param>
-    /// <returns>Строковое представление значения в тексте фильтра</returns>
-    public static string GetInvariant(object value)
-    {
-      var formattable = value as IFormattable;
-
-      if (value is string || value is char)
-        return string.Format("'{0}'", value);
-      else if (value is DateTime)
-        return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));
-      else if (formattable != null)
-        return formattable.ToString(null, CultureInfo.InvariantCulture);
-      else if (value != null)
-        return value.ToString();
-      else
-        return "NULL";
-    }
-
     public int Count
     {
       get { return m_views.Length; }
     }
 
-    public IPlainSample this[string rowFilter]
+    /// <summary>
+    /// Получение подвыборки по ключу группы
+    /// </summary>
+    /// <param name="rowFilter">Ключ группы</param>
+    /// <returns>Подвыборка, соответствующая этому ключу</returns>
+    public IPlainSample this[GroupKey rowFilter]
     {
       get { return m_views[m_indexes[rowFilter]]; }
     }
 
+    /// <summary>
+    /// Получение подвыборки по порядковому номеру
+    /// </summary>
+    /// <param name="index">Порядковый номер подвыборки, начиная с 0</param>
+    /// <returns>Подвыборка с соответствующим порядковым номером</returns>
     public IPlainSample this[int index]
     {
       get { return m_views[index]; }
     }
 
-    public string GetKey(int index)
+    /// <summary>
+    /// Получение ключа подвыборки по её порядковому номеру
+    /// </summary>
+    /// <param name="index">Порядковый номер подвыборки, начиная с 0</param>
+    /// <returns>Ключ подвыборки</returns>
+    public GroupKey GetKey(int index)
     {
-      return m_views[index].View.RowFilter;
+      return m_keys[index];
     }
 
-    public int GetIndex(string rowFilter)
+    /// <summary>
+    /// Получение порядкового номера подвыборки по ключу группы
+    /// </summary>
+    /// <param name="rowFilter">Ключ группы, ассоциированный с подвыборкой</param>
+    /// <returns>Порядковый номер подвыборки, начиная с 0</returns>
+    public int GetIndex(GroupKey rowFilter)
     {
       return m_indexes[rowFilter];
     }
 
+    /// <summary>
+    /// Закрытие всех представлений, через которые читаются данные из таблицы
+    /// </summary>
+    public void Dispose()
+    {
+      foreach (DataViewSample sample in m_views)
+        sample.View.Dispose();
+    }
+
+    /// <summary>
+    /// Возвращает итератор, выполняющий перебор подвыборок в выборке
+    /// </summary>
+    /// <returns>Итератор, который можно использовать для обхода подвыборок</returns>
     public IEnumerator<IPlainSample> GetEnumerator()
     {
       return m_views.Select(v => v).GetEnumerator();
@@ -133,12 +142,6 @@ namespace Schicksal.Basic
     IEnumerator IEnumerable.GetEnumerator()
     {
       return this.GetEnumerator();
-    }
-
-    public void Dispose()
-    {
-      foreach (DataViewSample sample in m_views)
-        sample.View.Dispose();
     }
 
     private class DataViewSample : IPlainSample
@@ -182,7 +185,7 @@ namespace Schicksal.Basic
       {
         if (m_string == null)
         {
-          m_string = string.Format("[{0}] is not null", m_view.Table.Columns[m_column].ColumnName);
+          m_string = string.Format("[{0}] IS NOT NULL", m_view.Table.Columns[m_column].ColumnName);
 
           if (m_view.RowFilter.Contains(m_string + " AND"))
             m_string += " AND";

@@ -100,11 +100,15 @@ namespace Schicksal.Basic
     /// <summary>
     /// Разбиение множества предикторов на непустые подмножества
     /// </summary>
+    /// <param name="includeSelf">Включать ли в список выдачи текущий набор предикторов</param>
     /// <returns>Коллекция непустых наборов предикторов</returns>
-    public IEnumerable<FactorInfo> Split()
+    public IEnumerable<FactorInfo> Split(bool includeSelf = true)
     {
       string[] factors = new string[m_data.Count];
       int group_count = (1 << factors.Length);
+
+      if (!includeSelf)
+        group_count--;
 
       m_data.CopyTo(factors);
 

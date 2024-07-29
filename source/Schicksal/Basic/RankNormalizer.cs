@@ -62,6 +62,11 @@ namespace Schicksal.Basic
       return this.GetType().GetHashCode() ^ m_round;
     }
 
+    /// <summary>
+    /// Настройка преобразователя для нормирования данных
+    /// </summary>
+    /// <param name="sample">Выборка нормированных данных</param>
+    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
     public IValueTransform Prepare(ISample sample)
     {
       if (sample == null)
@@ -208,7 +213,6 @@ namespace Schicksal.Basic
 
     private static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, out bool hasReason, int round)
     {
-      float rank = 1;
       hasReason = false;
       var ranks = new Dictionary<double, float>();
 
@@ -222,6 +226,14 @@ namespace Schicksal.Basic
 
       list.Sort();
 
+      PerformRanking(ref hasReason, ranks, list);
+
+      return ranks;
+    }
+
+    private static void PerformRanking(ref bool hasReason, Dictionary<double, float> ranks, List<double> list)
+    {
+      float rank = 1;
       double last = list[0];
       int count = 1;
 
@@ -242,9 +254,7 @@ namespace Schicksal.Basic
 
       var last_rank = rank + (count - 1f) / 2f;
       ranks[last] = last_rank;
-      hasReason |= (last_rank != last);
-
-      return ranks;
+      hasReason |= (last_rank != last); ;
     }
 
     private sealed class RankTransform : IValueTransform

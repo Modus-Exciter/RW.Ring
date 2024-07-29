@@ -23,7 +23,8 @@ namespace Schicksal.Anova
     /// <param name="probability">Уровень значимости для анализа</param>
     /// <param name="normalizer">Алгоритм нормирования данных</param>
     /// <param name="conjugation">Имя колонки, идентифицирующей сопряжённые наблюдения</param>
-    public AnovaParameters(
+    public AnovaParameters
+    (
       DataTable table,
       string filter,
       FactorInfo predictors,
@@ -31,7 +32,8 @@ namespace Schicksal.Anova
       double probability,
       INormalizer normalizer,
       string conjugation,
-      bool individualError) : base(table, filter, predictors, response, probability)
+      bool individualError
+    ) : base(table, filter, predictors, response, probability)
     {
       if (normalizer == null)
         throw new ArgumentNullException("normalizer");

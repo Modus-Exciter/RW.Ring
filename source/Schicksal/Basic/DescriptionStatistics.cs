@@ -159,7 +159,7 @@ namespace Schicksal.Basic
 
         for (int i = 0; i < res.Length; i++)
         {
-          var name = sample.GetKey(i);
+          var name = sample.GetKey(i).Query;
 
           if (name.Contains(" AND "))
             name = name.Substring(name.IndexOf(" AND ") + 5);

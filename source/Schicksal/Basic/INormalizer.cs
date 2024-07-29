@@ -38,6 +38,9 @@ namespace Schicksal.Basic
     double Denormalize(double value);
   }
 
+  /// <summary>
+  /// Расширяющие методы для упрощённого создания нормированных выборок
+  /// </summary>
   public static class NormalizerExtensions
   {
     /// <summary>
@@ -48,8 +51,6 @@ namespace Schicksal.Basic
     /// <returns>Выборка нормированных данных</returns>
     public static IPlainSample Normalize(this INormalizer normalizer, IPlainSample sample)
     {
-      CheckParameters(normalizer, sample);
-
       return Prepare(normalizer, sample).Normalize(sample);
     }
 
@@ -61,8 +62,6 @@ namespace Schicksal.Basic
     /// <returns>Выборка нормированных данных</returns>
     public static IDividedSample Normalize(this INormalizer normalizer, IDividedSample sample)
     {
-      CheckParameters(normalizer, sample);
-
       return Prepare(normalizer, sample).Normalize(sample);
     }
 
@@ -74,8 +73,6 @@ namespace Schicksal.Basic
     /// <returns>Выборка нормированных данных</returns>
     public static IComplexSample Normalize(this INormalizer normalizer, IComplexSample sample)
     {
-      CheckParameters(normalizer, sample);
-
       return Prepare(normalizer, sample).Normalize(sample);
     }
 
@@ -192,19 +189,16 @@ namespace Schicksal.Basic
 
     private static IValueTransform Prepare(INormalizer normalizer, ISample sample)
     {
-      if (sample.Count == 0)
-        return DummyNormalizer.Transform;
-
-      return normalizer.Prepare(sample);
-    }
-
-    private static void CheckParameters(INormalizer normalizer, ISample sample)
-    {
       if (normalizer == null)
         throw new ArgumentNullException("normalizer");
 
       if (sample == null)
         throw new ArgumentNullException("sample");
+
+      if (sample.Count == 0)
+        return DummyNormalizer.Transform;
+
+      return normalizer.Prepare(sample);
     }
 
     private static void CheckParameters(IValueTransform transform, ISample sample)
@@ -280,18 +274,6 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
-    /// Возвращает итератор, выполняющий перебор нормированных значений в выборке
-    /// </summary>
-    /// <returns>Итератор, который можно использовать для обхода выборки</returns>
-    public IEnumerator<double> GetEnumerator()
-    {
-      if (m_handler == null)
-        m_handler = m_transform.Normalize;
-
-      return m_sample.Select(m_handler).GetEnumerator();
-    }
-
-    /// <summary>
     /// Строковое представление объекта
     /// </summary>
     /// <returns>Информация о выборке и её трансформации</returns>
@@ -322,6 +304,18 @@ namespace Schicksal.Basic
     public override int GetHashCode()
     {
       return m_sample.GetHashCode() ^ m_transform.GetHashCode();
+    }
+
+    /// <summary>
+    /// Возвращает итератор, выполняющий перебор нормированных значений в выборке
+    /// </summary>
+    /// <returns>Итератор, который можно использовать для обхода выборки</returns>
+    public IEnumerator<double> GetEnumerator()
+    {
+      if (m_handler == null)
+        m_handler = m_transform.Normalize;
+
+      return m_sample.Select(m_handler).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
