@@ -17,8 +17,12 @@ namespace Schicksal.Anova
     /// <returns>Вероятность нулевой гипотезы</returns>
     public static double GetProbability(SampleVariance between, SampleVariance within)
     {
-      return SpecialFunctions.fcdistribution(between.DegreesOfFreedom, within.DegreesOfFreedom,
-        between.MeanSquare / within.MeanSquare);
+      var f = between.MeanSquare / within.MeanSquare;
+
+      if (f == 0)
+        return 1;
+
+      return SpecialFunctions.fcdistribution(between.DegreesOfFreedom, within.DegreesOfFreedom, f);
     }
 
     /// <summary>

@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Schicksal.Basic
 {
+  /// <summary>
+  /// Набор значений колонок, идентифицирующий выборку в таблице
+  /// </summary>
   public sealed class GroupKey : IEnumerable<KeyValuePair<string, object>>
   {
     private readonly Dictionary<string, object> m_data;
@@ -19,6 +22,11 @@ namespace Schicksal.Basic
     private static readonly Func<KeyValuePair<string, object>, KeyValuePair<string, object>> _omit_nulls =
       kv => new KeyValuePair<string, object>(kv.Key, OmitNulls(kv.Value));
 
+    /// <summary>
+    /// Инициализация набора значений колонок
+    /// </summary>
+    /// <param name="parameters">Таблица с фильтром, из которой делается выборка</param>
+    /// <param name="data">Конкретные значения колонок</param>
     public GroupKey(PredictedResponseParameters parameters, Dictionary<string, object> data)
     {
       if (parameters is null) 
@@ -29,7 +37,7 @@ namespace Schicksal.Basic
 
       foreach (var kv in data)
       {
-        if (!parameters.Table.Columns.Contains(kv.Key))
+        if (!parameters.Predictors.Contains(kv.Key))
           throw new ArgumentException(string.Format("Column {0} not found in the table", kv.Key));
       }
 
@@ -47,31 +55,51 @@ namespace Schicksal.Basic
       m_query = this.GetQueryText();
     }
 
+    /// <summary>
+    /// Значение конкретной колонки таблицы
+    /// </summary>
+    /// <param name="column">Имя колонки</param>
+    /// <returns>Значение указанной колонки</returns>
     public object this[string column]
     {
       get { return OmitNulls(m_data[column]); }
     }
 
+    /// <summary>
+    /// Фильтр, применённый к таблице
+    /// </summary>
     public string BaseFilter
     {
       get { return m_base_filter; }
     }
 
+    /// <summary>
+    /// Имя колонки, используемой для хранения отклика на воздействие факторов
+    /// </summary>
     public string Response
     {
       get { return m_response; }
     }
 
+    /// <summary>
+    /// Текст запроса к таблице, чтобы получить выборку
+    /// </summary>
     public string Query
     {
       get { return m_query; }
     }
 
+    /// <summary>
+    /// Количество значений колонки
+    /// </summary>
     public int Count
     {
       get { return m_data.Count; }
     }
 
+    /// <summary>
+    /// Информация о списке предикторов в значениях колонок
+    /// </summary>
     public FactorInfo FactorInfo
     {
       get
@@ -83,6 +111,10 @@ namespace Schicksal.Basic
       }
     }
 
+    /// <summary>
+    /// Возвращает итератор, позволяющий обойти значения колонок
+    /// </summary>
+    /// <returns>Итератор, позволяющий обойти значения колонок</returns>
     public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
     {
       return m_data.Select(_omit_nulls).GetEnumerator();
@@ -93,6 +125,11 @@ namespace Schicksal.Basic
       return this.GetEnumerator();
     }
 
+    /// <summary>
+    /// Сравнение наборов значений колонок на равенство
+    /// </summary>
+    /// <param name="obj">Другой объект, с которым делается сравнение</param>
+    /// <returns>True, если наборы значений колонок совпадают. Иначе, False</returns>
     public override bool Equals(object obj)
     {
       var other = obj as GroupKey;
@@ -101,6 +138,9 @@ namespace Schicksal.Basic
         return false;
 
       if (!object.Equals(m_base_filter, other.m_base_filter))
+        return false;
+
+      if (!object.Equals(m_response, other.m_response))
         return false;
 
       if (m_data.Count != other.m_data.Count)
@@ -120,14 +160,23 @@ namespace Schicksal.Basic
       return true;
     }
 
+    /// <summary>
+    /// Возвращает строковое представление набора значений колонок
+    /// </summary>
+    /// <returns>Текст запроса для осуществления выборки из таблицы</returns>
     public override string ToString()
     {
       return m_query;
     }
 
+    /// <summary>
+    /// Хеш-функция для набора значений колонок
+    /// </summary>
+    /// <returns>Хеш функцию от колонки отклика, фильтра и всех значений колонок</returns>
     public override int GetHashCode()
     {
-      var ret = m_base_filter == null ? 0 : m_base_filter.GetHashCode();
+      var ret = m_base_filter == null ? m_response.GetHashCode() : 
+        m_response.GetHashCode() ^ m_base_filter.GetHashCode();
 
       foreach (var kv in m_data)
         ret ^= (kv.Key.GetHashCode() ^ OmitNulls(kv.Value).GetHashCode());
@@ -135,12 +184,17 @@ namespace Schicksal.Basic
       return ret;
     }
 
+    /// <summary>
+    /// Получение строкового представления произвольного значения ячейки таблицы для запроса
+    /// </summary>
+    /// <param name="value">Значение ячейки таблицы</param>
+    /// <returns>Текстовое представление значения ячейки</returns>
     public static string GetInvariant(object value)
     {
       var formattable = value as IFormattable;
 
       if (value is string || value is char)
-        return string.Format("'{0}'", value);
+        return string.Format("'{0}'", value); // TODO: escape
       else if (value is DateTime)
         return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));
       else if (value is DBNull)
@@ -153,6 +207,12 @@ namespace Schicksal.Basic
         return "NULL";
     }
 
+    /// <summary>
+    /// Перепаковка выборки второго порядка по подмножеству колонок
+    /// </summary>
+    /// <param name="sample">Выборка, сгруппированная по значениям колонок для запроса</param>
+    /// <param name="factor">Подмножество колонок для запроса</param>
+    /// <returns>Выборка, сгруппированная по подмножеству колонок для запроса</returns>
     public static IDividedSample<GroupKey> Repack(IDividedSample<GroupKey> sample, FactorInfo factor)
     {
       if (factor is null)
@@ -176,6 +236,7 @@ namespace Schicksal.Basic
 
       GroupKey[] keys = new GroupKey[tmp.Count];
       double[][] values = new double[tmp.Count][];
+
       int index = 0;
 
       foreach (var kv in tmp)

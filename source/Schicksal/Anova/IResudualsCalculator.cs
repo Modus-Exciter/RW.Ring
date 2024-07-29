@@ -11,9 +11,11 @@ namespace Schicksal.Anova
   /// </summary>
   public interface IResudualsCalculator
   {
-    void Start(AnovaParameters parameters, IProgressIndicator progress);
+    void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress);
 
     IEnumerable<FactorInfo> GetSupportedFactors();
+
+    bool SingleWihinVariance { get; }
 
     SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress);
   }
@@ -26,17 +28,17 @@ namespace Schicksal.Anova
     private SampleVariance m_within_variance;
     private AnovaParameters m_parameters;
 
-    public void Start(AnovaParameters parameters, IProgressIndicator progress)
+    public bool SingleWihinVariance
+    {
+      get { return true; }
+    }
+
+    public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
       Debug.Assert(parameters != null);
 
       m_parameters = parameters;
-
-      using (var tableSample = new TableDividedSample(parameters, null))
-      {
-        IDividedSample sample = SampleRepack.Wrap(parameters.Normalizer.Normalize(tableSample));
-        m_within_variance = FisherTest.MSw(sample);
-      }
+      m_within_variance = FisherTest.MSw(sample);
     }
 
     public SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress)
@@ -58,16 +60,19 @@ namespace Schicksal.Anova
     private SampleVariance m_within_variance;
     private AnovaParameters m_parameters;
 
+    public bool SingleWihinVariance
+    {
+      get { return true; }
+    }
+
     public SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress)
     {
       return m_within_variance;
     }
 
-    public void Start(AnovaParameters parameters, IProgressIndicator progress)
+    public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
       Debug.Assert(parameters != null);
-
-      IDividedSample sample = CreateSample(parameters);
 
       Debug.Assert(sample is IEqualSubSamples && sample.Count > 1 && sample[0].Count > 1);
 
@@ -88,14 +93,6 @@ namespace Schicksal.Anova
       m_within_variance.DegreesOfFreedom = (sample.Count - 1) * (repetition_count - 1);
     }
 
-    private static IDividedSample CreateSample(AnovaParameters parameters)
-    {
-      using (var tableSample = new TableDividedSample(parameters, null))
-      {
-        return SampleRepack.Wrap(parameters.Normalizer.Normalize(tableSample));
-      }
-    }
-
     public IEnumerable<FactorInfo> GetSupportedFactors()
     {
       return m_parameters.Predictors.Split();
@@ -111,6 +108,11 @@ namespace Schicksal.Anova
       return m_parameters.Predictors.Split().Where(p => p != m_parameters.Predictors);
     }
 
+    public bool SingleWihinVariance
+    {
+      get { return false; }
+    }
+
     public SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress)
     {
       var parameters = new PredictedResponseParameters(m_parameters.Table, m_parameters.Filter,
@@ -123,7 +125,7 @@ namespace Schicksal.Anova
       }
     }
 
-    public void Start(AnovaParameters parameters, IProgressIndicator progress)
+    public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
       m_parameters = parameters;
     }

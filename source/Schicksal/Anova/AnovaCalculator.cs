@@ -57,9 +57,12 @@ namespace Schicksal.Anova
     {
       var transformed = this.GetInitialData();
 
-      m_residuals_calculator.Start(m_parameters, this);
+      m_residuals_calculator.Start(m_parameters, transformed, this);
 
       var list = new List<TestResult>();
+
+      int totals = 1 << m_parameters.Predictors.Count;
+      int current = 0;
 
       foreach (var p in m_residuals_calculator.GetSupportedFactors())
       {
@@ -67,9 +70,46 @@ namespace Schicksal.Anova
           m_parameters.Filter, p, m_parameters.Response);
 
         var sample = GroupKey.Repack(transformed, p);
-
-        var ms_w = m_residuals_calculator.GetWithinVariance(p, this);
         var ms_b = FisherTest.MSb(sample);
+
+        this.AddPredictorResult(list, p, ms_b);
+
+        current++;
+
+        this.ReportProgress(current * 100 / totals, p.ToString());
+      }
+
+      FindInteraction(list);
+
+      if (m_residuals_calculator.SingleWihinVariance)
+      {
+        var ms_w = m_residuals_calculator.GetWithinVariance(m_parameters.Predictors, this);
+
+        foreach (var item in list)
+          item.Within = ms_w;
+      }
+
+      this.Result = this.ConvertResult(list);
+    }
+
+    void IProgressIndicator.ReportProgress(int percentage, string state)
+    {
+      base.ReportProgress(percentage, state);
+    }
+
+    private void AddPredictorResult(List<TestResult> list, FactorInfo p, SampleVariance ms_b)
+    {
+      if (m_residuals_calculator.SingleWihinVariance)
+      {
+        list.Add(new TestResult
+        {
+          Between = ms_b,
+          Factor = p
+        });
+      }
+      else
+      {
+        var ms_w = m_residuals_calculator.GetWithinVariance(p, this);
 
         if (ms_w.MeanSquare != 0 && ms_w.DegreesOfFreedom != 0)
         {
@@ -81,10 +121,6 @@ namespace Schicksal.Anova
           });
         }
       }
-
-      FindInteraction(list);
-
-      this.Result = this.ConvertResult(list);
     }
 
     private IDividedSample<GroupKey> GetInitialData()
@@ -105,11 +141,6 @@ namespace Schicksal.Anova
 
         return new ArrayDividedSample<GroupKey>(SampleRepack.Wrap(m_transform.Normalize(table)), table.GetKey);
       }
-    }
-
-    void IProgressIndicator.ReportProgress(int percentage, string state)
-    {
-      base.ReportProgress(percentage, state);
     }
 
     private FisherTestResult[] ConvertResult(List<TestResult> list)
@@ -178,6 +209,12 @@ namespace Schicksal.Anova
           var res = list[dic[p]];
           result.Between.DegreesOfFreedom -= res.Between.DegreesOfFreedom;
           result.Between.SumOfSquares -= res.Between.SumOfSquares;
+
+          if (result.Between.DegreesOfFreedom <= 1)
+            result.Between.DegreesOfFreedom = 1;
+
+          if (result.Between.SumOfSquares < 0)
+            result.Between.SumOfSquares = 0;
         }
       }
     }
