@@ -74,7 +74,7 @@ namespace Schicksal.Basic
       if (sample is IComplexSample)
         return this.PrepareTransform(sample as IComplexSample);
 
-      return DummyNormalizer.Transform;
+      return DummyNormalizer.Instance.Prepare(sample);
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ namespace Schicksal.Basic
       else if (sample.Count > 0)
         return GetValueTransform(sample[0]);
       else
-        return DummyNormalizer.Transform;
+        return DummyNormalizer.Instance.Prepare(sample);
     }
 
     private IValueTransform PrepareTransform(IComplexSample sample)
@@ -268,7 +268,7 @@ namespace Schicksal.Basic
       else if (sample.Count > 0 && sample[0].Count > 0)
         return GetValueTransform(sample[0][0]);
       else
-        return DummyNormalizer.Transform;
+        return DummyNormalizer.Instance.Prepare(sample);
     }
 
     private static bool RecreateRequired(IEnumerable<IPlainSample> samples, string method)

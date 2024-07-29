@@ -45,7 +45,7 @@ namespace Schicksal.Basic
       if (sample is IComplexSample)
         return this.PrepareTransform(sample as IComplexSample);
 
-      return DummyNormalizer.Transform;
+      return DummyNormalizer.Instance.Prepare(sample);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ namespace Schicksal.Basic
       if (has_reason)
         return new RankTransform(ranks, m_round, true);
       else
-        return transform != null ? new RankTransform(transform.Ranks, m_round, true) : DummyNormalizer.Transform;
+        return transform != null ? new RankTransform(transform.Ranks, m_round, true) : DummyNormalizer.Instance.Prepare(sample);
     }
 
     private IValueTransform PrepareTransform(IDividedSample sample)
@@ -123,12 +123,12 @@ namespace Schicksal.Basic
         if (has_reason)
           return new RankTransform(ranks, m_round, false);
         else
-          return DummyNormalizer.Transform;
+          return DummyNormalizer.Instance.Prepare(sample);
       }
       else if (sample.Count > 0)
         return GetValueTransform(sample[0]);
       else
-        return DummyNormalizer.Transform;
+        return DummyNormalizer.Instance.Prepare(sample);
     }
 
     private IValueTransform PrepareTransform(IComplexSample sample)
@@ -143,12 +143,12 @@ namespace Schicksal.Basic
         if (has_reason)
           return new RankTransform(ranks, m_round, false);
         else
-          return DummyNormalizer.Transform;
+          return DummyNormalizer.Instance.Prepare(sample);
       }
       else if (sample.Count > 0 && sample[0].Count > 0)
         return GetValueTransform(sample[0][0]);
       else
-        return DummyNormalizer.Transform;
+        return DummyNormalizer.Instance.Prepare(sample);
     }
 
     private static bool RecreateRequired(IEnumerable<IPlainSample> samples, int round)

@@ -592,7 +592,7 @@ namespace BasicStatisticsTest
       if (ns != null)
         return ns.ValueTransform.Denormalize;
       else
-        return DummyNormalizer.Transform.Denormalize;
+        return DummyNormalizer.Instance.Prepare(group).Denormalize;
 
       //var ranked = new RankNormalizer().Prepare(group);
 
@@ -616,7 +616,7 @@ namespace BasicStatisticsTest
       if (ns != null)
         return ns.ValueTransform.Denormalize;
       else
-        return DummyNormalizer.Transform.Denormalize;
+        return DummyNormalizer.Instance.Prepare(group).Denormalize;
     }
 
     /// <summary>
@@ -633,7 +633,7 @@ namespace BasicStatisticsTest
       if (ns != null)
         return ns.ValueTransform.Denormalize;
       else
-        return DummyNormalizer.Transform.Denormalize;
+        return DummyNormalizer.Instance.Prepare(group).Denormalize;
     }
 
     #endregion
