@@ -15,7 +15,7 @@ namespace Schicksal.Anova
   {
     private readonly AnovaParameters m_parameters;
     private IResudualsCalculator m_residuals_calculator;
-    private IDenormalizer m_denormalizer;
+    private IValueTransform m_denormalizer;
 
     /// <summary>
     /// Инициализация задачи дисперсионного анализа таблицы
@@ -40,7 +40,7 @@ namespace Schicksal.Anova
     /// <summary>
     /// Преобразователь нормированных данных в ненормированные
     /// </summary>
-    public IDenormalizer Denormalizer
+    public IValueTransform Denormalizer
     {
       get { return m_denormalizer; }
     }
@@ -102,9 +102,9 @@ namespace Schicksal.Anova
     {
       var ret = new FisherTestResult[list.Count];
 
-      for (int i = 0; i < this.Result.Length; i++)
+      for (int i = 0; i < ret.Length; i++)
       {
-        this.Result[i] = new FisherTestResult
+        ret[i] = new FisherTestResult
         {
           Conjugate = m_parameters.Conjugation,
           Factor = list[i].Factor,
@@ -181,7 +181,7 @@ namespace Schicksal.Anova
     {
       using (var sample = new TableDividedSample(m_parameters, m_parameters.Conjugation))
       {
-        m_denormalizer = m_parameters.Normalizer.GetDenormalizer(m_parameters.Normalizer.Normalize(sample));
+        m_denormalizer = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(sample));
 
         return sample.Sum(g => g.Count) > sample.Count;
       }

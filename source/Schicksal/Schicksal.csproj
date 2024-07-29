@@ -67,6 +67,7 @@
     <Compile Include="Basic\RankNormalizer.cs" />
     <Compile Include="Basic\TableDividedSample.cs" />
     <Compile Include="Basic\TableComplexSample.cs" />
+    <Compile Include="Basic\Tmp.cs" />
     <Compile Include="Clustering\ClusteringParameters.cs" />
     <Compile Include="Clustering\IArcDeleter.cs" />
     <Compile Include="Clustering\IDistanceMetrics.cs" />

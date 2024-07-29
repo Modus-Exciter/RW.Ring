@@ -223,8 +223,20 @@ namespace BasicStatisticsTest
       var delta = GroupNormalizer.CalculateDelta(group);
       var group2 = new ArrayPlainSample(group.Select(a => a + delta).ToArray());
       var group3 = GroupNormalizer.NormalizeByBoxCox(group);
-      var lambda = (double)group3.GetType().GetField("Lambda").GetValue(group3);
+      var lambda = GetLambda(group3);
       Assert.AreEqual(lambda, GroupNormalizer.CalculateLambda(group2), 1e-5);
+    }
+
+    private static double GetLambda(IPlainSample sample)
+    {
+      var ns = sample as NormalizedSample;
+      return (double)ns.ValueTransform.GetType().GetProperty("Lambda").GetValue(ns.ValueTransform, null);
+    }
+
+    private static void SetLambda(IPlainSample sample, double value)
+    {
+      var ns = sample as NormalizedSample;
+      ns.ValueTransform.GetType().GetField("m_lambda", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(ns.ValueTransform, value);
     }
 
     [TestMethod]
@@ -275,7 +287,7 @@ namespace BasicStatisticsTest
       var lambda = GroupNormalizer.CalculateLambda(group);
       Assert.AreEqual(0.705, lambda, 0.00025);
       var group2 = GroupNormalizer.NormalizeByBoxCox(group);
-      lambda = (double)group2.GetType().GetField("Lambda").GetValue(group2);
+      lambda = GetLambda(group2);
       Assert.AreEqual(0.705, lambda, 0.00025);
     }
 
@@ -289,7 +301,7 @@ namespace BasicStatisticsTest
       var group4 = new ArrayDividedSample(new IPlainSample[] { group1, group2, group3 });
 
       var group5 = GroupNormalizer.NormalizeByBoxCox(group4);
-      var lambda = (double)group5[0].GetType().GetField("Lambda").GetValue(group5[0]);
+      var lambda = GetLambda(group5[0]);
 
       Assert.IsTrue(lambda > -10 && lambda < 10);
     }
@@ -304,7 +316,7 @@ namespace BasicStatisticsTest
       for (int i = 0; i < group.Count; i++)
         Assert.AreEqual(group[i], handler(group2[i]), 1e-5);
 
-      group2.GetType().GetField("Lambda").SetValue(group2, 0);
+      SetLambda(group2, 0);
       handler = GroupNormalizer.CreateInverseHandler(group2);
 
       for (int i = 0; i < group.Count; i++)
@@ -391,9 +403,9 @@ namespace BasicStatisticsTest
       var group5 = GroupNormalizer.NormalizeByBoxCox(mg3);
       var group6 = GroupNormalizer.NormalizeByBoxCox(group);
 
-      var lambda1 = (double)group5[0].GetType().GetField("Lambda").GetValue(group5[0]);
+      var lambda1 = GetLambda(group5[0]);
 
-      var lambda2 = (double)group6[0][0].GetType().GetField("Lambda").GetValue(group6[0][0]);
+      var lambda2 = GetLambda(group6[0][0]);
 
       Assert.AreEqual(lambda1, lambda2);
 
@@ -575,12 +587,19 @@ namespace BasicStatisticsTest
     {
       Debug.Assert(group != null, "group cannot be null");
 
-      var ranked = new RankNormalizer().GetDenormalizer(group);
+      var ns = group as NormalizedSample;
 
-      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
-        return ranked.Denormalize;
+      if (ns != null)
+        return ns.ValueTransform.Denormalize;
       else
-        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+        return DummyNormalizer.Transform.Denormalize;
+
+      //var ranked = new RankNormalizer().Prepare(group);
+
+      //if (ranked != DummyNormalizer.Instance.Prepare(group))
+      //  return ranked.Denormalize;
+      //else
+      //  return new BoxCoxNormalizer().Prepare(group).Denormalize;
     }
 
     /// <summary>
@@ -592,12 +611,12 @@ namespace BasicStatisticsTest
     {
       Debug.Assert(group != null, "group cannot be null");
 
-      var ranked = new RankNormalizer().GetDenormalizer(group);
+      var ns = group[0] as NormalizedSample;
 
-      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
-        return ranked.Denormalize;
+      if (ns != null)
+        return ns.ValueTransform.Denormalize;
       else
-        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+        return DummyNormalizer.Transform.Denormalize;
     }
 
     /// <summary>
@@ -609,12 +628,12 @@ namespace BasicStatisticsTest
     {
       Debug.Assert(group != null, "group cannot be null");
 
-      var ranked = new RankNormalizer().GetDenormalizer(group);
+      var ns = group[0][0] as NormalizedSample;
 
-      if (ranked != DummyNormalizer.Instance.GetDenormalizer(group))
-        return ranked.Denormalize;
+      if (ns != null)
+        return ns.ValueTransform.Denormalize;
       else
-        return new BoxCoxNormalizer().GetDenormalizer(group).Denormalize;
+        return DummyNormalizer.Transform.Denormalize;
     }
 
     #endregion

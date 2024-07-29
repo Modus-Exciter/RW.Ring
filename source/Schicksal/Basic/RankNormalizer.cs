@@ -10,7 +10,7 @@ namespace Schicksal.Basic
   /// <summary>
   /// Преобразователь данных для нормирования с использованием рангов
   /// </summary>
-  public sealed class RankNormalizer : INormalizer, ISamplePropertyExtractor<IDenormalizer>
+  public sealed class RankNormalizer : INormalizer
   {
     private readonly int m_round;
 
@@ -31,99 +31,21 @@ namespace Schicksal.Basic
       get { return m_round; }
     }
 
-    /// <summary>
-    /// Расчёт изначального значения по преобразованному
-    /// </summary>
-    /// <param name="sample">Группа нормированных значений</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(ISample sample)
+    public IValueTransform Prepare(ISample sample)
     {
-      Debug.Assert(sample != null, "sample cannot be null");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      return this.ExtractProperty(sample) ?? DummyNormalizer.Instance.GetDenormalizer(sample);
-    }
+      if (sample is IPlainSample)
+        return this.PrepareTransform(sample as IPlainSample);
 
-    /// <summary>
-    /// Преобразование группы значений в группу рангов
-    /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа</returns>
-    public IPlainSample Normalize(IPlainSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
+      if (sample is IDividedSample)
+        return this.PrepareTransform(sample as IDividedSample);
 
-      if (sample is RankedSample)
-      {
-        if (((RankedSample)sample).Round == m_round && ((RankedSample)sample).Internal)
-          return sample;
+      if (sample is IComplexSample)
+        return this.PrepareTransform(sample as IComplexSample);
 
-        return new RankedSample(((RankedSample)sample).Source, m_round);
-      }
-
-      return new RankedSample(sample, m_round);
-    }
-
-    /// <summary>
-    /// Преобразование группы значений второго порядка в группу рангов
-    /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа</returns>
-    public IDividedSample Normalize(IDividedSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (RecreateRequired(sample, m_round))
-      {
-        bool has_reason;
-        var ranks = CalculateRanks(sample.SelectMany(g => g), out has_reason, m_round);
-
-        if (has_reason)
-        {
-          var samples = new IPlainSample[sample.Count];
-
-          for (int i = 0; i < samples.Length; i++)
-            samples[i] = new RankedSample(sample[i], m_round, ranks);
-
-          return new ArrayDividedSample(samples);
-        }
-      }
-
-      return sample;
-    }
-
-    /// <summary>
-    /// Преобразование группы значений третьего порядка в группу рангов
-    /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа третьего порядка</returns>
-    public IComplexSample Normalize(IComplexSample sample)
-    {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (RecreateRequired(sample.SelectMany(g => g), m_round))
-      {
-        bool has_reason;
-        var ranks = CalculateRanks(sample.SelectMany(g => g).SelectMany(g => g), out has_reason, m_round);
-
-        if (has_reason)
-        {
-          var samples = new IDividedSample[sample.Count];
-
-          for (int i = 0; i < sample.Count; i++)
-          {
-            var array = new IPlainSample[sample[i].Count];
-
-            for (int j = 0; j < sample[i].Count; j++)
-              array[j] = new RankedSample(sample[i][j], m_round, ranks);
-
-            samples[i] = new ArrayDividedSample(array);
-          }
-
-          return new ArrayComplexSample(samples);
-        }
-      }
-
-      return sample;
+      return DummyNormalizer.Transform;
     }
 
     /// <summary>
@@ -163,43 +85,101 @@ namespace Schicksal.Basic
       return CalculateRanks(data, out _, round);
     }
 
-    #region ISamplePropertyExtractor<IDenormalizer> members ---------------------------------------
-
-    bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
+    private static RankTransform GetValueTransform(IPlainSample sample)
     {
-      return sample is RankedSample;
+      var ns = sample as NormalizedSample;
+
+      if (ns != null)
+        return ns.ValueTransform as RankTransform;
+
+      return null;
     }
 
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IPlainSample sample)
+    private IValueTransform PrepareTransform(IPlainSample sample)
     {
-      var ranked = sample as RankedSample;
+      var transform = GetValueTransform(sample);
 
-      return new RankInverse(ranked.Ranks);
-    }
+      if (transform != null && transform.Round == m_round && transform.Internal)
+        return transform;
 
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IDividedSample sample)
-    {
-      var ranked = sample.FirstOrDefault() as RankedSample;
+      bool has_reason;
+      var ranks = CalculateRanks(sample, out has_reason, m_round);
 
-      if (RecreateRequired(sample, ranked.Round))
-        throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
+      if (has_reason)
+        return new RankTransform(ranks, m_round, true);
       else
-        return new RankInverse(ranked.Ranks);
+        return transform != null ? new RankTransform(transform.Ranks, m_round, true) : DummyNormalizer.Transform;
     }
 
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IComplexSample sample)
+    private IValueTransform PrepareTransform(IDividedSample sample)
     {
-      var ranked = sample.SelectMany(g => g).FirstOrDefault() as RankedSample;
+      Debug.Assert(sample != null, "sample cannot be null");
 
-      if (RecreateRequired(sample.SelectMany(g => g), ranked.Round))
-        throw new InvalidOperationException(Resources.NO_JOINT_RANKS);
+      if (RecreateRequired(sample, m_round))
+      {
+        bool has_reason;
+        var ranks = CalculateRanks(sample.SelectMany(g => g), out has_reason, m_round);
+
+        if (has_reason)
+          return new RankTransform(ranks, m_round, false);
+        else
+          return DummyNormalizer.Transform;
+      }
+      else if (sample.Count > 0)
+        return GetValueTransform(sample[0]);
       else
-        return new RankInverse(ranked.Ranks);
+        return DummyNormalizer.Transform;
     }
 
-    #endregion
+    private IValueTransform PrepareTransform(IComplexSample sample)
+    {
+      Debug.Assert(sample != null, "sample cannot be null");
 
-    #region Implementation ------------------------------------------------------------------------
+      if (RecreateRequired(sample.SelectMany(g => g), m_round))
+      {
+        bool has_reason;
+        var ranks = CalculateRanks(sample.SelectMany(g => g).SelectMany(g => g), out has_reason, m_round);
+
+        if (has_reason)
+          return new RankTransform(ranks, m_round, false);
+        else
+          return DummyNormalizer.Transform;
+      }
+      else if (sample.Count > 0 && sample[0].Count > 0)
+        return GetValueTransform(sample[0][0]);
+      else
+        return DummyNormalizer.Transform;
+    }
+
+    private static bool RecreateRequired(IEnumerable<IPlainSample> samples, int round)
+    {
+      Dictionary<double, float> ranks = null;
+      bool first = true;
+
+      foreach (var sample in samples)
+      {
+        var ranked = GetValueTransform(sample);
+
+        if (ranked == null)
+          return true;
+
+        if (ranked.Round != round)
+          return true;
+
+        if (ranked.Internal)
+          return false;
+
+        if (first)
+        {
+          first = false;
+          ranks = ranked.Ranks;
+        }
+        else if (!ReferenceEquals(ranked.Ranks, ranks))
+          return true;
+      }
+
+      return false;
+    }
 
     private static Dictionary<double, float> CalculateRanks(IEnumerable<double> data, out bool hasReason, int round)
     {
@@ -241,104 +221,76 @@ namespace Schicksal.Basic
       return ranks;
     }
 
-    private static bool RecreateRequired(IEnumerable<IPlainSample> samples, int round)
+    private class RankTransform : IValueTransform
     {
-      Dictionary<double, float> ranks = null;
-      bool first = true;
+      private readonly Dictionary<double, float> m_ranks;
+      private readonly int m_round;
+      private RankInverse m_inverse;
+      private bool m_internal;
 
-      foreach (var sample in samples)
+      public RankTransform(Dictionary<double, float> ranks, int round, bool isInternal)
       {
-        var ranked = sample as RankedSample;
+        m_ranks = ranks;
+        m_round = round;
+        m_internal = isInternal;
+      }
 
-        if (ranked == null)
-          return true;
+      public Dictionary<double, float> Ranks
+      {
+        get { return m_ranks; }
+      }
 
-        if (ranked.Round != round)
-          return true;
+      public int Round
+      {
+        get { return m_round; }
+      }
 
-        if (first)
+      public bool Internal
+      {
+        get { return m_internal; }
+      }
+
+      public double Normalize(double value)
+      {
+        return m_ranks[value];
+      }
+
+      public double Denormalize(double value)
+      {
+        if (m_inverse == null)
         {
-          first = false;
-          ranks = ranked.Ranks;
+          lock (m_ranks)
+          {
+            if (m_inverse == null)
+              m_inverse = new RankInverse(m_ranks);
+          }
         }
-        else if (!object.ReferenceEquals(ranked.Ranks, ranks))
-          return true;
-      }
 
-      return false;
-    }
-
-    private sealed class RankedSample : IPlainSample
-    {
-      public readonly Dictionary<double, float> Ranks;
-      public readonly int Round;
-      public readonly IPlainSample Source;
-      public readonly bool Internal;
-
-      public RankedSample(IPlainSample source, int round, Dictionary<double, float> ranks)
-      {
-        this.Source = source;
-        this.Round = round;
-        this.Ranks = ranks;
-      }
-
-      public RankedSample(IPlainSample source, int round)
-        : this(source, round, CalculateRanks(source, out _, round))
-      {
-        this.Internal = true;
-      }
-
-      public double this[int index]
-      {
-        get { return this.Ranks[this.Source[index]]; }
-      }
-
-      public int Count
-      {
-        get { return this.Source.Count; }
-      }
-
-      public IEnumerator<double> GetEnumerator()
-      {
-        return this.Source.Select(a => (double)this.Ranks[a]).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-        return this.GetEnumerator();
+        return m_inverse.Denormalize(value);
       }
 
       public override string ToString()
       {
-        return string.Format("Ranked {0}", this.Source);
+        return string.Format("Ranking, round: {0}, ranks code: {1}", m_round, m_ranks.GetHashCode());
       }
 
       public override bool Equals(object obj)
       {
-        var other = obj as RankedSample;
+        var other = obj as RankTransform;
 
         if (other == null)
           return false;
-
-        if (!this.Source.Equals(other.Source))
-          return false;
-
-        if (this.Round != other.Round)
-          return false;
-
-        if (!ReferenceEquals(this.Ranks, other.Ranks))
-          return false;
-
-        return true;
+        
+        return m_ranks.Equals(other.m_ranks) && m_round == other.m_round && m_internal == other.m_internal;
       }
 
       public override int GetHashCode()
       {
-        return this.Source.GetHashCode() ^ this.Round ^ this.Ranks.GetHashCode();
+        return m_ranks.GetHashCode() ^ m_round ^ m_internal.GetHashCode();
       }
     }
 
-    private sealed class RankInverse : IDenormalizer
+    private sealed class RankInverse
     {
       private readonly float[] m_ranks;
       private readonly double[] m_values;
@@ -404,13 +356,6 @@ namespace Schicksal.Basic
 
         return (value - m_ranks[l]) / (m_ranks[l + 1] - m_ranks[l]) * (m_values[l + 1] - m_values[l]) + m_values[l];
       }
-
-      public override string ToString()
-      {
-        return "Denormalizer(rank => value)";
-      }
     }
   }
-
-  #endregion
 }

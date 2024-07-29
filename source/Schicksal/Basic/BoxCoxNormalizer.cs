@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Schicksal.Properties;
 
 namespace Schicksal.Basic
 {
   /// <summary>
   /// Преобразователь данных для нормирования методом Бокса-Кокса
   /// </summary>
-  public sealed class BoxCoxNormalizer : INormalizer, ISamplePropertyExtractor<IDenormalizer>
+  public sealed class BoxCoxNormalizer : INormalizer
   {
     private readonly double m_min;
     private readonly double m_max;
     private readonly double m_eps;
+    private readonly string m_method = "MaxLikehood";
 
     /// <summary>
     /// Инициализация преобразователя данных для нормирования методом Бокса-Кокса
@@ -57,113 +56,58 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
-    /// Расчёт изначального значения по преобразованному
+    /// Настройка преобразователя для нормирования данных
     /// </summary>
-    /// <param name="sample">Группа нормированных значений</param>
-    /// <returns>Обратный преобразователь нормированных данных</returns>
-    public IDenormalizer GetDenormalizer(ISample sample)
+    /// <param name="sample">Выборка нормированных данных</param>
+    /// <returns>Преобразователь нормированных значений в ненормированные</returns>
+    public IValueTransform Prepare(ISample sample)
     {
-      Debug.Assert(sample != null, "sample cannot be null");
+      if (sample == null)
+        throw new ArgumentNullException("sample");
 
-      return this.ExtractProperty(sample) ?? DummyNormalizer.Instance.GetDenormalizer(sample);
+      if (sample is IPlainSample)
+        return this.PrepareTransform(sample as IPlainSample);
+
+      if (sample is IDividedSample)
+        return this.PrepareTransform(sample as IDividedSample);
+
+      if (sample is IComplexSample)
+        return this.PrepareTransform(sample as IComplexSample);
+
+      return DummyNormalizer.Transform;
     }
 
     /// <summary>
-    /// Преобразование группы значений в группу рангов
+    /// Текстовая информация об объекте
     /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа</returns>
-    public IPlainSample Normalize(IPlainSample sample)
+    public override string ToString()
     {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      var bcg = new BoxCoxSample(sample, CalculateDelta(sample));
-      bcg.Lambda = TwoStageOptimization(m_min, m_max, m_eps, bcg.GetLikehood);
-
-      return bcg;
+      return "Normalizer(value => BoxCox(value, λ, δ))";
     }
 
     /// <summary>
-    /// Преобразование группы значений второго порядка в группу рангов
+    /// Сравнение двух нормализаторов на равенство
     /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа</returns>
-    public IDividedSample Normalize(IDividedSample sample)
+    /// <param name="obj">Второй объект</param>
+    /// <returns>True, если второй объект такой же нормализатор с теми же настройками. Иначе, False</returns>
+    public override bool Equals(object obj)
     {
-      Debug.Assert(sample != null, "sample cannot be null");
+      var other = obj as BoxCoxNormalizer;
 
-      if (RecreateRequired(sample))
-      {
-        var samples = new BoxCoxSample[sample.Count];
+      if (other == null)
+        return false;
 
-        double delta = CalculateDelta(sample.SelectMany(g => g));
-
-        for (int i = 0; i < samples.Length; i++)
-          samples[i] = new BoxCoxSample(sample[i], delta);
-
-        var lambda = TwoStageOptimization(m_min, m_max, m_eps, l =>
-        {
-          return CalculateMultipleLikehood(l, samples);
-        });
-
-        foreach (var b in samples)
-          b.Lambda = lambda;
-
-        return new ArrayDividedSample(samples);
-      }
-
-      return sample;
+      return m_min == other.m_min && m_max == other.m_max
+        && m_eps == other.m_eps && m_method.Equals(other.m_method);
     }
 
     /// <summary>
-    /// Преобразование группы значений третьего порядка в группу рангов
+    /// Получение хеш-кода нормализатора
     /// </summary>
-    /// <param name="sample">Исходная группа</param>
-    /// <returns>Преобразованная группа третьего порядка</returns>
-    public IComplexSample Normalize(IComplexSample sample)
+    /// <returns>Побитное исключающее "или" от хеш-кодов настроек</returns>
+    public override int GetHashCode()
     {
-      Debug.Assert(sample != null, "sample cannot be null");
-
-      if (RecreateRequired(sample.SelectMany(g => g)))
-      {
-        var samples = new IDividedSample[sample.Count];
-        double delta = CalculateDelta(sample.SelectMany(g => g).SelectMany(g => g));
-
-        for (int i = 0; i < samples.Length; i++)
-        {
-          var array = new BoxCoxSample[sample[i].Count];
-
-          for (int j = 0; j < sample[i].Count; j++)
-            array[j] = new BoxCoxSample(sample[i][j], delta);
-
-          samples[i] = new ArrayDividedSample(array);
-        }
-
-        var lambda = TwoStageOptimization(m_min, m_max, m_eps, l =>
-        {
-          return CalculateMultipleLikehood(l, samples.SelectMany(g => g).Cast<BoxCoxSample>());
-        });
-
-        for (int i = 0; i < samples.Length; i++)
-        {
-          for (int j = 0; j < samples[i].Count; j++)
-            ((BoxCoxSample)samples[i][j]).Lambda = lambda;
-        }
-
-        return new ArrayComplexSample(samples);
-      }
-
-      return sample;
-    }
-
-    /// <summary>
-    /// Вычисление коэффициента для преобразования Бокса-Кокса
-    /// </summary>
-    /// <param name="sample">Числовая последовательность</param>
-    /// <returns>Коэффициент для преобразования</returns>
-    public double CalculateLambda(IPlainSample sample)
-    {
-      return this.CalculateLambda(sample, CalculateDelta(sample));
+      return m_min.GetHashCode() ^ m_max.GetHashCode() ^ m_eps.GetHashCode() ^ m_method.GetHashCode();
     }
 
     /// <summary>
@@ -177,17 +121,45 @@ namespace Schicksal.Basic
       Debug.Assert(sample != null, "sample cannot be null");
       Debug.Assert(delta >= 0, "delta must be positive");
 
-      var bcg = new BoxCoxSample(sample, delta);
+      var bcg = new LikehoodCalculator(sample, delta);
 
       return TwoStageOptimization(m_min, m_max, m_eps, bcg.GetLikehood);
     }
 
     /// <summary>
-    /// Текстовая информация об объекте
+    /// Вычисление коэффициента для преобразования Бокса-Кокса
     /// </summary>
-    public override string ToString()
+    /// <param name="samples">Набор числовых последовательностей</param>
+    /// <param name="delta">Коэффициент для смещения отрицательных значений</param>
+    /// <returns>Коэффициент для преобразования Бокса-Кокса</returns>
+    public double CalculateLambda(IEnumerable<IPlainSample> samples, double delta)
     {
-      return "Normalizer(value => BoxCox(value, λ, δ))";
+      Debug.Assert(samples != null, "samples cannot be null");
+      Debug.Assert(delta >= 0, "delta must be positive");
+
+      var bcg = samples.Select(s => new LikehoodCalculator(s, delta));
+
+      return TwoStageOptimization(m_min, m_max, m_eps, l => CalculateMultipleLikehood(l, bcg));
+    }
+
+    private static double CalculateMultipleLikehood(double l, IEnumerable<LikehoodCalculator> calculators)
+    {
+      double likehood = 0;
+
+      foreach (var b in calculators)
+        likehood += b.GetLikehood(l);
+
+      return likehood;
+    }
+
+    /// <summary>
+    /// Вычисление коэффициента для преобразования Бокса-Кокса
+    /// </summary>
+    /// <param name="sample">Числовая последовательность</param>
+    /// <returns>Коэффициент для преобразования</returns>
+    public double CalculateLambda(IPlainSample sample)
+    {
+      return this.CalculateLambda(sample, CalculateDelta(sample));
     }
 
     /// <summary>
@@ -250,45 +222,56 @@ namespace Schicksal.Basic
       }
     }
 
-    #region ISamplePropertyExtractor<IDenormalizer> members----------------------------------------
-
-    bool ISamplePropertyExtractor<IDenormalizer>.HasProperty(IPlainSample sample)
-    {
-      return sample is BoxCoxSample;
-    }
-
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IPlainSample sample)
-    {
-      var box_cox = sample as BoxCoxSample;
-
-      return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-    }
-
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IDividedSample sample)
-    {
-      var box_cox = sample.FirstOrDefault() as BoxCoxSample;
-
-      if (RecreateRequired(sample))
-        throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
-      else
-        return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-    }
-
-    IDenormalizer ISamplePropertyExtractor<IDenormalizer>.Extract(IComplexSample sample)
-    {
-      var box_cox = sample.SelectMany(g => g).FirstOrDefault() as BoxCoxSample;
-
-      if (RecreateRequired(sample.SelectMany(g => g)))
-        throw new InvalidOperationException(Resources.NO_JOINT_BOX_COX);
-      else
-        return new BoxCoxInverse(box_cox.Lambda, box_cox.Delta);
-    }
-
-    #endregion
-
     #region Implementation ------------------------------------------------------------------------
 
-    private static bool RecreateRequired(IEnumerable<IPlainSample> samples)
+    private IValueTransform PrepareTransform(IPlainSample sample)
+    {
+      var transform = GetValueTransform(sample);
+
+      if (transform != null && transform.Method.Equals(m_method))
+        return transform;
+
+      double delta = CalculateDelta(sample);
+      double lambda = this.CalculateLambda(sample, delta);
+
+      return new BoxCoxValueTransform(lambda, delta, m_method);
+    }
+
+    private IValueTransform PrepareTransform(IDividedSample sample)
+    {
+      Debug.Assert(sample != null, "sample cannot be null");
+
+      if (RecreateRequired(sample, m_method))
+      {
+        double delta = CalculateDelta(sample.SelectMany(g => g));
+        double lambda = this.CalculateLambda(sample, delta);
+
+        return new BoxCoxValueTransform(lambda, delta, m_method);
+      }
+      else if (sample.Count > 0)
+        return GetValueTransform(sample[0]);
+      else
+        return DummyNormalizer.Transform;
+    }
+
+    private IValueTransform PrepareTransform(IComplexSample sample)
+    {
+      Debug.Assert(sample != null, "sample cannot be null");
+
+      if (RecreateRequired(sample.SelectMany(g => g), m_method))
+      {
+        double delta = CalculateDelta(sample.SelectMany(g => g).SelectMany(g => g));
+        double lambda = this.CalculateLambda(sample.SelectMany(g => g), delta);
+
+        return new BoxCoxValueTransform(lambda, delta, m_method);
+      }
+      else if (sample.Count > 0 && sample[0].Count > 0)
+        return GetValueTransform(sample[0][0]);
+      else
+        return DummyNormalizer.Transform;
+    }
+
+    private static bool RecreateRequired(IEnumerable<IPlainSample> samples, string method)
     {
       double delta = 0;
       double lambda = 1;
@@ -296,9 +279,12 @@ namespace Schicksal.Basic
 
       foreach (var sample in samples)
       {
-        var bcg = sample as BoxCoxSample;
+        var bcg = GetValueTransform(sample);
 
         if (bcg == null)
+          return true;
+
+        if (!method.Equals(bcg.Method))
           return true;
 
         if (first)
@@ -314,14 +300,14 @@ namespace Schicksal.Basic
       return false;
     }
 
-    private static double CalculateMultipleLikehood(double l, IEnumerable<BoxCoxSample> samples)
+    private static BoxCoxValueTransform GetValueTransform(IPlainSample sample)
     {
-      double likehood = 0;
+      var ns = sample as NormalizedSample;
 
-      foreach (var b in samples)
-        likehood += b.GetLikehood(l);
+      if (ns != null)
+        return ns.ValueTransform as BoxCoxValueTransform;
 
-      return likehood;
+      return null;
     }
 
     private static double TwoStageOptimization(double left, double right, double eps, Func<double, double> criteria)
@@ -407,34 +393,17 @@ namespace Schicksal.Basic
       Right
     }
 
-    private sealed class BoxCoxSample : IPlainSample
+    private class LikehoodCalculator
     {
       public readonly IPlainSample Source;
       public readonly double Delta;
-      public double Lambda;
       private readonly double m_log_sum;
-      private readonly Func<double, double> m_transform;
 
-      public BoxCoxSample(IPlainSample sample, double delta)
+      public LikehoodCalculator(IPlainSample source, double delta)
       {
-        this.Source = sample;
-        this.Delta = delta;
-
+        Source = source;
+        Delta = delta;
         m_log_sum = this.Source.Sum(this.LogWithDelta);
-        m_transform = a => BoxCoxTransform(a, this.Lambda, this.Delta);
-      }
-
-      public double this[int index]
-      {
-        get
-        {
-          return BoxCoxTransform(this.Source[index], this.Lambda, this.Delta);
-        }
-      }
-
-      public int Count
-      {
-        get { return this.Source.Count; }
       }
 
       public double GetLikehood(double lambda)
@@ -454,45 +423,6 @@ namespace Schicksal.Basic
         return likehood;
       }
 
-      public IEnumerator<double> GetEnumerator()
-      {
-        return this.Source.Select(m_transform).GetEnumerator();
-      }
-
-      IEnumerator IEnumerable.GetEnumerator()
-      {
-        return this.GetEnumerator();
-      }
-
-      public override string ToString()
-      {
-        return string.Format("Box-Cox {0}", this.Source);
-      }
-
-      public override bool Equals(object obj)
-      {
-        var other = obj as BoxCoxSample;
-
-        if (other == null)
-          return false;
-
-        if (!this.Source.Equals(other.Source))
-          return false;
-
-        if (this.Lambda != other.Lambda)
-          return false;
-
-        if (this.Delta != other.Delta)
-          return false;
-
-        return true;
-      }
-
-      public override int GetHashCode()
-      {
-        return this.Source.GetHashCode() ^ this.Lambda.GetHashCode() ^ this.Delta.GetHashCode();
-      }
-
       private double LogWithDelta(double value)
       {
         double a = value + this.Delta;
@@ -504,15 +434,37 @@ namespace Schicksal.Basic
       }
     }
 
-    private sealed class BoxCoxInverse : IDenormalizer
+    private sealed class BoxCoxValueTransform : IValueTransform
     {
       private readonly double m_lambda;
       private readonly double m_delta;
+      private readonly string m_method;
 
-      public BoxCoxInverse(double lambda, double delta)
+      public BoxCoxValueTransform(double lambda, double delta, string method)
       {
         m_lambda = lambda;
         m_delta = delta;
+        m_method = method;
+      }
+
+      public double Lambda
+      {
+        get { return m_lambda; }
+      }
+
+      public double Delta
+      {
+        get { return m_delta; }
+      }
+
+      public string Method
+      {
+        get { return m_method; }
+      }
+
+      public double Normalize(double value)
+      {
+        return BoxCoxTransform(value, m_lambda, m_delta);
       }
 
       public double Denormalize(double value)
@@ -525,7 +477,22 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return "Denormalizer(value => InverseBoxCox(value, λ, δ))";
+        return string.Format("Box-Cox(λ={0}, δ={1}, method={2})", m_lambda, m_delta, m_method);
+      }
+
+      public override bool Equals(object obj)
+      {
+        var other = obj as BoxCoxValueTransform;
+
+        if (other == null)
+          return false;
+
+        return m_lambda == other.m_lambda && m_delta == other.m_delta && m_method.Equals(other.m_method);
+      }
+
+      public override int GetHashCode()
+      {
+        return m_delta.GetHashCode() ^ m_lambda.GetHashCode() ^ m_method.GetHashCode();
       }
     }
 
