@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Anova\AnovaCalculator.cs" />
+    <Compile Include="Anova\IFisherResults.cs" />
     <Compile Include="Anova\AnovaHtmlSaver.cs" />
     <Compile Include="Anova\AnovaParameters.cs" />
     <Compile Include="Anova\DifferenceInfo.cs" />

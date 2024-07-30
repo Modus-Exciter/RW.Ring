@@ -8,10 +8,19 @@ using Schicksal.Basic;
 
 namespace Schicksal.Anova
 {
+  public interface IFisherResults
+  {
+    IResudualsCalculator ResudualsCalculator { get; }
+
+    IValueTransform ValueTransform { get; }
+
+    FisherTestResult[] Result { get; }
+  }
+
   /// <summary>
   /// Задача дисперсионного анализа таблицы
   /// </summary>
-  public class AnovaCalculator : RunBase, IProgressIndicator
+  public class AnovaCalculator : RunBase, IProgressIndicator, IFisherResults
   {
     private readonly AnovaParameters m_parameters;
     private IResudualsCalculator m_residuals_calculator;
