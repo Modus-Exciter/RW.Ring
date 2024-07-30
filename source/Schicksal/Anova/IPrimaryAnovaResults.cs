@@ -199,10 +199,9 @@ namespace Schicksal.Anova
       {
         ret[i] = new FisherTestResult
         {
-          Conjugate = m_parameters.Conjugation,
           Factor = list[i].Factor,
-          IgnoredFactor = (m_parameters.Predictors - list[i].Factor).ToString(),
           F = list[i].Between.MeanSquare / list[i].Within.MeanSquare,
+          SSw = list[i].Within.SumOfSquares,
           Kdf = (uint)list[i].Between.DegreesOfFreedom,
           Ndf = (uint)list[i].Within.DegreesOfFreedom,
           FCritical = FisherTest.GetCriticalValue
@@ -255,6 +254,7 @@ namespace Schicksal.Anova
             continue;
 
           var res = list[dic[p]];
+
           result.Between.DegreesOfFreedom -= res.Between.DegreesOfFreedom;
           result.Between.SumOfSquares -= res.Between.SumOfSquares;
 

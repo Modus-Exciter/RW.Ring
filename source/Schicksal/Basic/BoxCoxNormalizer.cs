@@ -319,7 +319,7 @@ namespace Schicksal.Basic
       {
         double value = criteria(x);
 
-        if (best_criteria < value)
+        if (!double.IsInfinity(value) && !double.IsNaN(value) && best_criteria < value)
         {
           best_criteria = value;
           best_argument = x;
@@ -419,7 +419,7 @@ namespace Schicksal.Basic
         likehood *= this.Source.Count / -2.0;
         likehood += m_log_sum * (lambda - 1);
 
-        return likehood;
+        return likehood; 
       }
 
       private double LogWithDelta(double value)
@@ -476,7 +476,7 @@ namespace Schicksal.Basic
 
       public override string ToString()
       {
-        return string.Format("Box-Cox(λ={0}), δ={1}, method={2}", m_lambda, m_delta, m_method);
+        return string.Format("Box-Cox(λ={0}, δ={1}), method={2}", m_lambda, m_delta, m_method);
       }
 
       public override bool Equals(object obj)

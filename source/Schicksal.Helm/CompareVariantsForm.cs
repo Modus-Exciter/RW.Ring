@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -24,11 +25,11 @@ namespace Schicksal.Helm
     private bool m_only_significant;
     private string m_selection = string.Empty;
 
-    public CompareVariantsForm(IPrimaryAnovaResults primaryResults, FactorInfo predictor)
+    public CompareVariantsForm(IPrimaryAnovaResults primaryResults, FisherTestResult testResult)
     {
       this.InitializeComponent();
 
-      this.Text = string.Format("{0}({1}) [{2}]", primaryResults.Parameters.Response, predictor.ToString().Replace("+", ", "), primaryResults.Parameters.Filter);
+      this.Text = string.Format("{0}({1}) [{2}]", primaryResults.Parameters.Response, testResult.Factor.ToString().Replace("+", ", "), primaryResults.Parameters.Filter);
 
       Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
 
@@ -38,8 +39,14 @@ namespace Schicksal.Helm
       if (resolution.width != 0) 
         this.Width = resolution.width;
       
-      m_comparator = new VariantsComparator(primaryResults, predictor/*table, factor, ignoredFactors, result, filter, conjugate*/);
-      m_probability = (float)primaryResults.Parameters.Probability;
+      m_comparator = new VariantsComparator(primaryResults, testResult.Factor, new SampleVariance
+      {
+        DegreesOfFreedom =
+        (int)testResult.Ndf,
+        SumOfSquares = testResult.SSw
+      });
+
+      m_probability = primaryResults.Parameters.Probability;
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
       m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;
     }
@@ -58,13 +65,15 @@ namespace Schicksal.Helm
       AppManager.Configurator.GetSection<Resolution>().height = this.Size.Height;
       AppManager.Configurator.GetSection<Resolution>().width = this.Size.Width;
       AppManager.Configurator.SaveSettings();
+
+      base.OnClosed(e);
     }
 
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
 
-      var mult = new MultiVariantsComparator(/*m_comparator, m_probability*/);
+      var mult = new MultiVariantsComparator(m_comparator);
 
       if (AppManager.OperationLauncher.Run(mult) == System.Threading.Tasks.TaskStatus.RanToCompletion)
       {
@@ -73,11 +82,9 @@ namespace Schicksal.Helm
 
         m_grid.Columns["Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
         m_grid.Columns["Count"].HeaderText = Resources.COUNT;
-        m_grid.Columns["Factor"].Visible = false;
         m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
         m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
         m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
-        m_grid.Columns["Ignorable"].Visible = false;
 
         m_summary_page.Text = Resources.STATISTICS;
         m_details_page.Text = Resources.COMPARISON;
@@ -98,7 +105,7 @@ namespace Schicksal.Helm
           series_m.Points.AddXY(row["Factor"], mean);
         }
 
-        //this.AutoResizeColumnsByExample(mult.CreateExample());
+        this.AutoResizeColumnsByExample(mult.CreateExample());
         m_binding_source.DataSource = new DifferenceInfoList(m_all_data = mult.Results);
       }
     }

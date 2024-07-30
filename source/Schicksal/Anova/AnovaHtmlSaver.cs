@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -11,19 +10,14 @@ namespace Schicksal.Anova
 {
   public class AnovaHtmlSaver : RunBase, IServiceProvider
   {
-    /*private readonly string m_file;
-    private readonly DataTable m_table;
-    private readonly FisherTestResult[] m_results;
-    private readonly double m_probability;
+    private readonly string m_file;
     private readonly string m_header;
+    private readonly IPrimaryAnovaResults m_results;
 
-    public AnovaHtmlSaver(string file, DataTable table, FisherTestResult[] results, double probability, string header)
+    public AnovaHtmlSaver(string file, IPrimaryAnovaResults results, string header)
     {
       if (string.IsNullOrEmpty(file))
         throw new ArgumentNullException("file");
-
-      if (table == null)
-        throw new ArgumentNullException("table");
 
       if (results == null)
         throw new ArgumentNullException("results");
@@ -32,21 +26,13 @@ namespace Schicksal.Anova
         header = Resources.REPORT;
 
       m_file = file;
-      m_table = table;
       m_results = results;
-      m_probability = probability;
       m_header = header;
     }
-
-    public string[] Factors { get; set; }
-
-    public string Result { get; set; }
-
-    public string Filter { get; set; }
-    */
+    
     public override void Run()
     {
-      /*this.ReportProgress(Resources.BASIC_METRICS);
+      this.ReportProgress(Resources.BASIC_METRICS);
 
       using (var writer = new HtmlWriter(m_file, Encoding.UTF8, Resources.REPORT))
       {
@@ -55,7 +41,7 @@ namespace Schicksal.Anova
         this.WriteCommonTestDescription(writer);
         writer.WriteHeader(Resources.SIGNIFICAT_FACTORS, 1);
 
-        var significant = m_results.Where(r => r.P <= m_probability).ToList();
+        var significant = m_results.FisherTestResults.Where(r => r.P <= m_results.Parameters.Probability).ToList();
         var descriptions = new Dictionary<string, string>
         {
           { "Count", SchicksalResources.COUNT },
@@ -80,7 +66,7 @@ namespace Schicksal.Anova
 
         using (writer.CreateParagraph())
           writer.WriteSpace();
-      }*/
+      }
     }
 
     public override string ToString()
@@ -95,20 +81,26 @@ namespace Schicksal.Anova
 
       return base.GetService(serviceType);
     }
-    /*
+    
     private void WriteFactorResults(HtmlWriter writer, FisherTestResult factor, Dictionary<string, string> descriptions, int number)
     {
-      writer.WriteHeader(factor.Factor, 2);
+      writer.WriteHeader(factor.Factor.ToString(), 2);
 
       using (writer.CreateParagraph())
         writer.WriteText(string.Format("<em>{0} {1}.</em> {2}", Resources.TABLE, number + 2, Resources.BASIC_METRICS));
 
-      var processor = new VariantsComparator(m_table, factor.Factor, factor.IgnoredFactor, this.Result, this.Filter, factor.Conjugate);
-      var comparator = new MultiVariantsComparator(processor, m_probability);
+      var processor = new VariantsComparator(m_results, factor.Factor, new SampleVariance
+      {
+        DegreesOfFreedom = (int)factor.Ndf,
+        SumOfSquares = factor.SSw
+      });
+
+      var comparator = new MultiVariantsComparator(processor);
+
       comparator.Run();
       comparator.Source.Columns.Remove("Factor");
 
-      writer.WriteTable(comparator.Source.DefaultView, descriptions, new HashSet<string> { "Ignorable" });
+      writer.WriteTable(comparator.Source.DefaultView, descriptions, new HashSet<string> { "Ignorable", "MeanNormalized" });
 
       writer.WriteHeader(string.Format("{0}:", Resources.SUMMARY), 3);
 
@@ -116,7 +108,7 @@ namespace Schicksal.Anova
       {
         writer.WriteText(Resources.SIGNIFICANT_DIFFERENCES);
 
-        foreach (var di in comparator.Results.Where(r => r.Probability <= m_probability))
+        foreach (var di in comparator.Results.Where(r => r.Probability <= m_results.Parameters.Probability))
           writer.WriteText(string.Format("«{0}» {1} «{2}»,", di.Factor1, Resources.AND, di.Factor2));//«»
 
         writer.WriteText(Resources.OTHER_UNSIGNIFICAT);
@@ -129,7 +121,7 @@ namespace Schicksal.Anova
         for (int i = 0; i < comparator.Results.Length; i++)
         {
           if (max_dif.ActualDifference < comparator.Results[i].ActualDifference
-            && max_dif.Probability < m_probability)
+            && max_dif.Probability < m_results.Parameters.Probability)
             max_dif = comparator.Results[i];
 
           if (sig_dif.Probability > comparator.Results[i].Probability)
@@ -151,6 +143,7 @@ namespace Schicksal.Anova
         writer.WriteText(string.Format("{0} «{1}» {2} «{3}»; {4} {5}.",
           Resources.MAX_DIFFERENCE, max_dif.Factor1, Resources.AND, max_dif.Factor2,
           Resources.DIFFERENCE_VALUE, HtmlWriter.FormatValue(max_dif.ActualDifference)));
+        
         writer.WriteText(string.Format("{0} «{1}» {2} «{3}»; {4} {5}.",
           Resources.MOST_SIGNIFICAT_DIFFERENCE, sig_dif.Factor1, Resources.AND, sig_dif.Factor2,
           Resources.DIFFERENCE_VALUE, HtmlWriter.FormatValue(sig_dif.ActualDifference)));
@@ -164,61 +157,62 @@ namespace Schicksal.Anova
     {
       writer.WriteHeader(m_header, 1);
 
-      if (this.Factors != null && this.Factors.Length > 0)
+      if (m_results.Parameters.Predictors.Count > 0)
       {
         using (writer.CreateParagraph())
           writer.WriteText(string.Format("{0}:", Resources.VARIED_FACTORS));
 
-        writer.WriteCollection(this.Factors);
+        writer.WriteCollection(m_results.Parameters.Predictors.Select(p => p.ToString()).ToList());
       }
 
-      if (!string.IsNullOrEmpty(this.Result))
+      if (!string.IsNullOrEmpty(m_results.Parameters.Response))
       {
         using (writer.CreateParagraph())
-          writer.WriteText(string.Format("{0}: {1}", Resources.AFFECTED_RESULT, this.Result));
+          writer.WriteText(string.Format("{0}: {1}", Resources.AFFECTED_RESULT, m_results.Parameters.Response));
       }
 
       using (writer.CreateParagraph())
         writer.WriteText(string.Format("<em>{0} {1}.</em> {2}", Resources.TABLE, 1, Resources.F_CRITERIA));
 
-      writer.WriteTable(m_results, new Dictionary<string, string>
+      writer.WriteTable(m_results.FisherTestResults, new Dictionary<string, string>
         {
           { "Factor", Resources.FACTOR },
           { "Kdf", "K - 1" },
           { "Ndf", "N - K" },
         },
-        new HashSet<string> { "IgnoredFactor" });
+        new HashSet<string> { "SSw" });
     }
 
     private void WriteCommonTestDescription(HtmlWriter writer)
     {
       using (writer.CreateParagraph())
       {
-        if (m_results.Any(r => r.P > m_probability))
+        if (m_results.FisherTestResults.Any(r => r.P > m_results.Parameters.Probability))
         {
-          writer.WriteText(string.Format(Resources.UNSIGNIFICAT, m_probability * 100) + ':');
+          writer.WriteText(string.Format(Resources.UNSIGNIFICAT, m_results.Parameters.Probability * 100) + ':');
           writer.WriteText(string.Join(", ",
-            m_results.Where(r => r.P > m_probability).Select(r => r.Factor)) + '.');
+            m_results.FisherTestResults.Where(r => r.P > m_results.Parameters.Probability).Select(r => r.Factor)) + '.');
         }
-        if (m_results.Any(r => r.P <= m_probability))
+
+        if (m_results.FisherTestResults.Any(r => r.P <= m_results.Parameters.Probability))
         {
           writer.WriteText(string.Format(Resources.SIGNIFICAT,
-            string.Join(", ", m_results.Where(r => r.P <= m_probability).Select(r => r.Factor)),
-            m_probability * 100) + '.');
+            string.Join(", ", m_results.FisherTestResults.Where(r => r.P <= m_results.Parameters.Probability).Select(r => r.Factor)),
+            m_results.Parameters.Probability * 100) + '.');
         }
 
-        if (m_results.Length > 0)
+        if (m_results.FisherTestResults.Length > 0)
         {
-          var min = m_results[0];
-          var max = m_results[0];
+          var min = m_results.FisherTestResults[0];
+          var max = m_results.FisherTestResults[0];
 
-          for (int i = 1; i < m_results.Length; i++)
+          for (int i = 1; i < m_results.FisherTestResults.Length; i++)
           {
-            if (min.P < m_results[i].P)
-              min = m_results[i];
+            if (min.P < m_results.FisherTestResults[i].P)
+              min = m_results.FisherTestResults[i];
 
-            if (max.P > m_results[i].P)
-              max = m_results[i];
+            if (max.P > m_results.FisherTestResults[i].P)
+              max = m_results.FisherTestResults[i];
           }
 
           writer.WriteText(string.Format(Resources.MAX_INFLUENCE,
@@ -228,6 +222,6 @@ namespace Schicksal.Anova
             min.Factor, HtmlWriter.FormatValue(min.P * 100)));
         }
       }
-    }*/
+    }
   }
 }

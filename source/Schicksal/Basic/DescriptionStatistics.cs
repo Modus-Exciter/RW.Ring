@@ -109,7 +109,7 @@ namespace Schicksal.Basic
       string filter,
       FactorInfo predictors,
       string response,
-      double probability) : base(table, filter, predictors, response, probability) 
+      float probability) : base(table, filter, predictors, response, probability) 
     {
       if (!IsNumeric(table.Columns[response].DataType))
         throw new ArgumentException("Result column must be numeric");

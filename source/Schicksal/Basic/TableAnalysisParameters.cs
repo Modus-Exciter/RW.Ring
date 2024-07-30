@@ -126,7 +126,7 @@ namespace Schicksal.Basic
   /// </summary>
   public class PredictedWithProbabilityResponseParameters : PredictedResponseParameters
   {
-    private readonly double m_probability;
+    private readonly float m_probability;
 
     /// <summary>
     /// Инициализация набора параметров для анализа данных в таблице
@@ -142,7 +142,7 @@ namespace Schicksal.Basic
       string filter,
       FactorInfo predictors,
       string response,
-      double probability
+      float probability
     ) : base(table, filter, predictors, response)
     {
       if (probability < 0 || probability > 1)
@@ -154,7 +154,7 @@ namespace Schicksal.Basic
     /// <summary>
     /// Уровень значимости для анализа
     /// </summary>
-    public double Probability
+    public float Probability
     {
       get { return m_probability; }
     }

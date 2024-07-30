@@ -16,7 +16,7 @@ namespace Schicksal.Basic
     private readonly T[] m_keys;
     private readonly Dictionary<T, int> m_indexes;
 
-    public ArrayDividedSample(IPlainSample[] data, T[] keys)
+    public ArrayDividedSample(IPlainSample[] data, Func<int, T> keys)
     {
       if (data == null)
         throw new ArgumentNullException("data");
@@ -24,21 +24,21 @@ namespace Schicksal.Basic
       if (keys == null)
         throw new ArgumentNullException("keys");
 
-      if (data.Length != keys.Length)
-        throw new ArgumentException("Data and keys count mismatch");
-
       m_indexes = new Dictionary<T, int>(data.Length);
+      m_keys = new T[data.Length];
 
       for (int i = 0; i < data.Length; i++)
       {
         if (data[i] == null)
           throw new ArgumentNullException(string.Format("data[{0}]", i));
 
-        m_indexes.Add(keys[i], i);
+        var key = keys(i);
+
+        m_indexes.Add(key, i);
+        m_keys[i] = key;
       }
 
       m_data = data;
-      m_keys = keys;
     }
 
     public ArrayDividedSample(double[][] data, T[] keys)

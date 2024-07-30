@@ -161,15 +161,6 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
-    /// Возвращает строковое представление набора значений колонок
-    /// </summary>
-    /// <returns>Текст запроса для осуществления выборки из таблицы</returns>
-    public override string ToString()
-    {
-      return m_query;
-    }
-
-    /// <summary>
     /// Хеш-функция для набора значений колонок
     /// </summary>
     /// <returns>Хеш функцию от колонки отклика, фильтра и всех значений колонок</returns>
@@ -182,6 +173,31 @@ namespace Schicksal.Basic
         ret ^= (kv.Key.GetHashCode() ^ OmitNulls(kv.Value).GetHashCode());
 
       return ret;
+    }
+
+    /// <summary>
+    /// Возвращает строковое представление набора значений колонок
+    /// </summary>
+    /// <returns>Текст запроса для осуществления выборки из таблицы</returns>
+    public override string ToString()
+    {
+      return m_query;
+    }
+
+    /// <summary>
+    /// Получение подмножества значений колонок по списку кололонок
+    /// </summary>
+    /// <param name="factor">Список значений колонок, которые надо включить в подмножество</param>
+    /// <returns>Подмножество значений указанных колонок</returns>
+    public GroupKey GetSubKey(FactorInfo factor)
+    {
+      var dic = new Dictionary<string, object>();
+
+      foreach (var p in factor)
+        dic[p] = m_data[p];
+
+      var new_key = new GroupKey(dic, m_base_filter, m_response);
+      return new_key;
     }
 
     /// <summary>
@@ -254,13 +270,8 @@ namespace Schicksal.Basic
 
       for (int i = 0; i < sample.Count; i++)
       {
-        var key = sample.GetKey(i);
-        var dic = new Dictionary<string, object>();
-
-        foreach (var p in factor)
-          dic[p] = key.m_data[p];
-
-        var new_key = new GroupKey(dic, key.BaseFilter, key.Response);
+        GroupKey key = sample.GetKey(i);
+        GroupKey new_key = key.GetSubKey(factor);
         List<double> list;
 
         if (tmp.TryGetValue(new_key, out list))

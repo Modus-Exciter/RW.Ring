@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Notung.Threading;
@@ -18,6 +19,12 @@ namespace Schicksal.Anova
     bool SingleWihinVariance { get; }
 
     SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress);
+
+    SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined);
+
+    double ErrorRatio(IDividedSample group, IPlainSample joined);
+
+    int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount);
   }
 
   /// <summary>
@@ -49,6 +56,25 @@ namespace Schicksal.Anova
     public IEnumerable<FactorInfo> GetSupportedFactors()
     {
       return m_parameters.Predictors.Split();
+    }
+
+    public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
+    {
+      return new SampleVariance
+      {
+        SumOfSquares = group.Sum(b => DescriptionStatistics.SquareDerivation(b)),
+        DegreesOfFreedom = joined.Count - group.Count
+      };
+    }
+
+    public double ErrorRatio(IDividedSample group, IPlainSample joined)
+    {
+      return (double)group.Count / joined.Count;
+    }
+
+    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
+    {
+      return observationsCount - groupCount;
     }
   }
 
@@ -97,6 +123,25 @@ namespace Schicksal.Anova
     {
       return m_parameters.Predictors.Split();
     }
+
+    public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
+    {
+      return new SampleVariance
+      {
+        SumOfSquares = group.Sum(b => DescriptionStatistics.SquareDerivation(b)),
+        DegreesOfFreedom = joined.Count - group.Count
+      };
+    }
+
+    public double ErrorRatio(IDividedSample group, IPlainSample joined)
+    {
+      return 1.0 / joined.Count;
+    }
+
+    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
+    {
+      return observationsCount - groupCount;
+    }
   }
 
   public sealed class UnrepeatedResudualsCalculator : IResudualsCalculator
@@ -128,6 +173,25 @@ namespace Schicksal.Anova
     public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
       m_parameters = parameters;
+    }
+
+    public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
+    {
+      return new SampleVariance
+      {
+        SumOfSquares = DescriptionStatistics.SquareDerivation(joined),
+        DegreesOfFreedom = joined.Count - 1
+      };
+    }
+
+    public double ErrorRatio(IDividedSample group, IPlainSample joined)
+    {
+      return 1.0 / joined.Count;
+    }
+
+    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
+    {
+      return observationsCount - 1;
     }
   }
 }

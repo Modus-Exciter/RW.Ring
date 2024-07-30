@@ -48,16 +48,6 @@ namespace Schicksal.Anova
     public FactorInfo Factor { get; internal set; }
 
     /// <summary>
-    /// Фактор, влияние которого игнорируется
-    /// </summary>
-    public string IgnoredFactor { get; internal set; }
-
-    /// <summary>
-    /// Фактор сопряжённых наблюдений
-    /// </summary>
-    public string Conjugate { get; internal set; }
-
-    /// <summary>
     /// Число степеней свободы для межгрупповой дисперсии
     /// </summary>
     public uint Kdf { get; internal set; }
@@ -71,6 +61,11 @@ namespace Schicksal.Anova
     /// Отношение межгрупповой дисперсии к внутригрупповой
     /// </summary>
     public double F { get; internal set; }
+
+    /// <summary>
+    /// Сумма квадратов отклонений внутри групп
+    /// </summary>
+    public double SSw { get; internal set; }
 
     /// <summary>
     /// Критическое значение критерия F для указанного уровня значимости

@@ -29,7 +29,7 @@ namespace Schicksal.Anova
       string filter,
       FactorInfo predictors,
       string response,
-      double probability,
+      float probability,
       INormalizer normalizer,
       string conjugation,
       bool individualError
