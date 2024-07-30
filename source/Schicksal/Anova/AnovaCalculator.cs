@@ -139,7 +139,7 @@ namespace Schicksal.Anova
         else
           m_residuals_calculator = new UnrepeatedResudualsCalculator();
 
-        return new ArrayDividedSample<GroupKey>(SampleRepack.Wrap(m_transform.Normalize(table)), table.GetKey);
+        return SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
       }
     }
 

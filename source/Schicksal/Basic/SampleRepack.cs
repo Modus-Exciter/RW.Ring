@@ -39,7 +39,7 @@ namespace Schicksal.Basic
         return sample;
 
       if (check_result.EqualPlainSamples)
-        return RepackRectangleMultiDataSample(sample);
+        return new TwoDimensionsMultiDataSample(PrepareArray(sample));
 
       var samples = new IPlainSample[sample.Count];
 
@@ -47,6 +47,33 @@ namespace Schicksal.Basic
         samples[i] = WrapIfNeeded(sample[i]);
 
       return new ArrayDividedSample(samples);
+    }
+
+    /// <summary>
+    /// Перепаковка выборки
+    /// </summary>
+    /// <typeparam name="T">Тип ключа подвыборки в выборке</typeparam>
+    /// <param name="sample">Исходная выборка второго порядка с ключами групп</param>
+    /// <returns>Выборка второго порядка на основе массивов с ключами групп</returns>
+    public static IDividedSample<T> Wrap<T>(IDividedSample<T> sample)
+    {
+      if (sample == null)
+        throw new ArgumentNullException("sample");
+
+      var check_result = Check(sample);
+
+      if (!check_result.Repack)
+        return sample;
+
+      if (check_result.EqualPlainSamples)
+        return new TwoDimensionsMultiDataSample<T>(PrepareArray(sample), sample.GetKey);
+
+      var samples = new IPlainSample[sample.Count];
+
+      for (int i = 0; i < samples.Length; i++)
+        samples[i] = WrapIfNeeded(sample[i]);
+
+      return new ArrayDividedSample<T>(new ArrayDividedSample(samples), sample.GetKey);
     }
 
     /// <summary>
@@ -73,7 +100,7 @@ namespace Schicksal.Basic
       {
         if (check_result.EqualPlainSamples)
         {
-          samples[i] = RepackRectangleMultiDataSample(sample[i]);
+          samples[i] = new TwoDimensionsMultiDataSample(PrepareArray(sample[i]));
         }
         else
         {
@@ -107,10 +134,8 @@ namespace Schicksal.Basic
 
     private static IPlainSample WrapIfNeeded(IPlainSample sample)
     {
-      var adg = sample as ArrayPlainSample;
-
-      if (adg != null)
-        return adg;
+      if (sample is ArrayPlainSample)
+        return sample as ArrayPlainSample;
 
       double[] array = new double[sample.Count];
 
@@ -120,7 +145,7 @@ namespace Schicksal.Basic
       return new ArrayPlainSample(array);
     }
 
-    private static IDividedSample RepackRectangleMultiDataSample(IDividedSample sample)
+    private static double[,] PrepareArray(IDividedSample sample)
     {
       int count = sample.Count > 0 ? sample[0].Count : 0;
 
@@ -132,7 +157,7 @@ namespace Schicksal.Basic
           array[i, j] = sample[i][j];
       }
 
-      return new TwoDimensionsMultiDataSample(array);
+      return array;
     }
 
     private static IComplexSample RepackRectangleSetMultiDataSample(IComplexSample sample)
@@ -217,7 +242,7 @@ namespace Schicksal.Basic
       return new DimensionCheckResult(repack, equal1, equal2);
     }
 
-    private sealed class TwoDimensionsMultiDataSample : IDividedSample, IEqualSubSamples
+    private class TwoDimensionsMultiDataSample : IDividedSample, IEqualSubSamples
     {
       private readonly TwoDimensionsDataSample[] m_array;
 
@@ -333,6 +358,41 @@ namespace Schicksal.Basic
       public override int GetHashCode()
       {
         return (m_index + 1) ^ this.Array.GetHashCode();
+      }
+    }
+
+    private sealed class TwoDimensionsMultiDataSample<T> : TwoDimensionsMultiDataSample, IDividedSample<T>
+    {
+      private readonly Dictionary<T, int> m_indexes;
+      private readonly T[] m_keys;
+
+      public TwoDimensionsMultiDataSample(double[,] array, Func<int, T> keys) : base(array)
+      {
+        m_indexes = new Dictionary<T, int>();
+        m_keys = new T[base.Count];
+
+        for (int i = 0; i < base.Count; i++)
+        {
+          var key = keys(i);
+
+          m_indexes.Add(key, i);
+          m_keys[i] = key;
+        }
+      }
+
+      public IPlainSample this[T key]
+      {
+        get { return base[m_indexes[key]]; }
+      }
+
+      public int GetIndex(T key)
+      {
+        return m_indexes[key];
+      }
+
+      public T GetKey(int index)
+      {
+        return m_keys[index];
       }
     }
 
