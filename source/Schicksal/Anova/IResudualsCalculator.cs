@@ -22,8 +22,6 @@ namespace Schicksal.Anova
 
     SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined);
 
-    double ErrorRatio(IDividedSample group, IPlainSample joined);
-
     int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount);
   }
 
@@ -67,11 +65,6 @@ namespace Schicksal.Anova
       };
     }
 
-    public double ErrorRatio(IDividedSample group, IPlainSample joined)
-    {
-      return (double)group.Count / joined.Count;
-    }
-
     public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
     {
       return observationsCount - groupCount;
@@ -85,6 +78,7 @@ namespace Schicksal.Anova
   {
     private SampleVariance m_within_variance;
     private AnovaParameters m_parameters;
+    private int m_repetitions_count;
 
     public bool SingleWihinVariance
     {
@@ -100,23 +94,24 @@ namespace Schicksal.Anova
     {
       Debug.Assert(parameters != null);
 
-      Debug.Assert(sample is IEqualSubSamples && sample.Count > 1 && sample[0].Count > 1);
+      if (!(sample is IEqualSubSamples && sample.Count > 1 && sample[0].Count > 1))
+        throw new ArgumentException("Sample must be IEqualSubSamples and full");
 
       m_within_variance = FisherTest.MSw(sample);
       m_parameters = parameters;
 
-      int repetition_count = sample[0].Count;
+      m_repetitions_count = sample[0].Count;
       double g_mean = sample.SelectMany(g => g).Average();
       double r_var = 0;
 
-      for (int i = 0; i < repetition_count; i++)
+      for (int i = 0; i < m_repetitions_count; i++)
       {
         var avg = sample.Select(s => s[i]).Average();
         r_var += (avg - g_mean) * (avg - g_mean);
       }
 
       m_within_variance.SumOfSquares -= r_var * sample.Count;
-      m_within_variance.DegreesOfFreedom = (sample.Count - 1) * (repetition_count - 1);
+      m_within_variance.DegreesOfFreedom = (sample.Count - 1) * (m_repetitions_count - 1);
     }
 
     public IEnumerable<FactorInfo> GetSupportedFactors()
@@ -133,14 +128,9 @@ namespace Schicksal.Anova
       };
     }
 
-    public double ErrorRatio(IDividedSample group, IPlainSample joined)
-    {
-      return 1.0 / joined.Count;
-    }
-
     public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
     {
-      return observationsCount - groupCount;
+      return observationsCount - groupCount - m_repetitions_count + 1;
     }
   }
 
@@ -182,11 +172,6 @@ namespace Schicksal.Anova
         SumOfSquares = DescriptionStatistics.SquareDerivation(joined),
         DegreesOfFreedom = joined.Count - 1
       };
-    }
-
-    public double ErrorRatio(IDividedSample group, IPlainSample joined)
-    {
-      return 1.0 / joined.Count;
     }
 
     public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)

@@ -50,22 +50,18 @@ namespace Schicksal.Anova
     {
       var res = new DataTable();
 
-      res.Columns.Add("Factor", typeof(string)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+Factor", typeof(string)).ColumnMapping = MappingType.Hidden;
 
       foreach (string p in m_predictor)
-      {
-        if (p != "Factor")
-          res.Columns.Add(p, m_primary_results.Parameters.Table.Columns[p].DataType);
-      }
+        res.Columns.Add(p, m_primary_results.Parameters.Table.Columns[p].DataType);
 
-      res.Columns.Add("Count", typeof(int));
-      res.Columns.Add("Mean", typeof(double));
-      res.Columns.Add("Std error", typeof(double));
-      res.Columns.Add("Interval", typeof(double));
-      res.Columns.Add("MeanNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
-      res.Columns.Add("ErrorNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
-      res.Columns.Add("ErrorRatio", typeof(double)).ColumnMapping = MappingType.Hidden;
-      res.Columns.Add("Ignorable", typeof(int)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+Count", typeof(int));
+      res.Columns.Add("+Mean", typeof(double));
+      res.Columns.Add("+Std error", typeof(double));
+      res.Columns.Add("+Interval", typeof(double));
+      res.Columns.Add("+MeanNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+ErrorNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+Ignorable", typeof(int)).ColumnMapping = MappingType.Hidden;
 
       var groupset = new DoubleGroupedSample(m_primary_results.DataSet, m_predictor);
 
@@ -91,38 +87,36 @@ namespace Schicksal.Anova
           : TypeDescriptor.GetConverter(col_type).ConvertFromInvariantString(kv.Value.ToString());
       }
 
-      row["Factor"] = string.Join(", ", m_predictor.Select(f => row[f]));
+      row["+Factor"] = string.Join(", ", m_predictor.Select(f => row[f]));
 
       var join = new JoinedSample(group);
       var mean = DescriptionStatistics.Mean(join);
       var std_der = m_primary_results.ResudualsCalculator.GetStandardDerivation(group, join);
-      var ratio = m_primary_results.ResudualsCalculator.ErrorRatio(group, join);
 
-      row["Count"] = join.Count;
-      row["Mean"] = m_primary_results.ValueTransform.Denormalize(mean);
-      row["MeanNormalized"] = mean;
-      row["ErrorRatio"] = ratio;
-      row["Ignorable"] = group.Count;
+      row["+Count"] = join.Count;
+      row["+Mean"] = m_primary_results.ValueTransform.Denormalize(mean);
+      row["+MeanNormalized"] = mean;
+      row["+Ignorable"] = group.Count;
 
       if (std_der.DegreesOfFreedom > 0)
       {
         var std_error = Math.Sqrt(std_der.MeanSquare);
-        var interval = std_error * Math.Sqrt(ratio)
+        var interval = std_error / Math.Sqrt(join.Count)
           * SpecialFunctions.invstudenttdistribution
           (
             std_der.DegreesOfFreedom,
             1 - m_primary_results.Parameters.Probability / 2
           );
 
-        row["Std error"] = this.RecalcDerivation(mean, std_error);
-        row["Interval"] = this.RecalcDerivation(mean, interval);
-        row["ErrorNormalized"] = std_der.MeanSquare;
+        row["+Std error"] = this.RecalcDerivation(mean, std_error);
+        row["+Interval"] = this.RecalcDerivation(mean, interval);
+        row["+ErrorNormalized"] = std_der.MeanSquare;
       }
       else
       {
-        row["Std error"] = double.NaN;
-        row["Interval"] = double.NaN;
-        row["ErrorNormalized"] = double.NaN;
+        row["+Std error"] = double.NaN;
+        row["+Interval"] = double.NaN;
+        row["+ErrorNormalized"] = double.NaN;
       }
     }
 
@@ -130,17 +124,17 @@ namespace Schicksal.Anova
     {
       var result = new DifferenceInfo
       {
-        Factor1 = row1["Factor"].ToString(),
-        Factor2 = row2["Factor"].ToString(),
-        Mean1 = (double)row1["Mean"],
-        Mean2 = (double)row2["Mean"],
+        Factor1 = row1["+Factor"].ToString(),
+        Factor2 = row2["+Factor"].ToString(),
+        Mean1 = (double)row1["+Mean"],
+        Mean2 = (double)row2["+Mean"],
         Result = m_primary_results.Parameters.Response
       };
 
       result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
 
-      double n_mean1 = (double)row1["MeanNormalized"];
-      double n_mean2 = (double)row2["MeanNormalized"];
+      double n_mean1 = (double)row1["+MeanNormalized"];
+      double n_mean2 = (double)row2["+MeanNormalized"];
       double error = this.GetError(row1, row2);
       int df = this.GetDegreesOfFreedom(row1, row2);
 
@@ -181,13 +175,12 @@ namespace Schicksal.Anova
     {
       if (m_primary_results.Parameters.IndividualError)
       {
-        int count1 = (int)row1["Count"];
-        int count2 = (int)row2["Count"];
-        int ig1 = (int)row1["Ignorable"];
-        int ig2 = (int)row2["Ignorable"];
+        int count1 = (int)row1["+Count"];
+        int count2 = (int)row2["+Count"];
+        int ig1 = (int)row1["+Ignorable"];
+        int ig2 = (int)row2["+Ignorable"];
 
-        return m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig1, count1)
-          + m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig2, count2);
+        return m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig1 + ig2, count1 + count2);
       }
       else
         return m_msw.DegreesOfFreedom;
@@ -216,18 +209,18 @@ namespace Schicksal.Anova
 
     private double GetError(DataRowView row1, DataRowView row2)
     {
-      double ratio1 = (double)row1["ErrorRatio"];
-      double ratio2 = (double)row2["ErrorRatio"];
+      double count1 = (int)row1["+Count"];
+      double count2 = (int)row2["+Count"];
       double mse1 = m_msw.MeanSquare;
       double mse2 = mse1;
 
       if (m_primary_results.Parameters.IndividualError)
       {
-        mse1 = (double)row1["ErrorNormalized"];
-        mse2 = (double)row2["ErrorNormalized"];
+        mse1 = (double)row1["+ErrorNormalized"];
+        mse2 = (double)row2["+ErrorNormalized"];
       }
 
-      return Math.Sqrt(mse1 * ratio1 + mse2 * ratio2);
+      return Math.Sqrt(mse1 / count1 + mse2 / count2);
     }
   }
 

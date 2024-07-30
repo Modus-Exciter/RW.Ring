@@ -44,10 +44,10 @@ namespace Schicksal.Anova
         var significant = m_results.FisherTestResults.Where(r => r.P <= m_results.Parameters.Probability).ToList();
         var descriptions = new Dictionary<string, string>
         {
-          { "Count", SchicksalResources.COUNT },
-          { "Mean", SchicksalResources.MEAN },
-          { "Std error", SchicksalResources.STD_ERROR },
-          { "Interval", SchicksalResources.INTERVAL },
+          { "+Count", SchicksalResources.COUNT },
+          { "+Mean", SchicksalResources.MEAN },
+          { "+Std error", SchicksalResources.STD_ERROR },
+          { "+Interval", SchicksalResources.INTERVAL },
           { "Factor1", string.Format("{0} 1", Resources.FACTOR) },
           { "Mean1", string.Format("{0} 1", SchicksalResources.MEAN) },
           { "Factor2", string.Format("{0} 2", Resources.FACTOR) },
@@ -98,9 +98,9 @@ namespace Schicksal.Anova
       var comparator = new MultiVariantsComparator(processor);
 
       comparator.Run();
-      comparator.Source.Columns.Remove("Factor");
+      comparator.Source.Columns.Remove("+Factor");
 
-      writer.WriteTable(comparator.Source.DefaultView, descriptions, new HashSet<string> { "Ignorable", "MeanNormalized" });
+      writer.WriteTable(comparator.Source.DefaultView, descriptions, new HashSet<string> { "+Ignorable", "+MeanNormalized" });
 
       writer.WriteHeader(string.Format("{0}:", Resources.SUMMARY), 3);
 

@@ -29,10 +29,10 @@ namespace Schicksal.Basic
     /// <param name="data">Конкретные значения колонок</param>
     public GroupKey(PredictedResponseParameters parameters, Dictionary<string, object> data)
     {
-      if (parameters is null) 
+      if (parameters is null)
         throw new ArgumentNullException("parameters");
 
-      if (data is null) 
+      if (data is null)
         throw new ArgumentNullException("data");
 
       foreach (var kv in data)
@@ -166,7 +166,7 @@ namespace Schicksal.Basic
     /// <returns>Хеш функцию от колонки отклика, фильтра и всех значений колонок</returns>
     public override int GetHashCode()
     {
-      var ret = m_base_filter == null ? m_response.GetHashCode() : 
+      var ret = m_base_filter == null ? m_response.GetHashCode() :
         m_response.GetHashCode() ^ m_base_filter.GetHashCode();
 
       foreach (var kv in m_data)
@@ -210,7 +210,7 @@ namespace Schicksal.Basic
       var formattable = value as IFormattable;
 
       if (value is string || value is char)
-        return string.Format("'{0}'", value); // TODO: escape
+        return string.Format("'{0}'", value.ToString().Replace("'", "''"));
       else if (value is DateTime)
         return string.Format("#{0}#", ((DateTime)value).ToString(CultureInfo.InvariantCulture));
       else if (value is DBNull)

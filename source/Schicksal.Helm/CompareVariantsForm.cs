@@ -80,11 +80,11 @@ namespace Schicksal.Helm
         DataTable res = mult.Source;
         m_grid.DataSource = res;
 
-        m_grid.Columns["Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
-        m_grid.Columns["Count"].HeaderText = Resources.COUNT;
-        m_grid.Columns["Mean"].HeaderText = Resources.MEAN;
-        m_grid.Columns["Std error"].HeaderText = Resources.STD_ERROR;
-        m_grid.Columns["Interval"].HeaderText = Resources.INTERVAL;
+        m_grid.Columns["+Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
+        m_grid.Columns["+Count"].HeaderText = Resources.COUNT;
+        m_grid.Columns["+Mean"].HeaderText = Resources.MEAN;
+        m_grid.Columns["+Std error"].HeaderText = Resources.STD_ERROR;
+        m_grid.Columns["+Interval"].HeaderText = Resources.INTERVAL;
 
         m_summary_page.Text = Resources.STATISTICS;
         m_details_page.Text = Resources.COMPARISON;
@@ -99,10 +99,10 @@ namespace Schicksal.Helm
 
         foreach (DataRow row in res.Rows)
         {
-          var mean = (double)row["Mean"];
-          var interval = (double)row["Interval"];
-          series_in.Points.AddXY(row["Factor"], 0, mean - interval, mean + interval);
-          series_m.Points.AddXY(row["Factor"], mean);
+          var mean = (double)row["+Mean"];
+          var interval = (double)row["+Interval"];
+          series_in.Points.AddXY(row["+Factor"], 0, mean - interval, mean + interval);
+          series_m.Points.AddXY(row["+Factor"], mean);
         }
 
         this.AutoResizeColumnsByExample(mult.CreateExample());
