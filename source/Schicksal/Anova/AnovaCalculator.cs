@@ -79,14 +79,14 @@ namespace Schicksal.Anova
         this.ReportProgress(current * 100 / totals, p.ToString());
       }
 
-      FindInteraction(list);
-
       if (m_residuals_calculator.SingleWihinVariance)
       {
         var ms_w = m_residuals_calculator.GetWithinVariance(m_parameters.Predictors, this);
 
         foreach (var item in list)
           item.Within = ms_w;
+
+        FindInteraction(list);
       }
 
       this.Result = this.ConvertResult(list);
