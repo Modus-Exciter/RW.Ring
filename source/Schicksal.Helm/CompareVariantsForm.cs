@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Notung.Configuration;
 using Notung.Services;
 using Schicksal.Anova;
+using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
@@ -23,11 +24,11 @@ namespace Schicksal.Helm
     private bool m_only_significant;
     private string m_selection = string.Empty;
 
-    public CompareVariantsForm(DataTable table, string factor, string ignoredFactors, string result, string filter, float p, string conjugate)
+    public CompareVariantsForm(IPrimaryAnovaResults primaryResults, FactorInfo predictor)
     {
       this.InitializeComponent();
 
-      this.Text = string.Format("{0}({1}) [{2}]", result, factor.Replace("+", ", "), filter);
+      this.Text = string.Format("{0}({1}) [{2}]", primaryResults.Parameters.Response, predictor.ToString().Replace("+", ", "), primaryResults.Parameters.Filter);
 
       Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
 
@@ -37,8 +38,8 @@ namespace Schicksal.Helm
       if (resolution.width != 0) 
         this.Width = resolution.width;
       
-      m_comparator = new VariantsComparator(/*table, factor, ignoredFactors, result, filter, conjugate*/);
-      m_probability = p;
+      m_comparator = new VariantsComparator(primaryResults, predictor/*table, factor, ignoredFactors, result, filter, conjugate*/);
+      m_probability = (float)primaryResults.Parameters.Probability;
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
       m_exclusive_color = AppManager.Configurator.GetSection<Program.Preferences>().ExclusiveColor;
     }

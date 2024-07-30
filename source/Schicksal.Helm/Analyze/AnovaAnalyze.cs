@@ -32,13 +32,14 @@ namespace Schicksal.Helm.Analyze
       var table = tf.DataSource;
       results_form.Text = string.Format("{0}: {1}, p={2}",
               Resources.ANOVA, tf.Text, data.Probability);
-      results_form.DataSource = currentProcessor.Result;
-      results_form.SourceTable = table;
+      results_form.DataSource = currentProcessor.FisherTestResults;
+      /*results_form.SourceTable = table;
       results_form.ResultColumn = data.Result;
       results_form.Conjugate = this.GetConjugate(data);
       results_form.Filter = data.Filter;
       results_form.Probability = data.Probability;
-      results_form.Factors = data.Predictors.ToArray();
+      results_form.Factors = data.Predictors.ToArray();*/
+      results_form.Results = currentProcessor;
       results_form.Show(tf.MdiParent);
     }
 

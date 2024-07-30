@@ -28,24 +28,14 @@ namespace Schicksal.Helm
       set { m_binding_source.DataSource = (object)value ?? typeof(FisherTestResult); }
     }
 
-    public float Probability { get; set; }
-
-    public DataTable SourceTable { get; set; }
-
-    public string ResultColumn { get; set; }
-
-    public string Filter { get; set; }
-
-    public string[] Factors { get; set; }
-
-    public string Conjugate { get; set; }
+    public IPrimaryAnovaResults Results { get; set; }
 
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
 
-      fCriticalColumn.HeaderText = string.Format("F {0}%", this.Probability * 100);
-      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, this.Probability * 100);
+      fCriticalColumn.HeaderText = string.Format("F {0}%", this.Results.Parameters.Probability * 100);
+      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, this.Results.Parameters.Probability * 100);
       m_grid.AutoResizeColumns();
     }
 
@@ -59,8 +49,7 @@ namespace Schicksal.Helm
       if (fisher == null)
         return;
 
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor.ToString(),
-        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability, this.Conjugate))
+      using (var compare = new CompareVariantsForm(this.Results, fisher.Factor))
       {
         compare.ShowDialog(this);
       }
@@ -75,7 +64,7 @@ namespace Schicksal.Helm
       if (row == null)
         return;
 
-      if (row.P <= this.Probability)
+      if (row.P <= this.Results.Parameters.Probability)
         e.CellStyle.ForeColor = m_significat_color;
     }
 

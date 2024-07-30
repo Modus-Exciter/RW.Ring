@@ -8,23 +8,46 @@ using Schicksal.Basic;
 
 namespace Schicksal.Anova
 {
-  public interface IFisherResults
+  /// <summary>
+  /// Первичные результаты дисперсионного анализа
+  /// </summary>
+  public interface IPrimaryAnovaResults
   {
+    /// <summary>
+    /// Алгоритм расчёта остаточной дисперсии
+    /// </summary>
     IResudualsCalculator ResudualsCalculator { get; }
 
+    /// <summary>
+    /// Преобразователь нормированных данных в ненормированные и обратно
+    /// </summary>
     IValueTransform ValueTransform { get; }
 
-    FisherTestResult[] Result { get; }
+    /// <summary>
+    /// Результаты теста по критерию Фишера
+    /// </summary>
+    FisherTestResult[] FisherTestResults { get; }
+
+    /// <summary>
+    /// Анализируемый набор данных
+    /// </summary>
+    IDividedSample<GroupKey> DataSet { get; }
+
+    /// <summary>
+    /// Параметры анализа
+    /// </summary>
+    AnovaParameters Parameters { get; }
   }
 
   /// <summary>
   /// Задача дисперсионного анализа таблицы
   /// </summary>
-  public class AnovaCalculator : RunBase, IProgressIndicator, IFisherResults
+  public class AnovaCalculator : RunBase, IProgressIndicator, IPrimaryAnovaResults
   {
     private readonly AnovaParameters m_parameters;
     private IResudualsCalculator m_residuals_calculator;
     private IValueTransform m_transform;
+    private IDividedSample<GroupKey> m_data_set;
 
     /// <summary>
     /// Инициализация задачи дисперсионного анализа таблицы
@@ -55,18 +78,34 @@ namespace Schicksal.Anova
     }
 
     /// <summary>
+    /// Параметры анализа
+    /// </summary>
+    public AnovaParameters Parameters
+    {
+      get { return m_parameters; }
+    }
+
+    /// <summary>
+    /// Анализируемый набор данных
+    /// </summary>
+    public IDividedSample<GroupKey> DataSet
+    {
+      get { return m_data_set; }
+    }
+
+    /// <summary>
     /// Результаты теста по критерию Фишера
     /// </summary>
-    public FisherTestResult[] Result { get; private set; }
+    public FisherTestResult[] FisherTestResults { get; private set; }
 
     /// <summary>
     /// Запуск задачи на выполнение
     /// </summary>
     public override void Run()
     {
-      var transformed = this.GetInitialData();
+      this.Initialize();
 
-      m_residuals_calculator.Start(m_parameters, transformed, this);
+      m_residuals_calculator.Start(m_parameters, m_data_set, this);
 
       var list = new List<TestResult>();
 
@@ -78,7 +117,7 @@ namespace Schicksal.Anova
         var parameters = new PredictedResponseParameters(m_parameters.Table,
           m_parameters.Filter, p, m_parameters.Response);
 
-        var sample = GroupKey.Repack(transformed, p);
+        var sample = GroupKey.Repack(m_data_set, p);
         var ms_b = FisherTest.MSb(sample);
 
         this.AddPredictorResult(list, p, ms_b);
@@ -98,7 +137,7 @@ namespace Schicksal.Anova
         FindInteraction(list);
       }
 
-      this.Result = this.ConvertResult(list);
+      this.FisherTestResults = this.ConvertResult(list);
     }
 
     void IProgressIndicator.ReportProgress(int percentage, string state)
@@ -132,7 +171,7 @@ namespace Schicksal.Anova
       }
     }
 
-    private IDividedSample<GroupKey> GetInitialData()
+    private void Initialize()
     {
       using (var table = new TableDividedSample(m_parameters, m_parameters.Conjugation))
       {
@@ -148,7 +187,7 @@ namespace Schicksal.Anova
         else
           m_residuals_calculator = new UnrepeatedResudualsCalculator();
 
-        return SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
+        m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
       }
     }
 
