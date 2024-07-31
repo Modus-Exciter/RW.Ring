@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using Notung;
-using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
 
@@ -43,9 +42,8 @@ namespace Schicksal.Anova
     /// <summary>
     /// Генерация таблицы с описательными статистиками по факторам, градации которых сравниваются
     /// </summary>
-    /// <returns>Таблица содержит градации всех факторов. По каждой градации показано
-    /// количество наблюдений, среднее арифметическое, количество наблюдений, стандартное
-    /// отклонение, доверительный  интервал и количество градаций игнорируемого фактора</returns>
+    /// <returns>Таблица содержит градации всех факторов. По каждой градации показано количество наблюдений,
+    /// среднее арифметическое, стандартное отклонение, доверительный  интервал и служебная информация</returns>
     public DataTable CreateDescriptiveTable()
     {
       var res = new DataTable();
