@@ -150,19 +150,32 @@ namespace Schicksal.Anova
 
     public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
     {
-      double[] diffs = new double[sample1.Sample.Count * sample1.Sample[0].Count];
-      int index = 0;
+      var join_array = new IPlainSample[sample1.Sample.Count + sample2.Sample.Count];
 
-      for (int i = 0; i < sample1.Sample.Count && i < sample2.Sample.Count; i++)
+      for (int i = 0; i < sample1.Sample.Count; i++)
+        join_array[i] = sample1.Sample[i];
+
+      for (int i = 0; i < sample2.Sample.Count; i++)
+        join_array[i + sample1.Sample.Count] = sample2.Sample[i];
+
+      var join = new ArrayDividedSample(join_array);
+      var repetitions_count = join[0].Count;
+      double g_mean = join.SelectMany(g => g).Average();
+      double r_var = 0;
+
+      for (int i = 0; i < repetitions_count; i++)
       {
-        for (int j = 0; j < sample1.Sample[i].Count && j < sample2.Sample[i].Count; j++)
-          diffs[index++] = sample1.Sample[i][j] - sample2.Sample[i][j];
+        var avg = join.Select(s => s[i]).Average();
+        r_var += (avg - g_mean) * (avg - g_mean);
       }
+
+      var df = (join.Count - 1) * (repetitions_count - 1);
+      var error_value = (FisherTest.MSw(join).SumOfSquares - r_var * join.Count) / df;
 
       return new ErrorInfo
       {
-        Value = Math.Sqrt(DescriptionStatistics.Dispresion(new ArrayPlainSample(diffs)) / diffs.Length),
-        DegreesOfFreedom = diffs.Length - 1
+        Value = Math.Sqrt(error_value / sample1.InnerCount + error_value / sample2.InnerCount),
+        DegreesOfFreedom = df
       };
     }
   }
@@ -205,11 +218,6 @@ namespace Schicksal.Anova
         SumOfSquares = DescriptionStatistics.SquareDerivation(joined),
         DegreesOfFreedom = joined.Count - 1
       };
-    }
-
-    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
-    {
-      return observationsCount - 1;
     }
 
     public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)

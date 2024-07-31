@@ -222,6 +222,9 @@
   <data name="TOTAL_COUNT" xml:space="preserve">
     <value>Общее количество наблюдений</value>
   </data>
+  <data name="UNABLE_CONJUGATION" xml:space="preserve">
+    <value>Невозможно использовать сопряжённые наблюдения из-за разного количества повторностей в вариантах</value>
+  </data>
   <data name="UNSIGNIFICAT" xml:space="preserve">
     <value>В ходе исследования выяснилось, что следующие факторы и комбинации оказались статистически незначимыми на уровне значимости {0:0.0}%</value>
   </data>

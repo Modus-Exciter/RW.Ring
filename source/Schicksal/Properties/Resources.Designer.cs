@@ -396,6 +396,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unable to use conjugation due to different repetitions count.
+        /// </summary>
+        internal static string UNABLE_CONJUGATION {
+            get {
+                return ResourceManager.GetString("UNABLE_CONJUGATION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ducring reasearch it was realized, that the following factors and factor combinations are not significat with probability level {0:0.0}%.
         /// </summary>
         internal static string UNSIGNIFICAT {

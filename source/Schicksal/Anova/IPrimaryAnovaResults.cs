@@ -5,6 +5,7 @@ using Notung;
 using Notung.Data;
 using Notung.Threading;
 using Schicksal.Basic;
+using Schicksal.Properties;
 
 namespace Schicksal.Anova
 {
@@ -42,7 +43,7 @@ namespace Schicksal.Anova
   /// <summary>
   /// Задача дисперсионного анализа таблицы
   /// </summary>
-  public class AnovaCalculator : RunBase, IProgressIndicator, IPrimaryAnovaResults
+  public class AnovaCalculator : RunBase, IProgressIndicator, IPrimaryAnovaResults, IServiceProvider
   {
     private readonly AnovaParameters m_parameters;
     private IResudualsCalculator m_residuals_calculator;
@@ -176,10 +177,11 @@ namespace Schicksal.Anova
       using (var table = new TableDividedSample(m_parameters, m_parameters.Conjugation))
       {
         m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
+        m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
 
         if (table.Sum(g => g.Count) > table.Count)
         {
-          if (string.IsNullOrEmpty(m_parameters.Conjugation))
+          if (string.IsNullOrEmpty(m_parameters.Conjugation) || !(m_data_set is IEqualSubSamples))
             m_residuals_calculator = new IndenepdentResudualsCalculator();
           else
             m_residuals_calculator = new ConjugatedResudualsCalculator();
@@ -187,7 +189,8 @@ namespace Schicksal.Anova
         else
           m_residuals_calculator = new UnrepeatedResudualsCalculator();
 
-        m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
+        if (m_residuals_calculator is IndenepdentResudualsCalculator && !string.IsNullOrEmpty(m_parameters.Conjugation))
+          this.Infolog.Add(Resources.UNABLE_CONJUGATION, InfoLevel.Warning);
       }
     }
 
