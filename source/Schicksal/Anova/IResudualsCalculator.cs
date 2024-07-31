@@ -57,19 +57,40 @@ namespace Schicksal.Anova
     ErrorInfo GetErrorInfo(Gradation group1, Gradation group2);
   }
 
+  /// <summary>
+  /// Одна градация фактора
+  /// </summary>
   public struct Gradation
   {
+    /// <summary>
+    /// Выборка данных по градации фактора
+    /// </summary>
     public IDividedSample Sample;
 
-    public int InnerCount;
+    /// <summary>
+    /// Общее количество данных в выборке
+    /// </summary>
+    public int TotalCount;
 
+    /// <summary>
+    /// Стандартное отклонение в выборке
+    /// </summary>
     public double ErrorValue;
   }
 
+  /// <summary>
+  /// Информация об ошибке для сравнения двух градаций
+  /// </summary>
   public struct ErrorInfo
   {
+    /// <summary>
+    /// Ошибка разности средних
+    /// </summary>
     public double Value;
 
+    /// <summary>
+    /// Количество степеней свободы
+    /// </summary>
     public int DegreesOfFreedom;
   }
 
@@ -113,8 +134,8 @@ namespace Schicksal.Anova
     {
       return new ErrorInfo
       {
-        Value = Math.Sqrt(grad1.ErrorValue / grad1.InnerCount + grad2.ErrorValue / grad2.InnerCount),
-        DegreesOfFreedom = grad1.InnerCount + grad2.InnerCount - grad1.Sample.Count - grad2.Sample.Count
+        Value = Math.Sqrt(grad1.ErrorValue / grad1.TotalCount + grad2.ErrorValue / grad2.TotalCount),
+        DegreesOfFreedom = grad1.TotalCount + grad2.TotalCount - grad1.Sample.Count - grad2.Sample.Count
       };
     }
   }
@@ -189,7 +210,7 @@ namespace Schicksal.Anova
 
       return new ErrorInfo
       {
-        Value = Math.Sqrt(ms.MeanSquare / grad1.InnerCount + ms.MeanSquare / grad2.InnerCount),
+        Value = Math.Sqrt(ms.MeanSquare / grad1.TotalCount + ms.MeanSquare / grad2.TotalCount),
         DegreesOfFreedom = ms.DegreesOfFreedom
       };
     }
@@ -237,8 +258,8 @@ namespace Schicksal.Anova
     {
       return new ErrorInfo
       {
-        Value = Math.Sqrt(grad1.ErrorValue / grad1.InnerCount + grad2.ErrorValue / grad2.InnerCount),
-        DegreesOfFreedom = grad1.InnerCount + grad2.InnerCount - 2
+        Value = Math.Sqrt(grad1.ErrorValue / grad1.TotalCount + grad2.ErrorValue / grad2.TotalCount),
+        DegreesOfFreedom = grad1.TotalCount + grad2.TotalCount - 2
       };
     }
   }

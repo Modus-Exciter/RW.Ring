@@ -206,14 +206,14 @@ namespace Schicksal.Anova
         var sample1 = new Gradation
         {
           ErrorValue = (double)row1["+ErrorNormalized"],
-          InnerCount = count1,
+          TotalCount = count1,
           Sample = (IDividedSample)row1["+Sample"]
         };
 
         var sample2 = new Gradation
         {
           ErrorValue = (double)row2["+ErrorNormalized"],
-          InnerCount = count2,
+          TotalCount = count2,
           Sample = (IDividedSample)row2["+Sample"]
         };
 
