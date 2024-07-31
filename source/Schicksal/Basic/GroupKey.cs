@@ -42,7 +42,10 @@ namespace Schicksal.Basic
 
       m_base_filter = parameters.Filter;
       m_response = parameters.Response;
-      m_data = parameters.Predictors.ToDictionary(p => p, p => row[p]);
+      m_data = new Dictionary<string, object>();
+
+      foreach (var p in parameters.Predictors)
+        m_data.Add(p, row[p]);
     }
 
     private GroupKey(Dictionary<string, object> data, string baseFilter, string response)

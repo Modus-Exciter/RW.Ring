@@ -50,13 +50,12 @@
     <Compile Include="Anova\AnovaParameters.cs" />
     <Compile Include="Anova\DifferenceInfo.cs" />
     <Compile Include="Anova\FisherTest.cs" />
-    <Compile Include="Anova\FisherMetrics.cs" />
+    <Compile Include="Anova\FisherTestResult.cs" />
     <Compile Include="Anova\IResudualsCalculator.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
     <Compile Include="Basic\GroupKey.cs" />
     <Compile Include="Basic\TableAnalysisParameters.cs" />
     <Compile Include="Basic\BoxCoxNormalizer.cs" />
-    <Compile Include="Basic\ISamplePropertyExtractor.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
     <Compile Include="Basic\FactorInfo.cs" />
     <Compile Include="Basic\SampleRepack.cs" />
@@ -67,8 +66,7 @@
     <Compile Include="Basic\OrderedSample.cs" />
     <Compile Include="Basic\RankNormalizer.cs" />
     <Compile Include="Basic\TableDividedSample.cs" />
-    <Compile Include="Basic\TableComplexSample.cs" />
-    <Compile Include="Basic\DoubleGroupedSample.cs" />
+    <Compile Include="Anova\TwiceGroupedSample.cs" />
     <Compile Include="Clustering\ClusteringParameters.cs" />
     <Compile Include="Clustering\IArcDeleter.cs" />
     <Compile Include="Clustering\IDistanceMetrics.cs" />

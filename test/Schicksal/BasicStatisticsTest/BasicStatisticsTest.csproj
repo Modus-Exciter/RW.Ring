@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GroupsEquality.cs" />
+    <Compile Include="Optional\ISamplePropertyExtractor.cs" />
     <Compile Include="NormalizationTest.cs" />
+    <Compile Include="Optional\TableComplexSample.cs" />
     <Compile Include="TableSetDataGroupTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MedianTest.cs" />

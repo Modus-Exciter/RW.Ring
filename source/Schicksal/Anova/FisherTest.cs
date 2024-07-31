@@ -10,22 +10,6 @@ namespace Schicksal.Anova
   public static class FisherTest
   {
     /// <summary>
-    /// Расчёт вероятости того, что все группы в выборке относятся к одной генеральной совокупности
-    /// </summary>
-    /// <param name="between">Межгрупповая дисперсия выборки</param>
-    /// <param name="within">Внутригрупповая дисперсия выборки</param>
-    /// <returns>Вероятность нулевой гипотезы</returns>
-    public static double GetProbability(SampleVariance between, SampleVariance within)
-    {
-      var f = between.MeanSquare / within.MeanSquare;
-
-      if (f == 0)
-        return 1;
-
-      return SpecialFunctions.fcdistribution(between.DegreesOfFreedom, within.DegreesOfFreedom, f);
-    }
-
-    /// <summary>
     /// Расчёт межгрупповой дисперсии
     /// </summary>
     /// <param name="sample">Выборка, разделённая на группы</param>
@@ -39,7 +23,10 @@ namespace Schicksal.Anova
 
       foreach (var sub_sample in sample)
       {
-        double mean = sub_sample.Count > 0 ? sub_sample.Average() : 0;
+        if (sub_sample.Count == 0)
+          continue;
+        
+        double mean = sub_sample.Average();
 
         ss_b += (mean - g_mean) * (mean - g_mean) * sub_sample.Count;
       }
@@ -86,6 +73,22 @@ namespace Schicksal.Anova
     public static double GetCriticalValue(double p, uint kdf, uint ndf)
     {
       return SpecialFunctions.invfdistribution((int)kdf, (int)ndf, p);
+    }
+
+    /// <summary>
+    /// Расчёт вероятости того, что все группы в выборке относятся к одной генеральной совокупности
+    /// </summary>
+    /// <param name="between">Межгрупповая дисперсия выборки</param>
+    /// <param name="within">Внутригрупповая дисперсия выборки</param>
+    /// <returns>Вероятность нулевой гипотезы</returns>
+    public static double GetProbability(SampleVariance between, SampleVariance within)
+    {
+      var f = between.MeanSquare / within.MeanSquare;
+
+      if (f == 0)
+        return 1;
+
+      return SpecialFunctions.fcdistribution(between.DegreesOfFreedom, within.DegreesOfFreedom, f);
     }
   }
 

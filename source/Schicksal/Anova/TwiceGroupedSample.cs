@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Schicksal.Basic;
 
-namespace Schicksal.Basic
+namespace Schicksal.Anova
 {
-  public class DoubleGroupedSample : IComplexSample, IEnumerable<IDividedSample<GroupKey>>
+  public class TwiceGroupedSample : IComplexSample, IEnumerable<IDividedSample<GroupKey>>
   {
     private readonly IDividedSample<GroupKey>[] m_groups;
     private readonly GroupKey[] m_keys;
 
-    public DoubleGroupedSample(IDividedSample<GroupKey> source, FactorInfo divider)
+    public TwiceGroupedSample(IDividedSample<GroupKey> source, FactorInfo divider)
     {
       if (source == null) 
         throw new ArgumentNullException("source");
@@ -85,7 +86,7 @@ namespace Schicksal.Basic
 
     public override bool Equals(object obj)
     {
-      var other = obj as DoubleGroupedSample;
+      var other = obj as TwiceGroupedSample;
 
       if (other == null)
         return false;

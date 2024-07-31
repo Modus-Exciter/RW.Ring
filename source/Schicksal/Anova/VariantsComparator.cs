@@ -63,7 +63,7 @@ namespace Schicksal.Anova
       res.Columns.Add("+ErrorNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
       res.Columns.Add("+Sample", typeof(IDividedSample<GroupKey>)).ColumnMapping = MappingType.Hidden;
 
-      var groupset = new DoubleGroupedSample(m_primary_results.DataSet, m_predictor);
+      var groupset = new TwiceGroupedSample(m_primary_results.DataSet, m_predictor);
 
       res.BeginLoadData();
 

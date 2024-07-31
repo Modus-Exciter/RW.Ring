@@ -41,8 +41,7 @@ namespace Schicksal.Helm
       
       m_comparator = new VariantsComparator(primaryResults, testResult.Factor, new SampleVariance
       {
-        DegreesOfFreedom =
-        (int)testResult.Ndf,
+        DegreesOfFreedom = (int)testResult.Ndf,
         SumOfSquares = testResult.SSw
       });
 
@@ -80,7 +79,18 @@ namespace Schicksal.Helm
         DataTable res = mult.Source;
         m_grid.DataSource = res;
 
-        m_grid.Columns["+Count"].DefaultCellStyle = new DataGridViewCellStyle { Format = "0" };
+        var types = new Type[] { typeof(float), typeof(double), typeof(decimal) };
+        for (int i = 0; i < res.Columns.Count; i++)
+        {
+          if (m_grid.Columns.Contains(res.Columns[i].ColumnName) && !types.Contains(res.Columns[i].DataType))
+          {
+            m_grid.Columns[res.Columns[i].ColumnName].DefaultCellStyle = new DataGridViewCellStyle
+            {
+              Format = "0"
+            };
+          }
+        }
+
         m_grid.Columns["+Count"].HeaderText = Resources.COUNT;
         m_grid.Columns["+Mean"].HeaderText = Resources.MEAN;
         m_grid.Columns["+Std error"].HeaderText = Resources.STD_ERROR;
