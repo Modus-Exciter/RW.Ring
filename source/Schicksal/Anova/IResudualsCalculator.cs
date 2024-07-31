@@ -22,8 +22,24 @@ namespace Schicksal.Anova
 
     SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined);
 
-    int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount);
+    ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2);
   }
+
+  public struct LSDHelper
+  {
+    public IDividedSample Sample;
+
+    public int InnerCount;
+
+    public double ErrorValue;
+  }
+
+  public struct ErrorInfo
+  {
+    public double Value;
+    public int DegreesOfFreedom;
+  }
+
 
   /// <summary>
   /// Многофакторный анализ независимых наблюдений с повторностями
@@ -65,9 +81,13 @@ namespace Schicksal.Anova
       };
     }
 
-    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
+    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
     {
-      return observationsCount - groupCount;
+      return new ErrorInfo
+      {
+        Value = Math.Sqrt(sample1.ErrorValue / sample1.InnerCount + sample2.ErrorValue / sample2.InnerCount),
+        DegreesOfFreedom = sample1.InnerCount + sample2.InnerCount - sample1.Sample.Count - sample2.Sample.Count
+      };
     }
   }
 
@@ -128,9 +148,21 @@ namespace Schicksal.Anova
       };
     }
 
-    public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
+    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
     {
-      return observationsCount - groupCount - m_repetitions_count + 1;
+      double[] diffs = new double[sample1.Sample.Count * sample1.Sample[0].Count];
+      int index = 0;
+      for (int i = 0; i < sample1.Sample.Count && i < sample2.Sample.Count; i++)
+      {
+        for (int j = 0; j < sample1.Sample[i].Count && j < sample2.Sample[i].Count; j++)
+          diffs[index++] = sample1.Sample[i][j] - sample2.Sample[i][j];
+      }
+
+      return new ErrorInfo
+      {
+        Value = Math.Sqrt(DescriptionStatistics.Dispresion(new ArrayPlainSample(diffs)) / diffs.Length),
+        DegreesOfFreedom = diffs.Length - 1
+      };
     }
   }
 
@@ -177,6 +209,15 @@ namespace Schicksal.Anova
     public int GetDifferenceDegreesOfFreedom(int groupCount, int observationsCount)
     {
       return observationsCount - 1;
+    }
+
+    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
+    {
+      return new ErrorInfo
+      {
+        Value = Math.Sqrt(sample1.ErrorValue / sample1.InnerCount + sample2.ErrorValue / sample2.InnerCount),
+        DegreesOfFreedom = sample1.InnerCount + sample2.InnerCount - 2
+      };
     }
   }
 }

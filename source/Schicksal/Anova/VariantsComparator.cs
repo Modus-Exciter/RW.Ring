@@ -81,6 +81,40 @@ namespace Schicksal.Anova
       return res;
     }
 
+    public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2)
+    {
+      var result = new DifferenceInfo
+      {
+        Factor1 = row1["+Factor"].ToString(),
+        Factor2 = row2["+Factor"].ToString(),
+        Mean1 = (double)row1["+Mean"],
+        Mean2 = (double)row2["+Mean"],
+        Result = m_primary_results.Parameters.Response
+      };
+
+      result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
+
+      double n_mean1 = (double)row1["+MeanNormalized"];
+      double n_mean2 = (double)row2["+MeanNormalized"];
+      ErrorInfo error = this.GetError(row1, row2);
+
+      if (error.DegreesOfFreedom > 0)
+      {
+        result.MinimalDifference = this.RecalcLSD(this.GetLSD(error), n_mean1, n_mean2);
+        result.Probability = this.GetErrorProbability(Math.Abs(n_mean1 - n_mean2), error);
+      }
+      else
+      {
+        result.MinimalDifference = double.PositiveInfinity;
+        result.Probability = 1;
+      }
+
+      if (result.Probability < 0)
+        result.Probability = 0;
+
+      return result;
+    }
+
     private void FillDataRow(DataRow row, GroupKey groupKey, IDividedSample group)
     {
       foreach (var kv in groupKey)
@@ -125,41 +159,6 @@ namespace Schicksal.Anova
       }
     }
 
-    public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2)
-    {
-      var result = new DifferenceInfo
-      {
-        Factor1 = row1["+Factor"].ToString(),
-        Factor2 = row2["+Factor"].ToString(),
-        Mean1 = (double)row1["+Mean"],
-        Mean2 = (double)row2["+Mean"],
-        Result = m_primary_results.Parameters.Response
-      };
-
-      result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
-
-      double n_mean1 = (double)row1["+MeanNormalized"];
-      double n_mean2 = (double)row2["+MeanNormalized"];
-      double error = this.GetError(row1, row2);
-      int df = this.GetDegreesOfFreedom(row1, row2);
-
-      if (df > 0)
-      {
-        result.MinimalDifference = this.RecalcLSD(this.GetLSD(df, error), n_mean1, n_mean2);
-        result.Probability = this.GetErrorProbability(Math.Abs(n_mean1 - n_mean2), df, error);
-      }
-      else
-      {
-        result.MinimalDifference = double.PositiveInfinity;
-        result.Probability = 1;
-      }
-
-      if (result.Probability < 0)
-        result.Probability = 0;
-
-      return result;
-    }
-
     private double RecalcDerivation(double center, double derivation)
     {
       var up = m_primary_results.ValueTransform.Denormalize(center + derivation);
@@ -173,59 +172,59 @@ namespace Schicksal.Anova
       var up = m_primary_results.ValueTransform.Denormalize(bigger);
       var dn = m_primary_results.ValueTransform.Denormalize(smaller);
 
-      return Math.Abs((up - dn) * lsd / (bigger - smaller) );
+      return Math.Abs((up - dn) * lsd / (bigger - smaller));
     }
 
-    private double GetLSD(int degreesOfFreedom, double error)
+    private double GetLSD(ErrorInfo error)
     {
-      return error * SpecialFunctions.invstudenttdistribution
+      return error.Value * SpecialFunctions.invstudenttdistribution
       (
-        degreesOfFreedom,
+        error.DegreesOfFreedom,
         1 - m_primary_results.Parameters.Probability / 2
       );
     }
 
-    private double GetErrorProbability(double normalizedDifference, int degreesOfFreedom, double error)
+    private double GetErrorProbability(double normalizedDifference, ErrorInfo error)
     {
-      return 
+      return
         (
           1 - SpecialFunctions.studenttdistribution
           (
-            degreesOfFreedom,
-            normalizedDifference / error
+            error.DegreesOfFreedom,
+            normalizedDifference / error.Value
           )
         ) * 2;
     }
 
-    private int GetDegreesOfFreedom(DataRowView row1, DataRowView row2)
+    private ErrorInfo GetError(DataRowView row1, DataRowView row2)
     {
-      if (m_primary_results.Parameters.IndividualError)
-      {
-        int count1 = (int)row1["+Count"];
-        int count2 = (int)row2["+Count"];
-        int ig1 = ((ISample)row1["+Sample"]).Count;
-        int ig2 = ((ISample)row2["+Sample"]).Count;
-
-        return m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig1 + ig2, count1 + count2);
-      }
-      else
-        return m_msw.DegreesOfFreedom;
-    }
-
-    private double GetError(DataRowView row1, DataRowView row2)
-    {
-      double count1 = (int)row1["+Count"];
-      double count2 = (int)row2["+Count"];
-      double mse1 = m_msw.MeanSquare;
-      double mse2 = mse1;
+      int count1 = (int)row1["+Count"];
+      int count2 = (int)row2["+Count"];
 
       if (m_primary_results.Parameters.IndividualError)
       {
-        mse1 = (double)row1["+ErrorNormalized"];
-        mse2 = (double)row2["+ErrorNormalized"];
+        var sample1 = new LSDHelper
+        {
+          ErrorValue = (double)row1["+ErrorNormalized"],
+          InnerCount = count1,
+          Sample = (IDividedSample)row1["+Sample"]
+        };
+
+        var sample2 = new LSDHelper
+        {
+          ErrorValue = (double)row2["+ErrorNormalized"],
+          InnerCount = count2,
+          Sample = (IDividedSample)row2["+Sample"]
+        };
+
+        return m_primary_results.ResudualsCalculator.GetErrorInfo(sample1, sample2);
       }
 
-      return Math.Sqrt(mse1 / count1 + mse2 / count2);
+      return new ErrorInfo
+      {
+        Value = Math.Sqrt(m_msw.MeanSquare / count1 + m_msw.MeanSquare / count2),
+        DegreesOfFreedom = m_msw.DegreesOfFreedom
+      };
     }
   }
 
