@@ -128,16 +128,16 @@ namespace Schicksal.Anova
             sig_dif = comparator.Results[i];
 
           if (max_val.Item2 < comparator.Results[i].Mean1)
-            max_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);// comparator.Results[i];
+            max_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);
 
           if (max_val.Item2 < comparator.Results[i].Mean2)
-            max_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);// comparator.Results[i];
+            max_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);
 
           if (min_val.Item2 > comparator.Results[i].Mean1)
-            min_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);// comparator.Results[i];
+            min_val = new Tuple<string, double>(comparator.Results[i].Factor1, comparator.Results[i].Mean1);
 
           if (min_val.Item2 > comparator.Results[i].Mean2)
-            min_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);// comparator.Results[i];
+            min_val = new Tuple<string, double>(comparator.Results[i].Factor2, comparator.Results[i].Mean2);
         }
 
         writer.WriteText(string.Format("{0} «{1}» {2} «{3}»; {4} {5}.",

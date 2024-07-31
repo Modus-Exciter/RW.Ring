@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Schicksal.Properties;
 
 namespace Schicksal.Basic
 {
@@ -14,9 +16,9 @@ namespace Schicksal.Basic
   {
     private readonly Dictionary<string, object> m_data;
     private readonly string m_base_filter;
-    private readonly string m_query;
     private readonly string m_response;
 
+    private string m_query;
     private FactorInfo m_factor_info;
 
     private static readonly Func<KeyValuePair<string, object>, KeyValuePair<string, object>> _omit_nulls =
@@ -26,25 +28,21 @@ namespace Schicksal.Basic
     /// Инициализация набора значений колонок
     /// </summary>
     /// <param name="parameters">Таблица с фильтром, из которой делается выборка</param>
-    /// <param name="data">Конкретные значения колонок</param>
-    public GroupKey(PredictedResponseParameters parameters, Dictionary<string, object> data)
+    /// <param name="row">Конкретные значения колонок</param>
+    public GroupKey(PredictedResponseParameters parameters, DataRow row)
     {
-      if (parameters is null)
+      if (parameters == null)
         throw new ArgumentNullException("parameters");
 
-      if (data is null)
+      if (row == null)
         throw new ArgumentNullException("data");
 
-      foreach (var kv in data)
-      {
-        if (!parameters.Predictors.Contains(kv.Key))
-          throw new ArgumentException(string.Format("Column {0} not found in the table", kv.Key));
-      }
+      if (row.Table != parameters.Table)
+        throw new ArgumentException(Resources.ROW_NOT_BELONG_TABLE);
 
       m_base_filter = parameters.Filter;
       m_response = parameters.Response;
-      m_data = data;
-      m_query = this.GetQueryText();
+      m_data = parameters.Predictors.ToDictionary(p => p, p => row[p]);
     }
 
     private GroupKey(Dictionary<string, object> data, string baseFilter, string response)
@@ -52,7 +50,6 @@ namespace Schicksal.Basic
       m_data = data;
       m_base_filter = baseFilter;
       m_response = response;
-      m_query = this.GetQueryText();
     }
 
     /// <summary>
@@ -86,7 +83,13 @@ namespace Schicksal.Basic
     /// </summary>
     public string Query
     {
-      get { return m_query; }
+      get
+      {
+        if (m_query == null)
+          m_query = this.GetQueryText();
+
+        return m_query;
+      }
     }
 
     /// <summary>
@@ -181,7 +184,7 @@ namespace Schicksal.Basic
     /// <returns>Текст запроса для осуществления выборки из таблицы</returns>
     public override string ToString()
     {
-      return m_query;
+      return this.Query;
     }
 
     /// <summary>
@@ -231,10 +234,10 @@ namespace Schicksal.Basic
     /// <returns>Выборка, сгруппированная по подмножеству колонок для запроса</returns>
     public static IDividedSample<GroupKey> Repack(IDividedSample<GroupKey> sample, FactorInfo factor)
     {
-      if (factor is null)
+      if (factor == null)
         throw new ArgumentNullException("factor");
 
-      if (sample is null)
+      if (sample == null)
         throw new ArgumentNullException("sample");
 
       var first_key = sample.GetKey(0);
@@ -292,7 +295,7 @@ namespace Schicksal.Basic
       foreach (var kv in m_data)
       {
         if (OmitNulls(kv.Value) is DBNull)
-          sb.AppendFormat(" AND [{0}] IS NULL", kv.Key);
+          sb.AppendFormat(" AND [{0}] == null", kv.Key);
         else
           sb.AppendFormat(" AND [{0}] = {1}", kv.Key, GetInvariant(kv.Value));
       }

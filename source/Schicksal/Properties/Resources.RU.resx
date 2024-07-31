@@ -192,6 +192,9 @@
   <data name="PAIRED_COMPARISON" xml:space="preserve">
     <value>Попарное сравнение</value>
   </data>
+  <data name="PREPARING_DATA" xml:space="preserve">
+    <value>Подготовка данных</value>
+  </data>
   <data name="REGRESSION_DEPENDENCY" xml:space="preserve">
     <value>Формула регрессионной зависимости</value>
   </data>
@@ -203,6 +206,9 @@
   </data>
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
+  </data>
+  <data name="ROW_NOT_BELONG_TABLE" xml:space="preserve">
+    <value>Строка не принадлежит этой таблице</value>
   </data>
   <data name="SIGNIFICANT_DIFFERENCES" xml:space="preserve">
     <value>Проведённое исследование показало, что существенные различия наблюдаются между вариантами</value>

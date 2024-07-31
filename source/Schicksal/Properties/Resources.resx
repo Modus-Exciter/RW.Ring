@@ -241,4 +241,10 @@
   <data name="UNABLE_CONJUGATION" xml:space="preserve">
     <value>Unable to use conjugation due to different repetitions count</value>
   </data>
+  <data name="PREPARING_DATA" xml:space="preserve">
+    <value>Preparing data</value>
+  </data>
+  <data name="ROW_NOT_BELONG_TABLE" xml:space="preserve">
+    <value>Data row does not belong this table</value>
+  </data>
 </root>

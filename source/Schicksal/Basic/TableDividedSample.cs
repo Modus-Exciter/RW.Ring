@@ -9,17 +9,16 @@ namespace Schicksal.Basic
   /// <summary>
   /// Обёртка над таблицей данных для статистического анализа
   /// </summary>
-  public sealed class TableDividedSample : IDividedSample<GroupKey>, IDisposable
+  public sealed class TableDividedSample : IDividedSample<GroupKey>
   {
-    private readonly DataViewSample[] m_views;
+    private readonly DataViewSample[] m_samples;
     private readonly Dictionary<GroupKey, int> m_indexes;
-    private readonly GroupKey[] m_keys;
 
     /// <summary>
-    /// Инициализация новой обёртки над таблицей для статистического анализа
+    /// Инициализация обёртки над таблицей для статистического анализа
     /// </summary>
-    /// <param name="tableParameters">Таблица, помещаемая в обёртку, с параметрами</param>
-    /// <param name="sort">Колонка, по которой сортируются данные</param>
+    /// <param name="tableParameters">Таблица с настройками отбора данных</param>
+    /// <param name="sort">Колонка, по которой требуется сортировка в группах</param>
     public TableDividedSample(PredictedResponseParameters tableParameters, string sort = null)
     {
       if (tableParameters == null)
@@ -30,113 +29,83 @@ namespace Schicksal.Basic
         && tableParameters.Table.Columns[tableParameters.Response].DataType != typeof(decimal))
         throw new ArgumentException("Result column must be numeric");
 
-      var sets = new HashSet<GroupKey>();
-      var columnIndexes = new int[tableParameters.Predictors.Count];
-      var factorColumns = tableParameters.Predictors.ToArray();
-      var tuples = new List<DataViewSample>();
+      Dictionary<GroupKey, List<DataRow>> dic = CreateDataDictionary(tableParameters);
 
-      for (int i = 0; i < tableParameters.Predictors.Count; i++)
-        columnIndexes[i] = tableParameters.Table.Columns[factorColumns[i]].Ordinal;
-
-      m_indexes = new Dictionary<GroupKey, int>();
-
-      using (var filtered_table = new DataView(tableParameters.Table, tableParameters.Filter, null, DataViewRowState.CurrentRows))
+      if (!string.IsNullOrEmpty(sort))
       {
-        foreach (DataRowView row in filtered_table)
-        {
-          Dictionary<string, object> values = new Dictionary<string, object>();
+        var sort_col = tableParameters.Table.Columns[sort].Ordinal;
 
-          for (int i = 0; i < factorColumns.Length; i++)
-            values.Add(factorColumns[i], row[columnIndexes[i]]);
-
-          var gk = new GroupKey(tableParameters, values);
-
-          if (!sets.Add(gk))
-            continue;
-
-          var view = new DataView(tableParameters.Table, gk.ToString(), sort, DataViewRowState.CurrentRows);
-
-          if (view.Count > 0)
-          {
-            tuples.Add(new DataViewSample(view, tableParameters.Response));
-            m_indexes[gk] = m_indexes.Count;
-          }
-          else
-            view.Dispose();
-        }
+        foreach (var kv in dic)
+          kv.Value.Sort((a, b) => ((IComparable)a[sort_col]).CompareTo(b[sort_col]));
       }
 
-      m_views = tuples.ToArray();
-      m_keys = new GroupKey[m_indexes.Count];
+      m_samples = new DataViewSample[dic.Count];
+      m_indexes = new Dictionary<GroupKey, int>();
 
-      foreach (var kv in m_indexes)
-        m_keys[kv.Value] = kv.Key;
+      int index = 0;
+
+      foreach (var kv in dic)
+      {
+        m_samples[index] = new DataViewSample(kv.Value.ToArray(), tableParameters.Response, kv.Key);
+        m_indexes[kv.Key] = index++;
+      }
     }
 
     /// <summary>
-    /// Количество подвыборок в выборке
+    /// Получение подвыборки данных по ключу
+    /// </summary>
+    /// <param name="key">Ключ со значениями колонок для отбора</param>
+    /// <returns>Подвыборка строк таблицы, соответствующих ключу</returns>
+    public IPlainSample this[GroupKey key]
+    {
+      get { return m_samples[m_indexes[key]]; }
+    }
+
+    /// <summary>
+    /// Получение подвыборки данных по индексу
+    /// </summary>
+    /// <param name="index">Индекс подвыборки (порядковый номер, начиная с 0)</param>
+    /// <returns>Подвыборка данных по индексу</returns>
+    public IPlainSample this[int index]
+    {
+      get { return m_samples[index]; }
+    }
+
+    /// <summary>
+    /// Общее количество подвыборок в выборке
     /// </summary>
     public int Count
     {
-      get { return m_views.Length; }
+      get { return m_samples.Length; }
     }
 
     /// <summary>
-    /// Получение подвыборки по ключу группы
+    /// Получение индекса подвыборки по ключу
     /// </summary>
-    /// <param name="rowFilter">Ключ группы</param>
-    /// <returns>Подвыборка, соответствующая этому ключу</returns>
-    public IPlainSample this[GroupKey rowFilter]
+    /// <param name="key">Ключ со значениями колонок для отбора</param>
+    /// <returns>Индекс подвыборки (порядковый номер, начиная с 0)</returns>
+    public int GetIndex(GroupKey key)
     {
-      get { return m_views[m_indexes[rowFilter]]; }
+      return m_indexes[key];
     }
 
     /// <summary>
-    /// Получение подвыборки по порядковому номеру
+    /// Получение ключа подвыборки по её индексу
     /// </summary>
-    /// <param name="index">Порядковый номер подвыборки, начиная с 0</param>
-    /// <returns>Подвыборка с соответствующим порядковым номером</returns>
-    public IPlainSample this[int index]
-    {
-      get { return m_views[index]; }
-    }
-
-    /// <summary>
-    /// Получение ключа подвыборки по её порядковому номеру
-    /// </summary>
-    /// <param name="index">Порядковый номер подвыборки, начиная с 0</param>
-    /// <returns>Ключ подвыборки</returns>
+    /// <param name="index">Индекс подвыборки (порядковый номер, начиная с 0)</param>
+    /// <returns>Ключ со значениями колонок для отбора</returns>
     public GroupKey GetKey(int index)
     {
-      return m_keys[index];
+      return m_samples[index].Key;
     }
 
     /// <summary>
-    /// Получение порядкового номера подвыборки по ключу группы
+    /// Получение итератора для обхода подвыборок
     /// </summary>
-    /// <param name="rowFilter">Ключ группы, ассоциированный с подвыборкой</param>
-    /// <returns>Порядковый номер подвыборки, начиная с 0</returns>
-    public int GetIndex(GroupKey rowFilter)
-    {
-      return m_indexes[rowFilter];
-    }
-
-    /// <summary>
-    /// Закрытие всех представлений, через которые читаются данные из таблицы
-    /// </summary>
-    public void Dispose()
-    {
-      foreach (DataViewSample sample in m_views)
-        sample.View.Dispose();
-    }
-
-    /// <summary>
-    /// Возвращает итератор, выполняющий перебор подвыборок в выборке
-    /// </summary>
-    /// <returns>Итератор, который можно использовать для обхода подвыборок</returns>
+    /// <returns>Итератор, позволяющий перебрать все подвыборки выборки</returns>
     public IEnumerator<IPlainSample> GetEnumerator()
     {
-      return m_views.Select(v => v).GetEnumerator();
+      return (m_samples as IList<IPlainSample>).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -144,57 +113,88 @@ namespace Schicksal.Basic
       return this.GetEnumerator();
     }
 
+    #region Implementation ------------------------------------------------------------------------
+
+    private static Dictionary<GroupKey, List<DataRow>> CreateDataDictionary(PredictedResponseParameters tableParameters)
+    {
+      var dic = new Dictionary<GroupKey, List<DataRow>>();
+
+      foreach (var row in tableParameters.Table.Select(tableParameters.Filter))
+      {
+        var gk = new GroupKey(tableParameters, row);
+        List<DataRow> list;
+
+        if (!dic.TryGetValue(gk, out list))
+        {
+          list = new List<DataRow>();
+          dic.Add(gk, list);
+        }
+
+        list.Add(row);
+      }
+
+      return dic;
+    }
+
     private class DataViewSample : IPlainSample
     {
-      private readonly DataView m_view;
+      private readonly DataRow[] m_rows;
       private readonly int m_column;
-      private string m_string;
+      private readonly GroupKey m_key;
 
-      public DataViewSample(DataView view, string column)
+      public DataViewSample(DataRow[] rows, string column, GroupKey key)
       {
-        m_view = view;
-        m_column = view.Table.Columns[column].Ordinal;
-      }
-
-      public DataView View
-      {
-        get { return m_view; }
-      }
-
-      public int Count
-      {
-        get { return m_view.Count; }
+        m_rows = rows;
+        m_column = rows[0].Table.Columns[column].Ordinal;
+        m_key = key;
       }
 
       public double this[int index]
       {
-        get { return Convert.ToDouble(m_view[index][m_column]); }
+        get { return Convert.ToDouble(m_rows[index][m_column]); }
+      }
+
+      public int Count
+      {
+        get { return m_rows.Length; }
+      }
+
+      public GroupKey Key
+      {
+        get { return m_key; }
       }
 
       public IEnumerator<double> GetEnumerator()
       {
-        return m_view.Cast<DataRowView>().Select(r => Convert.ToDouble(r[m_column])).GetEnumerator();
+        return m_rows.Select(r => Convert.ToDouble(r[m_column])).GetEnumerator();
       }
 
-      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+      IEnumerator IEnumerable.GetEnumerator()
       {
         return this.GetEnumerator();
       }
 
       public override string ToString()
       {
-        if (m_string == null)
-        {
-          m_string = string.Format("[{0}] IS NOT NULL", m_view.Table.Columns[m_column].ColumnName);
+        return m_key.Query;
+      }
 
-          if (m_view.RowFilter.Contains(m_string + " AND"))
-            m_string += " AND";
+      public override bool Equals(object obj)
+      {
+        var other = obj as DataViewSample;
 
-          m_string = string.Format("Count={0}, {1}", m_view.Count, m_view.RowFilter).Replace(m_string, "");
-        }
+        if (other == null)
+          return false;
 
-        return m_string;
+        return m_column == other.m_column && ReferenceEquals(m_rows, other.m_rows) && m_key.Equals(other.m_key);
+      }
+
+      public override int GetHashCode()
+      {
+        return m_column ^ m_key.GetHashCode() ^ m_rows.GetHashCode();
       }
     }
+
+    #endregion
   }
 }

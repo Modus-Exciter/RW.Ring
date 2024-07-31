@@ -21,10 +21,10 @@ namespace Schicksal.Anova
 
     public VariantsComparator(IPrimaryAnovaResults primaryResults, FactorInfo predictor, SampleVariance msw)
     {
-      if (primaryResults is null)
+      if (primaryResults == null)
         throw new ArgumentNullException("primaryResults");
 
-      if (predictor is null)
+      if (predictor == null)
         throw new ArgumentNullException("predictor");
 
       m_primary_results = primaryResults;

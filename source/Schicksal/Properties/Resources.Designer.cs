@@ -306,6 +306,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Preparing data.
+        /// </summary>
+        internal static string PREPARING_DATA {
+            get {
+                return ResourceManager.GetString("PREPARING_DATA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Regression dependency forumla.
         /// </summary>
         internal static string REGRESSION_DEPENDENCY {
@@ -338,6 +347,15 @@ namespace Schicksal.Properties {
         internal static string REPORT {
             get {
                 return ResourceManager.GetString("REPORT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data row does not belong this table.
+        /// </summary>
+        internal static string ROW_NOT_BELONG_TABLE {
+            get {
+                return ResourceManager.GetString("ROW_NOT_BELONG_TABLE", resourceCulture);
             }
         }
         

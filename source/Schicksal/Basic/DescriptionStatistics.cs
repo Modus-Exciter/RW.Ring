@@ -153,45 +153,43 @@ namespace Schicksal.Basic
     /// </summary>
     public override void Run()
     {
-      using (var sample = new TableDividedSample(m_parameters))
+      var sample = new TableDividedSample(m_parameters);
+      var res = new DescriptionStatisticsEntry[sample.Count];
+
+      for (int i = 0; i < res.Length; i++)
       {
-        var res = new DescriptionStatisticsEntry[sample.Count];
+        var name = sample.GetKey(i).Query;
 
-        for (int i = 0; i < res.Length; i++)
+        if (name.Contains(" AND "))
+          name = name.Substring(name.IndexOf(" AND ") + 5);
+
+        if (!string.IsNullOrEmpty(m_parameters.Filter))
+          name = name.Replace(" AND " + m_parameters.Filter, "");
+
+        res[i] = new DescriptionStatisticsEntry
         {
-          var name = sample.GetKey(i).Query;
+          Description = name.Replace(" AND ", ", ").Replace("[", "").Replace("]", ""),
+          Mean = DescriptionStatistics.Mean(sample[i]),
+          Median = DescriptionStatistics.Median(sample[i]),
+          Min = sample[i].Min(),
+          Max = sample[i].Max(),
+          Count = sample[i].Count
+        };
 
-          if (name.Contains(" AND "))
-            name = name.Substring(name.IndexOf(" AND ") + 5);
-
-          if (!string.IsNullOrEmpty(m_parameters.Filter))
-            name = name.Replace(" AND " + m_parameters.Filter, "");
-
-          res[i] = new DescriptionStatisticsEntry
-          {
-            Description = name.Replace(" AND ", ", ").Replace("[", "").Replace("]", ""),
-            Mean = DescriptionStatistics.Mean(sample[i]),
-            Median = DescriptionStatistics.Median(sample[i]),
-            Min = sample[i].Min(),
-            Max = sample[i].Max(),
-            Count = sample[i].Count
-          };
-
-          if (res[i].Count > 1)
-          {
-            res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(sample[i]));
-            res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(sample[i].Count) *
-              SpecialFunctions.invstudenttdistribution(sample[i].Count - 1, 1 - m_parameters.Probability / 2);
-          }
-          else
-          {
-            res[i].StdError = double.NaN;
-            res[i].ConfidenceInterval = double.NaN;
-          }
+        if (res[i].Count > 1)
+        {
+          res[i].StdError = Math.Sqrt(DescriptionStatistics.Dispresion(sample[i]));
+          res[i].ConfidenceInterval = res[i].StdError / Math.Sqrt(sample[i].Count) *
+            SpecialFunctions.invstudenttdistribution(sample[i].Count - 1, 1 - m_parameters.Probability / 2);
         }
-
-        this.Result = res;
+        else
+        {
+          res[i].StdError = double.NaN;
+          res[i].ConfidenceInterval = double.NaN;
+        }
       }
+
+      this.Result = res;
     }
   }
 

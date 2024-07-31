@@ -104,6 +104,8 @@ namespace Schicksal.Anova
     /// </summary>
     public override void Run()
     {
+      this.ReportProgress(Resources.PREPARING_DATA);
+      
       this.Initialize();
 
       m_residuals_calculator.Start(m_parameters, m_data_set, this);
@@ -174,25 +176,25 @@ namespace Schicksal.Anova
 
     private void Initialize()
     {
-      using (var table = new TableDividedSample(m_parameters, m_parameters.Conjugation))
+      var table = new TableDividedSample(m_parameters, m_parameters.Conjugation);
+
+      m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
+      m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
+
+      if (table.Sum(g => g.Count) > table.Count)
       {
-        m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
-        m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
-
-        if (table.Sum(g => g.Count) > table.Count)
-        {
-          if (string.IsNullOrEmpty(m_parameters.Conjugation) || !(m_data_set is IEqualSubSamples))
-            m_residuals_calculator = new IndenepdentResudualsCalculator();
-          else
-            m_residuals_calculator = new ConjugatedResudualsCalculator();
-        }
+        if (string.IsNullOrEmpty(m_parameters.Conjugation) || !(m_data_set is IEqualSubSamples))
+          m_residuals_calculator = new IndenepdentResudualsCalculator();
         else
-          m_residuals_calculator = new UnrepeatedResudualsCalculator();
-
-        if (m_residuals_calculator is IndenepdentResudualsCalculator && !string.IsNullOrEmpty(m_parameters.Conjugation))
-          this.Infolog.Add(Resources.UNABLE_CONJUGATION, InfoLevel.Warning);
+          m_residuals_calculator = new ConjugatedResudualsCalculator();
       }
+      else
+        m_residuals_calculator = new UnrepeatedResudualsCalculator();
+
+      if (m_residuals_calculator is IndenepdentResudualsCalculator && !string.IsNullOrEmpty(m_parameters.Conjugation))
+        this.Infolog.Add(Resources.UNABLE_CONJUGATION, InfoLevel.Warning);
     }
+    
 
     private FisherTestResult[] ConvertResult(List<TestResult> list)
     {

@@ -229,10 +229,10 @@ namespace Schicksal.Basic
     /// <param name="transform">Преобразователь ненормированных данных в нормированные</param>
     public NormalizedSample(IPlainSample sample, IValueTransform transform)
     {
-      if (sample is null)
+      if (sample == null)
         throw new ArgumentNullException("sample");
 
-      if (transform is null)
+      if (transform == null)
         throw new ArgumentNullException("transform");
 
       m_sample = sample;
