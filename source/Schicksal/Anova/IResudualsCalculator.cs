@@ -152,6 +152,7 @@ namespace Schicksal.Anova
     {
       double[] diffs = new double[sample1.Sample.Count * sample1.Sample[0].Count];
       int index = 0;
+
       for (int i = 0; i < sample1.Sample.Count && i < sample2.Sample.Count; i++)
       {
         for (int j = 0; j < sample1.Sample[i].Count && j < sample2.Sample[i].Count; j++)
