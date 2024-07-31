@@ -61,9 +61,11 @@ namespace Schicksal.Anova
       res.Columns.Add("+Interval", typeof(double));
       res.Columns.Add("+MeanNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
       res.Columns.Add("+ErrorNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
-      res.Columns.Add("+Ignorable", typeof(int)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+Sample", typeof(IDividedSample<GroupKey>)).ColumnMapping = MappingType.Hidden;
 
       var groupset = new DoubleGroupedSample(m_primary_results.DataSet, m_predictor);
+
+      res.BeginLoadData();
 
       for (int i = 0; i < groupset.Count; i++)
       {
@@ -73,6 +75,9 @@ namespace Schicksal.Anova
 
         res.Rows.Add(row);
       }
+
+      res.EndLoadData();
+
       return res;
     }
 
@@ -96,7 +101,7 @@ namespace Schicksal.Anova
       row["+Count"] = join.Count;
       row["+Mean"] = m_primary_results.ValueTransform.Denormalize(mean);
       row["+MeanNormalized"] = mean;
-      row["+Ignorable"] = group.Count;
+      row["+Sample"] = group;
 
       if (std_der.DegreesOfFreedom > 0)
       {
@@ -171,21 +176,6 @@ namespace Schicksal.Anova
       return Math.Abs((up - dn) * lsd / (bigger - smaller) );
     }
 
-    private int GetDegreesOfFreedom(DataRowView row1, DataRowView row2)
-    {
-      if (m_primary_results.Parameters.IndividualError)
-      {
-        int count1 = (int)row1["+Count"];
-        int count2 = (int)row2["+Count"];
-        int ig1 = (int)row1["+Ignorable"];
-        int ig2 = (int)row2["+Ignorable"];
-
-        return m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig1 + ig2, count1 + count2);
-      }
-      else
-        return m_msw.DegreesOfFreedom;
-    }
-
     private double GetLSD(int degreesOfFreedom, double error)
     {
       return error * SpecialFunctions.invstudenttdistribution
@@ -205,6 +195,21 @@ namespace Schicksal.Anova
             normalizedDifference / error
           )
         ) * 2;
+    }
+
+    private int GetDegreesOfFreedom(DataRowView row1, DataRowView row2)
+    {
+      if (m_primary_results.Parameters.IndividualError)
+      {
+        int count1 = (int)row1["+Count"];
+        int count2 = (int)row2["+Count"];
+        int ig1 = ((ISample)row1["+Sample"]).Count;
+        int ig2 = ((ISample)row2["+Sample"]).Count;
+
+        return m_primary_results.ResudualsCalculator.GetDifferenceDegreesOfFreedom(ig1 + ig2, count1 + count2);
+      }
+      else
+        return m_msw.DegreesOfFreedom;
     }
 
     private double GetError(DataRowView row1, DataRowView row2)
