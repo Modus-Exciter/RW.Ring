@@ -203,14 +203,14 @@ namespace Schicksal.Anova
 
       if (m_primary_results.Parameters.IndividualError)
       {
-        var sample1 = new LSDHelper
+        var sample1 = new Gradation
         {
           ErrorValue = (double)row1["+ErrorNormalized"],
           InnerCount = count1,
           Sample = (IDividedSample)row1["+Sample"]
         };
 
-        var sample2 = new LSDHelper
+        var sample2 = new Gradation
         {
           ErrorValue = (double)row2["+ErrorNormalized"],
           InnerCount = count2,

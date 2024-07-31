@@ -8,24 +8,56 @@ using Schicksal.Basic;
 namespace Schicksal.Anova
 {
   /// <summary>
-  /// Дисперсионный анализ
+  /// Методика расчёта остатков
   /// </summary>
   public interface IResudualsCalculator
   {
+    /// <summary>
+    /// Инициализация параметров расчёта перед обработкой каждого фактора
+    /// </summary>
+    /// <param name="parameters">Набор исходных данных для анализа с параметрами</param>
+    /// <param name="sample">Преобразованный и нормированный набор данных для анализа</param>
+    /// <param name="progress">Индикатор прогресса</param>
     void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress);
 
+    /// <summary>
+    /// Возвращает итератор, позволяющий перебрать все факторы и их комбинации, которые можно анализировать
+    /// </summary>
+    /// <returns>Итератор, обходящий доступные для анализа факторы</returns>
     IEnumerable<FactorInfo> GetSupportedFactors();
 
+    /// <summary>
+    /// Возвращает True, если в методике расчёта величина остатков не зависит от фактора. Иначе, возвращает False
+    /// </summary>
     bool SingleWihinVariance { get; }
 
+    /// <summary>
+    /// Получение дисперсии остатков для указанного фактора
+    /// </summary>
+    /// <param name="factor">Фактор, для которого рассчитывается дисперсия остатков</param>
+    /// <param name="progress">Индикатор прогресса</param>
+    /// <returns></returns>
     SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress);
 
+    /// <summary>
+    /// Расчёт стандартного отклонения по определённой градации одного фактора или сочетания факторов
+    /// </summary>
+    /// <param name="group">Набор данных, для которого требуется рассчитать стандартное отклонение</param>
+    /// <param name="joined">Набор данных, для которого требуется рассчитать
+    /// стандартное отклонение, преобразованный к числовой последовательности</param>
+    /// <returns></returns>
     SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined);
 
-    ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2);
+    /// <summary>
+    /// Расчёт ошибки разности средних значений в двух градациях фактора
+    /// </summary>
+    /// <param name="group1">Первая градация фактора</param>
+    /// <param name="group2">Вторая градация фактора</param>
+    /// <returns></returns>
+    ErrorInfo GetErrorInfo(Gradation group1, Gradation group2);
   }
 
-  public struct LSDHelper
+  public struct Gradation
   {
     public IDividedSample Sample;
 
@@ -37,12 +69,12 @@ namespace Schicksal.Anova
   public struct ErrorInfo
   {
     public double Value;
+
     public int DegreesOfFreedom;
   }
 
-
   /// <summary>
-  /// Многофакторный анализ независимых наблюдений с повторностями
+  /// Методика расчёта остатков для независимых наблюдений с повторностями
   /// </summary>
   public sealed class IndenepdentResudualsCalculator : IResudualsCalculator
   {
@@ -74,31 +106,26 @@ namespace Schicksal.Anova
 
     public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
     {
-      return new SampleVariance
-      {
-        SumOfSquares = group.Sum(b => DescriptionStatistics.SquareDerivation(b)),
-        DegreesOfFreedom = joined.Count - group.Count
-      };
+      return FisherTest.MSw(group);
     }
 
-    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
+    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
     {
       return new ErrorInfo
       {
-        Value = Math.Sqrt(sample1.ErrorValue / sample1.InnerCount + sample2.ErrorValue / sample2.InnerCount),
-        DegreesOfFreedom = sample1.InnerCount + sample2.InnerCount - sample1.Sample.Count - sample2.Sample.Count
+        Value = Math.Sqrt(grad1.ErrorValue / grad1.InnerCount + grad2.ErrorValue / grad2.InnerCount),
+        DegreesOfFreedom = grad1.InnerCount + grad2.InnerCount - grad1.Sample.Count - grad2.Sample.Count
       };
     }
   }
 
   /// <summary>
-  /// Многофакторный анализ сопряжённых наблюдений
+  /// Методика расчёта остатков для сопряжённых наблюдений
   /// </summary>
   public sealed class ConjugatedResudualsCalculator : IResudualsCalculator
   {
     private SampleVariance m_within_variance;
     private AnovaParameters m_parameters;
-    private int m_repetitions_count;
 
     public bool SingleWihinVariance
     {
@@ -117,21 +144,8 @@ namespace Schicksal.Anova
       if (!(sample is IEqualSubSamples && sample.Count > 1 && sample[0].Count > 1))
         throw new ArgumentException("Sample must be IEqualSubSamples and full");
 
-      m_within_variance = FisherTest.MSw(sample);
       m_parameters = parameters;
-
-      m_repetitions_count = sample[0].Count;
-      double g_mean = sample.SelectMany(g => g).Average();
-      double r_var = 0;
-
-      for (int i = 0; i < m_repetitions_count; i++)
-      {
-        var avg = sample.Select(s => s[i]).Average();
-        r_var += (avg - g_mean) * (avg - g_mean);
-      }
-
-      m_within_variance.SumOfSquares -= r_var * sample.Count;
-      m_within_variance.DegreesOfFreedom = (sample.Count - 1) * (m_repetitions_count - 1);
+      m_within_variance = this.GetStandardDerivation(sample, null);
     }
 
     public IEnumerable<FactorInfo> GetSupportedFactors()
@@ -141,48 +155,53 @@ namespace Schicksal.Anova
 
     public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
     {
-      return new SampleVariance
-      {
-        SumOfSquares = group.Sum(b => DescriptionStatistics.SquareDerivation(b)),
-        DegreesOfFreedom = joined.Count - group.Count
-      };
-    }
+      if (group.Count == 1)
+        return FisherTest.MSw(group);
 
-    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
-    {
-      var join_array = new IPlainSample[sample1.Sample.Count + sample2.Sample.Count];
-
-      for (int i = 0; i < sample1.Sample.Count; i++)
-        join_array[i] = sample1.Sample[i];
-
-      for (int i = 0; i < sample2.Sample.Count; i++)
-        join_array[i + sample1.Sample.Count] = sample2.Sample[i];
-
-      var join = new ArrayDividedSample(join_array);
-      var repetitions_count = join[0].Count;
-      double g_mean = join.SelectMany(g => g).Average();
+      var repetitions_count = group[0].Count;
+      double g_mean = group.SelectMany(g => g).Average();
       double r_var = 0;
 
       for (int i = 0; i < repetitions_count; i++)
       {
-        var avg = join.Select(s => s[i]).Average();
+        var avg = group.Select(s => s[i]).Average();
         r_var += (avg - g_mean) * (avg - g_mean);
       }
 
-      var df = (join.Count - 1) * (repetitions_count - 1);
-      var error_value = (FisherTest.MSw(join).SumOfSquares - r_var * join.Count) / df;
+      return new SampleVariance
+      {
+        DegreesOfFreedom = (group.Count - 1) * (repetitions_count - 1),
+        SumOfSquares = FisherTest.MSw(group).SumOfSquares - r_var * group.Count
+      };
+    }
+
+    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
+    {
+      var join_array = new IPlainSample[grad1.Sample.Count + grad2.Sample.Count];
+
+      for (int i = 0; i < grad1.Sample.Count; i++)
+        join_array[i] = grad1.Sample[i];
+
+      for (int i = 0; i < grad2.Sample.Count; i++)
+        join_array[i + grad1.Sample.Count] = grad2.Sample[i];
+
+      var ms = this.GetStandardDerivation(new ArrayDividedSample(join_array), null);
 
       return new ErrorInfo
       {
-        Value = Math.Sqrt(error_value / sample1.InnerCount + error_value / sample2.InnerCount),
-        DegreesOfFreedom = df
+        Value = Math.Sqrt(ms.MeanSquare / grad1.InnerCount + ms.MeanSquare / grad2.InnerCount),
+        DegreesOfFreedom = ms.DegreesOfFreedom
       };
     }
   }
 
+  /// <summary>
+  /// Методика расчёта остатков для многофакторного эксперимента без повторностей
+  /// </summary>
   public sealed class UnrepeatedResudualsCalculator : IResudualsCalculator
   {
     private AnovaParameters m_parameters;
+    private IDividedSample<GroupKey> m_data;
 
     public IEnumerable<FactorInfo> GetSupportedFactors()
     {
@@ -196,19 +215,13 @@ namespace Schicksal.Anova
 
     public SampleVariance GetWithinVariance(FactorInfo factor, IProgressIndicator progress)
     {
-      var parameters = new PredictedResponseParameters(m_parameters.Table, m_parameters.Filter,
-        m_parameters.Predictors - factor, m_parameters.Response);
-
-      using (var tableSample = new TableDividedSample(parameters, null))
-      {
-        IDividedSample sample = SampleRepack.Wrap(m_parameters.Normalizer.Normalize(tableSample));
-        return FisherTest.MSw(sample);
-      }
+      return FisherTest.MSw(GroupKey.Repack(m_data, factor));
     }
 
     public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
       m_parameters = parameters;
+      m_data = sample;
     }
 
     public SampleVariance GetStandardDerivation(IDividedSample group, IPlainSample joined)
@@ -220,12 +233,12 @@ namespace Schicksal.Anova
       };
     }
 
-    public ErrorInfo GetErrorInfo(LSDHelper sample1, LSDHelper sample2)
+    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
     {
       return new ErrorInfo
       {
-        Value = Math.Sqrt(sample1.ErrorValue / sample1.InnerCount + sample2.ErrorValue / sample2.InnerCount),
-        DegreesOfFreedom = sample1.InnerCount + sample2.InnerCount - 2
+        Value = Math.Sqrt(grad1.ErrorValue / grad1.InnerCount + grad2.ErrorValue / grad2.InnerCount),
+        DegreesOfFreedom = grad1.InnerCount + grad2.InnerCount - 2
       };
     }
   }
