@@ -96,7 +96,7 @@ namespace Schicksal.Anova
 
       double n_mean1 = (double)row1["+MeanNormalized"];
       double n_mean2 = (double)row2["+MeanNormalized"];
-      ErrorInfo error = this.GetError(row1, row2);
+      GradationsCompareError error = this.GetError(row1, row2);
 
       if (error.DegreesOfFreedom > 0)
       {
@@ -175,7 +175,7 @@ namespace Schicksal.Anova
       return Math.Abs((up - dn) * lsd / (bigger - smaller));
     }
 
-    private double GetLSD(ErrorInfo error)
+    private double GetLSD(GradationsCompareError error)
     {
       return error.Value * SpecialFunctions.invstudenttdistribution
       (
@@ -184,7 +184,7 @@ namespace Schicksal.Anova
       );
     }
 
-    private double GetErrorProbability(double normalizedDifference, ErrorInfo error)
+    private double GetErrorProbability(double normalizedDifference, GradationsCompareError error)
     {
       return
         (
@@ -196,7 +196,7 @@ namespace Schicksal.Anova
         ) * 2;
     }
 
-    private ErrorInfo GetError(DataRowView row1, DataRowView row2)
+    private GradationsCompareError GetError(DataRowView row1, DataRowView row2)
     {
       int count1 = (int)row1["+Count"];
       int count2 = (int)row2["+Count"];
@@ -217,10 +217,10 @@ namespace Schicksal.Anova
           Sample = (IDividedSample)row2["+Sample"]
         };
 
-        return m_primary_results.ResudualsCalculator.GetErrorInfo(sample1, sample2);
+        return m_primary_results.ResudualsCalculator.GetError(sample1, sample2);
       }
 
-      return new ErrorInfo
+      return new GradationsCompareError
       {
         Value = Math.Sqrt(m_msw.MeanSquare / count1 + m_msw.MeanSquare / count2),
         DegreesOfFreedom = m_msw.DegreesOfFreedom

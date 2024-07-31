@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace Schicksal.Anova
     /// <param name="group1">Первая градация фактора</param>
     /// <param name="group2">Вторая градация фактора</param>
     /// <returns></returns>
-    ErrorInfo GetErrorInfo(Gradation group1, Gradation group2);
+    GradationsCompareError GetError(Gradation group1, Gradation group2);
   }
 
   /// <summary>
@@ -81,7 +82,7 @@ namespace Schicksal.Anova
   /// <summary>
   /// Информация об ошибке для сравнения двух градаций
   /// </summary>
-  public struct ErrorInfo
+  public struct GradationsCompareError
   {
     /// <summary>
     /// Ошибка разности средних
@@ -130,9 +131,9 @@ namespace Schicksal.Anova
       return FisherTest.MSw(group);
     }
 
-    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
+    public GradationsCompareError GetError(Gradation grad1, Gradation grad2)
     {
-      return new ErrorInfo
+      return new GradationsCompareError
       {
         Value = Math.Sqrt(grad1.ErrorValue / grad1.TotalCount + grad2.ErrorValue / grad2.TotalCount),
         DegreesOfFreedom = grad1.TotalCount + grad2.TotalCount - grad1.Sample.Count - grad2.Sample.Count
@@ -196,23 +197,53 @@ namespace Schicksal.Anova
       };
     }
 
-    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
+    public GradationsCompareError GetError(Gradation grad1, Gradation grad2)
     {
-      var join_array = new IPlainSample[grad1.Sample.Count + grad2.Sample.Count];
+      var ms = this.GetStandardDerivation(new DoubleDividedSample(grad1.Sample, grad2.Sample), null);
 
-      for (int i = 0; i < grad1.Sample.Count; i++)
-        join_array[i] = grad1.Sample[i];
-
-      for (int i = 0; i < grad2.Sample.Count; i++)
-        join_array[i + grad1.Sample.Count] = grad2.Sample[i];
-
-      var ms = this.GetStandardDerivation(new ArrayDividedSample(join_array), null);
-
-      return new ErrorInfo
+      return new GradationsCompareError
       {
         Value = Math.Sqrt(ms.MeanSquare / grad1.TotalCount + ms.MeanSquare / grad2.TotalCount),
         DegreesOfFreedom = ms.DegreesOfFreedom
       };
+    }
+
+    private class DoubleDividedSample : IDividedSample
+    {
+      private readonly IDividedSample m_first;
+      private readonly IDividedSample m_second;
+
+      public DoubleDividedSample(IDividedSample first, IDividedSample second)
+      {
+        if (first == null) 
+          throw new ArgumentNullException("first");
+
+        if (second == null)
+          throw new ArgumentNullException("second");
+
+        m_first = first;
+        m_second = second;
+      }
+
+      public IPlainSample this[int index]
+      {
+        get { return index < m_first.Count ? m_first[index] : m_second[index - m_first.Count]; }
+      }
+
+      public int Count
+      {
+        get { return m_first.Count + m_second.Count; }
+      }
+
+      public IEnumerator<IPlainSample> GetEnumerator()
+      {
+        return m_first.Concat(m_second).GetEnumerator();
+      }
+
+      IEnumerator IEnumerable.GetEnumerator()
+      {
+        return this.GetEnumerator();
+      }
     }
   }
 
@@ -241,6 +272,9 @@ namespace Schicksal.Anova
 
     public void Start(AnovaParameters parameters, IDividedSample<GroupKey> sample, IProgressIndicator progress)
     {
+      if (parameters == null)
+        throw new ArgumentNullException("parameters");
+
       m_parameters = parameters;
       m_data = sample;
     }
@@ -254,9 +288,9 @@ namespace Schicksal.Anova
       };
     }
 
-    public ErrorInfo GetErrorInfo(Gradation grad1, Gradation grad2)
+    public GradationsCompareError GetError(Gradation grad1, Gradation grad2)
     {
-      return new ErrorInfo
+      return new GradationsCompareError
       {
         Value = Math.Sqrt(grad1.ErrorValue / grad1.TotalCount + grad2.ErrorValue / grad2.TotalCount),
         DegreesOfFreedom = grad1.TotalCount + grad2.TotalCount - 2
