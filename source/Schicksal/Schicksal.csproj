@@ -89,6 +89,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Regression\CorrelationMetrics.cs" />
+    <Compile Include="Regression\CorrelationParameters.cs" />
     <Compile Include="Regression\CorrelationTest.cs" />
     <Compile Include="Regression\CorrelationTestProcessor.cs" />
     <Compile Include="Regression\CorrelationGraphUtils.cs" />

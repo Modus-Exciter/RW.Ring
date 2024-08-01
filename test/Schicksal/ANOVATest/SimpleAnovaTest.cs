@@ -54,7 +54,7 @@ namespace ANOVATest
     [TestMethod]
     public void NoNormalizationIndependentCommon()
     {
-      CheckSingleFactor(new AnovaParameters
+      Utils.CheckSingleFactor(new AnovaParameters
       (
         GenerateTable(),
         null,
@@ -70,7 +70,7 @@ namespace ANOVATest
     [TestMethod]
     public void NoNormalizationConjugationCommon()
     {
-      CheckSingleFactor(new AnovaParameters
+      Utils.CheckSingleFactor(new AnovaParameters
       (
         GenerateTable(),
         null,
@@ -86,7 +86,7 @@ namespace ANOVATest
     [TestMethod]
     public void NoNormalizationIndependentIndividual ()
     {
-      CheckSingleFactor(new AnovaParameters
+      Utils.CheckSingleFactor(new AnovaParameters
       (
         GenerateTable(),
         null,
@@ -102,7 +102,7 @@ namespace ANOVATest
     [TestMethod]
     public void NoNormalizationConjugationIndividual()
     {
-      CheckSingleFactor(new AnovaParameters
+      Utils.CheckSingleFactor(new AnovaParameters
       (
         GenerateTable(),
         null,
@@ -115,53 +115,109 @@ namespace ANOVATest
       ), 5.8606, 0.072694376);
     }
 
-    private static void CheckSingleFactor(AnovaParameters pm, double f, double p)
+    [TestMethod]
+    public void RanksIndependentCommon()
     {
-      var calc = new AnovaCalculator(pm);
-      calc.Run();
-
-      var comparator = new MultiVariantsComparator(new VariantsComparator(
-        calc, FactorInfo.Parse("Factor"), 
-        new SampleVariance
-        {
-          SumOfSquares = calc.FisherTestResults[0].SSw,
-          DegreesOfFreedom = (int)calc.FisherTestResults[0].Ndf
-        }));
-
-      comparator.Run();
-
-      Assert.AreEqual(1, calc.FisherTestResults.Length);
-      Assert.AreEqual(1, comparator.Results.Length);
-
-      CheckValue(f, calc.FisherTestResults[0].F);
-      CheckValue(p, calc.FisherTestResults[0].P);
-      CheckValue(calc.FisherTestResults[0].P, comparator.Results[0].Probability);
-
-      CheckDifferenceInfo(comparator.Results[0], pm.Probability);
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        GenerateTable(),
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+        new RankNormalizer(2),
+        null,
+        false
+      ), 6.3612, 0.0356891487360225);
     }
 
-    private static void CheckDifferenceInfo(DifferenceInfo diff, double p)
+    [TestMethod]
+    public void RanksConjugationCommon()
     {
-      Assert.AreEqual(diff.Probability > p, diff.MinimalDifference > Math.Abs(diff.Mean1 - diff.Mean2));
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        GenerateTable(),
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+        new RankNormalizer(2),
+        "Repeat",
+        false
+      ), 7.0784, 0.0563590847952903);
     }
 
-    private static void CheckValue(double expected, double actual)
+    [TestMethod]
+    public void RanksIndependentIndividual()
     {
-      if (expected == 0)
-        Assert.AreEqual(0, actual);
-      else if (expected > 1e-3)
-        Assert.AreEqual(expected, actual, 1e-4);
-      else
-      {
-        try
-        {
-          Assert.AreEqual(Math.Log(expected), Math.Log(actual), 1e-5);
-        }
-        catch
-        {
-          Assert.AreEqual(expected, actual);
-        }
-      }
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        GenerateTable(),
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+        new RankNormalizer(2),
+        null,
+        true
+      ), 6.3612, 0.0356891487360225);
+    }
+
+    [TestMethod]
+    public void RanksConjugationIndividual()
+    {
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        GenerateTable(),
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+        new RankNormalizer(2),
+        "Repeat",
+        true
+      ), 7.0784, 0.0563590847952903);
+    }
+
+    [TestMethod]
+    public void NoNormalizationDifferent()
+    {
+      var table = GenerateTable();
+
+      table.Rows[5]["Factor"] = "a";
+      table.AcceptChanges();
+
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        table,
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+        DummyNormalizer.Instance,
+        null,
+        false
+      ), 3.7457, 0.088979423872302);
+    }
+
+    [TestMethod]
+    public void RanksDifferent()
+    {
+      var table = GenerateTable();
+
+      table.Rows[5]["Factor"] = "a";
+      table.AcceptChanges();
+      Utils.CheckSingleFactor(new AnovaParameters
+      (
+        table,
+        null,
+        FactorInfo.Parse("Factor"),
+        "Response",
+        0.05f,
+       new RankNormalizer(2),
+        null,
+        false
+      ), 5.6545, 0.0446913088516174);
     }
 
     private static DataTable GenerateTable()
@@ -186,7 +242,6 @@ namespace ANOVATest
       dt.Rows.Add("b", 28, 5);
 
       dt.EndInit();
-
       dt.AcceptChanges();
 
       return dt;

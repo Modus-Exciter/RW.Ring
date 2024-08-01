@@ -48,9 +48,8 @@ namespace Notung.Data
           m_buckets = new int[3];
         }
 
-        int previous;
         int bucket_index;
-        int slot_index = this.FindSlotIndex(item, out bucket_index, out previous, true);
+        int slot_index = this.FindSlotIndex(item, out bucket_index, out _, true);
 
         if (slot_index >= 0)
           return false;

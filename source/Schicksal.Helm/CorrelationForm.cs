@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -89,16 +90,8 @@ namespace Schicksal.Helm
 
       m_chart.Series[1].Points.ResumeUpdates();
 
-      /* m_label_metrics1.Text = string.Format("{0}: {1}; {2}: {3:0.0000}; {4}: {5:0.0000}",
-         SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity,
-         SchicksalResources.CONSISTENCY, dependency.Consistency,
-         SchicksalResources.CONSISTENCY_WEIGHTED, dependency.ConsistencyWeighted);
-
-       m_label_metrics2.Text = string.Format("{0}: {1}; {2}: {3};",
-         SchicksalResources.RMS_ERROR, dependency.RMSError,
-         SchicksalResources.RMS_ERROR_WEIGHTED, dependency.RMSErrorWeighted);*/
-
-      m_label_metrics.Text = string.Format("{0}: {1}", SchicksalResources.HETEROSCEDASTICITY, m_dependency.Heteroscedasticity);
+      m_label_metrics.Text = string.Format("{0}: {1:0.0000}", 
+        SchicksalResources.CONSISTENCY, m_dependency.Consistency);
 
       this.MinimumSize = new Size(m_label_metrics.Width 
         + m_type_selector.Width + 20, 200);

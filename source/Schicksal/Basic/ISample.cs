@@ -64,19 +64,6 @@ namespace Schicksal.Basic
   }
 
   /// <summary>
-  /// Множество наборов данных, состоящих из нескольких выборок
-  /// </summary>
-  public interface IComplexSample : IEnumerable<IDividedSample>, ISample
-  {
-    /// <summary>
-    /// Получение выборки по порядковому номеру
-    /// </summary>
-    /// <param name="index">Порядковый номер набора выборок данных</param>
-    /// <returns>Выборка для анализа</returns>
-    IDividedSample this[int index] { get; }
-  }
-
-  /// <summary>
   /// Набор данных, состоящий из нескольких выборок, с поиском по ключу
   /// </summary>
   /// <typeparam name="T">Тип ключа выборки</typeparam>
@@ -88,6 +75,19 @@ namespace Schicksal.Basic
     /// <param name="key">Значение ключа выборки</param>
     /// <returns>Выборка для анализа</returns>
     IPlainSample this[T key] { get; }
+  }
+
+  /// <summary>
+  /// Множество наборов данных, состоящих из нескольких выборок
+  /// </summary>
+  public interface IComplexSample : IEnumerable<IDividedSample>, ISample
+  {
+    /// <summary>
+    /// Получение выборки по порядковому номеру
+    /// </summary>
+    /// <param name="index">Порядковый номер набора выборок данных</param>
+    /// <returns>Выборка для анализа</returns>
+    IDividedSample this[int index] { get; }
   }
 
   [ImmutableObject(true)]
