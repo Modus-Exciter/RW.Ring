@@ -15,7 +15,28 @@ namespace Schicksal.Basic
     /// </summary>
     int Count { get; }
   }
-  
+
+  /// <summary>
+  /// Выборка, в которой каждому элементу (числу или подвыборке) сопоставлен ключ
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+  public interface ISample<T> : ISample
+  {
+    /// <summary>
+    /// Получение ключа выборки по порядковому номеру
+    /// </summary>
+    /// <param name="index">Порядковый номер выборки в наборе данных</param>
+    /// <returns>Значение ключа выборки</returns>
+    T GetKey(int index);
+
+    /// <summary>
+    /// Получение порядкового номера выборки по ключу
+    /// </summary>
+    /// <param name="key">Значение ключа выборки</param>
+    /// <returns>Порядковый номер выборки в наборе данных</returns>
+    int GetIndex(T key);
+  }
+
   /// <summary>
   /// Выборка чисел для статистического анализа
   /// </summary>
@@ -59,7 +80,7 @@ namespace Schicksal.Basic
   /// Набор данных, состоящий из нескольких выборок, с поиском по ключу
   /// </summary>
   /// <typeparam name="T">Тип ключа выборки</typeparam>
-  public interface IDividedSample<T> : IDividedSample
+  public interface IDividedSample<T> : IDividedSample, ISample<T>
   {
     /// <summary>
     /// Получение выборки по ключу
@@ -67,20 +88,6 @@ namespace Schicksal.Basic
     /// <param name="key">Значение ключа выборки</param>
     /// <returns>Выборка для анализа</returns>
     IPlainSample this[T key] { get; }
-
-    /// <summary>
-    /// Получение ключа выборки по порядковому номеру
-    /// </summary>
-    /// <param name="index">Порядковый номер выборки в наборе данных</param>
-    /// <returns>Значение ключа выборки</returns>
-    T GetKey(int index);
-
-    /// <summary>
-    /// Получение порядкового номера выборки по ключу
-    /// </summary>
-    /// <param name="key">Значение ключа выборки</param>
-    /// <returns>Порядковый номер выборки в наборе данных</returns>
-    int GetIndex(T key);
   }
 
   [ImmutableObject(true)]

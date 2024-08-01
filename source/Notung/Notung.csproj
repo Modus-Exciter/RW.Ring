@@ -52,6 +52,7 @@
     <Compile Include="ComponentModel\INodeMoveProvider.cs" />
     <Compile Include="ComponentModel\ObservableObject.cs" />
     <Compile Include="Data\CartesianMultiplier.cs" />
+    <Compile Include="Data\KeyedArray.cs" />
     <Compile Include="Data\MatrixFunctions.cs" />
     <Compile Include="Data\MST.cs" />
     <Compile Include="Data\PriorityQueue.cs" />

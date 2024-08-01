@@ -7,7 +7,7 @@ using Schicksal.Basic;
 
 namespace Schicksal.Anova
 {
-  public class TwiceGroupedSample : IComplexSample, IEnumerable<IDividedSample<GroupKey>>
+  public class TwiceGroupedSample : IComplexSample, ISample<GroupKey>
   {
     private readonly IDividedSample<GroupKey>[] m_groups;
     private readonly GroupKey[] m_keys;
@@ -79,6 +79,11 @@ namespace Schicksal.Anova
       return m_keys[index];
     }
 
+    public int GetIndex(GroupKey key)
+    {
+      return Array.FindIndex(m_keys, k => k.Equals(key));
+    }
+
     public override string ToString()
     {
       return string.Format("Grouped sample, count={0}", m_groups.Length);
@@ -116,17 +121,12 @@ namespace Schicksal.Anova
         ^ m_keys.Aggregate(0, (c, g) => c ^ g.GetHashCode());
     }
 
-    public IEnumerator<IDividedSample<GroupKey>> GetEnumerator()
+    public  IEnumerator<IDividedSample> GetEnumerator()
     {
       return (m_groups as IEnumerable<IDividedSample<GroupKey>>).GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
-    {
-      return this.GetEnumerator();
-    }
-
-    IEnumerator<IDividedSample> IEnumerable<IDividedSample>.GetEnumerator()
     {
       return this.GetEnumerator();
     }

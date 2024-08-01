@@ -12,10 +12,10 @@ namespace Notung
   [Serializable]
   public sealed class Info
   {
-    private readonly InfoBuffer m_inner_messages = new InfoBuffer();
     [NonSerialized]
     private object m_details;
     private string m_details_string;
+    private readonly InfoBuffer m_inner_messages = new InfoBuffer();
 
     /// <summary>
     /// Инициализирует новый экземпляр сообщения
