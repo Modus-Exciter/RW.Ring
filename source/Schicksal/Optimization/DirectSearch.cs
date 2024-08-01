@@ -29,13 +29,13 @@ namespace Schicksal.Optimization
       readonly double[] m_high_bound;
       readonly double m_tolerance;
 
-      readonly DataGroupObserver m_data_group = new DataGroupObserver();
       double[] m_function_buffer;
 
       public Direct(Func<double[], double> function, double[] lowBound, double[] highBound, OptimizationOptions options = null)
       {
         if (lowBound.Length != highBound.Length)
           throw new ArgumentException();
+
         if (options == null)
           m_options = OptimizationOptions.Default;
 
@@ -134,6 +134,5 @@ namespace Schicksal.Optimization
       }
     }
   }
-
 }
 

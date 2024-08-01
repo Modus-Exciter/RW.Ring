@@ -7,12 +7,15 @@ using Schicksal.Properties;
 
 namespace Schicksal.Regression
 {
-  class DataColumnGroup : IDataGroup
+  /// <summary>
+  /// Выборка на основе определённой колонки таблицы
+  /// </summary>
+  class DataColumnSample : IPlainSample
   {
     private readonly DataColumn m_column;
     private readonly DataRow[] m_rows;
 
-    public DataColumnGroup(DataColumn column, string filter)
+    public DataColumnSample(DataColumn column, string filter)
     {
       if (column == null)
         throw new ArgumentNullException("column");

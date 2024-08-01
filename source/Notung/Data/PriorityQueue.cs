@@ -35,7 +35,8 @@ namespace Notung.Data
 
     public int Count { get { return m_count; } }
 
-    public PriorityQueue(IEnumerable<KeyValuePair<TElement, TPriority>> values = null, IComparer<TPriority> comparer = null)
+    public PriorityQueue(IEnumerable<KeyValuePair<TElement, TPriority>> values = null, 
+      IComparer<TPriority> comparer = null, int domainSize = DOMAIN_SIZE)
     {
       if (comparer == null)
       {
@@ -47,7 +48,7 @@ namespace Notung.Data
       else
         m_comparer = comparer;
 
-      m_domain = new QueueTuple[DOMAIN_SIZE][];
+      m_domain = new QueueTuple[domainSize][];
       m_domain[m_last_domain_index] = new QueueTuple[1];
 
       if (values != null)

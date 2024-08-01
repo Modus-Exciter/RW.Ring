@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using Notung;
-using Notung.Data;
 using Schicksal.Basic;
 using Schicksal.Properties;
 
@@ -15,163 +14,92 @@ namespace Schicksal.Anova
   /// </summary>
   public class VariantsComparator
   {
-    private readonly DataTable m_source;
-    private readonly string[] m_factors;
-    private readonly string m_result;
-    private readonly string[] m_ignorable_factors;
-    private readonly string m_filter;
-    private readonly string m_conjugate;
-    private double m_within_dispersion;
-    private double m_within_df;
+    private readonly IPrimaryAnovaResults m_primary_results;
+    private readonly FactorInfo m_predictor;
+    private readonly SampleVariance m_msw;
 
-    /// <summary>
-    /// Инициализация детализации
-    /// </summary>
-    /// <param name="table">Таблица с исходными данными</param>
-    /// <param name="factor">Факторы, градации которых сравниваются</param>
-    /// <param name="ignoredFactors">Факторы, градации которых игнорируются, но тоже влияют</param>
-    /// <param name="result">Колонка таблицы с эффектом</param>
-    /// <param name="filter">Фильтр по таблице</param>
-    public VariantsComparator(DataTable table, string factor, string ignoredFactors, string result, string filter, string conjugate)
+    public VariantsComparator(IPrimaryAnovaResults primaryResults, FactorInfo predictor, SampleVariance msw)
     {
-      m_source = table;
-      m_factors = factor.Split('+');
-      m_ignorable_factors = string.IsNullOrEmpty(ignoredFactors) ? ArrayExtensions.Empty<string>() : ignoredFactors.Split('+');
-      m_result = result;
-      m_filter = filter;
-      m_conjugate = conjugate;
+      if (primaryResults == null)
+        throw new ArgumentNullException("primaryResults");
+
+      if (predictor == null)
+        throw new ArgumentNullException("predictor");
+
+      m_primary_results = primaryResults;
+      m_predictor = predictor;
+      m_msw = msw;
     }
 
     /// <summary>
-    /// Колонка таблицы с эффектом
+    /// Результаты первичного анализа, на базе которых делается детальный анализ
     /// </summary>
-    public string ResultField
+    public IPrimaryAnovaResults PrimaryResluts
     {
-      get { return m_result; }
-    }
-
-    /// <summary>
-    /// Факторы, градации которых сравниваются
-    /// </summary>
-    public string[] Factors
-    {
-      get { return m_factors; }
-    }
-
-    /// <summary>
-    /// Факторы, градации которых игнорируются, но тоже влияют
-    /// </summary>
-    public string Filter
-    {
-      get { return m_filter; }
+      get { return m_primary_results; }
     }
 
     /// <summary>
     /// Генерация таблицы с описательными статистиками по факторам, градации которых сравниваются
     /// </summary>
-    /// <param name="p">Уровень значимости для расчёта доверительных интервалов</param>
-    /// <returns>Таблица содержит градации всех факторов. По каждой градации показано
-    /// количество наблюдений, среднее арифметическое, количество наблюдений, стандартное
-    /// отклонение, доверительный  интервал и количество градаций игнорируемого фактора</returns>
-    public DataTable CreateDescriptiveTable(double p)
+    /// <returns>Таблица содержит градации всех факторов. По каждой градации показано количество наблюдений,
+    /// среднее арифметическое, стандартное отклонение, доверительный  интервал и служебная информация</returns>
+    public DataTable CreateDescriptiveTable()
     {
       var res = new DataTable();
 
-      res.Columns.Add("Factor", typeof(string));
+      res.Columns.Add("+Factor", typeof(string)).ColumnMapping = MappingType.Hidden;
 
-      foreach (string factor in m_factors)
-        res.Columns.Add(factor, m_source.Columns[factor].DataType);
+      foreach (string p in m_predictor)
+        res.Columns.Add(p, m_primary_results.Parameters.Table.Columns[p].DataType);
 
-      res.Columns.Add("Count", typeof(int));
-      res.Columns.Add("Mean", typeof(double));
-      res.Columns.Add("Std error", typeof(double));
-      res.Columns.Add("Interval", typeof(double));
-      res.Columns.Add("Ignorable", typeof(int));
+      res.Columns.Add("+Count", typeof(int));
+      res.Columns.Add("+Mean", typeof(double));
+      res.Columns.Add("+Std error", typeof(double));
+      res.Columns.Add("+Interval", typeof(double));
+      res.Columns.Add("+MeanNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+ErrorNormalized", typeof(double)).ColumnMapping = MappingType.Hidden;
+      res.Columns.Add("+Sample", typeof(IDividedSample<GroupKey>)).ColumnMapping = MappingType.Hidden;
 
-      using (var groupset = new TableSetDataGroup(m_source, m_factors, m_ignorable_factors, m_result, m_filter, m_conjugate))
+      var groupset = new TwiceGroupedSample(m_primary_results.DataSet, m_predictor);
+
+      res.BeginLoadData();
+
+      for (int i = 0; i < groupset.Count; i++)
       {
-        for (int i = 0; i < groupset.Count; i++)
-        {
-          DataRow row = res.NewRow();
-          string filter = groupset.GetKey(i);
+        DataRow row = res.NewRow();
 
-          foreach (string factor in m_factors)
-          {
-            var search = GetFactorLevel(filter, factor);
+        this.FillDataRow(row, groupset.GetKey(i), groupset[i]);
 
-            if (m_source.Columns[factor].DataType == typeof(string)
-              && search.StartsWith("'") && search.EndsWith("'"))
-              search = search.Substring(1, search.Length - 2);
-
-            row[factor] = TypeDescriptor.GetConverter(
-              m_source.Columns[factor].DataType).ConvertFromInvariantString(search);
-          }
-
-          var join = new JoinedDataGroup(groupset[i]);
-
-          row["Factor"] = string.Join(", ", m_factors.Select(f => row[f]));
-          row["Mean"] = DescriptionStatistics.Mean(join);
-          row["Count"] = join.Count;
-          row["Ignorable"] = groupset[i].Count;
-
-          if (join.Count > groupset[i].Count)
-          {
-            var sum = groupset[i].Sum(b => DescriptionStatistics.SquareDerivation(b));
-            row["Std error"] = Math.Sqrt(sum / (join.Count - groupset[i].Count));
-            row["Interval"] = ((double)row["Std error"]) / Math.Sqrt((double)join.Count / groupset[i].Count) *
-              SpecialFunctions.invstudenttdistribution(join.Count - groupset[i].Count, 1 - p / 2);
-          }
-          else
-          {
-            row["Interval"] = double.NaN;
-            row["Std error"] = double.NaN;
-          }
-
-          res.Rows.Add(row);
-        }
-
-        if (string.IsNullOrEmpty(m_conjugate))
-        {
-          m_within_dispersion = FisherCriteria.GetWithinDispersion(groupset);
-          m_within_df = (int)FisherCriteria.GetWithinDegreesOfFreedom(groupset);
-        }
-        else 
-        {
-          var criteria = FisherCriteria.CalculateConjugate(groupset);
-          m_within_dispersion = criteria.MSw;
-          m_within_df = criteria.Ndf;
-        }
+        res.Rows.Add(row);
       }
+
+      res.EndLoadData();
 
       return res;
     }
 
-    /// <summary>
-    /// Сравнение двух градаций факторов
-    /// </summary>
-    /// <param name="row1">Первая из сравниваемых строк, содержащих описание градации фактора</param>
-    /// <param name="row2">Вторая из сравниваемых строк, содержащих описание градации фактора</param>
-    /// <param name="p">Уровень значимости</param>
-    /// <returns>Результаты сравнения двух градаций фактора</returns>
-    public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2, double p)
+    public DifferenceInfo GetDifferenceInfo(DataRowView row1, DataRowView row2)
     {
-      double error = this.GetError(row1, row2);
       var result = new DifferenceInfo
       {
-        Factor1 = row1["Factor"].ToString(),
-        Factor2 = row2["Factor"].ToString(),
-        Mean1 = (double)row1["Mean"],
-        Mean2 = (double)row2["Mean"],
-        Result = m_result
+        Factor1 = row1["+Factor"].ToString(),
+        Factor2 = row2["+Factor"].ToString(),
+        Mean1 = (double)row1["+Mean"],
+        Mean2 = (double)row2["+Mean"],
+        Result = m_primary_results.Parameters.Response
       };
 
       result.ActualDifference = Math.Abs(result.Mean1 - result.Mean2);
 
-      if (m_within_df > 0)
+      double n_mean1 = (double)row1["+MeanNormalized"];
+      double n_mean2 = (double)row2["+MeanNormalized"];
+      GradationsCompareError error = this.GetError(row1, row2);
+
+      if (error.DegreesOfFreedom > 0)
       {
-        result.MinimalDifference = error * SpecialFunctions.invstudenttdistribution((int)m_within_df, 1 - p / 2);
-        result.Probability = (1 - SpecialFunctions.studenttdistribution((int)m_within_df,
-          Math.Abs(result.Mean2 - result.Mean1) / error)) * 2;
+        result.MinimalDifference = this.RecalcLSD(this.GetLSD(error), n_mean1, n_mean2);
+        result.Probability = this.GetErrorProbability(Math.Abs(n_mean1 - n_mean2), error);
       }
       else
       {
@@ -185,43 +113,116 @@ namespace Schicksal.Anova
       return result;
     }
 
-    private static string GetFactorLevel(string filter, string factor)
+    private void FillDataRow(DataRow row, GroupKey groupKey, IDividedSample group)
     {
-      var search = string.Format("[{0}] = ", factor);
-      var index = filter.IndexOf(search);
-      if (index >= 0)
+      foreach (var kv in groupKey)
       {
-        var next = filter.IndexOf(" AND ", index + search.Length);
+        var col_type = m_primary_results.Parameters.Table.Columns[kv.Key].DataType;
 
-        if (next >= 0)
-          search = filter.Substring(index + search.Length, next - (index + search.Length));
-        else
-          search = filter.Substring(index + search.Length);
+        row[kv.Key] = kv.Value.GetType() == col_type || kv.Value is DBNull
+          ? kv.Value
+          : TypeDescriptor.GetConverter(col_type).ConvertFromInvariantString(kv.Value.ToString());
+      }
+
+      row["+Factor"] = string.Join(", ", m_predictor.Select(f => row[f]));
+
+      var join = new JoinedSample(group);
+      var mean = DescriptionStatistics.Mean(join);
+      var std_der = m_primary_results.ResudualsCalculator.GetStandardDerivation(group, join);
+
+      row["+Count"] = join.Count;
+      row["+Mean"] = m_primary_results.ValueTransform.Denormalize(mean);
+      row["+MeanNormalized"] = mean;
+      row["+Sample"] = group;
+
+      if (std_der.DegreesOfFreedom > 0)
+      {
+        var std_error = Math.Sqrt(std_der.MeanSquare);
+        var interval = std_error / Math.Sqrt(join.Count)
+          * SpecialFunctions.invstudenttdistribution
+          (
+            std_der.DegreesOfFreedom,
+            1 - m_primary_results.Parameters.Probability / 2
+          );
+
+        row["+Std error"] = this.RecalcDerivation(mean, std_error);
+        row["+Interval"] = this.RecalcDerivation(mean, interval);
+        row["+ErrorNormalized"] = std_der.MeanSquare;
       }
       else
       {
-        search = string.Format("[{0}] IS NULL", factor);
-
-        if (!filter.Contains(search))
-          search = filter;
-        else
-          search = CoreResources.NULL;
+        row["+Std error"] = double.NaN;
+        row["+Interval"] = double.NaN;
+        row["+ErrorNormalized"] = double.NaN;
       }
-
-      return search;
     }
 
-    private double GetError(DataRowView row1, DataRowView row2)
+    private double RecalcDerivation(double center, double derivation)
     {
-      int count1 = (int)row1["Count"];
-      int count2 = (int)row2["Count"];
-      int ig1 = (int)row1["Ignorable"];
-      int ig2 = (int)row2["Ignorable"];
+      var up = m_primary_results.ValueTransform.Denormalize(center + derivation);
+      var dn = m_primary_results.ValueTransform.Denormalize(center - derivation);
 
-      if (string.IsNullOrEmpty(m_conjugate))
-        return Math.Sqrt(m_within_dispersion * ig1 / count1 + m_within_dispersion * ig2 / count2);
-      else
-        return Math.Sqrt(m_within_dispersion / count1 + m_within_dispersion / count2);
+      return Math.Abs(up - dn) / 2;
+    }
+
+    private double RecalcLSD(double lsd, double bigger, double smaller)
+    {
+      var up = m_primary_results.ValueTransform.Denormalize(bigger);
+      var dn = m_primary_results.ValueTransform.Denormalize(smaller);
+
+      return Math.Abs((up - dn) * lsd / (bigger - smaller));
+    }
+
+    private double GetLSD(GradationsCompareError error)
+    {
+      return error.Value * SpecialFunctions.invstudenttdistribution
+      (
+        error.DegreesOfFreedom,
+        1 - m_primary_results.Parameters.Probability / 2
+      );
+    }
+
+    private double GetErrorProbability(double normalizedDifference, GradationsCompareError error)
+    {
+      return
+        (
+          1 - SpecialFunctions.studenttdistribution
+          (
+            error.DegreesOfFreedom,
+            normalizedDifference / error.Value
+          )
+        ) * 2;
+    }
+
+    private GradationsCompareError GetError(DataRowView row1, DataRowView row2)
+    {
+      int count1 = (int)row1["+Count"];
+      int count2 = (int)row2["+Count"];
+
+      if (m_primary_results.Parameters.IndividualError)
+      {
+        var sample1 = new Gradation
+        {
+          ErrorValue = (double)row1["+ErrorNormalized"],
+          TotalCount = count1,
+          Sample = (IDividedSample)row1["+Sample"]
+        };
+
+        var sample2 = new Gradation
+        {
+          ErrorValue = (double)row2["+ErrorNormalized"],
+          TotalCount = count2,
+          Sample = (IDividedSample)row2["+Sample"]
+        };
+
+        return m_primary_results.ResudualsCalculator.GetError(sample1, sample2);
+      }
+
+      return new GradationsCompareError
+      {
+        Value = Math.Sqrt(m_msw.MeanSquare / count1 + m_msw.MeanSquare / count2),
+        DegreesOfFreedom = m_msw.DegreesOfFreedom
+      };
     }
   }
 
@@ -231,7 +232,6 @@ namespace Schicksal.Anova
   public sealed class MultiVariantsComparator : RunBase, IServiceProvider
   {
     private readonly VariantsComparator m_comparator;
-    private readonly double m_probability;
     private string m_factor1_max;
     private string m_factor2_max;
 
@@ -240,13 +240,12 @@ namespace Schicksal.Anova
     /// </summary>
     /// <param name="comparator">Объект для сравнения градаций фактора</param>
     /// <param name="p">Уровень значимости</param>
-    public MultiVariantsComparator(VariantsComparator comparator, double p)
+    public MultiVariantsComparator(VariantsComparator comparator)
     {
       if (comparator == null)
         throw new ArgumentNullException("comparator");
 
       m_comparator = comparator;
-      m_probability = p;
       m_factor1_max = string.Empty;
       m_factor2_max = string.Empty;
     }
@@ -266,11 +265,13 @@ namespace Schicksal.Anova
     /// </summary>
     public override void Run()
     {
-      this.ReportProgress(string.Format("{0}({1}) [{2}]", m_comparator.ResultField,
-        string.Join(", ", m_comparator.Factors), m_comparator.Filter));
+      this.ReportProgress(string.Format("{0}({1}) [{2}]", 
+        m_comparator.PrimaryResluts.Parameters.Response,
+        string.Join(", ", m_comparator.PrimaryResluts.Parameters.Predictors), 
+        m_comparator.PrimaryResluts.Parameters.Filter));
 
       if (this.Source == null)
-        this.Source = m_comparator.CreateDescriptiveTable(m_probability);
+        this.Source = m_comparator.CreateDescriptiveTable();
 
       var result = new DifferenceInfo[this.Source.Rows.Count * (this.Source.Rows.Count - 1) / 2];
       int k = 0;
@@ -280,7 +281,7 @@ namespace Schicksal.Anova
         for (int j = i + 1; j < this.Source.Rows.Count; j++)
         {
           result[k] = m_comparator.GetDifferenceInfo(
-            this.Source.DefaultView[i], this.Source.DefaultView[j], m_probability);
+            this.Source.DefaultView[i], this.Source.DefaultView[j]);
 
           if (result[k].Factor1.Length > m_factor1_max.Length)
             m_factor1_max = result[k].Factor1;

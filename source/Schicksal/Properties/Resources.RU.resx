@@ -132,8 +132,8 @@
   <data name="CRITICAL_DIFFERENCE" xml:space="preserve">
     <value>НСР</value>
   </data>
-  <data name="DATA_GROUP_SIZE_MISMATCH" xml:space="preserve">
-    <value>Обе группы данных для регрессионного анализа должны быть одинакового размера</value>
+  <data name="DATA_SAMPLE_SIZE_MISMATCH" xml:space="preserve">
+    <value>Обе числовые последовательности для регрессионного анализа должны быть одинакового размера</value>
   </data>
   <data name="DEPENDENCY_TYPE" xml:space="preserve">
     <value>Вид зависимости</value>
@@ -180,11 +180,20 @@
   <data name="MOST_SIGNIFICAT_DIFFERENCE" xml:space="preserve">
     <value>Наиболее статистически значимая разница наблюдалась между вариантами</value>
   </data>
+  <data name="NO_JOINT_BOX_COX" xml:space="preserve">
+    <value>Невозможно получить функцию обратного преобразования Бокса-Кокса. Группы не преобразованы совместно</value>
+  </data>
+  <data name="NO_JOINT_RANKS" xml:space="preserve">
+    <value>Невозможно получить функцию обратного ранжирования. Группы не ранжированы совместно</value>
+  </data>
   <data name="OTHER_UNSIGNIFICAT" xml:space="preserve">
     <value>а прочие различия оказались несущественными.</value>
   </data>
   <data name="PAIRED_COMPARISON" xml:space="preserve">
     <value>Попарное сравнение</value>
+  </data>
+  <data name="PREPARING_DATA" xml:space="preserve">
+    <value>Подготовка данных</value>
   </data>
   <data name="REGRESSION_DEPENDENCY" xml:space="preserve">
     <value>Формула регрессионной зависимости</value>
@@ -197,6 +206,9 @@
   </data>
   <data name="REPORT" xml:space="preserve">
     <value>Отчёт</value>
+  </data>
+  <data name="ROW_NOT_BELONG_TABLE" xml:space="preserve">
+    <value>Строка не принадлежит этой таблице</value>
   </data>
   <data name="SIGNIFICANT_DIFFERENCES" xml:space="preserve">
     <value>Проведённое исследование показало, что существенные различия наблюдаются между вариантами</value>
@@ -215,6 +227,9 @@
   </data>
   <data name="TOTAL_COUNT" xml:space="preserve">
     <value>Общее количество наблюдений</value>
+  </data>
+  <data name="UNABLE_CONJUGATION" xml:space="preserve">
+    <value>Невозможно использовать сопряжённые наблюдения из-за разного количества повторностей в вариантах</value>
   </data>
   <data name="UNSIGNIFICAT" xml:space="preserve">
     <value>В ходе исследования выяснилось, что следующие факторы и комбинации оказались статистически незначимыми на уровне значимости {0:0.0}%</value>

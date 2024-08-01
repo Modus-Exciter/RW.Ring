@@ -88,7 +88,7 @@ namespace Schicksal.Optimization
         }
 
         Array.Sort(simplex);
-        deltaY = Math.Abs(DescriptionStatistics.PlainDispersion(new ArrayDataGroup(simplex.Select(point => point.y).ToArray())) / simplex[0].y);
+        deltaY = Math.Abs(DescriptionStatistics.PlainDispersion(new ArrayPlainSample(simplex.Select(point => point.y).ToArray())) / simplex[0].y);
         deltaX = Math.Abs((simplex[0].x - simplex[1].x).Length());
         countIter++;
       }

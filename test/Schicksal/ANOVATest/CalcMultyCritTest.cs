@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 using Schicksal.Anova;
 using Schicksal.Basic;
 
@@ -8,21 +9,21 @@ namespace ANOVATest
   [TestClass]
   public class CalcMultyCritTest
   {
-    /// <summary>
+  /// <summary>
     /// Сопоставление результатов, рассчитаных с помощью Excel (1 эксперимент) и языка R для фактора B "сорт"
     /// </summary>
     [TestMethod]
     public void ExcelAndRComparisonExpNo1FactB()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 48, 49, 50 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 53, 54, 55 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 48, 49, 50 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 53, 54, 55 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 18, 19, 20 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 24, 25, 26 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 18, 19, 20 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 24, 25, 26 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 2610.75;
@@ -35,15 +36,15 @@ namespace ANOVATest
     [TestMethod]
     public void ExcelAndRComparisonExpNo1FactA()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 48, 49, 50 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 18, 19, 20 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 48, 49, 50 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 18, 19, 20 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 53, 54, 55 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 24, 25, 26 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 53, 54, 55 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 24, 25, 26 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 90.75;
@@ -56,17 +57,17 @@ namespace ANOVATest
     [TestMethod]
     public void TwoSortsThreeNitrogenFacB()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 20, 28, 15 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 21, 30, 19 });
-      ArrayDataGroup groupA3 = new ArrayDataGroup(new double[] { 32, 33, 35 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2, groupA3 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 20, 28, 15 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 21, 30, 19 });
+      ArrayPlainSample groupA3 = new ArrayPlainSample(new double[] { 32, 33, 35 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2, groupA3 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 32, 30, 36 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 34, 31, 36 });
-      ArrayDataGroup groupB3 = new ArrayDataGroup(new double[] { 37, 35, 38 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2, groupB3 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 32, 30, 36 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 34, 31, 36 });
+      ArrayPlainSample groupB3 = new ArrayPlainSample(new double[] { 37, 35, 38 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2, groupB3 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 19.71;
@@ -79,19 +80,19 @@ namespace ANOVATest
     [TestMethod]
     public void TwoSortsThreeNitrogenFacA()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 20, 28, 15 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 32, 30, 36 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 20, 28, 15 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 32, 30, 36 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 21, 30, 19 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 34, 31, 36 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 21, 30, 19 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 34, 31, 36 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      ArrayDataGroup groupC1 = new ArrayDataGroup(new double[] { 32, 33, 35 });
-      ArrayDataGroup groupC2 = new ArrayDataGroup(new double[] { 37, 35, 38 });
-      MultiArrayDataGroup multiC = new MultiArrayDataGroup(new IDataGroup[] { groupC1, groupC2 });
+      ArrayPlainSample groupC1 = new ArrayPlainSample(new double[] { 32, 33, 35 });
+      ArrayPlainSample groupC2 = new ArrayPlainSample(new double[] { 37, 35, 38 });
+      ArrayDividedSample multiC = new ArrayDividedSample(new IPlainSample[] { groupC1, groupC2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB, multiC });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB, multiC });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 6.86;
@@ -105,15 +106,15 @@ namespace ANOVATest
     [TestMethod]
     public void IgnoreIntensivOneGradation2x2FacB()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 31, 30 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 33 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 32, 31, 30 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 33 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 33, 32, 31 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 34 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 33, 32, 31 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 34 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 2;
@@ -127,15 +128,15 @@ namespace ANOVATest
     [TestMethod]
     public void IgnoreIntensivOneGradation2x2FacA()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 31, 30 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 33, 32, 31 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 32, 31, 30 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 33, 32, 31 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 33 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 34 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 33 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 34 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 6;
@@ -148,17 +149,17 @@ namespace ANOVATest
     [TestMethod]
     public void OneRepeatForNitrogenFacB()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 20 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 22, 24, 22 });
-      ArrayDataGroup groupA3 = new ArrayDataGroup(new double[] { 29, 30, 32 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2, groupA3 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 20 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 22, 24, 22 });
+      ArrayPlainSample groupA3 = new ArrayPlainSample(new double[] { 29, 30, 32 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2, groupA3 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 21 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 27, 26, 22 });
-      ArrayDataGroup groupB3 = new ArrayDataGroup(new double[] { 32, 33, 34 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2, groupB3 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 21 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 27, 26, 22 });
+      ArrayPlainSample groupB3 = new ArrayPlainSample(new double[] { 32, 33, 34 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2, groupB3 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 6.269;
@@ -171,19 +172,19 @@ namespace ANOVATest
     [TestMethod]
     public void OneRepeatForNitrogenFacA()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 20 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 21 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 20 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 21 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 22, 24, 22 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 27, 26, 22 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 22, 24, 22 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 27, 26, 22 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2 });
 
-      ArrayDataGroup groupC1 = new ArrayDataGroup(new double[] { 29, 30, 32 });
-      ArrayDataGroup groupC2 = new ArrayDataGroup(new double[] { 32, 33, 34 });
-      MultiArrayDataGroup multiC = new MultiArrayDataGroup(new IDataGroup[] { groupC1, groupC2 });
+      ArrayPlainSample groupC1 = new ArrayPlainSample(new double[] { 29, 30, 32 });
+      ArrayPlainSample groupC2 = new ArrayPlainSample(new double[] { 32, 33, 34 });
+      ArrayDividedSample multiC = new ArrayDividedSample(new IPlainSample[] { groupC1, groupC2 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB, multiC });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB, multiC });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 47.004;
@@ -197,16 +198,16 @@ namespace ANOVATest
     [TestMethod]
     public void OnefactorVsMultifactorWithOneRep()
     {
-      ArrayDataGroup groupA = new ArrayDataGroup(new double[] { 32, 29, 31, 35, 28, 26, 31, 36 });
-      ArrayDataGroup groupB = new ArrayDataGroup(new double[] { 31, 28, 31, 40, 25, 29, 35, 39 });
-      MultiArrayDataGroup multi = new MultiArrayDataGroup(new IDataGroup[] { groupA, groupB });
+      ArrayPlainSample groupA = new ArrayPlainSample(new double[] { 32, 29, 31, 35, 28, 26, 31, 36 });
+      ArrayPlainSample groupB = new ArrayPlainSample(new double[] { 31, 28, 31, 40, 25, 29, 35, 39 });
+      ArrayDividedSample multi = new ArrayDividedSample(new IPlainSample[] { groupA, groupB });
 
       FisherMetrics multiF = FisherCriteria.CalculateCriteria(multi);
 
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new[] { groupA });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new[] { groupB });
+      ArrayDividedSample multiA = new ArrayDividedSample(new[] { groupA });
+      ArrayDividedSample multiB = new ArrayDividedSample(new[] { groupB });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
 
@@ -220,21 +221,86 @@ namespace ANOVATest
     [TestMethod]
     public void FactorsWithDifferentGradations()
     {
-      ArrayDataGroup groupA1 = new ArrayDataGroup(new double[] { 32, 30, 33 });
-      ArrayDataGroup groupA2 = new ArrayDataGroup(new double[] { 29 });
-      ArrayDataGroup groupA3 = new ArrayDataGroup(new double[] { 30, 35, 40 });
-      MultiArrayDataGroup multiA = new MultiArrayDataGroup(new IDataGroup[] { groupA1, groupA2, groupA3 });
+      ArrayPlainSample groupA1 = new ArrayPlainSample(new double[] { 32, 30, 33 });
+      ArrayPlainSample groupA2 = new ArrayPlainSample(new double[] { 29 });
+      ArrayPlainSample groupA3 = new ArrayPlainSample(new double[] { 30, 35, 40 });
+      ArrayDividedSample multiA = new ArrayDividedSample(new IPlainSample[] { groupA1, groupA2, groupA3 });
 
-      ArrayDataGroup groupB1 = new ArrayDataGroup(new double[] { 31, 32, 29, 28 });
-      ArrayDataGroup groupB2 = new ArrayDataGroup(new double[] { 27 });
-      ArrayDataGroup groupB3 = new ArrayDataGroup(new double[] { 33, 35 });
-      MultiArrayDataGroup multiB = new MultiArrayDataGroup(new IDataGroup[] { groupB1, groupB2, groupB3 });
+      ArrayPlainSample groupB1 = new ArrayPlainSample(new double[] { 31, 32, 29, 28 });
+      ArrayPlainSample groupB2 = new ArrayPlainSample(new double[] { 27 });
+      ArrayPlainSample groupB3 = new ArrayPlainSample(new double[] { 33, 35 });
+      ArrayDividedSample multiB = new ArrayDividedSample(new IPlainSample[] { groupB1, groupB2, groupB3 });
 
-      SetMultiArrayDataGroup set = new SetMultiArrayDataGroup(new IMultyDataGroup[] { multiA, multiB });
+      ArrayComplexSample set = new ArrayComplexSample(new IDividedSample[] { multiA, multiB });
 
       FisherMetrics f = FisherCriteria.CalculateMultiplyCriteria(set);
       double fExp = 1.680;
       Assert.AreEqual(fExp, f.F, 1e-3);
+    }
+
+    private struct FisherMetrics
+    {
+      /// <summary>
+      /// Число степеней свободы для межгрупповой дисперсии
+      /// </summary>
+      public uint Kdf { get; internal set; }
+
+      /// <summary>
+      /// Число степеней свободы для внутригрупповой дисперсии
+      /// </summary>
+      public uint Ndf { get; internal set; }
+
+      /// <summary>
+      /// Межгрупповая дисперсия
+      /// </summary>
+      public double MSb { get; internal set; }
+
+      /// <summary>
+      /// Суммарная внутригрупповая дисперсия
+      /// </summary>
+      public double MSw { get; internal set; }
+
+      /// <summary>
+      /// Отношение межгрупповой дисперсии к внутригрупповой
+      /// </summary>
+      public double F
+      {
+        get { return this.MSb / this.MSw; }
+      }
+    }
+
+    private class FisherCriteria
+    {
+      internal static FisherMetrics CalculateCriteria(IDividedSample multi)
+      {
+        var msw = FisherTest.MSw(multi);
+        var msb = FisherTest.MSb(multi);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
+
+      internal static FisherMetrics CalculateMultiplyCriteria(IComplexSample set)
+      {
+        var between = new ArrayDividedSample(set.Select(s => new JoinedSample(s)).ToArray());
+        var within = new PartiallyJoinedSample(set);
+
+        var msw = FisherTest.MSw(within);
+        var msb = FisherTest.MSb(between);
+
+        return new FisherMetrics
+        {
+          Kdf = (uint)msb.DegreesOfFreedom,
+          Ndf = (uint)msw.DegreesOfFreedom,
+          MSb = msb.MeanSquare,
+          MSw = msw.MeanSquare
+        };
+      }
     }
   }
 }

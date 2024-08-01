@@ -211,8 +211,8 @@
   <data name="Export_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\export1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DATA_GROUP_SIZE_MISMATCH" xml:space="preserve">
-    <value>Both groups must be equal for regression analysis</value>
+  <data name="DATA_SAMPLE_SIZE_MISMATCH" xml:space="preserve">
+    <value>Both number sequences must be equal for regression analysis</value>
   </data>
   <data name="REGRESSION_DEPENDENCY" xml:space="preserve">
     <value>Regression dependency forumla</value>
@@ -231,5 +231,20 @@
   </data>
   <data name="MAX_CONSISTENCY" xml:space="preserve">
     <value>Maximal consistendy achieved for dependency type '{0}' equals {1}.</value>
+  </data>
+  <data name="NO_JOINT_RANKS" xml:space="preserve">
+    <value>Unable to create the inverse rank handler. Groups are not ranked together</value>
+  </data>
+  <data name="NO_JOINT_BOX_COX" xml:space="preserve">
+    <value>Unable to create the inverse Box-Cox handler. Groups are not transformed together</value>
+  </data>
+  <data name="UNABLE_CONJUGATION" xml:space="preserve">
+    <value>Unable to use conjugation due to different repetitions count</value>
+  </data>
+  <data name="PREPARING_DATA" xml:space="preserve">
+    <value>Preparing data</value>
+  </data>
+  <data name="ROW_NOT_BELONG_TABLE" xml:space="preserve">
+    <value>Data row does not belong this table</value>
   </data>
 </root>

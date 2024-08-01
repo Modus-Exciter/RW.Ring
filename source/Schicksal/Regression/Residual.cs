@@ -12,7 +12,7 @@ namespace Schicksal.Regression
 {
   public static class Residual
   {
-    public static IDataGroup Calculate(IDataGroup x, IDataGroup y, Func<double, double> model)
+    public static IPlainSample Calculate(IPlainSample x, IPlainSample y, Func<double, double> model)
     {
       if (x.Count != y.Count) throw new ArgumentException("Different sizes of arrays");
 
@@ -21,10 +21,10 @@ namespace Schicksal.Regression
       for (int i = 0; i < x.Count; i++)
         result[i] = Math.Abs(y[i] - model(x[i]));
       
-      return new ArrayDataGroup(result);
+      return new ArrayPlainSample(result);
     }
 
-    public static IDataGroup Calculate2(IDataGroup x, IDataGroup y, Func<double, double> model)
+    public static IPlainSample Calculate2(IPlainSample x, IPlainSample y, Func<double, double> model)
     {
       if (x.Count != y.Count) throw new ArgumentException("Different sizes of arrays");
       
@@ -36,7 +36,7 @@ namespace Schicksal.Regression
         result[i] *= result[i];
       }
       
-      return new ArrayDataGroup(result);
+      return new ArrayPlainSample(result);
     }
   }
 }

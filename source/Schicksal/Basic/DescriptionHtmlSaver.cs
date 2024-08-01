@@ -83,7 +83,7 @@ namespace Schicksal.Basic
 
     private Dictionary<string, string> CalculateSummary()
     {
-      Dictionary<string, string> summary = new Dictionary<string, string>();
+      var summary = new Dictionary<string, string>();
 
       DescriptionStatisticsEntry min = m_descriptions[0];
       DescriptionStatisticsEntry max = m_descriptions[0];
@@ -111,6 +111,7 @@ namespace Schicksal.Basic
       summary.Add(SchicksalResources.MEAN, (total / count).ToString("0.0000"));
       summary.Add(SchicksalResources.MEDIAN, string.Format("{0} ({1})", median.Median, median.Description));
       summary.Add(Resources.TOTAL_COUNT, count.ToString());
+
       return summary;
     }
 

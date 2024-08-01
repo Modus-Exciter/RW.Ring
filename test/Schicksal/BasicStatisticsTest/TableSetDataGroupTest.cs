@@ -9,6 +9,67 @@ namespace BasicStatisticsTest
   public class TableSetDataGroupTest
   {
     [TestMethod]
+    [ExpectedException(typeof(InvalidExpressionException), AllowDerivedTypes =true)]
+    public void TableFilterCheck()
+    {
+      DataTable dt = CreateTestTable();
+
+      TableAnalysisParameters tp = new TableAnalysisParameters(dt, "Wrong filter");
+
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(InvalidExpressionException), AllowDerivedTypes = true)]
+    public void TableFilterCheck2()
+    {
+      DataTable dt = CreateTestTable();
+
+      TableAnalysisParameters tp = new TableAnalysisParameters(dt, "Yield = kusk");
+    }
+
+    private static DataTable CreateTestTable()
+    {
+      DataTable dt = new DataTable("Obs1");
+      DataColumn dtCol;
+
+      dtCol = new DataColumn();
+      dtCol.DataType = typeof(String);
+      dtCol.ColumnName = "Variety";
+      dtCol.Caption = "Crop type";
+      dtCol.Unique = false;
+      dtCol.ReadOnly = false;
+      dt.Columns.Add(dtCol);
+
+      dtCol = new DataColumn();
+      dtCol.DataType = typeof(String);
+      dtCol.ColumnName = "N";
+      dtCol.Caption = "Nitrogen fertilizer";
+      dtCol.Unique = false;
+      dtCol.ReadOnly = false;
+      dt.Columns.Add(dtCol);
+
+      dtCol = new DataColumn();
+      dtCol.DataType = typeof(Double);
+      dtCol.ColumnName = "Yield";
+      dtCol.Caption = "Amount of yield (centner/hectare)";
+      dtCol.Unique = false;
+      dtCol.ReadOnly = false;
+      dt.Columns.Add(dtCol);
+      return dt;
+    }
+
+    [TestMethod]
+    public void TableWithoutFilter()
+    {
+      DataTable dt = CreateTestTable();
+
+      TableAnalysisParameters tp = new TableAnalysisParameters(dt, " ");
+
+      Assert.IsNull(tp.Filter);
+      Assert.AreEqual(dt, tp.Table);
+    }
+
+    [TestMethod]
     public void DataTableVsTSDGComparison()
     {
       DataTable dt = new DataTable("Obs1");
@@ -128,7 +189,7 @@ namespace BasicStatisticsTest
       double e10 = Convert.ToDouble(dt.Rows[10].ItemArray[2]);
       double e11 = Convert.ToDouble(dt.Rows[11].ItemArray[2]);
 
-      TableSetDataGroup tsdg = new TableSetDataGroup(dt, fc, ic, rc);
+      TableComplexSample tsdg = new TableComplexSample(dt, fc, ic, rc);
 
       double a0 = tsdg[0][0][0];
       double a1 = tsdg[0][0][1];
@@ -265,7 +326,7 @@ namespace BasicStatisticsTest
       double e6 = Convert.ToDouble(dt.Rows[6].ItemArray[3]);
       double e7 = Convert.ToDouble(dt.Rows[7].ItemArray[3]);
 
-      TableSetDataGroup tsdg = new TableSetDataGroup(dt, fc, ic, rc);
+      TableComplexSample tsdg = new TableComplexSample(dt, fc, ic, rc);
 
       double a0 = tsdg[0][0][0];
       double a1 = tsdg[1][0][0];

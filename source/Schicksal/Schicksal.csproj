@@ -45,18 +45,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Anova\IPrimaryAnovaResults.cs" />
     <Compile Include="Anova\AnovaHtmlSaver.cs" />
+    <Compile Include="Anova\AnovaParameters.cs" />
     <Compile Include="Anova\DifferenceInfo.cs" />
-    <Compile Include="Anova\FisherCriteria.cs" />
-    <Compile Include="Anova\FisherMetrics.cs" />
-    <Compile Include="Anova\FisherTableProcessor.cs" />
+    <Compile Include="Anova\FisherTest.cs" />
+    <Compile Include="Anova\FisherTestResult.cs" />
+    <Compile Include="Anova\IResudualsCalculator.cs" />
     <Compile Include="Anova\VariantsComparator.cs" />
+    <Compile Include="Basic\GroupKey.cs" />
+    <Compile Include="Basic\TableAnalysisParameters.cs" />
+    <Compile Include="Basic\BoxCoxNormalizer.cs" />
     <Compile Include="Basic\DescriptionStatistics.cs" />
-    <Compile Include="Basic\IDataGroup.cs" />
-    <Compile Include="Basic\JoinedDataGroup.cs" />
-    <Compile Include="Basic\MultiArrayDataGroup.cs" />
-    <Compile Include="Basic\TableMultyDataGroup.cs" />
-    <Compile Include="Basic\TableSetDataGroup.cs" />
+    <Compile Include="Basic\FactorInfo.cs" />
+    <Compile Include="Basic\SampleRepack.cs" />
+    <Compile Include="Basic\ISample.cs" />
+    <Compile Include="Basic\INormalizer.cs" />
+    <Compile Include="Basic\IEqualSubSamples.cs" />
+    <Compile Include="Basic\ArrayDividedSample.cs" />
+    <Compile Include="Basic\OrderedSample.cs" />
+    <Compile Include="Basic\RankNormalizer.cs" />
+    <Compile Include="Basic\TableDividedSample.cs" />
+    <Compile Include="Anova\TwiceGroupedSample.cs" />
     <Compile Include="Clustering\ClusteringParameters.cs" />
     <Compile Include="Clustering\IArcDeleter.cs" />
     <Compile Include="Clustering\IDistanceMetrics.cs" />
@@ -79,11 +89,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Regression\CorrelationMetrics.cs" />
+    <Compile Include="Regression\CorrelationParameters.cs" />
     <Compile Include="Regression\CorrelationTest.cs" />
     <Compile Include="Regression\CorrelationTestProcessor.cs" />
     <Compile Include="Regression\CorrelationGraphUtils.cs" />
-    <Compile Include="Regression\DataColumnGroup.cs" />
-    <Compile Include="Regression\DataGroupColumn.cs" />
+    <Compile Include="Regression\DataColumnSample.cs" />
+    <Compile Include="Regression\SampleMatrixColumn.cs" />
     <Compile Include="Regression\Dispersion.cs" />
     <Compile Include="Regression\PolylineFit.cs" />
     <Compile Include="Regression\RegressionDependency.cs" />

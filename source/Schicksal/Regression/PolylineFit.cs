@@ -70,7 +70,7 @@ namespace Schicksal.Regression
     /// <param name="x">Фактор</param>
     /// <param name="y">Результат</param>
     /// <exception cref="ArgumentOutOfRangeException">Размер массива факторов не совпадает с размером массива результатов</exception>
-    public PolylineFit(IDataGroup x, IDataGroup y)
+    public PolylineFit(IPlainSample x, IPlainSample y)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
 
@@ -88,7 +88,7 @@ namespace Schicksal.Regression
     /// <param name="x">Фактор</param>
     /// <param name="y">Результат</param>
     /// <returns>Список по x списков по y</returns>
-    private List<List<Point2D>> GroupByUniqeX(IDataGroup x, IDataGroup y)
+    private List<List<Point2D>> GroupByUniqeX(IPlainSample x, IPlainSample y)
     {
       var uniqeX = new List<List<Point2D>> { new List<Point2D> { new Point2D { X = x[0], Y = y[0] } } };
       for (int i = 1; i < x.Count; i++)

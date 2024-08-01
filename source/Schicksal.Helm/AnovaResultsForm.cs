@@ -1,51 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Schicksal.Helm.Properties;
+using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Notung.Services;
 using Schicksal.Anova;
-using Schicksal.Helm.Properties;
 
 namespace Schicksal.Helm
 {
   public partial class AnovaResultsForm : Form
   {
     private readonly Color m_significat_color;
+    private readonly IPrimaryAnovaResults m_results;
 
-    public AnovaResultsForm()
+    public AnovaResultsForm(IPrimaryAnovaResults results)
     {
+      if (results is null) 
+        throw new ArgumentNullException("results");
+
       this.InitializeComponent();
+
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
+      m_results = results;
+      m_binding_source.DataSource = results.FisherTestResults;
     }
-
-    public FisherTestResult[] DataSource
-    {
-      get { return m_binding_source.DataSource as FisherTestResult[]; }
-      set { m_binding_source.DataSource = (object)value ?? typeof(FisherTestResult); }
-    }
-
-    public float Probability { get; set; }
-
-    public DataTable SourceTable { get; set; }
-
-    public string ResultColumn { get; set; }
-
-    public string Filter { get; set; }
-
-    public string[] Factors { get; set; }
-
-    public string Conjugate { get; set; }
 
     protected override void OnShown(EventArgs e)
     {
       base.OnShown(e);
 
-      fCriticalColumn.HeaderText = string.Format("F {0}%", this.Probability * 100);
-      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, this.Probability * 100);
+      fCriticalColumn.HeaderText = string.Format("F {0}%", m_results.Parameters.Probability * 100);
+      fCriticalColumn.ToolTipText = string.Format(Resources.STANDARD_F_VALUE, m_results.Parameters.Probability * 100);
+
       m_grid.AutoResizeColumns();
     }
 
@@ -59,8 +46,7 @@ namespace Schicksal.Helm
       if (fisher == null)
         return;
 
-      using (var compare = new CompareVariantsForm(this.SourceTable, fisher.Factor,
-        fisher.IgnoredFactor, this.ResultColumn, this.Filter, this.Probability, this.Conjugate))
+      using (var compare = new CompareVariantsForm(m_results, fisher))
       {
         compare.ShowDialog(this);
       }
@@ -70,12 +56,13 @@ namespace Schicksal.Helm
     {
       if (e.RowIndex < 0)
         return;
+
       var row = m_grid.Rows[e.RowIndex].DataBoundItem as FisherTestResult;
 
       if (row == null)
         return;
 
-      if (row.P <= this.Probability)
+      if (row.P <= m_results.Parameters.Probability)
         e.CellStyle.ForeColor = m_significat_color;
     }
 
@@ -86,22 +73,11 @@ namespace Schicksal.Helm
         dlg.Filter = "Html files|*.html";
         if (dlg.ShowDialog(this) == DialogResult.OK)
         {
-          var saver = new AnovaHtmlSaver(
-            dlg.FileName,
-            this.SourceTable,
-            this.DataSource,
-            this.Probability,
-            string.Format("{0}, {1}", this.Text, this.Filter).Replace("[", "").Replace("]", ""))
-          {
-            Factors = this.Factors,
-            Result = this.ResultColumn,
-            Filter = this.Filter
-          };
+          var saver = new AnovaHtmlSaver(dlg.FileName, m_results,
+            string.Format("{0}, {1}", this.Text, m_results.Parameters.Filter).Replace("[", "").Replace("]", ""));
 
           if (AppManager.OperationLauncher.Run(saver) == TaskStatus.RanToCompletion)
-          {
             Process.Start(dlg.FileName);
-          }
         }
       }
     }

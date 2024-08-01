@@ -50,8 +50,15 @@ namespace Schicksal.Helm.Analyze
 
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      return new CorrelationTestProcessor(table,
-            data.Predictors.ToArray(), data.Result, data.Filter, data.Probability);
+      return new CorrelationTestProcessor(
+        new CorrelationParameters
+        (
+          table,
+          data.Filter,
+          new Basic.FactorInfo(data.Predictors),
+          data.Result,
+          data.Probability
+        ));
     }
 
     public Dictionary<string, string[]> GetSettings()

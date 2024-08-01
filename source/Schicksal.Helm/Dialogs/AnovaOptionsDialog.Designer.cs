@@ -40,6 +40,7 @@ namespace Schicksal.Helm.Dialogs
       this.m_btn_box_cox = new System.Windows.Forms.RadioButton();
       this.m_label_conjuate = new System.Windows.Forms.Label();
       this.m_cb_conjugate = new System.Windows.Forms.ComboBox();
+      this.m_check_individual_error = new System.Windows.Forms.CheckBox();
       this.m_bottom_panel.SuspendLayout();
       this.m_layout_panel.SuspendLayout();
       this.SuspendLayout();
@@ -75,6 +76,7 @@ namespace Schicksal.Helm.Dialogs
       this.m_layout_panel.Controls.Add(this.m_btn_box_cox, 0, 3);
       this.m_layout_panel.Controls.Add(this.m_label_conjuate, 1, 0);
       this.m_layout_panel.Controls.Add(this.m_cb_conjugate, 1, 1);
+      this.m_layout_panel.Controls.Add(this.m_check_individual_error, 1, 3);
       this.m_layout_panel.Name = "m_layout_panel";
       // 
       // m_label_normalization
@@ -116,6 +118,12 @@ namespace Schicksal.Helm.Dialogs
       this.m_cb_conjugate.FormattingEnabled = true;
       this.m_cb_conjugate.Name = "m_cb_conjugate";
       // 
+      // m_check_individual_error
+      // 
+      resources.ApplyResources(this.m_check_individual_error, "m_check_individual_error");
+      this.m_check_individual_error.Name = "m_check_individual_error";
+      this.m_check_individual_error.UseVisualStyleBackColor = true;
+      // 
       // AnovaOptionsDialog
       // 
       this.AcceptButton = this.m_button_ok;
@@ -149,5 +157,6 @@ namespace Schicksal.Helm.Dialogs
     private System.Windows.Forms.Label m_label_normalization;
     private System.Windows.Forms.Label m_label_conjuate;
     private System.Windows.Forms.ComboBox m_cb_conjugate;
+    private System.Windows.Forms.CheckBox m_check_individual_error;
   }
 }

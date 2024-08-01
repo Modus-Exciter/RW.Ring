@@ -10,7 +10,6 @@ namespace Schicksal.Optimization
 {
   public static partial class MathOptimization
   {
-
     [DebuggerDisplay("{ToString()}")]
     public class Domain : IEnumerable<Node>
     {

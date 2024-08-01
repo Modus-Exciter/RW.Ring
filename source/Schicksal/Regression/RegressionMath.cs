@@ -113,7 +113,7 @@ namespace Schicksal.Regression
     /// <param name="y">Результат</param>
     /// <param name="dependencyFunction">Определяемая функциональная параметрическая зависимость</param>
     /// <exception cref="ArgumentOutOfRangeException">Размер массива фактора не совпадает с размером массива результатов</exception>
-    public LikelyhoodFunction(IDataGroup x, IDataGroup y, Func<double, double[], double> dependencyFunction)
+    public LikelyhoodFunction(IPlainSample x, IPlainSample y, Func<double, double[], double> dependencyFunction)
     {
       if (x.Count != y.Count) throw new ArgumentOutOfRangeException();
 

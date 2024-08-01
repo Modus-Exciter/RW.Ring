@@ -31,21 +31,21 @@ namespace Schicksal.Helm.Dialogs
       if (!string.IsNullOrEmpty(m_cb_conjugate.SelectedItem as string))
         sb.AppendFormat("\"\nConjugate=\"{0}", m_cb_conjugate.SelectedItem);
 
-      sb.Append("\"/>");
+      sb.AppendFormat("\" Individual=\"{0}\"/>", m_check_individual_error.Checked);
 
       return sb.ToString();
     }
 
-    void IAnalysisOptions.Load(string xml, StatisticsParameters context)
+    void IAnalysisOptions.Load(StatisticsParameters context)
     {
       m_cb_conjugate.DataSource = new string[] { string.Empty }.Union((context.Total).Except(
         new string[] { context.Result })).ToList();
 
-      if (string.IsNullOrWhiteSpace(xml))
+      if (string.IsNullOrWhiteSpace(context.OptionsXML))
         return;
 
       var doc = new XmlDocument();
-      doc.LoadXml(xml);
+      doc.LoadXml(context.OptionsXML);
       switch (doc.DocumentElement.Attributes["Normalization"].Value)
       {
         case "NonParametric":
@@ -59,6 +59,9 @@ namespace Schicksal.Helm.Dialogs
 
       m_cb_conjugate.SelectedItem = doc.DocumentElement.HasAttribute("Conjugate") ?
         doc.DocumentElement.Attributes["Conjugate"].Value : string.Empty;
+
+      m_check_individual_error.Checked = doc.DocumentElement.HasAttribute("Individual") 
+        && bool.Parse(doc.DocumentElement.Attributes["Individual"].Value);
     }
 
     bool IAnalysisOptions.ShowDialog()
