@@ -15,12 +15,12 @@ namespace Schicksal.Helm.Dialogs
     {
       this.InitializeComponent();
 
-      m_label_metrics1.Text = string.Format("{0}: {1}; {2}: {3:0.0000}; {4}: {5:0.0000}",
+      m_label_metrics1.Text = string.Format("{0}: {1};\n{2}: {3:0.0000};\n{4}: {5:0.0000}",
          SchicksalResources.HETEROSCEDASTICITY, dependency.Heteroscedasticity,
          SchicksalResources.CONSISTENCY, dependency.Consistency,
          SchicksalResources.CONSISTENCY_WEIGHTED, dependency.ConsistencyWeighted);
 
-      m_label_metrics2.Text = string.Format("{0}: {1}; {2}: {3};",
+      m_label_metrics2.Text = string.Format("{0}: {1};\n{2}: {3};",
         SchicksalResources.RMS_ERROR, dependency.RMSError,
         SchicksalResources.RMS_ERROR_WEIGHTED, dependency.RMSErrorWeighted);
     }
