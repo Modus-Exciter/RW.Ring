@@ -381,13 +381,20 @@ namespace Schicksal.Helm
 
         if (dlg.ShowDialog(this) == DialogResult.OK) // Если пользователь нажал ОК
         {
-          var processor = analyze.GetProcessor(table, dlg.DataSource); // Получаем фоновую задачу, в которой будет проходить анализ
-
-          if (AppManager.OperationLauncher.Run(processor, analyze.GetLaunchParameters()) // Запускаем фоновую задачу и ждём завершения
-            == TaskStatus.RanToCompletion)
+          try
           {
-            dlg.DataSource.Save(analyze.GetSettings()); // При успешном завершении анализа сохраняем настройки для следующего запуска
-            analyze.BindTheResultForm(processor, table_form, dlg.DataSource); // Показываем результаты анализа
+            var processor = analyze.GetProcessor(table, dlg.DataSource); // Получаем фоновую задачу, в которой будет проходить анализ
+
+            if (AppManager.OperationLauncher.Run(processor, analyze.GetLaunchParameters()) // Запускаем фоновую задачу и ждём завершения
+              == TaskStatus.RanToCompletion)
+            {
+              dlg.DataSource.Save(analyze.GetSettings()); // При успешном завершении анализа сохраняем настройки для следующего запуска
+              analyze.BindTheResultForm(processor, table_form, dlg.DataSource); // Показываем результаты анализа
+            }
+          }
+          catch (Exception ex)
+          {
+            AppManager.Notificator.Show(new Info(ex));
           }
         }
       }

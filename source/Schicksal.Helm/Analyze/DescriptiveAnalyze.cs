@@ -30,12 +30,14 @@ namespace Schicksal.Helm.Analyze
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
       return new DescriptionStatisticsCalculator(
-        new DescriptionStatisticsParameters(
+        new DescriptionStatisticsParameters
+        (
           table,
           data.Filter,
           new FactorInfo(data.Predictors),
           data.Result,
-          data.Probability));
+          data.Probability
+        ));
     }
 
     public LaunchParameters GetLaunchParameters()
