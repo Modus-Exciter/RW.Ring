@@ -22,8 +22,7 @@ namespace Schicksal.Basic
       if (table == null)
         throw new ArgumentNullException("table");
 
-      //Проверка корректности фильтра
-      new DataView(table, filter, null, DataViewRowState.OriginalRows).Dispose();
+      new DataView(table, filter, null, DataViewRowState.OriginalRows).Dispose(); //Проверка корректности фильтра
 
       m_table = table;
       m_filter = string.IsNullOrWhiteSpace(filter) ? null : filter;
@@ -117,6 +116,25 @@ namespace Schicksal.Basic
     public string Response
     {
       get { return m_response; }
+    }
+
+    /// <summary>
+    /// Получение фильтра, дополненного условием обязательности заполнения колонки отклика
+    /// </summary>
+    /// <returns>Дополненный фильтр</returns>
+    public string GetFullFilter()
+    {
+      if (!this.Table.Columns[m_response].AllowDBNull)
+        return this.Filter;
+
+      string response_filter = string.Format("[{0}] IS NOT NULL", m_response);
+
+      if (this.Filter == null)
+        return response_filter;
+      else if (this.Filter.IndexOf(response_filter, StringComparison.CurrentCultureIgnoreCase) >= 0)
+        return this.Filter;
+
+      return string.Format("{0} AND {1}", this.Filter, response_filter);
     }
   }
 

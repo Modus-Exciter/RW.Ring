@@ -119,7 +119,7 @@ namespace Schicksal.Basic
     {
       var dic = new Dictionary<GroupKey, List<DataRow>>();
 
-      foreach (var row in tableParameters.Table.Select(tableParameters.Filter))
+      foreach (var row in tableParameters.Table.Select(tableParameters.GetFullFilter()))
       {
         var gk = new GroupKey(tableParameters, row);
         List<DataRow> list;
