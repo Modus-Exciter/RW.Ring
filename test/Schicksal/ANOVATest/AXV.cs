@@ -269,22 +269,22 @@ namespace ANOVATest
 
       dt.BeginLoadData();
 
-      dt.Rows.Add("A", "X", 12, 1);
-      dt.Rows.Add("A", "X", 13, 2);
       dt.Rows.Add("A", "X", 9, 3);
-      dt.Rows.Add("A", "X", 17, 4);
       dt.Rows.Add("B", "X", 20, 1);
       dt.Rows.Add("B", "X", 15, 2);
-      dt.Rows.Add("B", "X", 18, 3);
-      dt.Rows.Add("A", "Y", 12, 1);
-      dt.Rows.Add("A", "Y", 18, 2);
       dt.Rows.Add("A", "Y", 17, 3);
+      dt.Rows.Add("B", "X", 18, 3);
+      dt.Rows.Add("A", "X", 17, 4);
+      dt.Rows.Add("B", "Y", 23, 3);
+      dt.Rows.Add("B", "Y", 24, 4);
+      dt.Rows.Add("A", "Y", 12, 1);
+      dt.Rows.Add("A", "X", 13, 2);
       dt.Rows.Add("A", "Y", 15, 4);
       dt.Rows.Add("B", "Y", 18, 1);
+      dt.Rows.Add("A", "Y", 18, 2);
       dt.Rows.Add("B", "Y", 27, 2);
-      dt.Rows.Add("B", "Y", 23, 3);
       dt.Rows.Add("B", "X", 12, 4);
-      dt.Rows.Add("B", "Y", 24, 4);
+      dt.Rows.Add("A", "X", 12, 1);
 
       dt.EndLoadData();
       dt.AcceptChanges();
