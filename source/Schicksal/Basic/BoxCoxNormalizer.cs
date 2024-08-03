@@ -72,8 +72,8 @@ namespace Schicksal.Basic
     {
       var other = obj as BoxCoxNormalizer;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_min == other.m_min && m_max == other.m_max && m_eps == other.m_eps && m_method.Equals(other.m_method);
     }
@@ -483,8 +483,8 @@ namespace Schicksal.Basic
       {
         var other = obj as BoxCoxValueTransform;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         return m_lambda == other.m_lambda && m_delta == other.m_delta && m_method.Equals(other.m_method);
       }

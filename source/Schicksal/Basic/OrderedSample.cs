@@ -79,8 +79,8 @@ namespace Schicksal.Basic
     {
       var other = obj as OrderedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (m_direction != other.m_direction)
         return false;

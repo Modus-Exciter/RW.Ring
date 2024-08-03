@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Notung;
 using Notung.Data;
+using Notung.Logging;
 using Notung.Threading;
 using Schicksal.Basic;
 using Schicksal.Properties;
@@ -49,6 +50,8 @@ namespace Schicksal.Anova
     private IResudualsCalculator m_residuals_calculator;
     private IValueTransform m_transform;
     private IDividedSample<GroupKey> m_data_set;
+
+    private static readonly ILog _log = LogManager.GetLogger(typeof(AnovaCalculator));
 
     /// <summary>
     /// Инициализация задачи дисперсионного анализа таблицы
@@ -104,16 +107,20 @@ namespace Schicksal.Anova
     /// </summary>
     public override void Run()
     {
-      this.ReportProgress(Resources.PREPARING_DATA);
+      _log.Info("ANOVA started");
       
+      this.ReportProgress(Resources.PREPARING_DATA);
       this.Initialize();
 
       m_residuals_calculator.Start(m_parameters, m_data_set, this);
 
-      var list = new List<TestResult>();
+      var between = new List<FactorVariance>();
+      var within = new List<SampleVariance>();
 
       int totals = 1 << m_parameters.Predictors.Count;
       int current = 0;
+
+      _log.Info("Calculating between variance");
 
       foreach (var p in m_residuals_calculator.GetSupportedFactors())
       {
@@ -123,7 +130,10 @@ namespace Schicksal.Anova
         var sample = GroupKey.Repack(m_data_set, p);
         var ms_b = FisherTest.MSb(sample);
 
-        this.AddPredictorResult(list, p, ms_b);
+        this.AddPredictorResult(between, within, p, ms_b);
+
+        _log.DebugFormat("Factor: {0}, data set: {1}, equal subsamples size: {2}, between variance: {3}",
+          p, sample, sample is IEqualSubSamples, ms_b);
 
         current++;
 
@@ -134,13 +144,18 @@ namespace Schicksal.Anova
       {
         var ms_w = m_residuals_calculator.GetWithinVariance(m_parameters.Predictors, this);
 
-        foreach (var item in list)
-          item.Within = ms_w;
+        _log.Info("Calculating interactions");
+        _log.DebugFormat("Within variance: {0}", ms_w);
 
-        FindInteraction(list);
+        foreach (var item in between)
+          within.Add(ms_w);
+
+        FisherTest.FactorInteraction(between, this.ProcessInteractionError);
       }
 
-      this.FisherTestResults = this.ConvertResult(list);
+      this.FisherTestResults = this.ConvertResult(between, within);
+
+      _log.Info("ANOVA completed");
     }
 
     void IProgressIndicator.ReportProgress(int percentage, string state)
@@ -148,30 +163,20 @@ namespace Schicksal.Anova
       base.ReportProgress(percentage, state);
     }
 
-    private void AddPredictorResult(List<TestResult> list, FactorInfo p, SampleVariance ms_b)
+    private void ProcessInteractionError(FactorInfo predictor)
     {
-      if (m_residuals_calculator.SingleWihinVariance)
-      {
-        list.Add(new TestResult
-        {
-          Between = ms_b,
-          Factor = p
-        });
-      }
+      if (predictor.Count == 1)
+        this.Infolog.Add(string.Format("No main effect information for factor {0}", predictor), InfoLevel.Warning);
       else
-      {
-        var ms_w = m_residuals_calculator.GetWithinVariance(p, this);
+        this.Infolog.Add(string.Format("Factor {0} has wrong sample count", predictor), InfoLevel.Warning);
+    }
 
-        if (ms_w.MeanSquare != 0 && ms_w.DegreesOfFreedom != 0)
-        {
-          list.Add(new TestResult
-          {
-            Between = ms_b,
-            Within = ms_w,
-            Factor = p
-          });
-        }
-      }
+    private void AddPredictorResult(List<FactorVariance> between, List<SampleVariance> within, FactorInfo p, SampleVariance ms_b)
+    {
+      between.Add(new FactorVariance(p, ms_b));
+
+      if (!m_residuals_calculator.SingleWihinVariance)
+        within.Add(m_residuals_calculator.GetWithinVariance(p, this));
     }
 
     private void Initialize()
@@ -180,6 +185,9 @@ namespace Schicksal.Anova
 
       m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
       m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
+
+      _log.DebugFormat("Normalization value transform: {0}", m_transform);
+      _log.DebugFormat("Data set: {0}, equal subsamples size: {1}", m_data_set, m_data_set is IEqualSubSamples);
 
       if (table.Sum(g => g.Count) > table.Count)
       {
@@ -193,92 +201,35 @@ namespace Schicksal.Anova
 
       if (m_residuals_calculator is IndenepdentResudualsCalculator && !string.IsNullOrEmpty(m_parameters.Conjugation))
         this.Infolog.Add(Resources.UNABLE_CONJUGATION, InfoLevel.Warning);
+
+      _log.DebugFormat("Residuals caclulation method: {0}", m_residuals_calculator);
     }
     
 
-    private FisherTestResult[] ConvertResult(List<TestResult> list)
+    private FisherTestResult[] ConvertResult(List<FactorVariance> between, List<SampleVariance> within)
     {
-      var ret = new FisherTestResult[list.Count];
+      var ret = new FisherTestResult[between.Count];
 
       for (int i = 0; i < ret.Length; i++)
       {
         ret[i] = new FisherTestResult
         {
-          Factor = list[i].Factor,
-          F = list[i].Between.MeanSquare / list[i].Within.MeanSquare,
-          SSw = list[i].Within.SumOfSquares,
-          Kdf = (uint)list[i].Between.DegreesOfFreedom,
-          Ndf = (uint)list[i].Within.DegreesOfFreedom,
+          Factor = between[i].Factor,
+          F = between[i].Variance.MeanSquare / within[i].MeanSquare,
+          SSw = within[i].SumOfSquares,
+          Kdf = (uint)between[i].Variance.DegreesOfFreedom,
+          Ndf = (uint)within[i].DegreesOfFreedom,
           FCritical = FisherTest.GetCriticalValue
             (
               m_parameters.Probability,
-              (uint)list[i].Between.DegreesOfFreedom,
-              (uint)list[i].Within.DegreesOfFreedom
+              (uint)between[i].Variance.DegreesOfFreedom,
+              (uint)within[i].DegreesOfFreedom
             ),
-          P = FisherTest.GetProbability(list[i].Between, list[i].Within)
+          P = FisherTest.GetProbability(between[i].Variance, within[i])
         };
       }
 
       return ret;
-    }
-
-    private static void FindInteraction(List<TestResult> list)
-    {
-      var graph = new UnweightedListGraph(list.Count, true);
-      var dic = new Dictionary<FactorInfo, int>();
-
-      for (int i = 0; i < list.Count; i++)
-        dic.Add(list[i].Factor, i);
-
-      for (int i = 0; i < list.Count; i++)
-      {
-        var predictors = list[i].Factor;
-
-        if (predictors.Count == 1)
-          continue;
-
-        foreach (var p in predictors.Split(false))
-        {
-          if (dic.ContainsKey(p))
-            graph.AddArc(dic[p], i);
-        }
-      }
-
-      var indexes = TopologicalSort.Kahn(graph);
-
-      foreach (var index in indexes)
-      {
-        var result = list[index];
-
-        if (result.Factor.Count == 1)
-          continue;
-
-        foreach (var p in result.Factor.Split(false))
-        {
-          if (!dic.ContainsKey(p))
-            continue;
-
-          var res = list[dic[p]];
-
-          result.Between.DegreesOfFreedom -= res.Between.DegreesOfFreedom;
-          result.Between.SumOfSquares -= res.Between.SumOfSquares;
-
-          if (result.Between.DegreesOfFreedom <= 1)
-            result.Between.DegreesOfFreedom = 1;
-
-          if (result.Between.SumOfSquares < 0)
-            result.Between.SumOfSquares = 0;
-        }
-      }
-    }
-
-    private class TestResult
-    {
-      public FactorInfo Factor;
-
-      public SampleVariance Between;
-
-      public SampleVariance Within;
     }
   }
 }

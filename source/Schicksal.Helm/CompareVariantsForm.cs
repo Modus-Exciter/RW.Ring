@@ -29,7 +29,8 @@ namespace Schicksal.Helm
     {
       this.InitializeComponent();
 
-      this.Text = string.Format("{0}({1}) [{2}]", primaryResults.Parameters.Response, testResult.Factor.ToString().Replace("+", ", "), primaryResults.Parameters.Filter);
+      this.Text = string.Format("{0}({1}) [{2}]", primaryResults.Parameters.Response, 
+        testResult.Factor.ToString().Replace("+", ", "), primaryResults.Parameters.Filter);
 
       Resolution resolution = AppManager.Configurator.GetSection<Resolution>();
 

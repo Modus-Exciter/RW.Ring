@@ -122,8 +122,8 @@ namespace Schicksal.Basic
     {
       var other = obj as ArrayDividedSample<T>;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (!ReferenceEquals(m_data, other.m_data))
       {

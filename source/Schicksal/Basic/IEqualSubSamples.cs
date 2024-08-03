@@ -81,8 +81,8 @@ namespace Schicksal.Basic
     {
       var other = obj as JoinedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_sample.Equals(other.m_sample);
     }
@@ -157,8 +157,8 @@ namespace Schicksal.Basic
     {
       var other = obj as PartiallyJoinedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_sample.Equals(other.m_sample);
     }

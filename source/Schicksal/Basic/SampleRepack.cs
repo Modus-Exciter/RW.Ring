@@ -288,8 +288,8 @@ namespace Schicksal.Basic
       {
         var other = obj as TwoDimensionsMultiDataSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         if (m_array.Length == 0 && other.m_array.Length == 0)
           return true;
@@ -349,8 +349,8 @@ namespace Schicksal.Basic
       {
         var other = obj as TwoDimensionsDataSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         return this.Array == other.Array && m_index == other.m_index;
       }
@@ -444,8 +444,8 @@ namespace Schicksal.Basic
       {
         var other = obj as ThreeDimensionsSetDataSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         return Equals(m_data, other.m_data);
       }
@@ -502,8 +502,8 @@ namespace Schicksal.Basic
       {
         var other = obj as ThreeDimensionsMultiDataSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         if (other == null)
           return false;
@@ -573,8 +573,8 @@ namespace Schicksal.Basic
       {
         var other = obj as ThreeDimensionsDataSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         return this.Array == other.Array && m_index1 == other.m_index1 && m_index2 == other.m_index2;
       }

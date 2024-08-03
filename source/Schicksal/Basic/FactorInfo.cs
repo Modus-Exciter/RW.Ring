@@ -82,8 +82,8 @@ namespace Schicksal.Basic
     {
       var other = obj as FactorInfo;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_data.SetEquals(other.m_data);
     }
@@ -105,7 +105,7 @@ namespace Schicksal.Basic
     public IEnumerable<FactorInfo> Split(bool includeSelf = true)
     {
       string[] factors = new string[m_data.Count];
-      int group_count = (1 << factors.Length);
+      ulong group_count = 1ul << factors.Length;
 
       if (!includeSelf)
         group_count--;
@@ -113,15 +113,14 @@ namespace Schicksal.Basic
       m_data.CopyTo(factors);
 
       var details = new List<string>(this.Count);
-      var result = new FactorInfo[group_count - 1];
 
-      for (int i = 1; i < group_count; i++)
+      for (ulong i = 1; i < group_count; i++)
       {
         details.Clear();
 
         for (int j = 0; j < factors.Length; j++)
         {
-          if ((i & (1 << j)) != 0)
+          if ((i & (1ul << j)) != 0)
             details.Add(factors[j]);
         }
 

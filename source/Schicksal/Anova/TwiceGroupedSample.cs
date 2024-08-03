@@ -93,8 +93,8 @@ namespace Schicksal.Anova
     {
       var other = obj as TwiceGroupedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (m_groups.Length != other.m_groups.Length)
         return false;

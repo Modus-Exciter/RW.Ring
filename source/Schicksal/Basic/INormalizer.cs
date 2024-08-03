@@ -291,8 +291,8 @@ namespace Schicksal.Basic
     {
       var other = obj as NormalizedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_sample.Equals(other.m_sample) && m_transform.Equals(m_transform);
     }

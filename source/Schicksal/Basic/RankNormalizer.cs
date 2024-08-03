@@ -47,8 +47,8 @@ namespace Schicksal.Basic
     {
       var other = obj as RankNormalizer;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_round == other.m_round;
     }
@@ -315,9 +315,9 @@ namespace Schicksal.Basic
       {
         var other = obj as RankTransform;
 
-        if (other == null)
-          return false;
-        
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
+
         return m_ranks.Equals(other.Ranks) && m_round == other.Round && m_internal == other.Internal;
       }
 

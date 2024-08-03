@@ -140,8 +140,8 @@ namespace Schicksal.Basic
     {
       var other = obj as GroupKey;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (!object.Equals(m_base_filter, other.m_base_filter))
         return false;

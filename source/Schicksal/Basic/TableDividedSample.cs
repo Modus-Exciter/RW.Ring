@@ -183,8 +183,8 @@ namespace Schicksal.Basic
       {
         var other = obj as DataViewSample;
 
-        if (other == null)
-          return false;
+        if (other == null || ReferenceEquals(this, obj))
+          return other != null;
 
         return m_column == other.m_column && ReferenceEquals(m_rows, other.m_rows) && m_key.Equals(other.m_key);
       }

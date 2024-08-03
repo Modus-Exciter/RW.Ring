@@ -132,8 +132,8 @@ namespace Schicksal.Basic
     {
       var other = obj as ArrayPlainSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       return m_array.Equals(other.m_array);
     }
@@ -203,8 +203,8 @@ namespace Schicksal.Basic
     {
       var other = obj as ArrayDividedSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (m_data.Length != other.m_data.Length)
         return false;
@@ -280,8 +280,8 @@ namespace Schicksal.Basic
     {
       var other = obj as ArrayComplexSample;
 
-      if (other == null)
-        return false;
+      if (other == null || ReferenceEquals(this, obj))
+        return other != null;
 
       if (m_data.Length != other.m_data.Length)
         return false;
