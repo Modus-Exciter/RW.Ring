@@ -163,7 +163,7 @@ namespace Schicksal.Anova
     {
       Debug.Assert(parameters != null);
 
-      if (!(sample is IEqualSubSamples && sample.Count > 1 && sample[0].Count > 1))
+      if (!(sample is IEqualSubSamples && sample.Count > 0 && sample[0].Count > 1))
         throw new ArgumentException("Sample must be IEqualSubSamples and full");
 
       m_parameters = parameters;
