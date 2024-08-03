@@ -86,7 +86,7 @@ namespace Schicksal.Basic
     /// <returns>Индекс подвыборки (порядковый номер, начиная с 0)</returns>
     public int GetIndex(GroupKey key)
     {
-      return m_indexes[key];
+      return m_indexes.TryGetValue(key, out int index) ? index : -1;
     }
 
     /// <summary>

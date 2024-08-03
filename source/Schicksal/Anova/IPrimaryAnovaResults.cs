@@ -204,7 +204,6 @@ namespace Schicksal.Anova
 
       _log.DebugFormat("Residuals caclulation method: {0}", m_residuals_calculator);
     }
-    
 
     private FisherTestResult[] ConvertResult(List<FactorVariance> between, List<SampleVariance> within)
     {

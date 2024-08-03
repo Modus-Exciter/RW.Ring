@@ -100,7 +100,7 @@ namespace Schicksal.Basic
 
     public int GetIndex(T key)
     {
-      return m_indexes[key];
+      return m_indexes.TryGetValue(key, out int index) ? index : -1;
     }
 
     public IEnumerator<IPlainSample> GetEnumerator()

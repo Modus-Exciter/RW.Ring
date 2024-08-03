@@ -243,13 +243,13 @@ namespace Schicksal.Basic
       if (sample == null)
         throw new ArgumentNullException("sample");
 
+      if (sample.Count == 0)
+        return sample;
+
       var first_key = sample.GetKey(0);
 
       if (factor.Any(p => !first_key.m_data.ContainsKey(p)))
         throw new ArgumentException();
-
-      if (sample.Count == 0)
-        return sample;
 
       if (factor.Count == first_key.FactorInfo.Count)
         return sample;
