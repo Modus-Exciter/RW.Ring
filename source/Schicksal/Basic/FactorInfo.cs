@@ -129,6 +129,19 @@ namespace Schicksal.Basic
     }
 
     /// <summary>
+    /// Преобразование строки в список колонок-предикторов
+    /// </summary>
+    /// <param name="text">Имена колонок, разделённые знаком +</param>
+    /// <returns>Список колонок-предикторов</returns>
+    public static FactorInfo Parse(string text)
+    {
+      if (string.IsNullOrWhiteSpace(text))
+        return new FactorInfo(Enumerable.Empty<string>());
+
+      return new FactorInfo(text.Split('+').Where(a => !string.IsNullOrEmpty(a)).Select(a => a.Trim()));
+    }
+
+    /// <summary>
     /// Сравнение двух списков предикторов на равенство
     /// </summary>
     /// <param name="left">Первый список предикторов</param>
@@ -196,19 +209,6 @@ namespace Schicksal.Basic
       result.m_data.ExceptWith(right.m_data);
 
       return result;
-    }
-
-    /// <summary>
-    /// Преобразование строки в список колонок-предикторов
-    /// </summary>
-    /// <param name="text">Имена колонок, разделённые знаком +</param>
-    /// <returns>Список колонок-предикторов</returns>
-    public static FactorInfo Parse(string text)
-    {
-      if (string.IsNullOrWhiteSpace(text))
-        return new FactorInfo(Enumerable.Empty<string>());
-
-      return new FactorInfo(text.Split('+').Where(a => !string.IsNullOrEmpty(a)).Select(a => a.Trim()));
     }
   }
 }

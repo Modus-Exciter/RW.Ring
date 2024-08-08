@@ -73,11 +73,24 @@ namespace Schicksal.Anova
     /// <param name="list">Информация о взаимодействующих факторах</param>
     /// <param name="errorHandler">Вывод сообщений о невозможности вычислить взаимодействие факторов</param>
     /// <returns>True, если удалось посчитать взаимодействие факторов. Иначе False</returns>
-    public static bool FactorInteraction(IList<FactorVariance> list, Action<FactorInfo> errorHandler = null)
+    public static bool FactorInteraction(IList<FactorVariance> list, IDividedSample<GroupKey> sample, Action<FactorInfo> errorHandler = null)
     {
       if (list == null)
         throw new ArgumentNullException("betweenVariances");
 
+      /*var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
+      var calculator = new InteractionCalculator(list);
+
+      foreach (int index in GetIndexOrder(list, keys))
+      {
+        FactorVariance result = list[index];
+
+        if (result.Factor.Count == 1)
+          continue;
+
+        list[index] = new FactorVariance(result.Factor, calculator.GetInteraction(sample, result.Factor));
+      }
+      */
       var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
 
       if (!CheckGradationsCount(list, errorHandler))
@@ -122,6 +135,9 @@ namespace Schicksal.Anova
     /// <returns></returns>
     public static double GetCriticalValue(double p, uint kdf, uint ndf)
     {
+      if (kdf == 0 || ndf == 0)
+        return double.NaN;
+
       return SpecialFunctions.invfdistribution((int)kdf, (int)ndf, p);
     }
 
@@ -137,6 +153,9 @@ namespace Schicksal.Anova
 
       if (f == 0)
         return 1;
+
+      if (double.IsNaN(f))
+        return double.NaN;
 
       return SpecialFunctions.fcdistribution(between.DegreesOfFreedom, within.DegreesOfFreedom, f);
     }

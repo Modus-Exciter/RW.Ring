@@ -124,9 +124,6 @@ namespace Schicksal.Anova
 
       foreach (var p in m_residuals_calculator.GetSupportedFactors())
       {
-        var parameters = new PredictedResponseParameters(m_parameters.Table,
-          m_parameters.Filter, p, m_parameters.Response);
-
         var sample = GroupKey.Repack(m_data_set, p);
         var ms_b = FisherTest.MSb(sample);
 
@@ -150,7 +147,7 @@ namespace Schicksal.Anova
         foreach (var item in between)
           within.Add(ms_w);
 
-        FisherTest.FactorInteraction(between, this.ProcessInteractionError);
+        FisherTest.FactorInteraction(between, m_data_set, this.ProcessInteractionError);
       }
 
       this.FisherTestResults = this.ConvertResult(between, within);

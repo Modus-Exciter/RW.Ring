@@ -25,6 +25,11 @@ namespace Schicksal.Basic
       kv => new KeyValuePair<string, object>(kv.Key, OmitNulls(kv.Value));
 
     /// <summary>
+    /// Пустой ключ
+    /// </summary>
+    public static GroupKey Empty = new GroupKey(new Dictionary<string, object>(), null, string.Empty);
+
+    /// <summary>
     /// Инициализация набора значений колонок
     /// </summary>
     /// <param name="parameters">Таблица с фильтром, из которой делается выборка</param>
@@ -48,7 +53,7 @@ namespace Schicksal.Basic
         m_data.Add(p, row[p]);
     }
 
-    private GroupKey(Dictionary<string, object> data, string baseFilter, string response)
+    internal GroupKey(Dictionary<string, object> data, string baseFilter, string response)
     {
       m_data = data;
       m_base_filter = baseFilter;
@@ -298,7 +303,7 @@ namespace Schicksal.Basic
       foreach (var kv in m_data)
       {
         if (OmitNulls(kv.Value) is DBNull)
-          sb.AppendFormat(" AND [{0}] == null", kv.Key);
+          sb.AppendFormat(" AND [{0}] IS NULL", kv.Key);
         else
           sb.AppendFormat(" AND [{0}] = {1}", kv.Key, GetInvariant(kv.Value));
       }

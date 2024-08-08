@@ -11,6 +11,22 @@ namespace ANOVATest
   public class AXV
   {
     [TestMethod]
+    public void GroupKeyIndex()
+    {
+      var table = GenerateTable();
+      table.Rows.Add("C", "X", 18, 1);
+      table.Rows.Add("C", "X", 17, 2);
+      table.Rows.Add("C", "X", 19, 3);
+      table.Rows.Add("C", "X", 19, 4);
+      table.AcceptChanges();
+
+      var sample = SampleRepack.Wrap( new TableDividedSample(new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2"), "Value")));
+
+      var s = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2"));
+      s.ToString();
+    }
+
+   [TestMethod]
     public void NoNormalizationIndependentCommon()
     {
       Utils.CheckMultipleFactors

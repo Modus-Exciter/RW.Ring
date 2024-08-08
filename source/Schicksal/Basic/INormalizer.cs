@@ -294,7 +294,7 @@ namespace Schicksal.Basic
       if (other == null || ReferenceEquals(this, obj))
         return other != null;
 
-      return m_sample.Equals(other.m_sample) && m_transform.Equals(m_transform);
+      return m_sample.Equals(other.m_sample) && m_transform.Equals(other.m_transform);
     }
 
     /// <summary>
