@@ -78,7 +78,7 @@ namespace Schicksal.Anova
       if (list == null)
         throw new ArgumentNullException("betweenVariances");
 
-      /*var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
+      var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
       var calculator = new InteractionCalculator(list);
 
       foreach (int index in GetIndexOrder(list, keys))
@@ -90,7 +90,7 @@ namespace Schicksal.Anova
 
         list[index] = new FactorVariance(result.Factor, calculator.GetInteraction(sample, result.Factor));
       }
-      */
+      /*
       var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
 
       if (!CheckGradationsCount(list, errorHandler))
@@ -122,7 +122,7 @@ namespace Schicksal.Anova
           list[index] = result;
         }
       }
-
+      */
       return true;
     }
 

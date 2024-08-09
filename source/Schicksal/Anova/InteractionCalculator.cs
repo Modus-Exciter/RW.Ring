@@ -26,17 +26,47 @@ namespace Schicksal.Anova
       source = Filter(source, predictors);
 
       var splitted = predictors.Split(false).ToArray();
+      var keys = new KeyedArray<FactorInfo>(splitted);
+      var list = new List<FactorVariance>();
+
       SampleVariance ret = FisherTest.MSb(source);
 
-      for (int index = 0; index < splitted.Length; index++)
+      foreach (var p in splitted)
       {
-        var repack = GroupKey.Repack(source, splitted[index]);
-        var ek = new EffectKey { Factor = splitted[index], GradationCount = repack.Count };
+        var repack = GroupKey.Repack(source, p);
+        list.Add(new FactorVariance(p, FisherTest.MSb(repack)));
+      }
 
-        var dif = FisherTest.MSb(repack);
+      foreach (int index in GetFactorOrder(splitted))
+      {
+        FactorVariance result = list[index];
 
-        ret.DegreesOfFreedom -= dif.DegreesOfFreedom;
-        ret.SumOfSquares -= dif.SumOfSquares;
+        if (result.Factor.Count == 1)
+          continue;
+
+        foreach (var p in splitted[index].Split(false))
+        {
+          if (!keys.Contains(p))
+            continue;
+
+          FactorVariance res = list[keys.GetIndex(p)];
+          result.Variance.DegreesOfFreedom -= res.Variance.DegreesOfFreedom;
+          result.Variance.SumOfSquares -= res.Variance.SumOfSquares;
+
+          if (result.Variance.DegreesOfFreedom < 0)
+            result.Variance.DegreesOfFreedom = 0;
+
+          if (result.Variance.SumOfSquares < 0)
+            result.Variance.SumOfSquares = 0;
+
+          list[index] = result;
+        }
+      }
+
+      foreach (var f in list)
+      {
+        ret.DegreesOfFreedom -= f.Variance.DegreesOfFreedom;
+        ret.SumOfSquares -= f.Variance.SumOfSquares;
 
         if (ret.DegreesOfFreedom < 0)
           ret.DegreesOfFreedom = 0;
@@ -46,6 +76,26 @@ namespace Schicksal.Anova
       }
 
       return ret;
+    }
+
+    private static int[] GetFactorOrder(FactorInfo[] splitted)
+    {
+      var graph = new UnweightedListGraph(splitted.Length, true);
+      var keys = new KeyedArray<FactorInfo>(splitted);
+
+      for (int i = 0; i < splitted.Length; i++)
+      {
+        if (splitted[i].Count == 1)
+          continue;
+
+        foreach (var p in splitted[i].Split(false))
+        {
+          if (keys.Contains(p))
+            graph.AddArc(keys.GetIndex(p), i);
+        }
+      }
+
+      return TopologicalSort.Kahn(graph);
     }
 
     /// <summary>
@@ -120,14 +170,25 @@ namespace Schicksal.Anova
       }
 
       // Формируем окончательный результат
-      IPlainSample[] sub_samples = new IPlainSample[data_list.Count];
+      var twice = new TwiceGroupedSample(source, predictors);
+      var list = new List<IPlainSample>();
+      var keys = new List<GroupKey>();
 
-      source = GroupKey.Repack(source, predictors);
+      foreach (var values in data_list)
+      {
+        GroupKey key = GetKey(index, values);
+        int idx = twice.GetIndex(key);
 
-      for (int i = 0; i < data_list.Count; i++)
-        sub_samples[i] = source[GetKey(index, data_list[i])];
+        if (idx >= 0)
+        {
+          list.AddRange(twice[idx]);
 
-      return new ArrayDividedSample<GroupKey>(sub_samples, i => GetKey(index, data_list[i]));
+          for (int i = 0; i < twice[idx].Count; i++)
+            keys.Add(((IDividedSample<GroupKey>)twice[idx]).GetKey(i));
+        }
+      }
+
+      return new ArrayDividedSample<GroupKey>(list.ToArray(), i => keys[i]);
     }
 
     private static List<object[]> CreateDataList(Dictionary<string, HashSet<object>> dic, string[] order)
