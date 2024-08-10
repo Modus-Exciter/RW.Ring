@@ -78,23 +78,13 @@ namespace Schicksal.Anova
       if (list == null)
         throw new ArgumentNullException("betweenVariances");
 
-      var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
-      var calculator = new InteractionCalculator(list);
-
-      foreach (int index in GetIndexOrder(list, keys))
-      {
-        FactorVariance result = list[index];
-
-        if (result.Factor.Count == 1)
-          continue;
-
-        list[index] = new FactorVariance(result.Factor, calculator.GetInteraction(sample, result.Factor));
-      }
-      /*
-      var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
-
       if (!CheckGradationsCount(list, errorHandler))
+      {
+        FindFilteredInteraction(list, sample);
         return false;
+      }
+
+      var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
 
       foreach (int index in GetIndexOrder(list, keys))
       {
@@ -122,8 +112,23 @@ namespace Schicksal.Anova
           list[index] = result;
         }
       }
-      */
       return true;
+    }
+
+    private static void FindFilteredInteraction(IList<FactorVariance> list, IDividedSample<GroupKey> sample)
+    {
+      var keys = new KeyedArray<FactorInfo>(list.Count, i => list[i].Factor);
+      var calculator = new InteractionCalculator(list);
+
+      foreach (int index in GetIndexOrder(list, keys))
+      {
+        FactorVariance result = list[index];
+
+        if (result.Factor.Count == 1)
+          continue;
+
+        list[index] = new FactorVariance(result.Factor, calculator.GetInteraction(sample, result.Factor));
+      }
     }
 
     /// <summary>
