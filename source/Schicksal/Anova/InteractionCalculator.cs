@@ -25,6 +25,9 @@ namespace Schicksal.Anova
     {
       source = Filter(source, predictors);
 
+      if (source.Count == 0)
+        return default(SampleVariance);
+
       var splitted = predictors.Split(false).ToArray();
       var keys = new KeyedArray<FactorInfo>(splitted);
       var list = new List<FactorVariance>();
