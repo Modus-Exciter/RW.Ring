@@ -28,13 +28,16 @@ namespace Schicksal.Anova
       var splitted = predictors.Split(false).ToArray();
       var keys = new KeyedArray<FactorInfo>(splitted);
       var list = new List<FactorVariance>();
+      var ei = new EffectKey { Factor = predictors, GradationCount = source.Sum(g => g.Count) };
 
-      SampleVariance ret = FisherTest.MSb(source);
+      SampleVariance ret = m_variance_cache.GetOrAdd(ei, 
+        e => FisherTest.MSb(GroupKey.Repack(source, predictors)));
 
       foreach (var p in splitted)
       {
-        var repack = GroupKey.Repack(source, p);
-        list.Add(new FactorVariance(p, FisherTest.MSb(repack)));
+        var ep = new EffectKey { Factor = p, GradationCount = source.Sum(g => g.Count) };
+        list.Add(new FactorVariance(p, m_variance_cache.GetOrAdd(ep, 
+          e => FisherTest.MSb(GroupKey.Repack(source, p)))));
       }
 
       foreach (int index in GetFactorOrder(splitted))
