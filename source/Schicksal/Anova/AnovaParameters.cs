@@ -23,6 +23,7 @@ namespace Schicksal.Anova
     /// <param name="probability">Уровень значимости для анализа</param>
     /// <param name="normalizer">Алгоритм нормирования данных</param>
     /// <param name="conjugation">Имя колонки, идентифицирующей сопряжённые наблюдения</param>
+    /// <param name="individualError">Использовать индивидуальное значение дисперсии при расчёте наименьшей существенной разницы</param>
     public AnovaParameters
     (
       DataTable table,
