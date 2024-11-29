@@ -50,8 +50,7 @@
       this.m_grid.Name = "m_grid";
       this.m_grid.RowHeadersWidth = 62;
       this.m_grid.Size = new System.Drawing.Size(596, 464);
-      this.m_grid.TabIndex = 0;
-      this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEndEdit);
+      this.m_grid.TabIndex = 0;      
       this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_grid_CellEnter);
       this.m_grid.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.Grid_DataError);
       this.m_grid.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.m_grid_UserDeletedRow);
