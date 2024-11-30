@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Notung;
 using Notung.Services;
@@ -206,12 +207,11 @@ namespace Schicksal.Helm
       if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
       {
         e.PaintBackground(e.CellBounds, true);
+        e.PaintContent(e.CellBounds);
         using (Pen pen = new Pen(SystemColors.Highlight, 3))
         {
           e.Graphics.DrawRectangle(pen, e.CellBounds.X, e.CellBounds.Y, e.CellBounds.Width - 1, e.CellBounds.Height - 1);
         }
-        e.PaintContent(e.CellBounds);
-        e.Handled = true;
       }
       else
       {
@@ -240,7 +240,13 @@ namespace Schicksal.Helm
     private Point startPoint; // Добавлена переменная startPoint
     private bool draggingFromHandle = false; // Флаг для перетаскивания за маркер в углу
 
-    public bool IsDragging { get => isDragging; set => isDragging = value; }
+    public bool IsDragging { get => isDragging;
+      set
+      {
+        isDragging = value;
+        grid.Cursor = value ? Cursors.SizeAll : Cursors.Default;
+      }
+    }
     public int startColumnIndex1 { get => startColumnIndex; set => startColumnIndex = value; }
     public int startRowIndex1 { get => startRowIndex; set => startRowIndex = value; }
 
@@ -304,7 +310,7 @@ namespace Schicksal.Helm
         DataGridViewCell cell = grid.Rows[row]?.Cells[col];
         if (cell != null)
         {
-          SetCellValue(cell, cellValue);
+          this.SetCellValue(cell, cellValue);
         }
         else
         {
@@ -385,128 +391,183 @@ namespace Schicksal.Helm
         rect.Width = 15;
         rect.Height = 15;
         e.Graphics.FillRectangle(Brushes.Black, rect);
+        e.Handled = true;
       }
     }
 
     private void Grid_MouseDown(object sender, MouseEventArgs e)
     {
-      // Проверяем, что DataGridView существует, перетаскивание не началось и нажата левая кнопка мыши
-      if (grid != null && !isDragging && e.Button == MouseButtons.Left)
+      if (!this.IsMouseOverCorner(e, out DataGridView.HitTestInfo hit))
+        return;
+
+      //DataGridView.HitTestInfo hit = grid.HitTest(e.X, e.Y);
+
+      if (hit.RowIndex < 0 || (grid.CurrentCell != null && grid.CurrentCell.RowIndex == hit.RowIndex && grid.CurrentCell.ColumnIndex == hit.ColumnIndex))
+        return;
+
+      startRowIndex = hit.RowIndex;
+      startColumnIndex1 = hit.ColumnIndex;
+      this.IsDragging = true;
+      //// Проверяем, что DataGridView существует, перетаскивание не началось и нажата левая кнопка мыши
+      //if (grid != null && !isDragging && e.Button == MouseButtons.Left)
+      //{
+      //  // Получаем информацию о ячейке, на которую нажал пользователь
+      //  DataGridView.HitTestInfo hit = grid.HitTest(e.X, e.Y);
+
+      //  // Проверяем, что нажатие произошло на ячейку
+      //  if (hit != null && hit.Type == DataGridViewHitTestType.Cell)
+      //  {
+      //    grid.EndEdit(); // Завершаем редактирование, если оно активно
+
+      //    // Сохраняем начальные координаты
+      //    startColumnIndex = hit.ColumnIndex;
+      //    startRowIndex = hit.RowIndex;
+      //    startPoint = e.Location;
+
+      //    // Получаем прямоугольник, описывающий ячейку
+      //    Rectangle rect = grid.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, true);
+
+      //    // Расчет handleSize с минимальным размером и проверкой на 0
+      //    int handleSize = Math.Max(Math.Min(rect.Width, rect.Height) / 5, 5); // Минимальный размер 5 пикселей
+      //    int tolerance = 2;
+
+      //    Debug.WriteLine($"handleSize: {handleSize}, rect.Width: {rect.Width}, rect.Height: {rect.Height}");
+
+      //    bool isHandleClicked = (handleSize > 0) && (e.X > rect.Right - handleSize - tolerance) && (e.Y > rect.Bottom - handleSize - tolerance);
+
+      //    draggingFromHandle = isHandleClicked;
+      //    isDragging = isHandleClicked; // isDragging = true ТОЛЬКО если нажата ручка
+
+      //    grid.Cursor = isHandleClicked ? Cursors.Cross : Cursors.Default; // Default если не нажата ручка
+
+      //    Debug.WriteLine($"MouseDown: StartColumnIndex={startColumnIndex}, StartRowIndex={startRowIndex}, draggingFromHandle={draggingFromHandle}, handleSize={handleSize}");
+      //  }
+      //}
+    }
+
+    private bool IsMouseOverCorner(MouseEventArgs e, out DataGridView.HitTestInfo hit)
+    {
+      hit = grid.HitTest(e.X, e.Y);
+
+      if (hit != null && hit.Type == DataGridViewHitTestType.Cell)
       {
-        // Получаем информацию о ячейке, на которую нажал пользователь
-        DataGridView.HitTestInfo hit = grid.HitTest(e.X, e.Y);
+        Rectangle rect = grid.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, true);
 
-        // Проверяем, что нажатие произошло на ячейку
-        if (hit != null && hit.Type == DataGridViewHitTestType.Cell)
-        {
-          grid.EndEdit(); // Завершаем редактирование, если оно активно
-
-          // Сохраняем начальные координаты
-          startColumnIndex = hit.ColumnIndex;
-          startRowIndex = hit.RowIndex;
-          startPoint = e.Location;
-
-          // Получаем прямоугольник, описывающий ячейку
-          Rectangle rect = grid.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, true);
-
-          // Расчет handleSize с минимальным размером и проверкой на 0
-          int handleSize = Math.Max(Math.Min(rect.Width, rect.Height) / 5, 5); // Минимальный размер 5 пикселей
-          int tolerance = 2;
-
-          Debug.WriteLine($"handleSize: {handleSize}, rect.Width: {rect.Width}, rect.Height: {rect.Height}");
-
-          bool isHandleClicked = (handleSize > 0) && (e.X > rect.Right - handleSize - tolerance) && (e.Y > rect.Bottom - handleSize - tolerance);
-
-          draggingFromHandle = isHandleClicked;
-          isDragging = isHandleClicked; // isDragging = true ТОЛЬКО если нажата ручка
-
-          grid.Cursor = isHandleClicked ? Cursors.Cross : Cursors.Default; // Default если не нажата ручка
-
-          Debug.WriteLine($"MouseDown: StartColumnIndex={startColumnIndex}, StartRowIndex={startRowIndex}, draggingFromHandle={draggingFromHandle}, handleSize={handleSize}");
-        }
+        return (e.X >= rect.Right - 15 && e.X <= rect.Right
+           && e.Y >= rect.Bottom - 15 && e.Y <= rect.Bottom);
       }
+      else
+        return false;
     }
 
     private void Grid_MouseMove(object sender, MouseEventArgs e)
     {
-      if (grid != null && grid.Enabled && isDragging && draggingFromHandle)
+      if (!this.IsDragging)
       {
-        grid.Cursor = Cursors.Cross;
-      }
-      else
-      {
+        grid.Cursor = Cursors.SizeAll;
+
+        if (this.IsMouseOverCorner(e, out DataGridView.HitTestInfo _))
+        {
+          grid.Cursor = Cursors.Cross;
+          return;
+        }
+
         grid.Cursor = Cursors.Default;
       }
+      //else
+      //  grid.Cursor = Cursors.SizeAll;
+      //if (grid != null && grid.Enabled && isDragging && draggingFromHandle)
+      //{
+      //  grid.Cursor = Cursors.Cross;
+      //}
+      //else
+      //{
+      //  grid.Cursor = Cursors.Default;
+      //}
     }
 
     private void Grid_MouseUp(object sender, MouseEventArgs e)
     {
-      // Проверяем, что перетаскивание началось и осуществляется за "ручку"
-      if (isDragging && draggingFromHandle)
+      try
       {
-        // Получаем информацию о ячейке, на которой пользователь отпустил кнопку мыши
-        DataGridView.HitTestInfo hit = grid.HitTest(e.X, e.Y);
-        if (hit == null || hit.ColumnIndex < 0 || hit.RowIndex < 0)
+        foreach (DataGridViewCell cell in grid.SelectedCells)
         {
-          ResetDragging();
-          return;
-        }
-        // Получаем индексы столбца и строки конечной ячейки
-        int endColumnIndex = hit.ColumnIndex;
-        int endRowIndex = hit.RowIndex;
+          if (cell.RowIndex == startRowIndex || cell.ColumnIndex != startColumnIndex)
+            continue;
 
-        Debug.WriteLine($"MouseUp: EndColumnIndex={endColumnIndex}, EndRowIndex={endRowIndex}");
-        // Получаем строку и ячейку, с которых началось перетаскивание
-        DataGridViewRow startRow = grid.Rows[startRowIndex];
-        DataGridViewCell startCell = startRow?.Cells[startColumnIndex];
-
-        // Проверка границ и null-проверок в одно условие
-        if (startRow == null || startCell == null || endRowIndex >= grid.Rows.Count || endColumnIndex >= grid.Columns.Count)
-        {
-          ResetDragging();
-          return;
+          cell.Value = grid.Rows[startRowIndex].Cells[cell.ColumnIndex].Value;
         }
-        // Получаем значение исходной ячейки
-        object cellValue = startCell.Value;
-        if (cellValue == null)
-        {
-          ResetDragging();
-          return; // Значение исходной ячейки равно null
-        }
-
-        // Определяем, копируем ли только строки или столбцы
-        bool copyRowsOnly = endRowIndex == startRowIndex && endColumnIndex != startColumnIndex; // Копирование только по строке, если индекс строки тот же, а индекс столбца другой
-        bool copyColumnsOnly = endColumnIndex == startColumnIndex && endRowIndex != startRowIndex; // Копирование только по столбцу, если индекс столбца тот же, а индекс строки другой
-                                                                                                   // Проверяем, что пользователь перетащил курсор хотя бы на одну ячейку
-        if (endRowIndex != startRowIndex || endColumnIndex != startColumnIndex)
-        {
-          // Если копируется только строка или только столбец
-          if (copyRowsOnly || copyColumnsOnly)
-          {
-            try
-            {
-              // Вызываем метод копирования значений
-              CopyValue(startColumnIndex, startRowIndex, endColumnIndex, endRowIndex, cellValue, copyRowsOnly, copyColumnsOnly);
-            }
-            // Обработка любых исключений, возникающих при копировании
-            catch (Exception ex)
-            {
-              MessageBox.Show($"Ошибка при копировании: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-              Debug.WriteLine($"Exception in Grid_MouseUp: {ex}");
-            }
-            finally
-            {
-              // Сбрасываем состояние перетаскивания
-              ResetDragging();
-            }
-          }
-        }
-        else
-        {
-          ResetDragging(); // Сбрасываем, если не было движения
-        }
-
       }
+      finally
+      {
+        this.IsDragging = false;
+      }
+      // Проверяем, что перетаскивание началось и осуществляется за "ручку"
+      //if (isDragging && draggingFromHandle)
+      //{
+      //  // Получаем информацию о ячейке, на которой пользователь отпустил кнопку мыши
+      //  DataGridView.HitTestInfo hit = grid.HitTest(e.X, e.Y);
+      //  if (hit == null || hit.ColumnIndex < 0 || hit.RowIndex < 0)
+      //  {
+      //    ResetDragging();
+      //    return;
+      //  }
+      //  // Получаем индексы столбца и строки конечной ячейки
+      //  int endColumnIndex = hit.ColumnIndex;
+      //  int endRowIndex = hit.RowIndex;
+
+      //  Debug.WriteLine($"MouseUp: EndColumnIndex={endColumnIndex}, EndRowIndex={endRowIndex}");
+      //  // Получаем строку и ячейку, с которых началось перетаскивание
+      //  DataGridViewRow startRow = grid.Rows[startRowIndex];
+      //  DataGridViewCell startCell = startRow?.Cells[startColumnIndex];
+
+      //  // Проверка границ и null-проверок в одно условие
+      //  if (startRow == null || startCell == null || endRowIndex >= grid.Rows.Count || endColumnIndex >= grid.Columns.Count)
+      //  {
+      //    ResetDragging();
+      //    return;
+      //  }
+      //  // Получаем значение исходной ячейки
+      //  object cellValue = startCell.Value;
+      //  if (cellValue == null)
+      //  {
+      //    ResetDragging();
+      //    return; // Значение исходной ячейки равно null
+      //  }
+
+      //  // Определяем, копируем ли только строки или столбцы
+      //  bool copyRowsOnly = endRowIndex == startRowIndex && endColumnIndex != startColumnIndex; // Копирование только по строке, если индекс строки тот же, а индекс столбца другой
+      //  bool copyColumnsOnly = endColumnIndex == startColumnIndex && endRowIndex != startRowIndex; // Копирование только по столбцу, если индекс столбца тот же, а индекс строки другой
+      //                                                                                             // Проверяем, что пользователь перетащил курсор хотя бы на одну ячейку
+      //  if (endRowIndex != startRowIndex || endColumnIndex != startColumnIndex)
+      //  {
+      //    // Если копируется только строка или только столбец
+      //    if (copyRowsOnly || copyColumnsOnly)
+      //    {
+      //      try
+      //      {
+      //        // Вызываем метод копирования значений
+      //        CopyValue(startColumnIndex, startRowIndex, endColumnIndex, endRowIndex, cellValue, copyRowsOnly, copyColumnsOnly);
+      //      }
+      //      // Обработка любых исключений, возникающих при копировании
+      //      catch (Exception ex)
+      //      {
+      //        MessageBox.Show($"Ошибка при копировании: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+      //        Debug.WriteLine($"Exception in Grid_MouseUp: {ex}");
+      //      }
+      //      finally
+      //      {
+      //        // Сбрасываем состояние перетаскивания
+      //        ResetDragging();
+      //      }
+      //    }
+      //  }
+      //  else
+      //  {
+      //    ResetDragging(); // Сбрасываем, если не было движения
+      //  }
+
+      //}
     }
 
     private void ResetDragging()
