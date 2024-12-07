@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Notung.Data;
@@ -24,6 +25,8 @@ namespace Schicksal.Anova
     public SampleVariance GetInteraction(IDividedSample<GroupKey> source, FactorInfo predictors)
     {
       source = Filter(source, predictors);
+
+      Debug.Assert(IsFull(source, predictors));
 
       if (source.Count == 0)
         return default(SampleVariance);
@@ -121,7 +124,7 @@ namespace Schicksal.Anova
       if (predictors.Count < 2 || source.Count == 0)
         return source;
 
-      var dic = new Dictionary<string, HashSet<object>>();
+      var uniqueValues = new Dictionary<string, HashSet<object>>();
 
       foreach (var p in predictors)
       {
@@ -130,20 +133,21 @@ namespace Schicksal.Anova
         for (int i = 0; i < source.Count; i++)
           set.Add(source.GetKey(i)[p]);
 
-        dic.Add(p, set);
+        uniqueValues.Add(p, set);
       }
 
-      if (dic.Aggregate(1, (a, kv) => a * kv.Value.Count) == source.Count)
+      // Если Декартово произведение и так полное, незачем фильтровать
+      if (uniqueValues.Aggregate(1, (a, kv) => a * kv.Value.Count) == source.Count)
         return GroupKey.Repack(source, predictors);
 
-      return PerformFilter(source, dic, predictors);
+      return PerformFilter(source, uniqueValues, predictors);
     }
 
-    private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> dic, FactorInfo predictors)
+    private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
-      string[] order = dic.OrderByDescending(kv => kv.Value.Count).Select(kv => kv.Key).ToArray();
+      string[] order = uniqueValues.OrderByDescending(kv => kv.Value.Count).Select(kv => kv.Key).ToArray();
       GroupKeyNode index = BuildIndex(source, order);
-      List<object[]> data_list = CreateDataList(dic, order); // Градации первого фактора
+      List<object[]> data_list = CreateDataList(uniqueValues, order); // Градации первого фактора
 
       for (int p_idx = 1; p_idx < order.Length; p_idx++) // Обходим все оставшиеся факторы
       {
@@ -153,7 +157,7 @@ namespace Schicksal.Anova
 
         for (int i = 0; i < data_list.Count; i++) // Обходим уже сформированные
         {
-          foreach (var value in dic[order[p_idx]]) // Обходим все градации нового фактора
+          foreach (var value in uniqueValues[order[p_idx]]) // Обходим все градации нового фактора
           {
             data_list[i][p_idx] = value;
 
@@ -166,13 +170,13 @@ namespace Schicksal.Anova
         }
 
         var next_level = new List<object[]>(CalculateNextLevelCapacity(data_list.Count, 
-          dic[order[p_idx]].Count, wrong_indexes.Count, wrong_values.Count));
+          uniqueValues[order[p_idx]].Count, wrong_indexes.Count, wrong_values.Count));
 
         if (wrong_indexes.Count > 0)
-          Sacrifice(dic[order[p_idx]], wrong_indexes, wrong_values, ref data_list, ref next_level);
+          Sacrifice(uniqueValues[order[p_idx]], wrong_indexes, wrong_values, ref data_list, ref next_level);
 
         // Заменяем список
-        data_list = Exchange(data_list, next_level, dic[order[p_idx]], p_idx);
+        data_list = Exchange(data_list, next_level, uniqueValues[order[p_idx]], p_idx);
       }
 
       // Формируем окончательный результат
@@ -197,13 +201,13 @@ namespace Schicksal.Anova
       return new ArrayDividedSample<GroupKey>(list.ToArray(), i => keys[i]);
     }
 
-    private static List<object[]> CreateDataList(Dictionary<string, HashSet<object>> dic, string[] order)
+    private static List<object[]> CreateDataList(Dictionary<string, HashSet<object>> uniqueLevels, string[] order)
     {
       var data_list = new List<object[]>();
 
-      foreach (var value in dic[order[0]]) // Обходим все градации самого первого фактора
+      foreach (var value in uniqueLevels[order[0]]) // Обходим все градации самого первого фактора
       {
-        data_list.Add(new object[dic.Count]);
+        data_list.Add(new object[uniqueLevels.Count]);
         data_list[data_list.Count - 1][0] = value;
       }
 
@@ -327,6 +331,53 @@ namespace Schicksal.Anova
       }
 
       return nextLevel;
+    }
+
+    // Проверка полноты Декартова произведения
+    private static bool IsFull(IDividedSample<GroupKey> source, FactorInfo predictors)
+    {
+      var uniqueValues = new Dictionary<string, HashSet<object>>();
+
+      if (source.Count == 0)
+        return true;
+
+      var bf = source.GetKey(0).BaseFilter;
+      var rs = source.GetKey(0).Response;
+
+      foreach (var p in predictors)
+      {
+        var set = new HashSet<object>();
+
+        for (int i = 0; i < source.Count; i++)
+          set.Add(source.GetKey(i)[p]);
+
+        uniqueValues.Add(p, set);
+      }
+
+      var cm = new CartesianMultiplier<string, object>(
+        uniqueValues.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray()));
+
+      foreach (var mul in cm)
+      {
+        bool ok = false;
+        var g = new GroupKey(mul, bf, rs);
+
+        for (int i = 0; i < source.Count; i++)
+        {
+          var key = source.GetKey(i);
+
+          if (source.GetKey(i).GetSubKey(predictors).Equals(g))
+          {
+            ok = true;
+            break;
+          }
+        }
+
+        if (!ok)
+          return false;
+      }
+
+      return true;
     }
 
     private class GroupKeyNode

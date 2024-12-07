@@ -208,6 +208,7 @@ namespace Schicksal.Basic
         dic[p] = m_data[p];
 
       var new_key = new GroupKey(dic, m_base_filter, m_response);
+
       return new_key;
     }
 
