@@ -385,7 +385,6 @@ namespace Schicksal.Helm
         rect.Width = 15;
         rect.Height = 15;
         e.Graphics.FillRectangle(Brushes.Black, rect);
-        e.Handled = true;
       }
     }
 
@@ -411,7 +410,7 @@ namespace Schicksal.Helm
           Rectangle rect = grid.GetCellDisplayRectangle(hit.ColumnIndex, hit.RowIndex, true);
 
           // Расчет handleSize с минимальным размером и проверкой на 0
-          int handleSize = Math.Max(Math.Min(rect.Width, rect.Height) / 5, 15); // Минимальный размер 15 пикселей
+          int handleSize = Math.Max(Math.Min(rect.Width, rect.Height) / 5, 5); // Минимальный размер 5 пикселей
           int tolerance = 2;
 
           Debug.WriteLine($"handleSize: {handleSize}, rect.Width: {rect.Width}, rect.Height: {rect.Height}");
