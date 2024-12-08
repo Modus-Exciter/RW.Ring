@@ -112,7 +112,7 @@ namespace Schicksal.Basic
       float probability) : base(table, filter, predictors, response, probability) 
     {
       if (!IsNumeric(table.Columns[response].DataType))
-        throw new ArgumentException("Result column must be numeric");
+        throw new ArgumentException("Response column must be numeric");
     }
   }
 

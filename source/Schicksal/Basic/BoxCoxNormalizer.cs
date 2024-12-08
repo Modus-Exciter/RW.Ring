@@ -141,16 +141,6 @@ namespace Schicksal.Basic
       return TwoStageOptimization(m_min, m_max, m_eps, l => CalculateMultipleLikehood(l, bcg));
     }
 
-    private static double CalculateMultipleLikehood(double l, IEnumerable<LikehoodCalculator> calculators)
-    {
-      double likehood = 0;
-
-      foreach (var b in calculators)
-        likehood += b.GetLikehood(l);
-
-      return likehood;
-    }
-
     /// <summary>
     /// Вычисление коэффициента для преобразования Бокса-Кокса
     /// </summary>
@@ -222,6 +212,16 @@ namespace Schicksal.Basic
     }
 
     #region Implementation ------------------------------------------------------------------------
+
+    private static double CalculateMultipleLikehood(double l, IEnumerable<LikehoodCalculator> calculators)
+    {
+      double likehood = 0;
+
+      foreach (var b in calculators)
+        likehood += b.GetLikehood(l);
+
+      return likehood;
+    }
 
     private IValueTransform PrepareTransform(IPlainSample sample)
     {

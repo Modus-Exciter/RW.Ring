@@ -53,7 +53,7 @@ namespace Schicksal.Basic
         m_data.Add(p, row[p]);
     }
 
-    internal GroupKey(Dictionary<string, object> data, string baseFilter, string response)
+    private GroupKey(Dictionary<string, object> data, string baseFilter, string response)
     {
       m_data = data;
       m_base_filter = baseFilter;
