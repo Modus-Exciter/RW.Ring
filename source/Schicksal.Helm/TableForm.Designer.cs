@@ -48,7 +48,6 @@
       // 
       // m_grid
       // 
-      this.m_grid.AllowUserToOrderColumns = true;
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
       dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -65,10 +64,10 @@
       this.m_grid.Location = new System.Drawing.Point(0, 0);
       this.m_grid.Margin = new System.Windows.Forms.Padding(4);
       this.m_grid.Name = "m_grid";
-      this.m_grid.RowHeadersWidth = 62;
+      this.m_grid.RowHeadersWidth = 35;
+      this.m_grid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
       this.m_grid.Size = new System.Drawing.Size(795, 541);
       this.m_grid.TabIndex = 0;
-      this.m_grid.RowHeadersWidthChanged += new System.EventHandler(this.HandleGridRowHeadersWidthChanged);
       this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEndEdit);
       this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEnter);
       this.m_grid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.HandleGridColumnWidthChanged);

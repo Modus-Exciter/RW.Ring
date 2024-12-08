@@ -15,11 +15,10 @@ namespace Schicksal.Helm
 {
   public partial class TableForm : Form
   {
-    private readonly List<TextBox> m_filter_row = new List<TextBox>();
-    private readonly Dictionary<string, string> m_filter_condition = new Dictionary<string, string>();
     private bool m_filtering;
     private bool m_removing_filter;
     private bool m_auto_resizing;
+    private readonly List<TextBox> m_filter_row = new List<TextBox>();
 
     public TableForm()
     {
@@ -149,7 +148,6 @@ namespace Schicksal.Helm
     protected override void OnResize(EventArgs e)
     {
       base.OnResize(e);
-
       this.UpdateAutoFilterColumnWidths();
     }
 
@@ -157,17 +155,12 @@ namespace Schicksal.Helm
 
     #region Event handlers ------------------------------------------------------------------------
 
-    private void HadnleFilterTextChanged(object sender, EventArgs e)
+    private void HandleFilterTextChanged(object sender, EventArgs e)
     {
       var text_box = sender as TextBox;
 
       if (text_box == null || m_removing_filter)
         return;
-
-      if (!string.IsNullOrEmpty(text_box.Text))
-        m_filter_condition[(string)text_box.Tag] = text_box.Text;
-      else
-        m_filter_condition.Remove((string)text_box.Tag);
 
       this.ApplyRowFilter();
     }
@@ -251,11 +244,6 @@ namespace Schicksal.Helm
       this.UpdateAutoFilterColumnWidths();
     }
 
-    private void HandleGridRowHeadersWidthChanged(object sender, EventArgs e)
-    {
-      this.UpdateAutoFilterColumnWidths();
-    }
-
     private void HandleGridScroll(object sender, ScrollEventArgs e)
     {
       if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
@@ -273,15 +261,14 @@ namespace Schicksal.Helm
 
       try
       {
-        foreach (var tb in m_filter_row)
-          tb.Text = string.Empty;
+        foreach (DataGridViewColumn column in m_grid.Columns)
+          ((TextBox)column.Tag).Text = string.Empty;
       }
       finally
       {
         m_removing_filter = false;
       }
 
-      m_filter_condition.Clear();
       this.ApplyRowFilter();
     }
 
@@ -315,19 +302,18 @@ namespace Schicksal.Helm
         tb.Dispose();
       }
 
-      m_filter_row.Clear();
-      m_filter_condition.Clear();
       m_grid.Parent.SuspendLayout();
       m_filter_panel.Visible = false;
       m_filter_label.Text = string.Empty;
+      m_filter_row.Clear();
 
       foreach (DataGridViewColumn column in m_grid.Columns)
       {
-        var cell = new TextBox();
+        var cell = new TextBox { Tag = column.DataPropertyName };
 
-        cell.Tag = column.DataPropertyName;
-        cell.TextChanged += this.HadnleFilterTextChanged;
+        cell.TextChanged += this.HandleFilterTextChanged;
 
+        column.Tag = cell;
         m_filter_row.Add(cell);
         m_grid.Parent.Controls.Add(cell);
         m_grid.Parent.Controls.SetChildIndex(cell, 0);
@@ -342,29 +328,40 @@ namespace Schicksal.Helm
       if (m_auto_resizing)
         return;
 
-      for (int i = 0; i < m_filter_row.Count; i++)
+      for (int i = 0; i < m_grid.ColumnCount; i++)
       {
-        var textBox = m_filter_row[i];
+        var textBox = m_grid.Columns[i].Tag as TextBox;
+
+        if (textBox == null) 
+          return;
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
         textBox.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
-        textBox.Location = new Point(headerRect.X + 3, headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom);
+        textBox.Location = new Point(headerRect.X + 3, 
+          headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom);
         textBox.Size = new Size(headerRect.Width - 6, headerRect.Height);
       }
     }
 
+    private IEnumerable<KeyValuePair<string, string>> GetFilterCondition()
+    {
+      return m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text) && cell.Tag is string)
+        .Select(cell => new KeyValuePair<string, string>((string)cell.Tag, cell.Text));
+    }
+
     private void ApplyRowFilter()
     {
-      m_filter_label.Text = m_filter_condition.Count > 0 ? string.Join(" AND ",
-        m_filter_condition.Select(kv => string.Format("Convert([{0}], 'System.String') LIKE '{1}%'", kv.Key, kv.Value))) : null;
+      m_filter_label.Text = string.Join(" && ", this.GetFilterCondition().Select(kv =>
+        string.Format("{0} ≈ '{1}'", kv.Key, kv.Value)));
 
       m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
       m_filtering = true;
 
       try
       {
-        this.DataSource.DefaultView.RowFilter = m_filter_label.Text;
+        this.DataSource.DefaultView.RowFilter = string.Join(" AND ", this.GetFilterCondition().Select(kv =>
+          string.Format("Convert([{0}], 'System.String') LIKE '{1}%'", kv.Key, kv.Value)));
       }
       finally
       {

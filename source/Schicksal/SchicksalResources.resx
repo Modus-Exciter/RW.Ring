@@ -117,11 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AND" xml:space="preserve">
+    <value>AND</value>
+  </data>
   <data name="BOOL" xml:space="preserve">
     <value>Boolean</value>
   </data>
   <data name="CONSISTENCY" xml:space="preserve">
     <value>Consictency</value>
+  </data>
+  <data name="CONSISTENCY_WEIGHTED" xml:space="preserve">
+    <value>Consistency weighted</value>
   </data>
   <data name="COUNT" xml:space="preserve">
     <value>Count</value>
@@ -180,8 +186,17 @@
   <data name="MIN" xml:space="preserve">
     <value>Minimum</value>
   </data>
+  <data name="OR" xml:space="preserve">
+    <value>OR</value>
+  </data>
   <data name="PARABOLIC" xml:space="preserve">
     <value>Parabola</value>
+  </data>
+  <data name="RMS_ERROR" xml:space="preserve">
+    <value>Average error</value>
+  </data>
+  <data name="RMS_ERROR_WEIGHTED" xml:space="preserve">
+    <value>Average error weighted</value>
   </data>
   <data name="STD_ERROR" xml:space="preserve">
     <value>Standard error</value>

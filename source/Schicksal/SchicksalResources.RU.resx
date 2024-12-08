@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AND" xml:space="preserve">
+    <value>И</value>
+  </data>
   <data name="BOOL" xml:space="preserve">
     <value>Логический</value>
   </data>
@@ -182,6 +185,9 @@
   </data>
   <data name="MIN" xml:space="preserve">
     <value>Минимум</value>
+  </data>
+  <data name="OR" xml:space="preserve">
+    <value>ИЛИ</value>
   </data>
   <data name="PARABOLIC" xml:space="preserve">
     <value>Парабола</value>
