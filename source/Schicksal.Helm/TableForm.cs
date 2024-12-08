@@ -18,12 +18,15 @@ namespace Schicksal.Helm
     private readonly List<TextBox> m_filter_row = new List<TextBox>();
     private readonly Dictionary<string, string> m_filter_condition = new Dictionary<string, string>();
     private bool m_filtering;
+    private bool m_removing_filter;
     private bool m_auto_resizing;
 
     public TableForm()
     {
       this.InitializeComponent();
     }
+
+    #region Properties ----------------------------------------------------------------------------
 
     public DataTable DataSource
     {
@@ -55,12 +58,48 @@ namespace Schicksal.Helm
 
     public string FileName { get; set; }
 
+    #endregion
+
+    #region Public methods ------------------------------------------------------------------------
+
     public void MarkAsReadOnly()
     {
       m_grid.ReadOnly = true;
       m_grid.AllowUserToAddRows = false;
       m_grid.AllowUserToDeleteRows = false;
     }
+
+    public void Save()
+    {
+      if (string.IsNullOrEmpty(this.FileName))
+        this.SaveAs();
+      else
+        this.SaveFile(this.FileName, this.DataSource);
+    }
+
+    public void SaveAs()
+    {
+      using (var dlg = new SaveFileDialog())
+      {
+        dlg.Filter = "Schicksal data files|*.sks";
+
+        if (!string.IsNullOrEmpty(this.FileName))
+        {
+          dlg.FileName = Path.GetFileName(this.FileName);
+          dlg.InitialDirectory = Path.GetDirectoryName(this.FileName);
+        }
+
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          this.FileName = dlg.FileName;
+          this.SaveFile(this.FileName, this.DataSource);
+        }
+      }
+    }
+
+    #endregion
+
+    #region Form handling overrides ---------------------------------------------------------------
 
     protected override void OnLoad(EventArgs e)
     {
@@ -80,7 +119,7 @@ namespace Schicksal.Helm
         m_auto_resizing = false;
       }
 
-      this.UpdateAutoFilterColumnWidths(0);
+      this.UpdateAutoFilterColumnWidths();
     }
 
     protected override void OnClosing(CancelEventArgs e)
@@ -107,6 +146,149 @@ namespace Schicksal.Helm
       }
     }
 
+    protected override void OnResize(EventArgs e)
+    {
+      base.OnResize(e);
+
+      this.UpdateAutoFilterColumnWidths();
+    }
+
+    #endregion
+
+    #region Event handlers ------------------------------------------------------------------------
+
+    private void HadnleFilterTextChanged(object sender, EventArgs e)
+    {
+      var text_box = sender as TextBox;
+
+      if (text_box == null || m_removing_filter)
+        return;
+
+      if (!string.IsNullOrEmpty(text_box.Text))
+        m_filter_condition[(string)text_box.Tag] = text_box.Text;
+      else
+        m_filter_condition.Remove((string)text_box.Tag);
+
+      this.ApplyRowFilter();
+    }
+
+    private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    {
+      m_cmd_tbedit.Text = Resources.TABLE_EDIT;
+    }
+
+    private void HandleContextMenuOpening(object sender, CancelEventArgs e)
+    {
+      if (m_grid.ReadOnly)
+        e.Cancel = true;
+    }
+
+    private void HandleEditTableClick(object sender, EventArgs e)
+    {
+      using (var dlg = new EditColumnsDialog())
+      {
+        dlg.Text = Resources.TABLE_EDIT;
+        TableColumnInfo.FillColumnInfo(dlg.Columns, this.DataSource);
+
+        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+        {
+          m_grid.DataSource = TableColumnInfo.CreateUpdatedTable(dlg.Columns, this.DataSource);
+
+          this.CreateFilterRow();
+          this.UpdateAutoFilterColumnWidths();
+
+          if (!this.Text.EndsWith("*"))
+            this.Text += "*";
+        }
+      }
+    }
+
+    private void HandleGridCellEnter(object sender, DataGridViewCellEventArgs e)
+    {
+      if (!m_filtering)
+        m_grid.BeginEdit(true);
+    }
+
+    private void HandleGridMouseClick(object sender, MouseEventArgs e)
+    {
+      DataGridView.HitTestInfo info = m_grid.HitTest(e.X, e.Y);
+      DataGridViewCell cell = null;
+
+      if (info != null && info.ColumnIndex >= 0 && info.RowIndex >= 0)
+        cell = m_grid.Rows[info.RowIndex].Cells[info.ColumnIndex];
+
+      if (m_grid.CurrentCell != null && m_grid.CurrentCell != cell)
+      {
+        if (m_grid.CurrentCell.IsInEditMode)
+          m_grid.EndEdit();
+        else
+          m_grid.BeginEdit(false);
+      }
+    }
+
+    private void HandleGridCellEndEdit(object sender, DataGridViewCellEventArgs e)
+    {
+      if (e.RowIndex < 0 || m_filtering)
+        return;
+
+      var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
+
+      if (row == null)
+        return;
+
+      if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
+        this.Text += "*";
+    }
+
+    private void HandleGridUserDeletedRow(object sender, DataGridViewRowEventArgs e)
+    {
+      if(!this.Text.EndsWith("*"))
+        this.Text += "*";
+    }
+
+    private void HandleGridColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+    {
+      this.UpdateAutoFilterColumnWidths();
+    }
+
+    private void HandleGridRowHeadersWidthChanged(object sender, EventArgs e)
+    {
+      this.UpdateAutoFilterColumnWidths();
+    }
+
+    private void HandleGridScroll(object sender, ScrollEventArgs e)
+    {
+      if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
+        this.UpdateAutoFilterColumnWidths();
+    }
+
+    private void HandleGridDataError(object sender, DataGridViewDataErrorEventArgs e)
+    {
+      AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
+    }
+
+    private void HandleCloseFilterButtonClick(object sender, EventArgs e)
+    {
+      m_removing_filter = true;
+
+      try
+      {
+        foreach (var tb in m_filter_row)
+          tb.Text = string.Empty;
+      }
+      finally
+      {
+        m_removing_filter = false;
+      }
+
+      m_filter_condition.Clear();
+      this.ApplyRowFilter();
+    }
+
+    #endregion
+
+    #region Implementation ------------------------------------------------------------------------
+
     private void SaveFile(string fileName, DataTable table)
     {
       if (File.Exists(fileName))
@@ -125,28 +307,6 @@ namespace Schicksal.Helm
       this.Text = Path.GetFileName(this.FileName);
     }
 
-    public void Save()
-    {
-      if (string.IsNullOrEmpty(this.FileName))
-        this.SaveAs();
-      else
-        this.SaveFile(this.FileName, this.DataSource);
-    }
-
-    public void SaveAs()
-    {
-      using (var dlg = new SaveFileDialog())
-      {
-        dlg.Filter = "Schicksal data files|*.sks";
-
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-        {
-          this.FileName = dlg.FileName;
-          this.SaveFile(this.FileName, this.DataSource);
-        }
-      }
-    }
-
     private void CreateFilterRow()
     {
       foreach (var tb in m_filter_row)
@@ -156,14 +316,17 @@ namespace Schicksal.Helm
       }
 
       m_filter_row.Clear();
+      m_filter_condition.Clear();
       m_grid.Parent.SuspendLayout();
+      m_filter_panel.Visible = false;
+      m_filter_label.Text = string.Empty;
 
       foreach (DataGridViewColumn column in m_grid.Columns)
       {
         var cell = new TextBox();
 
         cell.Tag = column.DataPropertyName;
-        cell.TextChanged += this.Cell_TextChanged;
+        cell.TextChanged += this.HadnleFilterTextChanged;
 
         m_filter_row.Add(cell);
         m_grid.Parent.Controls.Add(cell);
@@ -174,138 +337,43 @@ namespace Schicksal.Helm
       m_grid.Parent.PerformLayout();
     }
 
-    private void Cell_TextChanged(object sender, EventArgs e)
-    {
-      var text_box = sender as TextBox;
-
-      if (text_box == null)
-        return;
-
-      if (!string.IsNullOrEmpty(text_box.Text))
-        m_filter_condition[(string)text_box.Tag] = text_box.Text;
-      else
-        m_filter_condition.Remove((string)text_box.Tag);
-
-      m_filtering = true;
-      try
-      {
-        this.DataSource.DefaultView.RowFilter = m_filter_condition.Count > 0 ? string.Join(" AND ",
-          m_filter_condition.Select(kv => string.Format("Convert([{0}], 'System.String') LIKE '{1}%'", kv.Key, kv.Value))) : null;
-      }
-      finally
-      {
-        m_filtering = false;
-      }
-    }
-
-    private void Grid_DataError(object sender, DataGridViewDataErrorEventArgs e)
-    {
-      AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
-    }
-
-    private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
-    {
-      m_cmd_tbedit.Text = Resources.TABLE_EDIT;
-    }
-
-    private void m_cmd_tbedit_Click(object sender, EventArgs e)
-    {
-      using (var dlg = new EditColumnsDialog())
-      {
-        dlg.Text = Resources.TABLE_EDIT;
-        TableColumnInfo.FillColumnInfo(dlg.Columns, this.DataSource);
-
-        if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-        {
-          m_grid.DataSource = TableColumnInfo.CreateUpdatedTable(dlg.Columns, this.DataSource);
-
-          if (!this.Text.EndsWith("*"))
-            this.Text += "*";
-        }
-      }
-    }
-
-    private void m_grid_CellEnter(object sender, DataGridViewCellEventArgs e)
-    {
-      if (m_filtering) 
-        return;
-
-      m_grid.BeginEdit(true);
-    }
-
-    private void m_grid_MouseClick(object sender, MouseEventArgs e)
-    {
-      var info = m_grid.HitTest(e.X, e.Y);
-      DataGridViewCell cell = null;
-
-      if (info != null && info.ColumnIndex >= 0 && info.RowIndex >= 0)
-        cell = m_grid.Rows[info.RowIndex].Cells[info.ColumnIndex];
-
-      if (m_grid.CurrentCell != null && m_grid.CurrentCell != cell)
-      {
-        if (m_grid.CurrentCell.IsInEditMode)
-          m_grid.EndEdit();
-        else
-          m_grid.BeginEdit(false);
-      }
-    }
-
-    private void m_grid_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-    {
-      if(!this.Text.EndsWith("*"))
-        this.Text += "*";
-    }
-
-    private void m_grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-    {
-      if (e.RowIndex < 0 || m_filtering)
-        return;
-
-      var row = m_grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
-
-      if (row == null)
-        return;
-
-      if (row.Row.RowState != DataRowState.Unchanged && !this.Text.EndsWith("*"))
-        this.Text += "*";
-    }
-
-    private void m_context_menu_Opening(object sender, CancelEventArgs e)
-    {
-      if (m_grid.ReadOnly)
-        e.Cancel = true;
-    }
-
-    private void UpdateAutoFilterColumnWidths(int startColumn)
+    private void UpdateAutoFilterColumnWidths()
     {
       if (m_auto_resizing)
         return;
 
-      for (int i = startColumn; i < m_filter_row.Count; i++)
+      for (int i = 0; i < m_filter_row.Count; i++)
       {
         var textBox = m_filter_row[i];
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
+        textBox.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
         textBox.Location = new Point(headerRect.X + 3, headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom);
         textBox.Size = new Size(headerRect.Width - 6, headerRect.Height);
       }
     }
 
-    private void m_grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
+    private void ApplyRowFilter()
     {
-      this.UpdateAutoFilterColumnWidths(e.Column.Index);
+      m_filter_label.Text = m_filter_condition.Count > 0 ? string.Join(" AND ",
+        m_filter_condition.Select(kv => string.Format("Convert([{0}], 'System.String') LIKE '{1}%'", kv.Key, kv.Value))) : null;
+
+      m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
+      m_filtering = true;
+
+      try
+      {
+        this.DataSource.DefaultView.RowFilter = m_filter_label.Text;
+      }
+      finally
+      {
+        m_filtering = false;
+      }
+
+      this.UpdateAutoFilterColumnWidths();
     }
 
-    private void m_grid_RowHeadersWidthChanged(object sender, EventArgs e)
-    {
-      this.UpdateAutoFilterColumnWidths(0);
-    }
-
-    private void m_grid_Scroll(object sender, ScrollEventArgs e)
-    {
-      if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
-        this.UpdateAutoFilterColumnWidths(0);
-    }
+    #endregion
   }
 }

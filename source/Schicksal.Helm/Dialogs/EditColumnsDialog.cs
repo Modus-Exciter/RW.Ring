@@ -66,6 +66,12 @@ namespace Schicksal.Helm.Dialogs
     {
       m_grid.BeginEdit(true);
     }
+
+    private void m_button_delete_Click(object sender, EventArgs e)
+    {
+      if (m_grid.CurrentCell.RowIndex >= 0)
+        m_grid.Rows.RemoveAt(m_grid.CurrentCell.RowIndex);
+    }
   }
 
   public class TableColumnInfo

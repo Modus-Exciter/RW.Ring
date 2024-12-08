@@ -257,7 +257,9 @@
     <None Include="Properties\DataSources\Schicksal.Basic.DescriptionStatisticsEntry.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.StatisticsParameters.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
+    <None Include="Resources\delete2.png" />
     <Content Include="Resources\dot_chart.png" />
+    <None Include="Resources\funnel_delete.png" />
     <Content Include="Schicksal.Manual.pdf" />
     <None Include="Properties\DataSources\Schicksal.Regression.CorrelationMetrics.datasource" />
     <None Include="Schicksal.snk" />
