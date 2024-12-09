@@ -172,6 +172,8 @@ namespace Schicksal.Helm
     private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
     {
       m_cmd_tbedit.Text = Resources.TABLE_EDIT;
+      m_tool_tip.SetToolTip(this.m_close_filter_button, Resources.DISABLE_FILTER);
+      m_tool_tip.SetToolTip(this.m_unsort_button, Resources.DISABLE_SORTING);
     }
 
     private void HandleContextMenuOpening(object sender, CancelEventArgs e)
@@ -259,6 +261,18 @@ namespace Schicksal.Helm
       AppManager.Notificator.Show(e.Exception.Message, InfoLevel.Error);
     }
 
+    private void HandleGridSorted(object sender, EventArgs e)
+    {
+      this.UpdateBottomPanel();
+      this.UpdateAutoFilterColumnWidths();
+    }
+
+    private void HandleUnsortClick(object sender, EventArgs e)
+    {
+      this.DataSource.DefaultView.Sort = string.Empty;
+      this.UpdateBottomPanel();
+    }
+
     private void HandleCloseFilterButtonClick(object sender, EventArgs e)
     {
       m_removing_filter = true;
@@ -320,8 +334,7 @@ namespace Schicksal.Helm
         column.Tag = cell;
         m_filter_row.Add(cell);
         m_grid.Parent.Controls.Add(cell);
-        m_grid.Parent.Controls.SetChildIndex(cell,
-          m_grid.Parent.Controls.GetChildIndex(m_grid));
+        m_grid.Parent.Controls.SetChildIndex(cell, m_grid.Parent.Controls.GetChildIndex(m_grid));
       }
 
       m_grid.Parent.ResumeLayout();
@@ -360,7 +373,8 @@ namespace Schicksal.Helm
       m_filter_label.Text = string.Join(" && ", this.GetFilterCondition().Select(kv =>
         string.Format("{0} ≈ '{1}'", kv.Key, kv.Value)));
 
-      m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
+      m_close_filter_button.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
+      this.UpdateBottomPanel();
       m_filtering = true;
 
       try
@@ -374,6 +388,13 @@ namespace Schicksal.Helm
       }
 
       this.UpdateAutoFilterColumnWidths();
+    }
+
+    private void UpdateBottomPanel()
+    {
+      m_unsort_button.Visible = !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
+      m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text)
+       || !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
     }
 
     #endregion

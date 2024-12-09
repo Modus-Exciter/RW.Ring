@@ -269,6 +269,7 @@
     <None Include="Resources\delete2.png" />
     <Content Include="Resources\dot_chart.png" />
     <None Include="Resources\funnel_delete.png" />
+    <None Include="Resources\down_minus.png" />
     <Content Include="Schicksal.Manual.pdf" />
     <None Include="Properties\DataSources\Schicksal.Regression.CorrelationMetrics.datasource" />
     <None Include="Schicksal.snk" />

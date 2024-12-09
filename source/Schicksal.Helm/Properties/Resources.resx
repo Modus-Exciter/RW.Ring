@@ -130,20 +130,23 @@
   <data name="BASIC_STATISTICS" xml:space="preserve">
     <value>Basic statistics</value>
   </data>
+  <data name="OPEN" xml:space="preserve">
+    <value>Open</value>
+  </data>
   <data name="disk_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\disk_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="STANDARD_T_VALUE" xml:space="preserve">
-    <value>T-criteria for {0}% probability</value>
   </data>
   <data name="arrow_right_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow_right_blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="WRONG_COLUMN_NAME" xml:space="preserve">
+    <value>Symbols [,+] are not allowed in column names</value>
+  </data>
   <data name="EXCLUSIVE_COLOR" xml:space="preserve">
     <value>Exclusive color</value>
   </data>
-  <data name="STUDENT" xml:space="preserve">
-    <value>Student distribution</value>
+  <data name="STANDARD_F_VALUE" xml:space="preserve">
+    <value>Standard F-criteria for {0}% probability</value>
   </data>
   <data name="COMPARISON" xml:space="preserve">
     <value>Comparison in pairs</value>
@@ -166,14 +169,23 @@
   <data name="ANOVA" xml:space="preserve">
     <value>Analysis of variance</value>
   </data>
+  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
+    <value>Open system folder</value>
+  </data>
   <data name="HELP" xml:space="preserve">
     <value>Help</value>
   </data>
-  <data name="SAVE" xml:space="preserve">
-    <value>Save</value>
+  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
+    <value>Do you want to save changes in table {0}?</value>
   </data>
   <data name="NO_FACTOR_COLUMNS" xml:space="preserve">
     <value>Factor columns not selected</value>
+  </data>
+  <data name="funnel_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\funnel_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="INTERVAL" xml:space="preserve">
+    <value>Confidence interval</value>
   </data>
   <data name="STATISTICS" xml:space="preserve">
     <value>Statistics</value>
@@ -229,14 +241,11 @@
   <data name="EXPORT" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="DUPLICATE_COLUMN" xml:space="preserve">
-    <value>Column name {0} is not unique</value>
+  <data name="LANGUAGE" xml:space="preserve">
+    <value>Language</value>
   </data>
   <data name="NO_COLUMNS" xml:space="preserve">
     <value>No columns specified</value>
-  </data>
-  <data name="SAVE_FILE_CONFIRM" xml:space="preserve">
-    <value>Do you want to save changes in table {0}?</value>
   </data>
   <data name="NO_RESULT_COUMN" xml:space="preserve">
     <value>Result column not selected</value>
@@ -244,20 +253,17 @@
   <data name="dot_chart" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\dot_chart.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="STANDARD_F_VALUE" xml:space="preserve">
-    <value>Standard F-criteria for {0}% probability</value>
+  <data name="SAVE" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="FISHER" xml:space="preserve">
     <value>Fisher distribution</value>
   </data>
-  <data name="About_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="STANDARD_T_VALUE" xml:space="preserve">
+    <value>T-criteria for {0}% probability</value>
   </data>
-  <data name="OPEN_SYSTEM_FOLDER" xml:space="preserve">
-    <value>Open system folder</value>
-  </data>
-  <data name="LAST_FILES" xml:space="preserve">
-    <value>Recent files</value>
+  <data name="REMOVE" xml:space="preserve">
+    <value>Remove</value>
   </data>
   <data name="MEAN" xml:space="preserve">
     <value>Mean</value>
@@ -268,31 +274,34 @@
   <data name="FILE" xml:space="preserve">
     <value>File</value>
   </data>
-  <data name="table_sql" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\table_sql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DUPLICATE_COLUMN" xml:space="preserve">
+    <value>Column name {0} is not unique</value>
   </data>
   <data name="delete2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\delete2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LANGUAGE" xml:space="preserve">
-    <value>Language</value>
+  <data name="table_sql" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\table_sql.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LAST_FILES" xml:space="preserve">
+    <value>Recent files</value>
+  </data>
+  <data name="STUDENT" xml:space="preserve">
+    <value>Student distribution</value>
+  </data>
+  <data name="About_Picture" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\about.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SIGNIFICAT_COLOR" xml:space="preserve">
     <value>Significat color</value>
   </data>
-  <data name="WRONG_COLUMN_NAME" xml:space="preserve">
-    <value>Symbols [,+] are not allowed in column names</value>
+  <data name="down_minus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\down_minus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="OPEN" xml:space="preserve">
-    <value>Open</value>
+  <data name="DISABLE_FILTER" xml:space="preserve">
+    <value>Disable filter</value>
   </data>
-  <data name="INTERVAL" xml:space="preserve">
-    <value>Confidence interval</value>
-  </data>
-  <data name="REMOVE" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="funnel_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\funnel_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="DISABLE_SORTING" xml:space="preserve">
+    <value>Disable sorting</value>
   </data>
 </root>

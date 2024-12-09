@@ -184,6 +184,24 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Disable filter.
+        /// </summary>
+        internal static string DISABLE_FILTER {
+            get {
+                return ResourceManager.GetString("DISABLE_FILTER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Disable sorting.
+        /// </summary>
+        internal static string DISABLE_SORTING {
+            get {
+                return ResourceManager.GetString("DISABLE_SORTING", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap disk_blue {
@@ -218,6 +236,16 @@ namespace Schicksal.Helm.Properties {
         internal static System.Drawing.Bitmap dot_chart {
             get {
                 object obj = ResourceManager.GetObject("dot_chart", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap down_minus {
+            get {
+                object obj = ResourceManager.GetObject("down_minus", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

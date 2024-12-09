@@ -138,6 +138,12 @@
   <data name="CREATE_NEW_TABLE" xml:space="preserve">
     <value>Создать новую таблицу</value>
   </data>
+  <data name="DISABLE_FILTER" xml:space="preserve">
+    <value>Отключить фильтр</value>
+  </data>
+  <data name="DISABLE_SORTING" xml:space="preserve">
+    <value>Отключить сортировку</value>
+  </data>
   <data name="DISTRIBUTION" xml:space="preserve">
     <value>распределение</value>
   </data>
