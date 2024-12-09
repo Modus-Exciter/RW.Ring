@@ -30,6 +30,7 @@
     {
       this.components = new System.ComponentModel.Container();
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TableForm));
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -48,23 +49,33 @@
       // 
       // m_grid
       // 
+      this.m_grid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
       dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
       dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.5F);
       dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-      dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 26);
+      dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 28);
       dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
       dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
       dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
       this.m_grid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
       this.m_grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.m_grid.ContextMenuStrip = this.m_context_menu;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+      dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+      this.m_grid.DefaultCellStyle = dataGridViewCellStyle2;
       this.m_grid.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
       this.m_grid.Location = new System.Drawing.Point(0, 0);
       this.m_grid.Margin = new System.Windows.Forms.Padding(4);
       this.m_grid.Name = "m_grid";
-      this.m_grid.RowHeadersWidth = 35;
+      this.m_grid.RowHeadersWidth = 51;
       this.m_grid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
       this.m_grid.Size = new System.Drawing.Size(795, 541);
       this.m_grid.TabIndex = 0;
@@ -138,6 +149,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackColor = System.Drawing.SystemColors.Control;
       this.ClientSize = new System.Drawing.Size(795, 571);
       this.Controls.Add(this.m_grid);
       this.Controls.Add(this.m_filter_panel);

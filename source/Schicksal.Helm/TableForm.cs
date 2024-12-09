@@ -18,7 +18,7 @@ namespace Schicksal.Helm
     private bool m_filtering;
     private bool m_removing_filter;
     private bool m_auto_resizing;
-    private readonly List<TextBox> m_filter_row = new List<TextBox>();
+    private readonly List<FilterCell> m_filter_row = new List<FilterCell>();
 
     public TableForm()
     {
@@ -111,12 +111,16 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
+      m_auto_resizing = true;
+
       if (m_grid.Rows.Count < (1 << 10))
-      {
-        m_auto_resizing = true;
         m_grid.AutoResizeColumns();
-        m_auto_resizing = false;
-      }
+      else
+        m_grid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+
+      m_grid.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToFirstHeader);
+
+      m_auto_resizing = false;
 
       this.UpdateAutoFilterColumnWidths();
     }
@@ -157,7 +161,7 @@ namespace Schicksal.Helm
 
     private void HandleFilterTextChanged(object sender, EventArgs e)
     {
-      var text_box = sender as TextBox;
+      var text_box = sender as FilterCell;
 
       if (text_box == null || m_removing_filter)
         return;
@@ -262,7 +266,7 @@ namespace Schicksal.Helm
       try
       {
         foreach (DataGridViewColumn column in m_grid.Columns)
-          ((TextBox)column.Tag).Text = string.Empty;
+          ((FilterCell)column.Tag).Text = string.Empty;
       }
       finally
       {
@@ -309,14 +313,15 @@ namespace Schicksal.Helm
 
       foreach (DataGridViewColumn column in m_grid.Columns)
       {
-        var cell = new TextBox { Tag = column.DataPropertyName };
+        var cell = new FilterCell(column);
 
         cell.TextChanged += this.HandleFilterTextChanged;
 
         column.Tag = cell;
         m_filter_row.Add(cell);
         m_grid.Parent.Controls.Add(cell);
-        m_grid.Parent.Controls.SetChildIndex(cell, 0);
+        m_grid.Parent.Controls.SetChildIndex(cell,
+          m_grid.Parent.Controls.GetChildIndex(m_grid));
       }
 
       m_grid.Parent.ResumeLayout();
@@ -330,24 +335,24 @@ namespace Schicksal.Helm
 
       for (int i = 0; i < m_grid.ColumnCount; i++)
       {
-        var textBox = m_grid.Columns[i].Tag as TextBox;
+        var cell = m_grid.Columns[i].Tag as FilterCell;
 
-        if (textBox == null) 
+        if (cell == null) 
           return;
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
-        textBox.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
-        textBox.Location = new Point(headerRect.X + 3, 
-          headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom);
-        textBox.Size = new Size(headerRect.Width - 6, headerRect.Height);
+        cell.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
+        cell.Location = new Point(headerRect.X + 3, 
+          headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom + 2);
+        cell.Size = new Size(headerRect.Width - 6, cell.Size.Height);
       }
     }
 
     private IEnumerable<KeyValuePair<string, string>> GetFilterCondition()
     {
-      return m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text) && cell.Tag is string)
-        .Select(cell => new KeyValuePair<string, string>((string)cell.Tag, cell.Text));
+      return m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text))
+        .Select(cell => new KeyValuePair<string, string>(cell.Property, cell.Text));
     }
 
     private void ApplyRowFilter()
