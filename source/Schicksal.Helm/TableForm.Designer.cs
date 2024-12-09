@@ -113,6 +113,7 @@
       // 
       // m_filter_panel
       // 
+      this.m_filter_panel.AutoSize = true;
       this.m_filter_panel.BackColor = System.Drawing.SystemColors.Info;
       this.m_filter_panel.Controls.Add(this.m_unsort_button);
       this.m_filter_panel.Controls.Add(this.m_filter_label);
@@ -188,6 +189,7 @@
       this.m_filter_panel.ResumeLayout(false);
       this.m_filter_panel.PerformLayout();
       this.ResumeLayout(false);
+      this.PerformLayout();
 
     }
 
