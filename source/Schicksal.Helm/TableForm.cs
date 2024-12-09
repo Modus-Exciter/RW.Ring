@@ -393,6 +393,7 @@ namespace Schicksal.Helm
     private void UpdateBottomPanel()
     {
       m_unsort_button.Visible = !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
+      m_separator.Visible = m_close_filter_button.Visible;
       m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text)
        || !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
     }

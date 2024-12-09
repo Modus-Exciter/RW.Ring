@@ -35,18 +35,19 @@
       this.m_grid = new System.Windows.Forms.DataGridView();
       this.m_context_menu = new System.Windows.Forms.ContextMenuStrip(this.components);
       this.m_cmd_tbedit = new System.Windows.Forms.ToolStripMenuItem();
-      this.m_switcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
       this.m_binding_source = new System.Windows.Forms.BindingSource(this.components);
       this.m_filter_panel = new System.Windows.Forms.Panel();
-      this.m_unsort_button = new System.Windows.Forms.Button();
       this.m_filter_label = new System.Windows.Forms.Label();
+      this.m_unsort_button = new System.Windows.Forms.Button();
+      this.m_separator = new System.Windows.Forms.Panel();
       this.m_close_filter_button = new System.Windows.Forms.Button();
       this.m_tool_tip = new System.Windows.Forms.ToolTip(this.components);
+      this.m_switcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).BeginInit();
       this.m_context_menu.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).BeginInit();
       this.m_filter_panel.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).BeginInit();
       this.SuspendLayout();
       // 
       // m_grid
@@ -107,38 +108,18 @@
       this.m_cmd_tbedit.Text = "Edit table";
       this.m_cmd_tbedit.Click += new System.EventHandler(this.HandleEditTableClick);
       // 
-      // m_switcher
-      // 
-      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Switcher_LanguageChanged);
-      // 
       // m_filter_panel
       // 
       this.m_filter_panel.BackColor = System.Drawing.SystemColors.Info;
-      this.m_filter_panel.Controls.Add(this.m_unsort_button);
       this.m_filter_panel.Controls.Add(this.m_filter_label);
+      this.m_filter_panel.Controls.Add(this.m_unsort_button);
+      this.m_filter_panel.Controls.Add(this.m_separator);
       this.m_filter_panel.Controls.Add(this.m_close_filter_button);
       this.m_filter_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
       this.m_filter_panel.Location = new System.Drawing.Point(0, 547);
       this.m_filter_panel.Name = "m_filter_panel";
       this.m_filter_panel.Size = new System.Drawing.Size(795, 24);
       this.m_filter_panel.TabIndex = 1;
-      // 
-      // m_unsort_button
-      // 
-      this.m_unsort_button.AutoSize = true;
-      this.m_unsort_button.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-      this.m_unsort_button.BackColor = System.Drawing.Color.Transparent;
-      this.m_unsort_button.Dock = System.Windows.Forms.DockStyle.Right;
-      this.m_unsort_button.FlatAppearance.BorderSize = 0;
-      this.m_unsort_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-      this.m_unsort_button.Image = global::Schicksal.Helm.Properties.Resources.down_minus;
-      this.m_unsort_button.Location = new System.Drawing.Point(735, 0);
-      this.m_unsort_button.Name = "m_unsort_button";
-      this.m_unsort_button.Size = new System.Drawing.Size(30, 24);
-      this.m_unsort_button.TabIndex = 2;
-      this.m_unsort_button.UseVisualStyleBackColor = false;
-      this.m_unsort_button.Visible = false;
-      this.m_unsort_button.Click += new System.EventHandler(this.HandleUnsortClick);
       // 
       // m_filter_label
       // 
@@ -153,22 +134,51 @@
       this.m_filter_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
       this.m_filter_label.Visible = false;
       // 
+      // m_unsort_button
+      // 
+      this.m_unsort_button.AutoSize = true;
+      this.m_unsort_button.BackColor = System.Drawing.Color.Transparent;
+      this.m_unsort_button.BackgroundImage = global::Schicksal.Helm.Properties.Resources.down_minus;
+      this.m_unsort_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+      this.m_unsort_button.Dock = System.Windows.Forms.DockStyle.Right;
+      this.m_unsort_button.FlatAppearance.BorderSize = 0;
+      this.m_unsort_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+      this.m_unsort_button.Location = new System.Drawing.Point(737, 0);
+      this.m_unsort_button.Name = "m_unsort_button";
+      this.m_unsort_button.Size = new System.Drawing.Size(24, 24);
+      this.m_unsort_button.TabIndex = 2;
+      this.m_unsort_button.UseVisualStyleBackColor = false;
+      this.m_unsort_button.Visible = false;
+      this.m_unsort_button.Click += new System.EventHandler(this.HandleUnsortClick);
+      // 
+      // m_separator
+      // 
+      this.m_separator.Dock = System.Windows.Forms.DockStyle.Right;
+      this.m_separator.Location = new System.Drawing.Point(761, 0);
+      this.m_separator.Name = "m_separator";
+      this.m_separator.Size = new System.Drawing.Size(10, 24);
+      this.m_separator.TabIndex = 3;
+      // 
       // m_close_filter_button
       // 
       this.m_close_filter_button.AutoSize = true;
-      this.m_close_filter_button.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
       this.m_close_filter_button.BackColor = System.Drawing.Color.Transparent;
+      this.m_close_filter_button.BackgroundImage = global::Schicksal.Helm.Properties.Resources.funnel_delete;
+      this.m_close_filter_button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
       this.m_close_filter_button.Dock = System.Windows.Forms.DockStyle.Right;
       this.m_close_filter_button.FlatAppearance.BorderSize = 0;
       this.m_close_filter_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-      this.m_close_filter_button.Image = global::Schicksal.Helm.Properties.Resources.funnel_delete;
-      this.m_close_filter_button.Location = new System.Drawing.Point(765, 0);
+      this.m_close_filter_button.Location = new System.Drawing.Point(771, 0);
       this.m_close_filter_button.Name = "m_close_filter_button";
-      this.m_close_filter_button.Size = new System.Drawing.Size(30, 24);
+      this.m_close_filter_button.Size = new System.Drawing.Size(24, 24);
       this.m_close_filter_button.TabIndex = 0;
       this.m_close_filter_button.UseVisualStyleBackColor = false;
       this.m_close_filter_button.Visible = false;
       this.m_close_filter_button.Click += new System.EventHandler(this.HandleCloseFilterButtonClick);
+      // 
+      // m_switcher
+      // 
+      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.Switcher_LanguageChanged);
       // 
       // TableForm
       // 
@@ -183,10 +193,10 @@
       this.Name = "TableForm";
       ((System.ComponentModel.ISupportInitialize)(this.m_grid)).EndInit();
       this.m_context_menu.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.m_binding_source)).EndInit();
       this.m_filter_panel.ResumeLayout(false);
       this.m_filter_panel.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -203,5 +213,6 @@
     private System.Windows.Forms.Label m_filter_label;
     private System.Windows.Forms.Button m_unsort_button;
     private System.Windows.Forms.ToolTip m_tool_tip;
+    private System.Windows.Forms.Panel m_separator;
   }
 }
