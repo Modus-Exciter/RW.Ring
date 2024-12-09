@@ -81,7 +81,7 @@
       this.m_grid.Name = "m_grid";
       this.m_grid.RowHeadersWidth = 51;
       this.m_grid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-      this.m_grid.Size = new System.Drawing.Size(795, 547);
+      this.m_grid.Size = new System.Drawing.Size(795, 543);
       this.m_grid.TabIndex = 0;
       this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEndEdit);
       this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEnter);
@@ -116,9 +116,10 @@
       this.m_filter_panel.Controls.Add(this.m_separator);
       this.m_filter_panel.Controls.Add(this.m_close_filter_button);
       this.m_filter_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.m_filter_panel.Location = new System.Drawing.Point(0, 547);
+      this.m_filter_panel.Location = new System.Drawing.Point(0, 543);
       this.m_filter_panel.Name = "m_filter_panel";
-      this.m_filter_panel.Size = new System.Drawing.Size(795, 24);
+      this.m_filter_panel.Padding = new System.Windows.Forms.Padding(2);
+      this.m_filter_panel.Size = new System.Drawing.Size(795, 28);
       this.m_filter_panel.TabIndex = 1;
       // 
       // m_filter_label
@@ -126,13 +127,12 @@
       this.m_filter_label.AutoSize = true;
       this.m_filter_label.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_filter_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-      this.m_filter_label.Location = new System.Drawing.Point(0, 0);
+      this.m_filter_label.Location = new System.Drawing.Point(2, 2);
       this.m_filter_label.Name = "m_filter_label";
       this.m_filter_label.Padding = new System.Windows.Forms.Padding(8, 3, 3, 3);
       this.m_filter_label.Size = new System.Drawing.Size(11, 24);
       this.m_filter_label.TabIndex = 1;
       this.m_filter_label.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-      this.m_filter_label.Visible = false;
       // 
       // m_unsort_button
       // 
@@ -143,7 +143,7 @@
       this.m_unsort_button.Dock = System.Windows.Forms.DockStyle.Right;
       this.m_unsort_button.FlatAppearance.BorderSize = 0;
       this.m_unsort_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-      this.m_unsort_button.Location = new System.Drawing.Point(737, 0);
+      this.m_unsort_button.Location = new System.Drawing.Point(735, 2);
       this.m_unsort_button.Name = "m_unsort_button";
       this.m_unsort_button.Size = new System.Drawing.Size(24, 24);
       this.m_unsort_button.TabIndex = 2;
@@ -154,7 +154,7 @@
       // m_separator
       // 
       this.m_separator.Dock = System.Windows.Forms.DockStyle.Right;
-      this.m_separator.Location = new System.Drawing.Point(761, 0);
+      this.m_separator.Location = new System.Drawing.Point(759, 2);
       this.m_separator.Name = "m_separator";
       this.m_separator.Size = new System.Drawing.Size(10, 24);
       this.m_separator.TabIndex = 3;
@@ -168,7 +168,7 @@
       this.m_close_filter_button.Dock = System.Windows.Forms.DockStyle.Right;
       this.m_close_filter_button.FlatAppearance.BorderSize = 0;
       this.m_close_filter_button.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-      this.m_close_filter_button.Location = new System.Drawing.Point(771, 0);
+      this.m_close_filter_button.Location = new System.Drawing.Point(769, 2);
       this.m_close_filter_button.Name = "m_close_filter_button";
       this.m_close_filter_button.Size = new System.Drawing.Size(24, 24);
       this.m_close_filter_button.TabIndex = 0;
