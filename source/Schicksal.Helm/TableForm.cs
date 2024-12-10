@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Notung;
 using Notung.Services;
+using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
@@ -119,7 +120,6 @@ namespace Schicksal.Helm
         m_grid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
 
       m_grid.AutoResizeRowHeadersWidth(DataGridViewRowHeadersWidthSizeMode.AutoSizeToFirstHeader);
-
       m_auto_resizing = false;
 
       this.UpdateAutoFilterColumnWidths();
@@ -362,25 +362,19 @@ namespace Schicksal.Helm
       }
     }
 
-    private IEnumerable<KeyValuePair<string, string>> GetFilterCondition()
-    {
-      return m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text))
-        .Select(cell => new KeyValuePair<string, string>(cell.Property, cell.Text));
-    }
-
     private void ApplyRowFilter()
     {
-      m_filter_label.Text = string.Join(" && ", this.GetFilterCondition().Select(kv =>
-        string.Format("{0} ≈ '{1}'", kv.Key, kv.Value)));
+      var condidions = m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text))
+        .Select(cell => new FilterCondition(cell.Property, cell.Text, cell.Parser));
 
+      m_filter_label.Text = string.Join(" && ", condidions.Select(fc => fc.ToString()));
       m_close_filter_button.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
       this.UpdateBottomPanel();
       m_filtering = true;
 
       try
       {
-        this.DataSource.DefaultView.RowFilter = string.Join(" AND ", this.GetFilterCondition().Select(kv =>
-          string.Format("Convert([{0}], 'System.String') LIKE '{1}%'", kv.Key, kv.Value)));
+        this.DataSource.DefaultView.RowFilter = string.Join(" AND ", condidions.Select(fc => fc.Query));
       }
       finally
       {
@@ -396,6 +390,100 @@ namespace Schicksal.Helm
       m_separator.Visible = m_close_filter_button.Visible;
       m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text)
        || !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
+    }
+
+    private struct FilterCondition
+    {
+      public string Column;
+      public object Value;
+      public bool ConvertColumn;
+      public char Operation;
+
+      public FilterCondition(string key, string value, ITypeParser converter)
+      {
+        this.Column = key;
+
+        if (value.StartsWith("!=") || value.StartsWith("<>"))
+        {
+          this.Operation = '≠';
+          value = value.Substring(2).TrimStart();
+        }
+        else if (value.StartsWith(">=") || value.StartsWith("≥"))
+        {
+          this.Operation = '≥';
+          value = value[0] == '≥' ? value.Substring(1).TrimStart() : value.Substring(2).TrimStart();
+        }
+        else if (value.StartsWith("<=") || value.StartsWith("≤"))
+        {
+          this.Operation = '≤';
+          value = value[0] == '≤' ? value.Substring(1).TrimStart() : value.Substring(2).TrimStart();
+        }
+        else if (value[0] == '>' || value[0] == '<' || value[0] == '=' || value[0] == '≠')
+        {
+          this.Operation = value[0];
+          value = value.Substring(1).TrimStart();
+        }
+        else if (value[0] == '\'')
+        {
+          this.Operation = '≈';
+          value = value.Substring(1).TrimStart();
+        }
+        else
+          this.Operation = '≈';
+
+        if (this.Operation == '≈')
+          value += "%";
+
+        if (converter.GetType() != typeof(StringConverter))
+        {
+          this.Value = converter.ParseIfPossible(value, out bool success);
+          this.ConvertColumn = !success;
+        }
+        else
+        {
+          this.Value = value;
+          this.ConvertColumn = false;
+        }
+      }
+
+      public override string ToString()
+      {
+        return string.Format("{0} {1} {2}", this.Column, this.Operation, GroupKey.GetInvariant(this.Value));
+      }
+
+      private string GetOperationName()
+      {
+        switch (this.Operation)
+        {
+          case '>':
+          case '<':
+          case '=':
+            return this.Operation.ToString();
+
+          case '≤':
+            return "<=";
+          case '≥':
+            return ">=";
+          case '≠':
+            return "<>";
+
+          default:
+            return "LIKE";
+        }
+      }
+
+      public string Query
+      {
+        get
+        {
+          if (string.Empty.Equals(this.Value))
+            return string.Format("Convert([{0}], 'System.String') LIKE '%'", this.Column);
+
+          return string.Format(this.ConvertColumn ?
+            "Convert([{0}], 'System.String') {1} {2}" : "[{0}] {1} {2}", 
+            this.Column, this.GetOperationName(), GroupKey.GetInvariant(this.Value));
+        }
+      }
     }
 
     #endregion

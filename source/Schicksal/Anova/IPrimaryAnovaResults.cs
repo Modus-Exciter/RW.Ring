@@ -180,7 +180,7 @@ namespace Schicksal.Anova
     {
       var table = new TableDividedSample(m_parameters, m_parameters.Conjugation);
 
-      m_transform = m_parameters.Normalizer.Prepare(m_parameters.Normalizer.Normalize(table));
+      m_transform = m_parameters.Normalizer.Prepare(table);
       m_data_set = SampleRepack.Wrap(new ArrayDividedSample<GroupKey>(m_transform.Normalize(table), table.GetKey));
 
       _log.DebugFormat("Normalization value transform: {0}", m_transform);
