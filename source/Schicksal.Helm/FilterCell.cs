@@ -1,9 +1,12 @@
 ﻿using Notung;
 using Notung.Logging;
+using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -18,8 +21,14 @@ namespace Schicksal.Helm
     {
       m_property = column.DataPropertyName;
       m_parser = TypeParser.GetParser(column.ValueType);
+      var table = column.DataGridView.DataSource as DataTable;
 
       this.InitializeComponent();
+
+      if (table == null)
+        return;
+
+      m_worker.RunWorkerAsync(table);
     }
 
     public override string Text
@@ -43,20 +52,53 @@ namespace Schicksal.Helm
       this.OnTextChanged(e);
     }
 
-    private void m_text_box_SizeChanged(object sender, EventArgs e)
+    private void HandleSizeChanged(object sender, EventArgs e)
     {
       this.Height = m_text_box.Height + this.Padding.Top + this.Padding.Bottom
         + m_text_border.Padding.Top + m_text_border.Padding.Bottom;
     }
 
-    private void m_text_box_MouseEnter(object sender, EventArgs e)
+    private void HandleMouseEnter(object sender, EventArgs e)
     {
       this.BackColor = SystemColors.GrayText;
     }
 
-    private void m_text_box_MouseLeave(object sender, EventArgs e)
+    private void HandleMouseLeave(object sender, EventArgs e)
     {
       this.BackColor = SystemColors.ControlDark;
+    }
+
+    private void HandleDoWork(object sender, DoWorkEventArgs e)
+    {
+      var table = e.Argument as DataTable;
+      var column = table.Columns[m_property];
+      var values = new HashSet<string>();
+
+      foreach (DataRow row in table.Rows)
+      {
+        var value = row[column];
+        values.Add(value is string ? ((string)value).Replace("'", "''") : value.ToString());
+      }
+
+      string[] prefixes = new string[] { "=", "!=", ">", "<", "<>" };
+      string[] suggestions = new string[values.Count * prefixes.Length];
+      int index = 0;
+
+      foreach (var value in values)
+      {
+        foreach (var prefix in prefixes)
+          suggestions[index++] = string.Format("{0}{1}", prefix, value);
+      }
+
+      e.Result = suggestions;
+    }
+
+    private void HandleRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+    {
+      var suggestions = e.Result as string[];
+
+      if (suggestions != null)
+        m_text_box.AutoCompleteCustomSource.AddRange(suggestions);
     }
   }
 

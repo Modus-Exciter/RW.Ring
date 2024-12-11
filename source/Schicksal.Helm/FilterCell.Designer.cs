@@ -31,11 +31,14 @@ namespace Schicksal.Helm
     {
       this.m_text_box = new System.Windows.Forms.TextBox();
       this.m_text_border = new System.Windows.Forms.Panel();
+      this.m_worker = new System.ComponentModel.BackgroundWorker();
       this.m_text_border.SuspendLayout();
       this.SuspendLayout();
       // 
       // m_text_box
       // 
+      this.m_text_box.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+      this.m_text_box.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
       this.m_text_box.BorderStyle = System.Windows.Forms.BorderStyle.None;
       this.m_text_box.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_text_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -43,10 +46,10 @@ namespace Schicksal.Helm
       this.m_text_box.Name = "m_text_box";
       this.m_text_box.Size = new System.Drawing.Size(318, 17);
       this.m_text_box.TabIndex = 0;
-      this.m_text_box.SizeChanged += new System.EventHandler(this.m_text_box_SizeChanged);
+      this.m_text_box.SizeChanged += new System.EventHandler(this.HandleSizeChanged);
       this.m_text_box.TextChanged += new System.EventHandler(this.HandleTextChanged);
-      this.m_text_box.MouseEnter += new System.EventHandler(this.m_text_box_MouseEnter);
-      this.m_text_box.MouseLeave += new System.EventHandler(this.m_text_box_MouseLeave);
+      this.m_text_box.MouseEnter += new System.EventHandler(this.HandleMouseEnter);
+      this.m_text_box.MouseLeave += new System.EventHandler(this.HandleMouseLeave);
       // 
       // m_text_border
       // 
@@ -58,6 +61,11 @@ namespace Schicksal.Helm
       this.m_text_border.Padding = new System.Windows.Forms.Padding(2);
       this.m_text_border.Size = new System.Drawing.Size(322, 125);
       this.m_text_border.TabIndex = 1;
+      // 
+      // m_worker
+      // 
+      this.m_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.HandleDoWork);
+      this.m_worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.HandleRunWorkerCompleted);
       // 
       // FilterCell
       // 
@@ -79,5 +87,6 @@ namespace Schicksal.Helm
 
     private System.Windows.Forms.TextBox m_text_box;
     private System.Windows.Forms.Panel m_text_border;
+    private System.ComponentModel.BackgroundWorker m_worker;
   }
 }
