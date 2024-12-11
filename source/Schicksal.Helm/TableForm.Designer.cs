@@ -83,6 +83,7 @@
       this.m_grid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
       this.m_grid.Size = new System.Drawing.Size(795, 543);
       this.m_grid.TabIndex = 0;
+      this.m_grid.ColumnHeadersHeightChanged += new System.EventHandler(this.HandleGridColumnHeadersHeightChanged);
       this.m_grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEndEdit);
       this.m_grid.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.HandleGridCellEnter);
       this.m_grid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.HandleGridColumnWidthChanged);

@@ -253,6 +253,11 @@ namespace Schicksal.Helm
       this.UpdateAutoFilterColumnWidths();
     }
 
+    private void HandleGridColumnHeadersHeightChanged(object sender, EventArgs e)
+    {
+      this.UpdateAutoFilterColumnWidths();
+    }
+
     private void HandleGridScroll(object sender, ScrollEventArgs e)
     {
       if (e.ScrollOrientation == ScrollOrientation.HorizontalScroll)
@@ -267,7 +272,6 @@ namespace Schicksal.Helm
     private void HandleGridSorted(object sender, EventArgs e)
     {
       this.UpdateBottomPanel();
-      this.UpdateAutoFilterColumnWidths();
     }
 
     private void HandleUnsortClick(object sender, EventArgs e)
@@ -282,8 +286,8 @@ namespace Schicksal.Helm
 
       try
       {
-        foreach (DataGridViewColumn column in m_grid.Columns)
-          ((FilterCell)column.Tag).Text = string.Empty;
+        foreach (var cell in m_filter_row)
+          cell.Text = string.Empty;
       }
       finally
       {
@@ -334,7 +338,6 @@ namespace Schicksal.Helm
 
         cell.TextChanged += this.HandleFilterTextChanged;
 
-        column.Tag = cell;
         m_filter_row.Add(cell);
         m_grid.Parent.Controls.Add(cell);
         m_grid.Parent.Controls.SetChildIndex(cell, m_grid.Parent.Controls.GetChildIndex(m_grid));
@@ -346,15 +349,12 @@ namespace Schicksal.Helm
 
     private void UpdateAutoFilterColumnWidths()
     {
-      if (m_auto_resizing)
+      if (m_auto_resizing || m_grid.ColumnCount != m_filter_row.Count)
         return;
 
-      for (int i = 0; i < m_grid.ColumnCount; i++)
+      for (int i = 0; i < m_filter_row.Count; i++)
       {
-        var cell = m_grid.Columns[i].Tag as FilterCell;
-
-        if (cell == null) 
-          return;
+        var cell = m_filter_row[i];
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
