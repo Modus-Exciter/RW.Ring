@@ -263,4 +263,98 @@ namespace Schicksal.Helm
       }
     }
   }
+
+  public struct FilterCondition
+  {
+    public string Column;
+    public object Value;
+    public bool ConvertColumn;
+    public char Operation;
+
+    public FilterCondition(string key, string value, ITypeParser converter)
+    {
+      this.Column = key;
+
+      if (value.StartsWith("!=") || value.StartsWith("<>"))
+      {
+        this.Operation = '≠';
+        value = value.Substring(2).TrimStart();
+      }
+      else if (value.StartsWith(">=") || value.StartsWith("≥"))
+      {
+        this.Operation = '≥';
+        value = value[0] == '≥' ? value.Substring(1).TrimStart() : value.Substring(2).TrimStart();
+      }
+      else if (value.StartsWith("<=") || value.StartsWith("≤"))
+      {
+        this.Operation = '≤';
+        value = value[0] == '≤' ? value.Substring(1).TrimStart() : value.Substring(2).TrimStart();
+      }
+      else if (value[0] == '>' || value[0] == '<' || value[0] == '=' || value[0] == '≠')
+      {
+        this.Operation = value[0];
+        value = value.Substring(1).TrimStart();
+      }
+      else if (value[0] == '\'')
+      {
+        this.Operation = '≈';
+        value = value.Substring(1).TrimStart();
+      }
+      else
+        this.Operation = '≈';
+
+      if (this.Operation == '≈')
+        value += "%";
+
+      if (converter.GetType() != typeof(StringConverter))
+      {
+        this.Value = converter.ParseIfPossible(value, out bool success);
+        this.ConvertColumn = !success;
+      }
+      else
+      {
+        this.Value = value;
+        this.ConvertColumn = false;
+      }
+    }
+
+    public override string ToString()
+    {
+      return string.Format("{0} {1} {2}", this.Column, this.Operation, GroupKey.GetInvariant(this.Value));
+    }
+
+    private string GetOperationName()
+    {
+      switch (this.Operation)
+      {
+        case '>':
+        case '<':
+        case '=':
+          return this.Operation.ToString();
+
+        case '≤':
+          return "<=";
+        case '≥':
+          return ">=";
+        case '≠':
+          return "<>";
+
+        default:
+          return "LIKE";
+      }
+    }
+
+    public string Query
+    {
+      get
+      {
+        if (string.Empty.Equals(this.Value))
+          return string.Format("Convert([{0}], 'System.String') LIKE '%'", this.Column);
+
+        return string.Format(this.ConvertColumn ?
+          "Convert([{0}], 'System.String') {1} {2}" : "[{0}] {1} {2}",
+          this.Column, this.GetOperationName(), GroupKey.GetInvariant(this.Value));
+      }
+    }
+  }
 }
