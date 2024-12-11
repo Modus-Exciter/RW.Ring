@@ -16,6 +16,7 @@ namespace Schicksal.Helm
   {
     private readonly string m_property;
     private readonly ITypeParser m_parser;
+    private int m_autocomplete_width;
 
     public FilterCell(DataGridViewColumn column)
     {
@@ -25,10 +26,14 @@ namespace Schicksal.Helm
 
       this.InitializeComponent();
 
-      if (table == null)
-        return;
+      var height = m_text_box.Height + this.Padding.Top + this.Padding.Bottom
+        + m_text_border.Padding.Top + m_text_border.Padding.Bottom;
 
-      m_worker.RunWorkerAsync(table);
+      this.MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
+      this.MinimumSize = new Size(0, height);
+
+      if (table != null)
+        m_worker.RunWorkerAsync(table);
     }
 
     public override string Text
@@ -52,12 +57,6 @@ namespace Schicksal.Helm
       this.OnTextChanged(e);
     }
 
-    private void HandleSizeChanged(object sender, EventArgs e)
-    {
-      this.Height = m_text_box.Height + this.Padding.Top + this.Padding.Bottom
-        + m_text_border.Padding.Top + m_text_border.Padding.Bottom;
-    }
-
     private void HandleMouseEnter(object sender, EventArgs e)
     {
       this.BackColor = SystemColors.GrayText;
@@ -77,17 +76,24 @@ namespace Schicksal.Helm
       foreach (DataRow row in table.Rows)
       {
         var value = row[column];
-        values.Add(value is string ? ((string)value).Replace("'", "''") : value.ToString());
+        values.Add(TypeParser.GetValueText(value));
       }
 
-      string[] prefixes = new string[] { "=", "!=", ">", "<", "<>" };
+      string[] prefixes = new string[] { "=", "!=", "> ", "< ", "<>", ">=", "<=" };
       string[] suggestions = new string[values.Count * prefixes.Length];
       int index = 0;
 
-      foreach (var value in values)
+      using (var g = Graphics.FromHwnd(IntPtr.Zero))
       {
-        foreach (var prefix in prefixes)
-          suggestions[index++] = string.Format("{0}{1}", prefix, value);
+        foreach (var value in values)
+        {
+          foreach (var prefix in prefixes)
+          {
+            suggestions[index++] = string.Format("{0}{1}", prefix, value);
+            var size = (int)g.MeasureString(suggestions[index - 1], m_text_box.Font).Width;
+              m_autocomplete_width = Math.Max(size, m_autocomplete_width);
+          }
+        }
       }
 
       e.Result = suggestions;
@@ -99,6 +105,13 @@ namespace Schicksal.Helm
 
       if (suggestions != null)
         m_text_box.AutoCompleteCustomSource.AddRange(suggestions);
+    }
+
+    private void HandleSizeChanged(object sender, EventArgs e)
+    {
+      m_text_box.Width = Math.Max(m_autocomplete_width + SystemInformation.VerticalScrollBarWidth, 
+        this.Width - (this.Padding.Left + this.Padding.Right
+        + m_text_border.Padding.Left + m_text_border.Padding.Right));
     }
   }
 
@@ -135,6 +148,27 @@ namespace Schicksal.Helm
         throw new ArgumentNullException(nameof(type));
 
       return _cache.GetOrAdd(type, CreateParser);
+    }
+
+    /// <summary>
+    /// Выполнение преобразование значения в строку
+    /// </summary>
+    /// <param name="value">Значение, которое нужно преобразовать</param>
+    /// <returns>Строка, в которое преобразовано значение</returns>
+    public static string GetValueText(object value)
+    {
+      if (value is string)
+        return ((string)value).Replace("'", "''");
+
+      if (value is DateTime)
+      {
+        var dt = (DateTime)value;
+
+        if (dt.TimeOfDay == TimeSpan.Zero)
+          return dt.ToShortDateString();
+      }
+
+      return value.ToString();
     }
 
     private static ITypeParser CreateParser(Type type)

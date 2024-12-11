@@ -40,13 +40,11 @@ namespace Schicksal.Helm
       this.m_text_box.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
       this.m_text_box.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
       this.m_text_box.BorderStyle = System.Windows.Forms.BorderStyle.None;
-      this.m_text_box.Dock = System.Windows.Forms.DockStyle.Fill;
       this.m_text_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
       this.m_text_box.Location = new System.Drawing.Point(2, 2);
       this.m_text_box.Name = "m_text_box";
       this.m_text_box.Size = new System.Drawing.Size(318, 17);
       this.m_text_box.TabIndex = 0;
-      this.m_text_box.SizeChanged += new System.EventHandler(this.HandleSizeChanged);
       this.m_text_box.TextChanged += new System.EventHandler(this.HandleTextChanged);
       this.m_text_box.MouseEnter += new System.EventHandler(this.HandleMouseEnter);
       this.m_text_box.MouseLeave += new System.EventHandler(this.HandleMouseLeave);
@@ -77,6 +75,7 @@ namespace Schicksal.Helm
       this.Name = "FilterCell";
       this.Padding = new System.Windows.Forms.Padding(1);
       this.Size = new System.Drawing.Size(324, 127);
+      this.Resize += new System.EventHandler(this.HandleSizeChanged);
       this.m_text_border.ResumeLayout(false);
       this.m_text_border.PerformLayout();
       this.ResumeLayout(false);
