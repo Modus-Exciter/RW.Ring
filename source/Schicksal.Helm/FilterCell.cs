@@ -80,8 +80,12 @@ namespace Schicksal.Helm
       }
 
       string[] prefixes = new string[] { "=", "!=", "> ", "< ", "<>", ">=", "<=" };
-      string[] suggestions = new string[values.Count * prefixes.Length];
+      string[] suggestions = new string[values.Count * prefixes.Length + 2];
+
       int index = 0;
+
+      suggestions[index++] = "=\xA0Ø";
+      suggestions[index++] = "!=\xA0Ø";
 
       using (var g = Graphics.FromHwnd(IntPtr.Zero))
       {
@@ -300,6 +304,11 @@ namespace Schicksal.Helm
         this.Operation = '≈';
         value = value.Substring(1).TrimStart();
       }
+      else if (value == "!")
+      {
+        this.Operation = '≈';
+        value = string.Empty;
+      }
       else
         this.Operation = '≈';
 
@@ -348,8 +357,17 @@ namespace Schicksal.Helm
     {
       get
       {
-        if (string.Empty.Equals(this.Value))
+        if (string.Empty.Equals(this.Value) && this.Operation != '≠')
           return string.Format("Convert([{0}], 'System.String') LIKE '%'", this.Column);
+
+        if ("Ø".Equals(this.Value))
+        {
+          if (this.Operation == '=')
+            return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') = '')", this.Column);
+
+          if (this.Operation == '≠')
+            return string.Format("([{0}] IS NOT NULL AND Convert([{0}], 'System.String') <> '')", this.Column);
+        }
 
         return string.Format(this.ConvertColumn ?
           "Convert([{0}], 'System.String') {1} {2}" : "[{0}] {1} {2}",
