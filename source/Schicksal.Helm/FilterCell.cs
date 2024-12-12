@@ -36,20 +36,19 @@ namespace Schicksal.Helm
         m_worker.RunWorkerAsync(table);
     }
 
-    public override string Text
+    public bool HasCondition
     {
-      get { return m_text_box.Text; }
-      set { m_text_box.Text = value; }
+      get { return !string.IsNullOrWhiteSpace(m_text_box.Text); }
     }
 
-    public string Property
+    public FilterCondition GetCondition()
     {
-      get { return m_property; }
+      return new FilterCondition(m_property, m_text_box.Text, m_parser);
     }
 
-    public ITypeParser Parser
+    public void ClearCondition()
     {
-      get { return m_parser; }
+      m_text_box.Text = string.Empty;
     }
 
     private void HandleTextChanged(object sender, EventArgs e)
@@ -75,8 +74,10 @@ namespace Schicksal.Helm
 
       foreach (DataRow row in table.Rows)
       {
-        var value = row[column];
-        values.Add(TypeParser.GetValueText(value));
+        var value = TypeParser.GetValueText(row[column]);
+
+        if (!string.IsNullOrEmpty(value))
+          values.Add(value);
       }
 
       string[] prefixes = new string[] { "=", "!=", "> ", "< ", "<>", ">=", "<=" };
@@ -113,7 +114,7 @@ namespace Schicksal.Helm
 
     private void HandleSizeChanged(object sender, EventArgs e)
     {
-      m_text_box.Width = Math.Max(m_autocomplete_width + SystemInformation.VerticalScrollBarWidth, 
+      m_text_box.Width = Math.Max(m_autocomplete_width + SystemInformation.VerticalScrollBarWidth,
         this.Width - (this.Padding.Left + this.Padding.Right
         + m_text_border.Padding.Left + m_text_border.Padding.Right));
     }
@@ -162,7 +163,7 @@ namespace Schicksal.Helm
     public static string GetValueText(object value)
     {
       if (value is string)
-        return ((string)value).Replace("'", "''");
+        return ((string)value);
 
       if (value is DateTime)
       {
@@ -327,9 +328,13 @@ namespace Schicksal.Helm
       }
     }
 
-    public override string ToString()
+    public string Display()
     {
-      return string.Format("{0} {1} {2}", this.Column, this.Operation, GroupKey.GetInvariant(this.Value));
+      if ("Ø".Equals(this.Value) && (this.Operation == '=' || this.Operation == '≠'))
+        return string.Format("{0} {1} {2}", this.Column, this.Operation, CoreResources.NULL);
+
+      return string.Format("{0} {1} {2}", this.Column, this.Operation,
+        this.Value is string ? string.Format("'{0}'", this.Value) :TypeParser.GetValueText(this.Value));
     }
 
     private string GetOperationName()
@@ -358,7 +363,7 @@ namespace Schicksal.Helm
       get
       {
         if (string.Empty.Equals(this.Value) && this.Operation != '≠')
-          return string.Format("Convert([{0}], 'System.String') LIKE '%'", this.Column);
+          return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') LIKE '%')", this.Column);
 
         if ("Ø".Equals(this.Value))
         {

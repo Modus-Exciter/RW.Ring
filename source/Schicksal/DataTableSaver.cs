@@ -106,7 +106,7 @@ namespace Schicksal
     /// <returns>Таблица, прочитанная из потока байт</returns>
     public static DataTable ReadDataTable(Stream stream)
     {
-      DataTable ret = new DataTable();
+      var ret = new DataTable();
       ret.BeginLoadData();
 
       var reader = new CompactBinaryReader(stream, Encoding.UTF8);

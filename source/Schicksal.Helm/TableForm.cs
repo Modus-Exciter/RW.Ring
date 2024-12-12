@@ -287,7 +287,7 @@ namespace Schicksal.Helm
       try
       {
         foreach (var cell in m_filter_row)
-          cell.Text = string.Empty;
+          cell.ClearCondition();
       }
       finally
       {
@@ -358,19 +358,20 @@ namespace Schicksal.Helm
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
+
         cell.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
+        cell.Size = new Size(headerRect.Width - 6, cell.Size.Height);
         cell.Location = new Point(headerRect.X + 3, 
           headerRect.Height - m_grid.ColumnHeadersDefaultCellStyle.Padding.Bottom + 2);
-        cell.Size = new Size(headerRect.Width - 6, cell.Size.Height);
       }
     }
 
     private void ApplyRowFilter()
     {
-      var condidions = m_filter_row.Where(cell => !string.IsNullOrEmpty(cell.Text))
-        .Select(cell => new FilterCondition(cell.Property, cell.Text, cell.Parser));
+      var condidions = m_filter_row.Where(cell => cell.HasCondition)
+        .Select(cell => cell.GetCondition());
 
-      m_filter_label.Text = string.Join(" && ", condidions.Select(fc => fc.ToString()));
+      m_filter_label.Text = string.Join(" && ", condidions.Select(fc => fc.Display()));
       m_close_filter_button.Visible = !string.IsNullOrEmpty(m_filter_label.Text);
       this.UpdateBottomPanel();
       m_filtering = true;
@@ -390,7 +391,6 @@ namespace Schicksal.Helm
     private void UpdateBottomPanel()
     {
       m_unsort_button.Visible = !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
-      m_separator.Visible = m_close_filter_button.Visible;
       m_filter_panel.Visible = !string.IsNullOrEmpty(m_filter_label.Text)
        || !string.IsNullOrEmpty(this.DataSource.DefaultView.Sort);
     }
