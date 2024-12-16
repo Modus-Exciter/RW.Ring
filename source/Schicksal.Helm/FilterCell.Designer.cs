@@ -29,10 +29,14 @@ namespace Schicksal.Helm
     /// </summary>
     private void InitializeComponent()
     {
+      this.components = new System.ComponentModel.Container();
       this.m_text_box = new System.Windows.Forms.TextBox();
       this.m_text_border = new System.Windows.Forms.Panel();
       this.m_worker = new System.ComponentModel.BackgroundWorker();
+      this.m_tool_tip = new System.Windows.Forms.ToolTip(this.components);
+      this.m_switcher = new Notung.ComponentModel.LanguageSwitcher(this.components);
       this.m_text_border.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).BeginInit();
       this.SuspendLayout();
       // 
       // m_text_box
@@ -65,6 +69,10 @@ namespace Schicksal.Helm
       this.m_worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.HandleDoWork);
       this.m_worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.HandleRunWorkerCompleted);
       // 
+      // m_switcher
+      // 
+      this.m_switcher.LanguageChanged += new System.EventHandler<Notung.ComponentModel.LanguageEventArgs>(this.m_switcher_LanguageChanged);
+      // 
       // FilterCell
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -78,6 +86,7 @@ namespace Schicksal.Helm
       this.Resize += new System.EventHandler(this.HandleSizeChanged);
       this.m_text_border.ResumeLayout(false);
       this.m_text_border.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.m_switcher)).EndInit();
       this.ResumeLayout(false);
 
     }
@@ -87,5 +96,7 @@ namespace Schicksal.Helm
     private System.Windows.Forms.TextBox m_text_box;
     private System.Windows.Forms.Panel m_text_border;
     private System.ComponentModel.BackgroundWorker m_worker;
+    private System.Windows.Forms.ToolTip m_tool_tip;
+    private Notung.ComponentModel.LanguageSwitcher m_switcher;
   }
 }

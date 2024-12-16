@@ -304,4 +304,7 @@
   <data name="DISABLE_SORTING" xml:space="preserve">
     <value>Disable sorting</value>
   </data>
+  <data name="FILTER_CELL_TOOLTIP" xml:space="preserve">
+    <value>Type &lt;, &gt;, =, != or a template to filter</value>
+  </data>
 </root>

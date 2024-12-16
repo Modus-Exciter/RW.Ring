@@ -2,6 +2,7 @@
 using Notung.Logging;
 using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
+using Schicksal.Helm.Properties;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -108,7 +109,7 @@ namespace Schicksal.Helm
     {
       var suggestions = e.Result as string[];
 
-      if (suggestions != null)
+      if (suggestions != null && suggestions.Length > 0)
         m_text_box.AutoCompleteCustomSource.AddRange(suggestions);
     }
 
@@ -117,6 +118,11 @@ namespace Schicksal.Helm
       m_text_box.Width = Math.Max(m_autocomplete_width + SystemInformation.VerticalScrollBarWidth,
         this.Width - (this.Padding.Left + this.Padding.Right
         + m_text_border.Padding.Left + m_text_border.Padding.Right));
+    }
+
+    private void m_switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    {
+      m_tool_tip.SetToolTip(m_text_box, Resources.FILTER_CELL_TOOLTIP);
     }
   }
 
@@ -334,7 +340,7 @@ namespace Schicksal.Helm
         return string.Format("{0} {1} {2}", this.Column, this.Operation, CoreResources.NULL);
 
       return string.Format("{0} {1} {2}", this.Column, this.Operation,
-        this.Value is string ? string.Format("'{0}'", this.Value) :TypeParser.GetValueText(this.Value));
+        this.Value is string ? string.Format("'{0}'", this.Value) : TypeParser.GetValueText(this.Value));
     }
 
     private string GetOperationName()
@@ -358,26 +364,23 @@ namespace Schicksal.Helm
       }
     }
 
-    public string Query
+    public string BuildQuery()
     {
-      get
+      if (string.Empty.Equals(this.Value) && this.Operation != '≠')
+        return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') LIKE '%')", this.Column);
+
+      if ("Ø".Equals(this.Value))
       {
-        if (string.Empty.Equals(this.Value) && this.Operation != '≠')
-          return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') LIKE '%')", this.Column);
+        if (this.Operation == '=')
+          return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') = '')", this.Column);
 
-        if ("Ø".Equals(this.Value))
-        {
-          if (this.Operation == '=')
-            return string.Format("([{0}] IS NULL OR Convert([{0}], 'System.String') = '')", this.Column);
-
-          if (this.Operation == '≠')
-            return string.Format("([{0}] IS NOT NULL AND Convert([{0}], 'System.String') <> '')", this.Column);
-        }
-
-        return string.Format(this.ConvertColumn ?
-          "Convert([{0}], 'System.String') {1} {2}" : "[{0}] {1} {2}",
-          this.Column, this.GetOperationName(), GroupKey.GetInvariant(this.Value));
+        if (this.Operation == '≠')
+          return string.Format("([{0}] IS NOT NULL AND Convert([{0}], 'System.String') <> '')", this.Column);
       }
+
+      return string.Format(this.ConvertColumn ?
+        "Convert([{0}], 'System.String') {1} {2}" : "[{0}] {1} {2}",
+        this.Column, this.GetOperationName(), GroupKey.GetInvariant(this.Value));
     }
   }
 }

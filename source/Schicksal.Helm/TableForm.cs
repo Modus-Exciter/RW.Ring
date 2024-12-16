@@ -7,8 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Notung;
+using Notung.ComponentModel;
 using Notung.Services;
-using Schicksal.Basic;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
 
@@ -172,7 +172,7 @@ namespace Schicksal.Helm
       this.ApplyRowFilter();
     }
 
-    private void Switcher_LanguageChanged(object sender, Notung.ComponentModel.LanguageEventArgs e)
+    private void Switcher_LanguageChanged(object sender, LanguageEventArgs e)
     {
       m_cmd_tbedit.Text = Resources.TABLE_EDIT;
       m_tool_tip.SetToolTip(this.m_close_filter_button, Resources.DISABLE_FILTER);
@@ -272,6 +272,7 @@ namespace Schicksal.Helm
     private void HandleGridSorted(object sender, EventArgs e)
     {
       this.UpdateBottomPanel();
+      this.UpdateAutoFilterColumnWidths();
     }
 
     private void HandleUnsortClick(object sender, EventArgs e)
@@ -358,7 +359,6 @@ namespace Schicksal.Helm
 
         // Позиционирование поля
         Rectangle headerRect = m_grid.GetCellDisplayRectangle(i, -1, true);
-
         cell.Visible = i >= m_grid.FirstDisplayedScrollingColumnIndex;
         cell.Size = new Size(headerRect.Width - 6, cell.Size.Height);
         cell.Location = new Point(headerRect.X + 3, 
@@ -378,7 +378,7 @@ namespace Schicksal.Helm
 
       try
       {
-        this.DataSource.DefaultView.RowFilter = string.Join(" AND ", condidions.Select(fc => fc.Query));
+        this.DataSource.DefaultView.RowFilter = string.Join(" AND ", condidions.Select(fc => fc.BuildQuery()));
       }
       finally
       {

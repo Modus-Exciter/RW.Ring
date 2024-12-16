@@ -162,6 +162,9 @@
   <data name="FILE" xml:space="preserve">
     <value>Файл</value>
   </data>
+  <data name="FILTER_CELL_TOOLTIP" xml:space="preserve">
+    <value>Напечатайте &lt;, &gt;, = , != или шаблон для фильтрации</value>
+  </data>
   <data name="FISHER" xml:space="preserve">
     <value>Распределение Фишера</value>
   </data>

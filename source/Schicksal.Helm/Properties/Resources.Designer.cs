@@ -296,6 +296,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Type &lt;, &gt;, =, != or a template to filter.
+        /// </summary>
+        internal static string FILTER_CELL_TOOLTIP {
+            get {
+                return ResourceManager.GetString("FILTER_CELL_TOOLTIP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Fisher distribution.
         /// </summary>
         internal static string FISHER {
