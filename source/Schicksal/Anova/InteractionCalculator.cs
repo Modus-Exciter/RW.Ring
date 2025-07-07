@@ -124,7 +124,7 @@ namespace Schicksal.Anova
       if (predictors.Count < 2 || source.Count == 0)
         return source;
 
-      var uniqueValues = new Dictionary<string, HashSet<object>>();
+      var uniqueValues = new Dictionary<string, HashSet<object>>(); // Ключ - фактор, значение - множество всех его уникальных значений во всех группах
 
       foreach (var p in predictors)
       {
@@ -139,198 +139,156 @@ namespace Schicksal.Anova
       // Если Декартово произведение и так полное, незачем фильтровать
       if (uniqueValues.Aggregate(1, (a, kv) => a * kv.Value.Count) == source.Count)
         return GroupKey.Repack(source, predictors);
-
+       
       return PerformFilter(source, uniqueValues, predictors);
+    }
+
+    /// <summary>
+    /// Получения словаря с частотами встречаемости всех уникальных значений всех факторов
+    /// </summary>
+    private static Dictionary<string, Dictionary<object, int>> GetFrequencyMap(IDividedSample<GroupKey> source, FactorInfo predictors)
+    {
+      var result = new Dictionary<string, Dictionary<object, int>>(); //Ключ - фактор, значение - словарь: градация-количество элементов
+
+      foreach (var factor in predictors) //Обходим все факторы
+      {
+        var freqDict = new Dictionary<object, int>(); 
+
+        for (int groupIndex = 0; groupIndex < source.Count; groupIndex++)
+        {
+          object value = source.GetKey(groupIndex)[factor]; //Текущая градация (значение фактора)
+          int groupSize = source[groupIndex].Count; 
+
+          if (freqDict.TryGetValue(value, out int currentCount))
+            freqDict[value] = currentCount + groupSize; //Прибавляем к счетчку частоты размер 
+          else
+            freqDict[value] = groupSize;
+        }
+        result[factor] = freqDict;
+      }
+      return result;
+    }
+
+    private static int GetMinFrequency(Dictionary<string, Dictionary<object, int>> frequencyInfo)
+    {
+      int result = int.MaxValue;
+      foreach (var factorDict in frequencyInfo.Values)
+      {
+        foreach (int freq in factorDict.Values)
+        {
+          if (freq < result)
+            result = freq;
+        }
+      }
+      return result;
     }
 
     private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
-      string[] order = uniqueValues.OrderByDescending(kv => kv.Value.Count).Select(kv => kv.Key).ToArray();
-      GroupKeyNode index = BuildIndex(source, order);
-      List<object[]> data_list = CreateDataList(uniqueValues, order); // Градации первого фактора
+      int maxIterations = 100;
+      var data = source;
 
-      for (int p_idx = 1; p_idx < order.Length; p_idx++) // Обходим все оставшиеся факторы
+      for (int iter = 0; iter < maxIterations; iter++)
       {
-        // Ищем соответствие
-        var wrong_indexes = new HashSet<int>();
-        var wrong_values = new HashSet<object>();
+        var frequency = GetFrequencyMap(data, predictors); //Считаем частоты
 
-        for (int i = 0; i < data_list.Count; i++) // Обходим уже сформированные
+        //Проверка полноты
+        int cartesianSize = frequency.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
+        if (cartesianSize == data.Count)
+          return GroupKey.Repack(data, predictors);
+
+        int globalMinFreq = GetMinFrequency(frequency); //Поиск минимальной частоты
+
+        //Сбор кандидатов в словарь
+        var candidates = new Dictionary<string, List<object>>(); 
+        foreach (var factor in predictors)
         {
-          foreach (var value in uniqueValues[order[p_idx]]) // Обходим все градации нового фактора
+          var factorDict = frequency[factor];
+          foreach (var kv in factorDict)
           {
-            data_list[i][p_idx] = value;
-
-            if (!IndexContains(index, data_list[i], p_idx))
+            if (kv.Value == globalMinFreq)
             {
-              wrong_indexes.Add(i);
-              wrong_values.Add(value);
+              if (!candidates.ContainsKey(factor))
+                candidates[factor] = new List<object>();
+
+              candidates[factor].Add(kv.Key);
             }
           }
         }
 
-        var next_level = new List<object[]>(CalculateNextLevelCapacity(data_list.Count, 
-          uniqueValues[order[p_idx]].Count, wrong_indexes.Count, wrong_values.Count));
+        if (candidates.Count == 0)
+          break;
 
-        if (wrong_indexes.Count > 0)
-          Sacrifice(uniqueValues[order[p_idx]], wrong_indexes, wrong_values, ref data_list, ref next_level);
+        //Подсчёт общего числа наблюдений
+        int totalObservations = 0;
+        for (int i = 0; i < data.Count; i++)
+          totalObservations += data[i].Count;
 
-        // Заменяем список
-        data_list = Exchange(data_list, next_level, uniqueValues[order[p_idx]], p_idx);
-      }
+        //Оценка кандидатов
+        string bestFactor = null;
+        object bestValue = null;
+        int bestDelta = int.MaxValue;
+        int bestRemovedObservations = int.MaxValue;
+        IDividedSample<GroupKey> bestData = null;
 
-      // Формируем окончательный результат
-      var twice = new TwiceGroupedSample(source, predictors);
-      var list = new List<IPlainSample>();
-      var keys = new List<GroupKey>();
-
-      foreach (var values in data_list)
-      {
-        GroupKey key = GetKey(index, values);
-        int idx = twice.GetIndex(key);
-
-        if (idx >= 0)
+        foreach (var factor in candidates.Keys)
         {
-          list.AddRange(twice[idx]);
-
-          for (int i = 0; i < twice[idx].Count; i++)
-            keys.Add(((IDividedSample<GroupKey>)twice[idx]).GetKey(i));
-        }
-      }
-
-      return new ArrayDividedSample<GroupKey>(list.ToArray(), i => keys[i]);
-    }
-
-    private static List<object[]> CreateDataList(Dictionary<string, HashSet<object>> uniqueLevels, string[] order)
-    {
-      var data_list = new List<object[]>();
-
-      foreach (var value in uniqueLevels[order[0]]) // Обходим все градации самого первого фактора
-      {
-        data_list.Add(new object[uniqueLevels.Count]);
-        data_list[data_list.Count - 1][0] = value;
-      }
-
-      return data_list;
-    }
-
-    private static GroupKeyNode BuildIndex(IDividedSample<GroupKey> sample, string[] factorOrder)
-    {
-      var ret = new GroupKeyNode { Key = GroupKey.Empty };
-      var factor_list = new List<string>(factorOrder.Length);
-      var subs = new List<FactorInfo>(factorOrder.Length);
-
-      foreach (var p in factorOrder)
-      {
-        factor_list.Add(p);
-        subs.Add(new FactorInfo(factor_list));
-      }
-
-      for (int i = 0; i < sample.Count; i++)
-      {
-        var key = sample.GetKey(i);
-        var node = ret;
-
-        for (int j = 0; j < factorOrder.Length; j++)
-        {
-          var value = key[factorOrder[j]];
-
-          GroupKeyNode sub_node;
-
-          if (!node.Nodes.TryGetValue(value, out sub_node))
+          foreach (object value in candidates[factor])
           {
-            sub_node = new GroupKeyNode { Key = key.GetSubKey(subs[j]) };
-            node.Nodes.Add(value, sub_node);
+            //Фильтрация данных
+            var newData = new List<IPlainSample>();
+            var newKeys = new List<GroupKey>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+              object currentValue = data.GetKey(i)[factor];
+              if (!Equals(currentValue, value))
+              {
+                newData.Add(data[i]);
+                newKeys.Add(data.GetKey(i));
+              }
+            }
+
+            if (newData.Count == 0)
+              continue;
+
+            var newSample = new ArrayDividedSample<GroupKey>(newData.ToArray(), i => newKeys[i]);
+
+            //Подсчёт удалённых наблюдений
+            int newTotalObservations = 0;
+            for (int i = 0; i < newSample.Count; i++)
+              newTotalObservations += newSample[i].Count;
+
+            int removedObservations = totalObservations - newTotalObservations;
+
+            //Пересчёт декартового произведения
+            var newFrequency = GetFrequencyMap(newSample, predictors);
+            int newCartesianSize = 1;
+            foreach (var dict in newFrequency.Values)
+            {
+              newCartesianSize *= dict.Count;
+            }
+            int delta = newCartesianSize - newSample.Count;
+
+            //Выбор лучшего кандидата
+            if (delta < bestDelta || (delta == bestDelta && removedObservations < bestRemovedObservations))
+            {
+              bestDelta = delta;
+              bestRemovedObservations = removedObservations;
+              bestFactor = factor;
+              bestValue = value;
+              bestData = newSample;
+            }
           }
-
-          node = sub_node;
-        }
-      }
-
-      return ret;
-    }
-
-    private static bool IndexContains(GroupKeyNode index, object[] values, int count)
-    {
-      for (int i = 0; i <= count; i++)
-      {
-        GroupKeyNode node;
-
-        if (!index.Nodes.TryGetValue(values[i], out node))
-          return false;
-
-        index = node;
-      }
-
-      return true;
-    }
-
-    private static GroupKey GetKey(GroupKeyNode index, object[] values)
-    {
-      for (int i = 0; i < values.Length; i++)
-      {
-        GroupKeyNode node;
-
-        if (!index.Nodes.TryGetValue(values[i], out node))
-          throw new KeyNotFoundException();
-
-        index = node;
-      }
-
-      return index.Key;
-    }
-
-    private static int CalculateNextLevelCapacity(int leftSize, int rightSize, int leftError, int rightError)
-    {
-      if ((float)leftError / leftSize < (float)rightError / rightSize)
-        return (leftSize - leftError) * rightSize;
-      else
-        return leftSize * (rightSize - rightError);
-    }
-
-    private static void Sacrifice(HashSet<object> set, HashSet<int> wrong_indexes, HashSet<object> wrong_values, ref List<object[]> data_list, ref List<object[]> next_level)
-    {
-      next_level = new List<object[]>();
-
-      // Выбираем, чем пожертвовать
-      if ((float)wrong_indexes.Count / data_list.Count < (float)wrong_values.Count / set.Count)
-      {
-        for (int i = 0; i < data_list.Count; i++) // Жертвуем градациями уже обработанных факторов
-        {
-          if (!wrong_indexes.Contains(i))
-            next_level.Add(data_list[i]);
         }
 
-        var tmp = data_list;
-        data_list = next_level;
-        next_level = tmp;
-        next_level.Clear();
-      }
-      else
-        set.ExceptWith(wrong_values); // Жертвуем градациями нового фактора
-    }
+        if (bestData == null)
+          break;
 
-    private static List<object[]> Exchange(List<object[]> data_list, List<object[]> nextLevel, HashSet<object> set, int index)
-    {
-      bool one_was = false;
-
-      foreach (var value in set)
-      {
-        for (int i = 0; i < data_list.Count; i++)
-        {
-          var array = data_list[i];
-
-          if (one_was)
-            array = array.ToArray();
-
-          array[index] = value;
-          nextLevel.Add(array);
-        }
-
-        one_was = true;
+        data = bestData;
       }
 
-      return nextLevel;
+      return GroupKey.Repack(data, predictors);
     }
 
     // Проверка полноты Декартова произведения
@@ -378,23 +336,6 @@ namespace Schicksal.Anova
       }
 
       return true;
-    }
-
-    private class GroupKeyNode
-    {
-      private readonly Dictionary<object, GroupKeyNode> m_nodes = new Dictionary<object, GroupKeyNode>();
-
-      public GroupKey Key { get; set; }
-
-      public Dictionary<object, GroupKeyNode> Nodes
-      {
-        get { return m_nodes; }
-      }
-
-      public override string ToString()
-      {
-        return this.Key != null ? this.Key.ToString() : base.ToString();
-      }
     }
 
     private struct EffectKey

@@ -130,13 +130,10 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_button_cancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>480, 9</value>
-  </data>
-  <data name="m_button_cancel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>359, 7</value>
   </data>
   <data name="m_button_cancel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 31</value>
+    <value>75, 25</value>
   </data>
   <data name="m_button_cancel.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -160,13 +157,10 @@
     <value>True</value>
   </data>
   <data name="m_button_ok.Location" type="System.Drawing.Point, System.Drawing">
-    <value>371, 9</value>
-  </data>
-  <data name="m_button_ok.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>277, 7</value>
   </data>
   <data name="m_button_ok.Size" type="System.Drawing.Size, System.Drawing">
-    <value>101, 33</value>
+    <value>76, 27</value>
   </data>
   <data name="m_button_ok.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -193,16 +187,13 @@
     <value>RightToLeft</value>
   </data>
   <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 469</value>
-  </data>
-  <data name="m_bottom_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>0, 381</value>
   </data>
   <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 5, 5, 5</value>
+    <value>4, 4, 4, 4</value>
   </data>
   <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>596, 53</value>
+    <value>447, 43</value>
   </data>
   <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -231,17 +222,11 @@
   <data name="m_list_total.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="m_list_total.ItemHeight" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
   <data name="m_list_total.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 29</value>
-  </data>
-  <data name="m_list_total.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>3, 23</value>
   </data>
   <data name="m_list_total.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 340</value>
+    <value>192, 278</value>
   </data>
   <data name="m_list_total.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -264,17 +249,11 @@
   <data name="m_list_selected.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="m_list_selected.ItemHeight" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
   <data name="m_list_selected.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 29</value>
-  </data>
-  <data name="m_list_selected.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>251, 23</value>
   </data>
   <data name="m_list_selected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 340</value>
+    <value>193, 278</value>
   </data>
   <data name="m_list_selected.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -298,13 +277,13 @@
     <value>NoControl</value>
   </data>
   <data name="m_label_probability.Location" type="System.Drawing.Point, System.Drawing">
-    <value>72, 0</value>
+    <value>57, 0</value>
   </data>
   <data name="m_label_probability.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="m_label_probability.Size" type="System.Drawing.Size, System.Drawing">
-    <value>259, 30</value>
+    <value>191, 24</value>
   </data>
   <data name="m_label_probability.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
@@ -337,13 +316,13 @@
     <value>Left</value>
   </data>
   <data name="m_options_button.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 0</value>
+    <value>4, 0</value>
   </data>
   <data name="m_options_button.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 2, 3, 2</value>
+    <value>2, 2, 2, 2</value>
   </data>
   <data name="m_options_button.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 30</value>
+    <value>53, 24</value>
   </data>
   <data name="m_options_button.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -367,16 +346,16 @@
     <value>Fill</value>
   </data>
   <data name="m_options_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 433</value>
+    <value>0, 352</value>
   </data>
   <data name="m_options_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="m_options_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 0, 0, 0</value>
+    <value>4, 0, 0, 0</value>
   </data>
   <data name="m_options_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>331, 30</value>
+    <value>248, 24</value>
   </data>
   <data name="m_options_panel.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -400,13 +379,10 @@
     <value>Fill</value>
   </data>
   <data name="m_label_total.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 0</value>
-  </data>
-  <data name="m_label_total.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 0</value>
   </data>
   <data name="m_label_total.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 25</value>
+    <value>192, 20</value>
   </data>
   <data name="m_label_total.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -436,13 +412,10 @@
     <value>Fill</value>
   </data>
   <data name="m_label_selected.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 0</value>
-  </data>
-  <data name="m_label_selected.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>251, 0</value>
   </data>
   <data name="m_label_selected.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 25</value>
+    <value>193, 20</value>
   </data>
   <data name="m_label_selected.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -472,13 +445,10 @@
     <value>Top</value>
   </data>
   <data name="m_button_left.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 4</value>
-  </data>
-  <data name="m_button_left.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>3, 3</value>
   </data>
   <data name="m_button_left.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 27</value>
+    <value>38, 22</value>
   </data>
   <data name="m_button_left.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -499,13 +469,10 @@
     <value>True</value>
   </data>
   <data name="m_button_right.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 39</value>
-  </data>
-  <data name="m_button_right.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>3, 31</value>
   </data>
   <data name="m_button_right.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 27</value>
+    <value>38, 22</value>
   </data>
   <data name="m_button_right.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -529,13 +496,10 @@
     <value>TopDown</value>
   </data>
   <data name="m_flow_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>268, 29</value>
-  </data>
-  <data name="m_flow_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>201, 23</value>
   </data>
   <data name="m_flow_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 340</value>
+    <value>44, 278</value>
   </data>
   <data name="m_flow_panel.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -559,13 +523,10 @@
     <value>475, 17</value>
   </metadata>
   <data name="m_result_field.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 377</value>
-  </data>
-  <data name="m_result_field.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>251, 307</value>
   </data>
   <data name="m_result_field.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 24</value>
+    <value>193, 21</value>
   </data>
   <data name="m_result_field.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -589,13 +550,10 @@
     <value>Fill</value>
   </data>
   <data name="m_label_result.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 373</value>
-  </data>
-  <data name="m_label_result.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 304</value>
   </data>
   <data name="m_label_result.Size" type="System.Drawing.Size, System.Drawing">
-    <value>323, 30</value>
+    <value>242, 24</value>
   </data>
   <data name="m_label_result.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -625,13 +583,10 @@
     <value>Fill</value>
   </data>
   <data name="m_label_filter.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 403</value>
-  </data>
-  <data name="m_label_filter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>3, 328</value>
   </data>
   <data name="m_label_filter.Size" type="System.Drawing.Size, System.Drawing">
-    <value>323, 30</value>
+    <value>242, 24</value>
   </data>
   <data name="m_label_filter.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -658,13 +613,10 @@
     <value>Fill</value>
   </data>
   <data name="m_filter_edit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 407</value>
-  </data>
-  <data name="m_filter_edit.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>251, 331</value>
   </data>
   <data name="m_filter_edit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 22</value>
+    <value>193, 20</value>
   </data>
   <data name="m_filter_edit.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -685,13 +637,10 @@
     <value>Top, Left, Right</value>
   </data>
   <data name="m_probability_edit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>335, 437</value>
-  </data>
-  <data name="m_probability_edit.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>251, 355</value>
   </data>
   <data name="m_probability_edit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>257, 24</value>
+    <value>193, 21</value>
   </data>
   <data name="m_probability_edit.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -714,17 +663,14 @@
   <data name="m_table_panel.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_table_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="m_table_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 0, 0, 6</value>
+    <value>0, 0, 0, 5</value>
   </data>
   <data name="m_table_panel.RowCount" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
   <data name="m_table_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>596, 469</value>
+    <value>447, 381</value>
   </data>
   <data name="m_table_panel.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -742,16 +688,16 @@
     <value>0</value>
   </data>
   <data name="m_table_panel.LayoutSettings" type="System.Windows.Forms.TableLayoutSettings, System.Windows.Forms">
-    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_list_total" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_list_selected" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_options_panel" Row="4" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_label_total" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_label_selected" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_flow_panel" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_result_field" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_label_result" Row="2" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_label_filter" Row="3" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_filter_edit" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_probability_edit" Row="4" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Absolute,67,Percent,50" /&gt;&lt;Rows Styles="Absolute,25,Percent,100,Absolute,30,Absolute,30,Absolute,30" /&gt;&lt;/TableLayoutSettings&gt;</value>
+    <value>&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;TableLayoutSettings&gt;&lt;Controls&gt;&lt;Control Name="m_list_total" Row="1" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_list_selected" Row="1" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_options_panel" Row="4" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_label_total" Row="0" RowSpan="1" Column="0" ColumnSpan="1" /&gt;&lt;Control Name="m_label_selected" Row="0" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_flow_panel" Row="1" RowSpan="1" Column="1" ColumnSpan="1" /&gt;&lt;Control Name="m_result_field" Row="2" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_label_result" Row="2" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_label_filter" Row="3" RowSpan="1" Column="0" ColumnSpan="2" /&gt;&lt;Control Name="m_filter_edit" Row="3" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;Control Name="m_probability_edit" Row="4" RowSpan="1" Column="2" ColumnSpan="1" /&gt;&lt;/Controls&gt;&lt;Columns Styles="Percent,50,Absolute,50,Percent,50" /&gt;&lt;Rows Styles="Absolute,20,Percent,100,Absolute,24,Absolute,24,Absolute,24" /&gt;&lt;/TableLayoutSettings&gt;</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>596, 522</value>
+    <value>447, 424</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1202,11 +1148,8 @@
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
   </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>261, 297</value>
+    <value>200, 249</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>
