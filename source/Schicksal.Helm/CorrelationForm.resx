@@ -122,13 +122,13 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="m_cmd_copy.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 24</value>
+    <value>102, 22</value>
   </data>
   <data name="m_cmd_copy.Text" xml:space="preserve">
     <value>Copy</value>
   </data>
   <data name="m_context_menu.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 28</value>
+    <value>103, 26</value>
   </data>
   <data name="&gt;&gt;m_context_menu.Name" xml:space="preserve">
     <value>m_context_menu</value>
@@ -143,11 +143,8 @@
   <data name="m_chart.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
-  <data name="m_chart.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
   <data name="m_chart.Size" type="System.Drawing.Size, System.Drawing">
-    <value>835, 515</value>
+    <value>626, 418</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="m_chart.TabIndex" type="System.Int32, mscorlib">
@@ -172,13 +169,10 @@
     <value>Fill</value>
   </data>
   <data name="m_type_selector.Location" type="System.Drawing.Point, System.Drawing">
-    <value>562, 5</value>
-  </data>
-  <data name="m_type_selector.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>420, 4</value>
   </data>
   <data name="m_type_selector.Size" type="System.Drawing.Size, System.Drawing">
-    <value>265, 24</value>
+    <value>200, 21</value>
   </data>
   <data name="m_type_selector.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -205,13 +199,10 @@
     <value>Microsoft Sans Serif, 8.25pt, style=Bold</value>
   </data>
   <data name="m_label_metrics.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 1</value>
-  </data>
-  <data name="m_label_metrics.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
+    <value>6, 1</value>
   </data>
   <data name="m_label_metrics.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 34</value>
+    <value>19, 28</value>
   </data>
   <data name="m_label_metrics.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -253,13 +244,10 @@
     <value>Microsoft Himalaya, 9pt, style=Bold</value>
   </data>
   <data name="m_button_details.Location" type="System.Drawing.Point, System.Drawing">
-    <value>39, 5</value>
-  </data>
-  <data name="m_button_details.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>31, 4</value>
   </data>
   <data name="m_button_details.Size" type="System.Drawing.Size, System.Drawing">
-    <value>31, 26</value>
+    <value>26, 22</value>
   </data>
   <data name="m_button_details.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -286,19 +274,16 @@
     <value>Bottom</value>
   </data>
   <data name="m_bottom_panel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 515</value>
-  </data>
-  <data name="m_bottom_panel.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
+    <value>0, 418</value>
   </data>
   <data name="m_bottom_panel.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 1, 4, 4</value>
+    <value>3, 1, 3, 3</value>
   </data>
   <data name="m_bottom_panel.RowCount" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
   <data name="m_bottom_panel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>835, 39</value>
+    <value>626, 32</value>
   </data>
   <data name="m_bottom_panel.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -322,10 +307,10 @@
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>835, 554</value>
+    <value>626, 450</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -775,9 +760,6 @@
         AADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAAAAADAADAAAAAAAMAAMAA
         AAAAAwAAwAAAAAADAADAAAAAAAMAAMAAAAAAAwAAwAAH////AAD///////8AAP///////wAA
 </value>
-  </data>
-  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
     <value>CenterParent</value>

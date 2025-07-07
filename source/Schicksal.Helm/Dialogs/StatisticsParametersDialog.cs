@@ -75,6 +75,7 @@ namespace Schicksal.Helm.Dialogs
       if (options.ShowDialog())
         this.DataSource.OptionsXML = options.Save();
     }
+
   }
 
   public interface IAnalysisOptions

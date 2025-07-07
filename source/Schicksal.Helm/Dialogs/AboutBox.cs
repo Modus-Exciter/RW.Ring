@@ -9,7 +9,7 @@ namespace Schicksal.Helm.Dialogs
   {
     public AboutBox()
     {
-      this.InitializeComponent();
+      this.InitializeComponent(); 
 
       this.Text = string.Format("{0} {1}", Resources.ABOUT, ApplicationInfo.Instance.Product);
       labelProductName.Text = ApplicationInfo.Instance.Product;
