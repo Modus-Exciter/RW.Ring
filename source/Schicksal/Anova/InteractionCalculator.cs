@@ -160,7 +160,7 @@ namespace Schicksal.Anova
           int groupSize = source[groupIndex].Count; 
 
           if (freqDict.TryGetValue(value, out int currentCount))
-            freqDict[value] = currentCount + groupSize; //Прибавляем к счетчку частоты размер 
+            freqDict[value] = currentCount + groupSize; //Прибавляем к счетчку частоты размер группы 
           else
             freqDict[value] = groupSize;
         }
@@ -169,20 +169,60 @@ namespace Schicksal.Anova
       return result;
     }
 
-    private static int GetMinFrequency(Dictionary<string, Dictionary<object, int>> frequencyInfo)
+    /// <summary>
+    /// Выбор для каждого фактора его самой редкой градаций
+    /// </summary>
+    private static Dictionary<string, KeyValuePair<object, int>> GetMinFrequencyCandidates(Dictionary<string, Dictionary<object, int>> frequencyInfo, FactorInfo predictors)
     {
-      int result = int.MaxValue;
-      foreach (var factorDict in frequencyInfo.Values)
+      var result = new Dictionary<string, KeyValuePair<object, int>>(); //Фактор, (градация, количество)
+
+      foreach (var factor in predictors)
       {
-        foreach (int freq in factorDict.Values)
+        var factorFreq = frequencyInfo[factor]; //Градация - количество элементов
+        if (factorFreq.Count == 0) continue;
+
+        int minFreq = factorFreq.Values.Min();
+        foreach (var kv in factorFreq)
         {
-          if (freq < result)
-            result = freq;
+          if (kv.Value == minFreq)
+          {
+            result[factor] = new KeyValuePair<object, int>(kv.Key, kv.Value);
+            break;
+          }
         }
       }
       return result;
     }
 
+    /// <summary>
+    /// Создание копии датасета без конкретной градации конкретного фактора. Возвращает разницу количества элементов исходного датасета и нового. Новый датасет заполняется в result
+    /// </summary>
+    private static int CreateDatasetWithoutLevelPrediction(IDividedSample<GroupKey> source, string predict, object predictValue, out IDividedSample<GroupKey> result)
+    {
+      int removedObservations = 0;
+      var newGroups = new List<IPlainSample>();
+      var newKeys = new List<GroupKey>();
+
+      for (int i = 0; i < source.Count; i++)
+      {
+        var key = source.GetKey(i);
+        if (Equals(key[predict], predictValue))
+        {
+          removedObservations += source[i].Count;
+          continue;
+        }
+
+        newGroups.Add(source[i]);
+        newKeys.Add(key);
+      }
+
+      result = new ArrayDividedSample<GroupKey>(
+        data: newGroups.ToArray(),
+        keys: index => newKeys.ToArray()[index]
+      );
+
+      return removedObservations;
+    }
     private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
       int maxIterations = 100;
@@ -190,104 +230,50 @@ namespace Schicksal.Anova
 
       for (int iter = 0; iter < maxIterations; iter++)
       {
-        var frequency = GetFrequencyMap(data, predictors); //Считаем частоты
+        var frequencyInfo = GetFrequencyMap(data, predictors); //Считаем частоты
 
         //Проверка полноты
-        int cartesianSize = frequency.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
+        int cartesianSize = frequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
         if (cartesianSize == data.Count)
           return GroupKey.Repack(data, predictors);
 
-        int globalMinFreq = GetMinFrequency(frequency); //Поиск минимальной частоты
+        var minFrequencyCandidates = GetMinFrequencyCandidates(frequencyInfo, predictors); //Выбираем самые редкие градации каждого фактора
 
-        //Сбор кандидатов в словарь
-        var candidates = new Dictionary<string, List<object>>(); 
-        foreach (var factor in predictors)
+        if (minFrequencyCandidates.Count == 0)
+          break;
+
+        int minDifference = int.MaxValue;
+        IDividedSample<GroupKey> bestCandidate = null;
+        KeyValuePair<string, object> bestFactor = default;
+
+        foreach (var factor in minFrequencyCandidates) //Обходим все минимальные градации каждого фактора
         {
-          var factorDict = frequency[factor];
-          foreach (var kv in factorDict)
-          {
-            if (kv.Value == globalMinFreq)
-            {
-              if (!candidates.ContainsKey(factor))
-                candidates[factor] = new List<object>();
+          IDividedSample<GroupKey> newDataset; //Копия датасета без минимальной градаци
+          int removedObservations = CreateDatasetWithoutLevelPrediction(source, factor.Key, factor.Value.Key, out newDataset);
 
-              candidates[factor].Add(kv.Key);
-            }
+          //Расчет новой полноты
+          var newFrequencyInfo = GetFrequencyMap(newDataset, predictors);
+          int newCartesianSize = newFrequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
+          int difference = newCartesianSize - newDataset.Count; //Разность декартово произведения и исследеумого датасета
+
+          //Этот кандидат лучше, чем тот, что у нас был
+          if (difference < minDifference)
+          {
+            minDifference = difference;
+            bestCandidate = newDataset;
+            bestFactor = new KeyValuePair<string, object>(factor.Key, factor.Value.Key);
           }
         }
 
-        if (candidates.Count == 0)
+        if (bestCandidate == null)
           break;
 
-        //Подсчёт общего числа наблюдений
-        int totalObservations = 0;
-        for (int i = 0; i < data.Count; i++)
-          totalObservations += data[i].Count;
+        data = bestCandidate;  //Обновление данных для следующей итерации
 
-        //Оценка кандидатов
-        string bestFactor = null;
-        object bestValue = null;
-        int bestDelta = int.MaxValue;
-        int bestRemovedObservations = int.MaxValue;
-        IDividedSample<GroupKey> bestData = null;
-
-        foreach (var factor in candidates.Keys)
-        {
-          foreach (object value in candidates[factor])
-          {
-            //Фильтрация данных
-            var newData = new List<IPlainSample>();
-            var newKeys = new List<GroupKey>();
-
-            for (int i = 0; i < data.Count; i++)
-            {
-              object currentValue = data.GetKey(i)[factor];
-              if (!Equals(currentValue, value))
-              {
-                newData.Add(data[i]);
-                newKeys.Add(data.GetKey(i));
-              }
-            }
-
-            if (newData.Count == 0)
-              continue;
-
-            var newSample = new ArrayDividedSample<GroupKey>(newData.ToArray(), i => newKeys[i]);
-
-            //Подсчёт удалённых наблюдений
-            int newTotalObservations = 0;
-            for (int i = 0; i < newSample.Count; i++)
-              newTotalObservations += newSample[i].Count;
-
-            int removedObservations = totalObservations - newTotalObservations;
-
-            //Пересчёт декартового произведения
-            var newFrequency = GetFrequencyMap(newSample, predictors);
-            int newCartesianSize = 1;
-            foreach (var dict in newFrequency.Values)
-            {
-              newCartesianSize *= dict.Count;
-            }
-            int delta = newCartesianSize - newSample.Count;
-
-            //Выбор лучшего кандидата
-            if (delta < bestDelta || (delta == bestDelta && removedObservations < bestRemovedObservations))
-            {
-              bestDelta = delta;
-              bestRemovedObservations = removedObservations;
-              bestFactor = factor;
-              bestValue = value;
-              bestData = newSample;
-            }
-          }
-        }
-
-        if (bestData == null)
+        // Выход при достижении полноты
+        if (minDifference == 0)
           break;
-
-        data = bestData;
       }
-
       return GroupKey.Repack(data, predictors);
     }
 
