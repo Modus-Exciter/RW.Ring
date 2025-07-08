@@ -28,7 +28,8 @@ namespace Schicksal.Anova
 
       Debug.Assert(IsFull(source, predictors));
 
-      if (source.Count == 0)
+      int totalObservations = source.Sum(g => g.Count);
+      if (source.Count == 0 || totalObservations == 0)
         return default(SampleVariance);
 
       var splitted = predictors.Split(false).ToArray();
@@ -148,24 +149,38 @@ namespace Schicksal.Anova
     /// </summary>
     private static Dictionary<string, Dictionary<object, int>> GetFrequencyMap(IDividedSample<GroupKey> source, FactorInfo predictors)
     {
-      var result = new Dictionary<string, Dictionary<object, int>>(); //Ключ - фактор, значение - словарь: градация-количество элементов
+      var result = new Dictionary<string, Dictionary<object, int>>();
 
-      foreach (var factor in predictors) //Обходим все факторы
+      foreach (var factor in predictors)
       {
-        var freqDict = new Dictionary<object, int>(); 
+        var freqDict = new Dictionary<object, int>();
+        bool factorFound = false;
 
         for (int groupIndex = 0; groupIndex < source.Count; groupIndex++)
         {
-          object value = source.GetKey(groupIndex)[factor]; //Текущая градация (значение фактора)
-          int groupSize = source[groupIndex].Count; 
+          var key = source.GetKey(groupIndex);
 
-          if (freqDict.TryGetValue(value, out int currentCount))
-            freqDict[value] = currentCount + groupSize; //Прибавляем к счетчку частоты размер группы 
+          if (!key.FactorInfo.Contains(factor))  //Проверяем наличие фактора в ключе
+            continue;
+
+          factorFound = true;
+          object value = key[factor];
+          int groupSize = source[groupIndex].Count;
+
+          if (freqDict.ContainsKey(value))
+          {
+            freqDict[value] += groupSize;
+          }
           else
+          {
             freqDict[value] = groupSize;
+          }
         }
-        result[factor] = freqDict;
+
+        if (factorFound)
+          result[factor] = freqDict;
       }
+
       return result;
     }
 
@@ -174,23 +189,19 @@ namespace Schicksal.Anova
     /// </summary>
     private static Dictionary<string, KeyValuePair<object, int>> GetMinFrequencyCandidates(Dictionary<string, Dictionary<object, int>> frequencyInfo, FactorInfo predictors)
     {
-      var result = new Dictionary<string, KeyValuePair<object, int>>(); //Фактор, (градация, количество)
+      var result = new Dictionary<string, KeyValuePair<object, int>>();
 
       foreach (var factor in predictors)
       {
-        var factorFreq = frequencyInfo[factor]; //Градация - количество элементов
-        if (factorFreq.Count == 0) continue;
+        if (!frequencyInfo.ContainsKey(factor) || frequencyInfo[factor].Count == 0)
+          continue;
 
-        int minFreq = factorFreq.Values.Min();
-        foreach (var kv in factorFreq)
-        {
-          if (kv.Value == minFreq)
-          {
-            result[factor] = new KeyValuePair<object, int>(kv.Key, kv.Value);
-            break;
-          }
-        }
+        int minFreq = frequencyInfo[factor].Values.Min();
+        var minEntry = frequencyInfo[factor].First(kv => kv.Value == minFreq);
+
+        result[factor] = new KeyValuePair<object, int>(minEntry.Key, minEntry.Value);
       }
+
       return result;
     }
 
@@ -203,7 +214,7 @@ namespace Schicksal.Anova
       var newGroups = new List<IPlainSample>();
       var newKeys = new List<GroupKey>();
 
-      for (int i = 0; i < source.Count; i++)
+      for (int i = 0; i < source.Count; i++) 
       {
         var key = source.GetKey(i);
         if (Equals(key[predict], predictValue))
@@ -225,18 +236,19 @@ namespace Schicksal.Anova
     }
     private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
-      int maxIterations = 100;
+      int maxIterations = 999;
       var data = source;
 
       for (int iter = 0; iter < maxIterations; iter++)
       {
-        var frequencyInfo = GetFrequencyMap(data, predictors); //Считаем частоты
 
-        //Проверка полноты
-        int cartesianSize = frequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
-        if (cartesianSize == data.Count)
-          return GroupKey.Repack(data, predictors);
+        //Репак данных для текущего состояния
+        var repacked = GroupKey.Repack(data, predictors);
 
+        if (IsFull(repacked, predictors))
+          return repacked;
+
+        var frequencyInfo = GetFrequencyMap(repacked, predictors); //Считаем частоты
         var minFrequencyCandidates = GetMinFrequencyCandidates(frequencyInfo, predictors); //Выбираем самые редкие градации каждого фактора
 
         if (minFrequencyCandidates.Count == 0)
@@ -249,14 +261,17 @@ namespace Schicksal.Anova
         foreach (var factor in minFrequencyCandidates) //Обходим все минимальные градации каждого фактора
         {
           IDividedSample<GroupKey> newDataset; //Копия датасета без минимальной градаци
-          int removedObservations = CreateDatasetWithoutLevelPrediction(source, factor.Key, factor.Value.Key, out newDataset);
+          int removedObservations = CreateDatasetWithoutLevelPrediction(repacked, factor.Key, factor.Value.Key, out newDataset);
 
           //Расчет новой полноты
           var newFrequencyInfo = GetFrequencyMap(newDataset, predictors);
           int newCartesianSize = newFrequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
-          int difference = newCartesianSize - newDataset.Count; //Разность декартово произведения и исследеумого датасета
+          int difference = newCartesianSize - newDataset.Count;
 
-          //Этот кандидат лучше, чем тот, что у нас был
+          //Если нашли полное декартово произведение - это результат
+          if (difference == 0 && IsFull(newDataset, predictors))
+            return newDataset;
+
           if (difference < minDifference)
           {
             minDifference = difference;
@@ -270,9 +285,8 @@ namespace Schicksal.Anova
 
         data = bestCandidate;  //Обновление данных для следующей итерации
 
-        // Выход при достижении полноты
-        if (minDifference == 0)
-          break;
+        if (minDifference == 0 && IsFull(data, predictors))
+          return data;
       }
       return GroupKey.Repack(data, predictors);
     }
