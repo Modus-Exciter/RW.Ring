@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyze\MultifactorRegressionAnalyze.cs" />
     <Compile Include="Dialogs\AnovaOptionsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +91,12 @@
     </Compile>
     <Compile Include="FilterCell.Designer.cs">
       <DependentUpon>FilterCell.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MultifactorRegressionResultsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultifactorRegressionResultsForm.designer.cs">
+      <DependentUpon>MultifactorRegressionResultsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="RegressionResultsForm.cs">
       <SubType>Form</SubType>
@@ -194,6 +201,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FilterCell.resx">
       <DependentUpon>FilterCell.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultifactorRegressionResultsForm.resx">
+      <DependentUpon>MultifactorRegressionResultsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultifactorRegressionResultsForm.ru.resx">
+      <DependentUpon>MultifactorRegressionResultsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RegressionResultsForm.resx">
       <DependentUpon>RegressionResultsForm.cs</DependentUpon>

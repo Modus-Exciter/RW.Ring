@@ -418,6 +418,15 @@ namespace Schicksal.Helm.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Multifactor Regression Analysis.
+        /// </summary>
+        internal static string MULTIFACTOR_REGRESSION {
+            get {
+                return ResourceManager.GetString("MULTIFACTOR_REGRESSION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на New.
         /// </summary>
         internal static string NEW {

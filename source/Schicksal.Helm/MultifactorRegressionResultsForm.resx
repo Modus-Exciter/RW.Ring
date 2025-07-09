@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="factorColumn.HeaderText" xml:space="preserve">
+    <value>Factor</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="factorColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="factorColumn.Width" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="coefficientColumn.HeaderText" xml:space="preserve">
+    <value>Coefficient</value>
+  </data>
+  <data name="coefficientColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="coefficientColumn.Width" type="System.Int32, mscorlib">
+    <value>75</value>
+  </data>
+  <data name="standardErrorColumn.HeaderText" xml:space="preserve">
+    <value>Standard Error</value>
+  </data>
+  <data name="standardErrorColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="standardErrorColumn.Width" type="System.Int32, mscorlib">
+    <value>90</value>
+  </data>
+  <data name="tStatisticColumn.HeaderText" xml:space="preserve">
+    <value>T-Statistic</value>
+  </data>
+  <data name="tStatisticColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tStatisticColumn.Width" type="System.Int32, mscorlib">
+    <value>72</value>
+  </data>
+  <data name="pValueColumn.HeaderText" xml:space="preserve">
+    <value>P-Value</value>
+  </data>
+  <data name="pValueColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pValueColumn.Width" type="System.Int32, mscorlib">
+    <value>63</value>
+  </data>
+  <data name="rSquaredColumn.HeaderText" xml:space="preserve">
+    <value>R-Squared</value>
+  </data>
+  <data name="rSquaredColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="rSquaredColumn.Width" type="System.Int32, mscorlib">
+    <value>79</value>
+  </data>
+  <data name="adjustedRSquaredColumn.HeaderText" xml:space="preserve">
+    <value>Adjusted R-Squared</value>
+  </data>
+  <data name="adjustedRSquaredColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="adjustedRSquaredColumn.Width" type="System.Int32, mscorlib">
+    <value>122</value>
+  </data>
+  <data name="fStatisticColumn.HeaderText" xml:space="preserve">
+    <value>F-Statistic</value>
+  </data>
+  <data name="fStatisticColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="fStatisticColumn.Width" type="System.Int32, mscorlib">
+    <value>71</value>
+  </data>
+  <data name="pValueFStatisticColumn.HeaderText" xml:space="preserve">
+    <value>P-Value (F)</value>
+  </data>
+  <data name="pValueFStatisticColumn.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pValueFStatisticColumn.Width" type="System.Int32, mscorlib">
+    <value>72</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="m_grid.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="m_grid.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 4</value>
+  </data>
+  <data name="m_grid.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_grid.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="m_grid.Size" type="System.Drawing.Size, System.Drawing">
+    <value>860, 517</value>
+  </data>
+  <data name="m_grid.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Name" xml:space="preserve">
+    <value>m_grid</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_grid.Parent" xml:space="preserve">
+    <value>m_tabPageLinear</value>
+  </data>
+  <data name="&gt;&gt;m_grid.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_tabPageLinear.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
+  </data>
+  <data name="m_tabPageLinear.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_tabPageLinear.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_tabPageLinear.Size" type="System.Drawing.Size, System.Drawing">
+    <value>868, 525</value>
+  </data>
+  <data name="m_tabPageLinear.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="m_tabPageLinear.Text" xml:space="preserve">
+    <value>Линейная регрессия</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageLinear.Name" xml:space="preserve">
+    <value>m_tabPageLinear</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageLinear.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageLinear.Parent" xml:space="preserve">
+    <value>m_tabControl</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageLinear.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="factorColumnParabolic.HeaderText" xml:space="preserve">
+    <value>Factor</value>
+  </data>
+  <data name="factorColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="factorColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="coefficientColumnParabolic.HeaderText" xml:space="preserve">
+    <value>Coefficient</value>
+  </data>
+  <data name="coefficientColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="coefficientColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>80</value>
+  </data>
+  <data name="standardErrorColumnParabolic.HeaderText" xml:space="preserve">
+    <value>Standard Error</value>
+  </data>
+  <data name="standardErrorColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="standardErrorColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>90</value>
+  </data>
+  <data name="tStatisticColumnParabolic.HeaderText" xml:space="preserve">
+    <value>T-Statistic</value>
+  </data>
+  <data name="tStatisticColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tStatisticColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="pValueColumnParabolic.HeaderText" xml:space="preserve">
+    <value>P-Value</value>
+  </data>
+  <data name="pValueColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pValueColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="rSquaredColumnParabolic.HeaderText" xml:space="preserve">
+    <value>R-Squared</value>
+  </data>
+  <data name="rSquaredColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="rSquaredColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="adjustedRSquaredColumnParabolic.HeaderText" xml:space="preserve">
+    <value>Adjusted R-Squared</value>
+  </data>
+  <data name="adjustedRSquaredColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="fStatisticColumnParabolic.HeaderText" xml:space="preserve">
+    <value>F-Statistic</value>
+  </data>
+  <data name="fStatisticColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="fStatisticColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="pValueFStatisticColumnParabolic.HeaderText" xml:space="preserve">
+    <value>P-Value (F)</value>
+  </data>
+  <data name="pValueFStatisticColumnParabolic.MinimumWidth" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="pValueFStatisticColumnParabolic.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="m_gridParabolic.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_gridParabolic.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 4</value>
+  </data>
+  <data name="m_gridParabolic.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_gridParabolic.RowHeadersWidth" type="System.Int32, mscorlib">
+    <value>51</value>
+  </data>
+  <data name="m_gridParabolic.Size" type="System.Drawing.Size, System.Drawing">
+    <value>860, 517</value>
+  </data>
+  <data name="m_gridParabolic.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;m_gridParabolic.Name" xml:space="preserve">
+    <value>m_gridParabolic</value>
+  </data>
+  <data name="&gt;&gt;m_gridParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_gridParabolic.Parent" xml:space="preserve">
+    <value>m_tabPageParabolic</value>
+  </data>
+  <data name="&gt;&gt;m_gridParabolic.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="m_tabPageParabolic.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 25</value>
+  </data>
+  <data name="m_tabPageParabolic.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_tabPageParabolic.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_tabPageParabolic.Size" type="System.Drawing.Size, System.Drawing">
+    <value>868, 525</value>
+  </data>
+  <data name="m_tabPageParabolic.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="m_tabPageParabolic.Text" xml:space="preserve">
+    <value>Параболическая регрессия</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageParabolic.Name" xml:space="preserve">
+    <value>m_tabPageParabolic</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageParabolic.Parent" xml:space="preserve">
+    <value>m_tabControl</value>
+  </data>
+  <data name="&gt;&gt;m_tabPageParabolic.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="m_tabControl.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="m_tabControl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="m_tabControl.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="m_tabControl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>876, 554</value>
+  </data>
+  <data name="m_tabControl.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;m_tabControl.Name" xml:space="preserve">
+    <value>m_tabControl</value>
+  </data>
+  <data name="&gt;&gt;m_tabControl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;m_tabControl.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;m_tabControl.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>8, 16</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>876, 554</value>
+  </data>
+  <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 4, 4, 4</value>
+  </data>
+  <data name="&gt;&gt;factorColumn.Name" xml:space="preserve">
+    <value>factorColumn</value>
+  </data>
+  <data name="&gt;&gt;factorColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;coefficientColumn.Name" xml:space="preserve">
+    <value>coefficientColumn</value>
+  </data>
+  <data name="&gt;&gt;coefficientColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;standardErrorColumn.Name" xml:space="preserve">
+    <value>standardErrorColumn</value>
+  </data>
+  <data name="&gt;&gt;standardErrorColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tStatisticColumn.Name" xml:space="preserve">
+    <value>tStatisticColumn</value>
+  </data>
+  <data name="&gt;&gt;tStatisticColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pValueColumn.Name" xml:space="preserve">
+    <value>pValueColumn</value>
+  </data>
+  <data name="&gt;&gt;pValueColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rSquaredColumn.Name" xml:space="preserve">
+    <value>rSquaredColumn</value>
+  </data>
+  <data name="&gt;&gt;rSquaredColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;adjustedRSquaredColumn.Name" xml:space="preserve">
+    <value>adjustedRSquaredColumn</value>
+  </data>
+  <data name="&gt;&gt;adjustedRSquaredColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fStatisticColumn.Name" xml:space="preserve">
+    <value>fStatisticColumn</value>
+  </data>
+  <data name="&gt;&gt;fStatisticColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pValueFStatisticColumn.Name" xml:space="preserve">
+    <value>pValueFStatisticColumn</value>
+  </data>
+  <data name="&gt;&gt;pValueFStatisticColumn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;factorColumnParabolic.Name" xml:space="preserve">
+    <value>factorColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;factorColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;coefficientColumnParabolic.Name" xml:space="preserve">
+    <value>coefficientColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;coefficientColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;standardErrorColumnParabolic.Name" xml:space="preserve">
+    <value>standardErrorColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;standardErrorColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tStatisticColumnParabolic.Name" xml:space="preserve">
+    <value>tStatisticColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;tStatisticColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pValueColumnParabolic.Name" xml:space="preserve">
+    <value>pValueColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;pValueColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rSquaredColumnParabolic.Name" xml:space="preserve">
+    <value>rSquaredColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;rSquaredColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;adjustedRSquaredColumnParabolic.Name" xml:space="preserve">
+    <value>adjustedRSquaredColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;adjustedRSquaredColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fStatisticColumnParabolic.Name" xml:space="preserve">
+    <value>fStatisticColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;fStatisticColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pValueFStatisticColumnParabolic.Name" xml:space="preserve">
+    <value>pValueFStatisticColumnParabolic</value>
+  </data>
+  <data name="&gt;&gt;pValueFStatisticColumnParabolic.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>MultifactorRegressionResultsForm</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>

@@ -95,6 +95,9 @@
     <Compile Include="Regression\CorrelationTestProcessor.cs" />
     <Compile Include="Regression\CorrelationGraphUtils.cs" />
     <Compile Include="Regression\DataColumnSample.cs" />
+    <Compile Include="Regression\MultifactorRegression.cs" />
+    <Compile Include="Regression\MultifactorRegressionProcessor.cs" />
+    <Compile Include="Regression\MultifactorRegressionResult.cs" />
     <Compile Include="Regression\SampleMatrixColumn.cs" />
     <Compile Include="Regression\Dispersion.cs" />
     <Compile Include="Regression\PolylineFit.cs" />

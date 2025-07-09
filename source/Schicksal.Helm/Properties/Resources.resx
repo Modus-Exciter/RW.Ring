@@ -307,4 +307,7 @@
   <data name="FILTER_CELL_TOOLTIP" xml:space="preserve">
     <value>Type &lt;, &gt;, =, != or a template to filter</value>
   </data>
+  <data name="MULTIFACTOR_REGRESSION" xml:space="preserve">
+    <value>Multifactor Regression Analysis</value>
+  </data>
 </root>

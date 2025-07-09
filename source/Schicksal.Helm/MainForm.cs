@@ -35,6 +35,7 @@ namespace Schicksal.Helm
       m_cmd_basic.Tag = new DescriptiveAnalyze();
       m_cmd_anova.Tag = new AnovaAnalyze();
       m_cmd_regression.Tag = new RegressionAnalyze();
+      m_cmd_multifactor_regression.Tag = new MultifactorRegressionAnalyze();
     }
 
     internal void FillLastFilesMenu()
@@ -94,6 +95,7 @@ namespace Schicksal.Helm
       m_cmd_basic.Text = Resources.BASIC_STATISTICS;
       m_cmd_anova.Text = Resources.ANOVA;
       m_cmd_regression.Text = Resources.REGRESSION_ANALYSIS;
+      m_cmd_multifactor_regression.Text = Resources.MULTIFACTOR_REGRESSION;
       m_cmd_about.Text = Resources.ABOUT;
 
       foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)

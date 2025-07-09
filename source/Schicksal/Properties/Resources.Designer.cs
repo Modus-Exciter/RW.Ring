@@ -270,6 +270,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Multifactor Regression Analysis.
+        /// </summary>
+        internal static string MULTIFACTOR_REGRESSION {
+            get {
+                return ResourceManager.GetString("MULTIFACTOR_REGRESSION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to create the inverse Box-Cox handler. Groups are not transformed together.
         /// </summary>
         internal static string NO_JOINT_BOX_COX {

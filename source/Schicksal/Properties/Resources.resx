@@ -247,4 +247,7 @@
   <data name="ROW_NOT_BELONG_TABLE" xml:space="preserve">
     <value>Data row does not belong this table</value>
   </data>
+  <data name="MULTIFACTOR_REGRESSION" xml:space="preserve">
+    <value>Multifactor Regression Analysis</value>
+  </data>
 </root>
