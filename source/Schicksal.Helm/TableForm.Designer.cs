@@ -117,7 +117,7 @@
             this.m_filter_panel.Controls.Add(this.m_filter_label);
             this.m_filter_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.m_filter_panel.Location = new System.Drawing.Point(0, 455);
-            this.m_filter_panel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.m_filter_panel.Margin = new System.Windows.Forms.Padding(2);
             this.m_filter_panel.Name = "m_filter_panel";
             this.m_filter_panel.Padding = new System.Windows.Forms.Padding(2);
             this.m_filter_panel.Size = new System.Drawing.Size(630, 28);

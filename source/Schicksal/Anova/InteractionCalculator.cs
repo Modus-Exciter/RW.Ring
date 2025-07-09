@@ -15,7 +15,7 @@ namespace Schicksal.Anova
 
     public InteractionCalculator(IEnumerable<FactorVariance> data)
     {
-      if (data is null) 
+      if (data is null)
         throw new ArgumentNullException(nameof(data));
 
       // Добавили в словарь все главные эффекты
@@ -37,13 +37,13 @@ namespace Schicksal.Anova
       var list = new List<FactorVariance>();
       var ei = new EffectKey { Factor = predictors, GradationCount = source.Sum(g => g.Count) };
 
-      SampleVariance ret = m_variance_cache.GetOrAdd(ei, 
+      SampleVariance ret = m_variance_cache.GetOrAdd(ei,
         e => FisherTest.MSb(GroupKey.Repack(source, predictors)));
 
       foreach (var p in splitted)
       {
         var ep = new EffectKey { Factor = p, GradationCount = source.Sum(g => g.Count) };
-        list.Add(new FactorVariance(p, m_variance_cache.GetOrAdd(ep, 
+        list.Add(new FactorVariance(p, m_variance_cache.GetOrAdd(ep,
           e => FisherTest.MSb(GroupKey.Repack(source, p)))));
       }
 
@@ -140,7 +140,7 @@ namespace Schicksal.Anova
       // Если Декартово произведение и так полное, незачем фильтровать
       if (uniqueValues.Aggregate(1, (a, kv) => a * kv.Value.Count) == source.Count)
         return GroupKey.Repack(source, predictors);
-       
+
       return PerformFilter(source, uniqueValues, predictors);
     }
 
@@ -168,13 +168,9 @@ namespace Schicksal.Anova
           int groupSize = source[groupIndex].Count;
 
           if (freqDict.ContainsKey(value))
-          {
             freqDict[value] += groupSize;
-          }
           else
-          {
             freqDict[value] = groupSize;
-          }
         }
 
         if (factorFound)
@@ -214,7 +210,7 @@ namespace Schicksal.Anova
       var newGroups = new List<IPlainSample>();
       var newKeys = new List<GroupKey>();
 
-      for (int i = 0; i < source.Count; i++) 
+      for (int i = 0; i < source.Count; i++)
       {
         var key = source.GetKey(i);
         if (Equals(key[predict], predictValue))
@@ -241,7 +237,6 @@ namespace Schicksal.Anova
 
       for (int iter = 0; iter < maxIterations; iter++)
       {
-
         //Репак данных для текущего состояния
         var repacked = GroupKey.Repack(data, predictors);
 
@@ -292,7 +287,7 @@ namespace Schicksal.Anova
     }
 
     // Проверка полноты Декартова произведения
-    private static bool IsFull(IDividedSample<GroupKey> source, FactorInfo predictors)
+    public static bool IsFull(IDividedSample<GroupKey> source, FactorInfo predictors)
     {
       var uniqueValues = new Dictionary<string, HashSet<object>>();
 
@@ -354,7 +349,7 @@ namespace Schicksal.Anova
         if (!(obj is EffectKey other))
           return false;
 
-        return this.GradationCount == other.GradationCount 
+        return this.GradationCount == other.GradationCount
           && object.Equals(this.Factor, other.Factor);
       }
 
