@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Schicksal.Helm
@@ -12,74 +13,78 @@ namespace Schicksal.Helm
   {
     private readonly Color m_significat_color;
     public float Probability { get; set; }
+    public string ResponseVariableName { get; set; }
 
     public MultifactorRegressionResultsForm()
     {
-      this.InitializeComponent();
+      InitializeComponent();
       m_significat_color = AppManager.Configurator.GetSection<Program.Preferences>().SignificatColor;
     }
 
     public void SetLinearRegressionResults(MultifactorRegressionResult dataSource, float probability)
     {
+      if (dataSource == null) return;
+
       this.Probability = probability;
-      m_linearBindingSource.DataSource = this.ConvertToRegressionRowData(dataSource, probability);
+      m_linearEquationLabel.Text = this.GenerateEquationString(dataSource);
+      m_linearCoefficientsBindingSource.DataSource = this.ConvertToCoefficientRowData(dataSource);
+      m_linearModelBindingSource.DataSource = this.ConvertToModelRowData(dataSource);
     }
 
     public void SetParabolicRegressionResults(MultifactorRegressionResult dataSource, float probability)
     {
+      if (dataSource == null) return;
+
       this.Probability = probability;
-      m_parabolicBindingSource.DataSource = this.ConvertToRegressionRowData(dataSource, probability);
+      m_parabolicEquationLabel.Text = this.GenerateEquationString(dataSource);
+      m_parabolicCoefficientsBindingSource.DataSource = this.ConvertToCoefficientRowData(dataSource);
+      m_parabolicModelBindingSource.DataSource = this.ConvertToModelRowData(dataSource);
     }
 
-    private List<RegressionRowData> ConvertToRegressionRowData(MultifactorRegressionResult dataSource, float probability)
+    private string GenerateEquationString(MultifactorRegressionResult result)
     {
-      List<RegressionRowData> rows = new List<RegressionRowData>();
+      string responseName = string.IsNullOrEmpty(this.ResponseVariableName) ? "Отклик" : this.ResponseVariableName;
 
-      if (dataSource == null) return rows;
+      StringBuilder sb = new StringBuilder();
+      sb.AppendFormat("{0} = {1:F4}", responseName, result.Coefficients[0]);
 
+      for (int i = 1; i < result.Coefficients.Length; i++)
+      {
+        double coeff = result.Coefficients[i];
+        sb.Append(coeff >= 0 ? " + " : " - ");
+        sb.AppendFormat("{0:F4} * {1}", Math.Abs(coeff), result.FactorNames[i]);
+      }
+      return sb.ToString();
+    }
+
+    private List<CoefficientRowData> ConvertToCoefficientRowData(MultifactorRegressionResult dataSource)
+    {
+      var rows = new List<CoefficientRowData>();
       for (int i = 0; i < dataSource.FactorNames.Length; i++)
       {
-        rows.Add(new RegressionRowData
+        rows.Add(new CoefficientRowData
         {
           Factor = dataSource.FactorNames[i],
           Coefficient = dataSource.Coefficients[i],
           StandardError = dataSource.StandardErrors[i],
           TStatistic = dataSource.TStatistics[i],
           PValue = dataSource.PValuesTStatistics[i],
-          IsCoefficientSignificant = dataSource.PValuesTStatistics[i] <= probability,
-
-          RSquared = null,
-          AdjustedRSquared = null,
-          FStatistic = null,
-          PValueFStatistic = null,
-          DegreesOfFreedomResidual = null,
-          MsResidual = null
         });
       }
+      return rows;
+    }
 
-      double? msResidual = null;
-      if (dataSource.DegreesOfFreedomResidual > 0)
+    private List<ModelRowData> ConvertToModelRowData(MultifactorRegressionResult dataSource)
+    {
+      var rows = new List<ModelRowData>();
+      rows.Add(new ModelRowData
       {
-        msResidual = dataSource.ResidualSumOfSquares / dataSource.DegreesOfFreedomResidual;
-      }
-
-      rows.Add(new RegressionRowData
-      {
-        Factor = "Модель",
-        Coefficient = null,
-        StandardError = null,
-        TStatistic = null,
-        PValue = null,
-        IsCoefficientSignificant = false,
-
+        Model = "Модель",
         RSquared = dataSource.RSquared,
         AdjustedRSquared = dataSource.AdjustedRSquared,
         FStatistic = dataSource.FStatistic,
-        PValueFStatistic = dataSource.PValueFStatistic,
-        DegreesOfFreedomResidual = dataSource.DegreesOfFreedomResidual,
-        MsResidual = msResidual
+        PValueFStatistic = dataSource.PValueFStatistic
       });
-
       return rows;
     }
 
@@ -87,114 +92,66 @@ namespace Schicksal.Helm
     {
       base.OnShown(e);
 
-      bool hasLinearResults = (m_linearBindingSource.DataSource as List<RegressionRowData>)?.Any() == true;
-      bool hasParabolicResults = (m_parabolicBindingSource.DataSource as List<RegressionRowData>)?.Any() == true;
+      bool hasLinearResults = m_linearCoefficientsBindingSource.Count > 0;
+      bool hasParabolicResults = m_parabolicCoefficientsBindingSource.Count > 0;
 
       if (!hasLinearResults)
       {
-        m_tabControl.TabPages.Remove(m_tabPageLinear);
+        if (m_tabControl.TabPages.Contains(m_tabPageLinear))
+          m_tabControl.TabPages.Remove(m_tabPageLinear);
       }
       if (!hasParabolicResults)
       {
-        m_tabControl.TabPages.Remove(m_tabPageParabolic);
+        if (m_tabControl.TabPages.Contains(m_tabPageParabolic))
+          m_tabControl.TabPages.Remove(m_tabPageParabolic);
       }
-
-      if (m_tabControl.TabPages.Count == 0)
-      {
-        MessageBox.Show("Нет результатов для отображения.", "Информация", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        this.Close();
-      }
-
-      this.ApplyColumnFormatting(m_grid);
-      this.ApplyColumnFormatting(m_gridParabolic);
-
-      m_grid.Refresh();
-      m_gridParabolic.Refresh();
     }
 
-    private void ApplyColumnFormatting(DataGridView grid)
-    {
-      if (grid == null) return;
-      foreach (DataGridViewColumn col in grid.Columns)
-      {
-        if (col.DataPropertyName == nameof(RegressionRowData.PValue) ||
-            col.DataPropertyName == nameof(RegressionRowData.PValueFStatistic))
-        {
-          col.DefaultCellStyle.Format = "0.0000";
-        }
-        else if (col.ValueType == typeof(double) || col.ValueType == typeof(double?) ||
-                 col.ValueType == typeof(float) || col.ValueType == typeof(float?) ||
-                 col.ValueType == typeof(decimal) || col.ValueType == typeof(decimal?))
-        {
-          col.DefaultCellStyle.Format = "0.0000";
-        }
-        else if (col.DataPropertyName == nameof(RegressionRowData.DegreesOfFreedomResidual) ||
-                 col.ValueType == typeof(int) || col.ValueType == typeof(int?))
-        {
-          col.DefaultCellStyle.Format = "0";
-        }
-      }
-      grid.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-    }
-
-    private void m_grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-    {
-      this.HighlightSignificantPValues(e, m_grid);
-    }
-
-    private void m_gridParabolic_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
-    {
-      this.HighlightSignificantPValues(e, m_gridParabolic);
-    }
-
-    private void HighlightSignificantPValues(DataGridViewCellPaintingEventArgs e, DataGridView grid)
+    private void m_Grid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
     {
       if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+      var grid = sender as DataGridView;
+      if (grid == null) return;
 
-      var rowData = grid.Rows[e.RowIndex].DataBoundItem as RegressionRowData;
-
-      if (rowData == null) return;
-
-      string dataPropertyName = grid.Columns[e.ColumnIndex].DataPropertyName;
-
-      if (dataPropertyName == nameof(RegressionRowData.PValue))
+      if (grid.Columns[e.ColumnIndex].DataPropertyName == nameof(CoefficientRowData.PValue) ||
+          grid.Columns[e.ColumnIndex].DataPropertyName == nameof(ModelRowData.PValueFStatistic))
       {
-        if (rowData.IsCoefficientSignificant)
+        // Проверяем тип данных строки
+        if (grid.Rows[e.RowIndex].DataBoundItem is CoefficientRowData coeffRowData &&
+            grid.Columns[e.ColumnIndex].DataPropertyName == nameof(CoefficientRowData.PValue))
         {
-          e.CellStyle.ForeColor = m_significat_color;
+          if (coeffRowData.PValue != null && coeffRowData.PValue.Value <= this.Probability)
+          {
+            e.CellStyle.ForeColor = m_significat_color;
+          }
         }
-      }
-      // Подсветка PValueFStatistic для строки модели
-      else if (dataPropertyName == nameof(RegressionRowData.PValueFStatistic))
-      {
-        if (rowData.PValueFStatistic.HasValue && rowData.PValueFStatistic.Value <= this.Probability)
+        else if (grid.Rows[e.RowIndex].DataBoundItem is ModelRowData modelRowData &&
+                 grid.Columns[e.ColumnIndex].DataPropertyName == nameof(ModelRowData.PValueFStatistic))
         {
-          e.CellStyle.ForeColor = m_significat_color;
+          if (modelRowData.PValueFStatistic != null && modelRowData.PValueFStatistic.Value <= this.Probability)
+          {
+            e.CellStyle.ForeColor = m_significat_color;
+          }
         }
       }
     }
 
-    private void m_tabControl_SelectedIndexChanged(object sender, EventArgs e)
+    public class CoefficientRowData
     {
+      public string Factor { get; set; }
+      public double? Coefficient { get; set; }
+      public double? StandardError { get; set; }
+      public double? TStatistic { get; set; }
+      public double? PValue { get; set; }
+    }
+
+    public class ModelRowData
+    {
+      public string Model { get; set; }
+      public double? RSquared { get; set; }
+      public double? AdjustedRSquared { get; set; }
+      public double? FStatistic { get; set; }
+      public double? PValueFStatistic { get; set; }
     }
   }
-
-
-  public class RegressionRowData
-  {
-    public string Factor { get; set; }
-    public double? Coefficient { get; set; }
-    public double? StandardError { get; set; }
-    public double? TStatistic { get; set; }
-    public double? PValue { get; set; }
-    public bool IsCoefficientSignificant { get; set; }
-
-    public double? RSquared { get; set; }
-    public double? AdjustedRSquared { get; set; }
-    public double? FStatistic { get; set; }
-    public double? PValueFStatistic { get; set; }
-    public int? DegreesOfFreedomResidual { get; set; }
-    public double? MsResidual { get; set; }
-  }
-
 }

@@ -273,6 +273,8 @@
       <DependentUpon>TableForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <None Include="Properties\DataSources\MultifactorRegressionResultsForm.CoefficientRowData.datasource" />
+    <None Include="Properties\DataSources\MultifactorRegressionResultsForm.ModelRowData.datasource" />
     <None Include="Properties\DataSources\Program.Preferences.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.DifferenceInfo.datasource" />
     <None Include="Properties\DataSources\Schicksal.Anova.FisherTestResult.datasource" />

@@ -34,6 +34,7 @@ namespace Schicksal.Helm.Analyze
       var resultsForm = new MultifactorRegressionResultsForm
       {
         Text = $"{Resources.MULTIFACTOR_REGRESSION}: {form.Text}, p={data.Probability}; {data.Result}",
+        ResponseVariableName = data.Result
       };
 
       resultsForm.SetLinearRegressionResults(currentProcessor.Results, data.Probability);
