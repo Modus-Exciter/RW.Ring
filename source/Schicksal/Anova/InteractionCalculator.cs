@@ -232,18 +232,19 @@ namespace Schicksal.Anova
     }
     private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
-      int maxIterations = 999;
       var data = source;
+      int previousCount = 0;
 
-      for (int iter = 0; iter < maxIterations; iter++)
+      while (true)
       {
         //Репак данных для текущего состояния
         var repacked = GroupKey.Repack(data, predictors);
 
-        if (IsFull(repacked, predictors))
+        if (IsFullLite(repacked, predictors))
           return repacked;
 
         var frequencyInfo = GetFrequencyMap(repacked, predictors); //Считаем частоты
+
         var minFrequencyCandidates = GetMinFrequencyCandidates(frequencyInfo, predictors); //Выбираем самые редкие градации каждого фактора
 
         if (minFrequencyCandidates.Count == 0)
@@ -261,7 +262,7 @@ namespace Schicksal.Anova
           //Расчет новой полноты
           var newFrequencyInfo = GetFrequencyMap(newDataset, predictors);
           int newCartesianSize = newFrequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
-          int difference = newCartesianSize - newDataset.Count;
+          int difference = Math.Abs(newCartesianSize - newDataset.Count);
 
           //Если нашли полное декартово произведение - это результат
           if (difference == 0 && IsFull(newDataset, predictors))
@@ -279,9 +280,10 @@ namespace Schicksal.Anova
           break;
 
         data = bestCandidate;  //Обновление данных для следующей итерации
-
-        if (minDifference == 0 && IsFull(data, predictors))
+        if (minDifference == 0 || data.Count == previousCount)
           return data;
+
+        previousCount = data.Count;
       }
       return GroupKey.Repack(data, predictors);
     }
@@ -331,6 +333,29 @@ namespace Schicksal.Anova
       }
 
       return true;
+    }
+
+    public static bool IsFullLite(IDividedSample<GroupKey> source, FactorInfo predictors)
+    {
+      if (source.Count == 0) return true;
+
+      // Вычисляем ожидаемое количество комбинаций
+      int expectedCount = 1;
+      var uniqueValues = new Dictionary<string, HashSet<object>>();
+
+      foreach (var p in predictors)
+      {
+        var set = new HashSet<object>();
+        for (int i = 0; i < source.Count; i++)
+        {
+          set.Add(source.GetKey(i)[p]);
+        }
+        uniqueValues[p] = set;
+        expectedCount *= set.Count;
+      }
+
+      // Быстрая проверка по количеству групп
+      return source.Count == expectedCount;
     }
 
     private struct EffectKey
