@@ -102,7 +102,7 @@ namespace Schicksal.Basic
     /// </summary>
     /// <param name="includeSelf">Включать ли в список выдачи текущий набор предикторов</param>
     /// <returns>Коллекция непустых наборов предикторов</returns>
-    public IEnumerable<FactorInfo> Split(bool includeSelf = true)
+    public IEnumerable<FactorInfo> Split(bool includeSelf = true, int maxOrder = 4)
     {
       string[] factors = new string[m_data.Count];
       ulong group_count = 1ul << factors.Length;
@@ -123,8 +123,9 @@ namespace Schicksal.Basic
           if ((i & (1ul << j)) != 0)
             details.Add(factors[j]);
         }
-
-        yield return new FactorInfo(details);
+  
+        if (details.Count <= maxOrder) //ограничиваем порядок
+          yield return new FactorInfo(details);    
       }
     }
 

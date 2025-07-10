@@ -41,7 +41,7 @@ namespace ANOVATest
 
       table.Rows.Add("C", "X", 70, 1); //Группа C-X (единственное наблюдение)
       table.Rows.Add("C", "Y", 80, 1); //Группа C-Y (единственное наблюдение)
-                                       // C-Z отсутствует
+
       table.AcceptChanges();
 
       var sample = SampleRepack.Wrap(
