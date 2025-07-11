@@ -240,7 +240,7 @@ namespace Schicksal.Anova
         //Репак данных для текущего состояния
         var repacked = GroupKey.Repack(data, predictors);
 
-        if (IsFullLite(repacked, predictors))
+        if (IsFull(repacked, predictors))
           return repacked;
 
         var frequencyInfo = GetFrequencyMap(repacked, predictors); //Считаем частоты
@@ -291,55 +291,9 @@ namespace Schicksal.Anova
     // Проверка полноты Декартова произведения
     public static bool IsFull(IDividedSample<GroupKey> source, FactorInfo predictors)
     {
-      var uniqueValues = new Dictionary<string, HashSet<object>>();
-
-      if (source.Count == 0)
-        return true;
-
-      var bf = source.GetKey(0).BaseFilter;
-      var rs = source.GetKey(0).Response;
-
-      foreach (var p in predictors)
-      {
-        var set = new HashSet<object>();
-
-        for (int i = 0; i < source.Count; i++)
-          set.Add(source.GetKey(i)[p]);
-
-        uniqueValues.Add(p, set);
-      }
-
-      var cm = new CartesianMultiplier<string, object>(
-        uniqueValues.ToDictionary(kv => kv.Key, kv => kv.Value.ToArray()));
-
-      foreach (var mul in cm)
-      {
-        bool ok = false;
-        var g = new GroupKey(mul, bf, rs);
-
-        for (int i = 0; i < source.Count; i++)
-        {
-          var key = source.GetKey(i);
-
-          if (source.GetKey(i).GetSubKey(predictors).Equals(g))
-          {
-            ok = true;
-            break;
-          }
-        }
-
-        if (!ok)
-          return false;
-      }
-
-      return true;
-    }
-
-    public static bool IsFullLite(IDividedSample<GroupKey> source, FactorInfo predictors)
-    {
       if (source.Count == 0) return true;
 
-      // Вычисляем ожидаемое количество комбинаций
+      //Вычисляем ожидаемое количество комбинаций
       int expectedCount = 1;
       var uniqueValues = new Dictionary<string, HashSet<object>>();
 
@@ -353,8 +307,6 @@ namespace Schicksal.Anova
         uniqueValues[p] = set;
         expectedCount *= set.Count;
       }
-
-      // Быстрая проверка по количеству групп
       return source.Count == expectedCount;
     }
 
