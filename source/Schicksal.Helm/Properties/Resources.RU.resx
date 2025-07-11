@@ -144,6 +144,9 @@
   <data name="DISABLE_SORTING" xml:space="preserve">
     <value>Отключить сортировку</value>
   </data>
+  <data name="DISCRIMINANT_ANALYSIS" xml:space="preserve">
+    <value>Дискриминантный анализ</value>
+  </data>
   <data name="DISTRIBUTION" xml:space="preserve">
     <value>распределение</value>
   </data>

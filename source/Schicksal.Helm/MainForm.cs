@@ -35,6 +35,7 @@ namespace Schicksal.Helm
       m_cmd_basic.Tag = new DescriptiveAnalyze();
       m_cmd_anova.Tag = new AnovaAnalyze();
       m_cmd_regression.Tag = new RegressionAnalyze();
+      m_cmd_discriminant.Tag = new DiscriminantAnalyze();
     }
 
     internal void FillLastFilesMenu()
@@ -95,6 +96,7 @@ namespace Schicksal.Helm
       m_cmd_anova.Text = Resources.ANOVA;
       m_cmd_regression.Text = Resources.REGRESSION_ANALYSIS;
       m_cmd_about.Text = Resources.ABOUT;
+      m_cmd_discriminant.Text = Resources.DISCRIMINANT_ANALYSIS;
 
       foreach (ToolStripMenuItem item in m_menu_import.DropDownItems)
         item.Text = item.Tag.ToString();
@@ -398,11 +400,6 @@ namespace Schicksal.Helm
           }
         }
       }
-    }
-
-    private void clusteringToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-
     }
   }
 }

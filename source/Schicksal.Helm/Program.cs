@@ -52,6 +52,8 @@ namespace Schicksal.Helm
       private Dictionary<string, string[]> m_bs_settings = new Dictionary<string, string[]>();
       [DataMember(Name = "RegressionSettings")]
       private Dictionary<string, string[]> m_regression_settings = new Dictionary<string, string[]>();
+      [DataMember(Name = "DiscriminantSettings")]
+      private Dictionary<string, string[]> m_discriminant_settings = new Dictionary<string, string[]>();
 
       public Dictionary<string, DateTime> LastFiles
       {
@@ -100,6 +102,17 @@ namespace Schicksal.Helm
             m_bs_settings = new Dictionary<string, string[]>();
 
           return m_bs_settings;
+        }
+      }
+
+      public Dictionary<string, string[]> DiscriminantSettings
+      {
+        get
+        {
+          if (m_discriminant_settings == null)
+            m_discriminant_settings = new Dictionary<string, string[]>();
+
+          return m_discriminant_settings;
         }
       }
 

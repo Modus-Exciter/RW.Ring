@@ -73,6 +73,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyze\DiscriminantAnalyze.cs" />
     <Compile Include="Dialogs\AnovaOptionsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -267,9 +268,11 @@
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.StatisticsParameters.datasource" />
     <None Include="Properties\DataSources\Schicksal.Helm.Dialogs.TableColumnInfo.datasource" />
     <None Include="Resources\delete2.png" />
+    <None Include="Resources\discriminant.jpg" />
     <Content Include="Resources\dot_chart.png" />
     <None Include="Resources\funnel_delete.png" />
     <None Include="Resources\down_minus.png" />
+    <None Include="Resources\Рисунок1.png" />
     <Content Include="Schicksal.Manual.pdf" />
     <None Include="Properties\DataSources\Schicksal.Regression.CorrelationMetrics.datasource" />
     <None Include="Schicksal.snk" />

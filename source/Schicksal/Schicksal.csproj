@@ -74,6 +74,8 @@
     <Compile Include="Clustering\WeightedTableGraph.cs" />
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
+    <Compile Include="Discriminant\Parameterscs.cs" />
+    <Compile Include="Discriminant\Processor.cs" />
     <Compile Include="HtmlWriter.cs" />
     <Compile Include="Optimization\DirectSearch.cs" />
     <Compile Include="Optimization\Domain.cs" />
@@ -138,6 +140,7 @@
   <ItemGroup>
     <None Include="Resources\export1.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

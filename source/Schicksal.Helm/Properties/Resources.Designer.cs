@@ -204,6 +204,35 @@ namespace Schicksal.Helm.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap discriminant {
+            get {
+                object obj = ResourceManager.GetObject("discriminant", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Discriminant analysis.
+        /// </summary>
+        internal static string DISCRIMINANT_ANALYSIS {
+            get {
+                return ResourceManager.GetString("DISCRIMINANT_ANALYSIS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap discriminant1 {
+            get {
+                object obj = ResourceManager.GetObject("discriminant1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap disk_blue {
             get {
                 object obj = ResourceManager.GetObject("disk_blue", resourceCulture);
@@ -641,6 +670,16 @@ namespace Schicksal.Helm.Properties {
         internal static string WRONG_COLUMN_NAME {
             get {
                 return ResourceManager.GetString("WRONG_COLUMN_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Рисунок1 {
+            get {
+                object obj = ResourceManager.GetObject("Рисунок1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
