@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Notung;
+using Schicksal.Basic;
+
 
 namespace Schicksal.Discriminant
 {
-  class Processor
+  public class Processor 
   {
   }
 }
