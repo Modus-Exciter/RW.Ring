@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Schicksal.Discriminant;
 
 namespace Schicksal.Helm.Analyze
 {
@@ -24,19 +25,22 @@ namespace Schicksal.Helm.Analyze
     
     public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
-      var currentProcessor = (CorrelationTestProcessor)processor;
+      var treeProcessor = (Processor)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
-      var results_form = new RegressionResultsForm();
-      results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-        Resources.REGRESSION_ANALYSIS, tf.Text, data.Probability, data.Result);
-      results_form.DataSource = currentProcessor.Results;
-      results_form.Factors = data.Predictors.ToArray();
-      results_form.ResultColumn = data.Result;
-      results_form.Filter = data.Filter;
-      results_form.Probability = data.Probability;
-      results_form.SourceTable = table;
-      results_form.Show(tf.MdiParent);
+
+      var resultsForm = new RegressionResultsForm
+      {
+        Text = string.Format("{0}: {1}", Resources.DISCRIMINANT_ANALYSIS, tf.Text),
+        DataSource = treeProcessor.Results,
+        Factors = data.Predictors.ToArray(),
+        ResultColumn = data.Result,
+        Filter = data.Filter,
+        Probability = data.Probability,
+        SourceTable = table
+      };
+
+      resultsForm.Show(tf.MdiParent);
     }
 
     public LaunchParameters GetLaunchParameters()
@@ -50,9 +54,8 @@ namespace Schicksal.Helm.Analyze
     
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      return new CorrelationTestProcessor(
-        new CorrelationParameters
-        (
+      return new Processor(
+        new Parameterscs(
           table,
           data.Filter,
           new Basic.FactorInfo(data.Predictors),
