@@ -4,12 +4,77 @@ using Schicksal.Basic;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace ANOVATest
 {
   [TestClass]
   public class AXV
   {
+    [TestMethod]
+    public void ComplexDataFiltering()
+    {
+      var table = new DataTable();
+      table.Columns.Add("F1", typeof(string));
+      table.Columns.Add("F2", typeof(string));
+      table.Columns.Add("F3", typeof(string));
+      table.Columns.Add("Value", typeof(double));
+      table.Columns.Add("Repeat", typeof(int));
+
+      var f1Levels = new[] { "A", "B", "C", "D", "E" };
+      var f2Levels = new[] { "X", "Y", "Z", "W", "V" };
+      var f3Levels = new[] { "L1", "L2", "L3", "L4", "L5" };
+
+      int repeatCounter = 1;
+      int totalRows = 0;
+
+      //Чтоб данные были с разным количеством наблюдений в группах
+      foreach (var f1 in f1Levels)
+      {
+        foreach (var f2 in f2Levels)
+        {
+          foreach (var f3 in f3Levels)
+          {
+            if ((f1 == "E" && f2 == "V") || (f1 == "C" && f3 == "L3"))
+              continue;
+
+            int observations = f1 == "E" ? 1 : (f2 == "Z" ? 4 : 3);
+
+            for (int i = 0; i < observations; i++)
+            {
+              table.Rows.Add(f1, f2, f3, 1.0, repeatCounter++);
+              totalRows++;
+            }
+          }
+        }
+      }
+
+      foreach (var f1 in f1Levels)
+      {
+        if (f1 == "C") continue;
+
+        foreach (var f3 in f3Levels)
+        {
+          table.Rows.Add(f1, "Z", f3, 1.0, repeatCounter++);
+          totalRows++;
+        }
+      }
+
+      table.AcceptChanges();
+
+      var sample = SampleRepack.Wrap(
+          new TableDividedSample(
+              new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2+F3"), "Value")));
+
+      var filtered = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2+F3"));
+      Assert.IsTrue(InteractionCalculator.IsFull(filtered, FactorInfo.Parse("F1+F2+F3")));
+      int totalObservations = filtered.Sum(g => g.Count);
+      int expectedRemoved = 25 + 75;
+      int expectedObservations = totalRows - expectedRemoved;
+      Assert.IsTrue(totalObservations >= expectedObservations,
+          $"Удалено слишком много данных. Ожидалось минимум {expectedObservations}, осталось {totalObservations}");
+    }
+
     [TestMethod]
     public void OptimalDataFiltering()
     {
@@ -19,10 +84,6 @@ namespace ANOVATest
       table.Columns.Add("Value", typeof(double));
       table.Columns.Add("Repeat", typeof(int));
 
-      // Градации: F1 (A, B, C), F2 (X, Y, Z)
-      // Комбинация C-Z отсутствует
-      // Градация C 2 наблюдения (C-X, C-Y)
-      // Градация Z 6 наблюдений (A-Z, B-Z)
       table.Rows.Add("A", "X", 10, 1);
       table.Rows.Add("A", "X", 11, 2);
       table.Rows.Add("A", "Y", 20, 1);

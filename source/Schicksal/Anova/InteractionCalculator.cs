@@ -251,6 +251,7 @@ namespace Schicksal.Anova
           break;
 
         int minDifference = int.MaxValue;
+        int bestRemovedObservations = int.MaxValue;
         IDividedSample<GroupKey> bestCandidate = null;
         KeyValuePair<string, object> bestFactor = default;
 
@@ -268,9 +269,10 @@ namespace Schicksal.Anova
           if (difference == 0 && IsFull(newDataset, predictors))
             return newDataset;
 
-          if (difference < minDifference)
+          if (difference < minDifference || (difference == minDifference && removedObservations < bestRemovedObservations))
           {
             minDifference = difference;
+            bestRemovedObservations = removedObservations;
             bestCandidate = newDataset;
             bestFactor = new KeyValuePair<string, object>(factor.Key, factor.Value.Key);
           }
