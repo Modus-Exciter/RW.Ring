@@ -1,4 +1,5 @@
-﻿namespace Schicksal.Helm
+﻿
+namespace Schicksal.Helm
 {
   partial class RegressionResultsForm
   {

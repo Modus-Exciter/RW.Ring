@@ -86,6 +86,12 @@
     <Compile Include="Dialogs\RegressionDetailsDialog.Designer.cs">
       <DependentUpon>RegressionDetailsDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="DiscriminantResultsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DiscriminantResultsForm.Designer.cs">
+      <DependentUpon>DiscriminantResultsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FilterCell.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -192,6 +198,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\RegressionDetailsDialog.resx">
       <DependentUpon>RegressionDetailsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DiscriminantResultsForm.resx">
+      <DependentUpon>DiscriminantResultsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FilterCell.resx">
       <DependentUpon>FilterCell.cs</DependentUpon>

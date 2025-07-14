@@ -42,6 +42,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +75,11 @@
     <Compile Include="Clustering\WeightedTableGraph.cs" />
     <Compile Include="DataTableSaver.cs" />
     <Compile Include="Basic\DescriptionHtmlSaver.cs" />
-    <Compile Include="Discriminant\Parameterscs.cs" />
-    <Compile Include="Discriminant\Processor.cs" />
+    <Compile Include="Discriminant\DecisionTreeBuilder.cs" />
+    <Compile Include="Discriminant\DiscriminantResult.cs" />
+    <Compile Include="Discriminant\DiscriminantTreeNode.cs" />
+    <Compile Include="Discriminant\DiscriminantParameters.cs" />
+    <Compile Include="Discriminant\DiscriminantProcessor.cs" />
     <Compile Include="HtmlWriter.cs" />
     <Compile Include="Optimization\DirectSearch.cs" />
     <Compile Include="Optimization\Domain.cs" />

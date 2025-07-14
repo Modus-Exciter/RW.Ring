@@ -2,7 +2,7 @@
 using Notung.Services;
 using Schicksal.Helm.Dialogs;
 using Schicksal.Helm.Properties;
-using Schicksal.Regression;
+using Schicksal.Discriminant;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,21 +21,17 @@ namespace Schicksal.Helm.Analyze
     {
       return Resources.DISCRIMINANT_ANALYSIS;
     }
-    
     public void BindTheResultForm(IRunBase processor, object table_form, StatisticsParameters data)
     {
-      var currentProcessor = (CorrelationTestProcessor)processor;
+      var currentProcessor = (DiscriminantProcessor)processor;
       var tf = (TableForm)table_form;
       var table = tf.DataSource;
-      var results_form = new RegressionResultsForm();
+
+      var results_form = new DiscriminantResultsForm();
       results_form.Text = string.Format("{0}: {1}, p={2}; {3}",
-        Resources.REGRESSION_ANALYSIS, tf.Text, data.Probability, data.Result);
-      results_form.DataSource = currentProcessor.Results;
-      results_form.Factors = data.Predictors.ToArray();
-      results_form.ResultColumn = data.Result;
-      results_form.Filter = data.Filter;
-      results_form.Probability = data.Probability;
-      results_form.SourceTable = table;
+          Resources.DISCRIMINANT_ANALYSIS, tf.Text, data.Probability, data.Result);
+
+      results_form.DataSource = currentProcessor.Result;
       results_form.Show(tf.MdiParent);
     }
 
@@ -47,20 +43,18 @@ namespace Schicksal.Helm.Analyze
         Bitmap = Resources.column_chart
       };
     }
-    
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
-      return new CorrelationTestProcessor(
-        new CorrelationParameters
-        (
-          table,
-          data.Filter,
-          new Basic.FactorInfo(data.Predictors),
-          data.Result,
-          data.Probability
-        ));
+      return new DiscriminantProcessor(
+          new DiscriminantParameters(
+              table,
+              data.Filter,
+              new Basic.FactorInfo(data.Predictors),
+              data.Result,
+              data.Probability,
+              DiscriminantParameters.SplitCriterion.Gini)); // или Entropy
     }
-    
+
     public Dictionary<string, string[]> GetSettings()
     {
       return AppManager.Configurator.GetSection<Program.Preferences>().DiscriminantSettings;
