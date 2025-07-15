@@ -32,7 +32,7 @@ namespace Schicksal.Anova
       if (source.Count == 0 || totalObservations == 0)
         return default(SampleVariance);
 
-      var splitted = predictors.Split(false).ToArray();
+      var splitted = predictors.Split(false, 4).ToArray();
       var keys = new KeyedArray<FactorInfo>(splitted);
       var list = new List<FactorVariance>();
       var ei = new EffectKey { Factor = predictors, GradationCount = source.Sum(g => g.Count) };
@@ -54,7 +54,7 @@ namespace Schicksal.Anova
         if (result.Factor.Count == 1)
           continue;
 
-        foreach (var p in splitted[index].Split(false))
+        foreach (var p in splitted[index].Split(false, 4))
         {
           if (!keys.Contains(p))
             continue;
@@ -98,7 +98,7 @@ namespace Schicksal.Anova
         if (splitted[i].Count == 1)
           continue;
 
-        foreach (var p in splitted[i].Split(false))
+        foreach (var p in splitted[i].Split(false, 4))
         {
           if (keys.Contains(p))
             graph.AddArc(keys.GetIndex(p), i);
