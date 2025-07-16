@@ -202,6 +202,15 @@
     <EmbeddedResource Include="Dialogs\AnovaOptionsDialog.ru.resx">
       <DependentUpon>AnovaOptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DiscriminantOptionsDialog.en.resx">
+      <DependentUpon>DiscriminantOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DiscriminantOptionsDialog.resx">
+      <DependentUpon>DiscriminantOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\DiscriminantOptionsDialog.ru.resx">
+      <DependentUpon>DiscriminantOptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\RegressionDetailsDialog.resx">
       <DependentUpon>RegressionDetailsDialog.cs</DependentUpon>
     </EmbeddedResource>

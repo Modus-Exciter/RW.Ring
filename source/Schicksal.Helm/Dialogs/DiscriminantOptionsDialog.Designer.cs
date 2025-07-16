@@ -20,90 +20,82 @@
 
     private void InitializeComponent()
     {
-      this.m_radio_none = new System.Windows.Forms.RadioButton();
-      this.m_radio_entropy = new System.Windows.Forms.RadioButton();
-      this.m_radio_gini = new System.Windows.Forms.RadioButton();
-      this.m_button_ok = new System.Windows.Forms.Button();
-      this.m_button_cancel = new System.Windows.Forms.Button();
-      this.m_buttons_panel = new System.Windows.Forms.FlowLayoutPanel();
-      this.m_groupbox = new System.Windows.Forms.GroupBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiscriminantOptionsDialog));
+            this.m_radio_none = new System.Windows.Forms.RadioButton();
+            this.m_radio_entropy = new System.Windows.Forms.RadioButton();
+            this.m_radio_gini = new System.Windows.Forms.RadioButton();
+            this.m_button_ok = new System.Windows.Forms.Button();
+            this.m_button_cancel = new System.Windows.Forms.Button();
+            this.m_buttons_panel = new System.Windows.Forms.FlowLayoutPanel();
+            this.m_groupbox = new System.Windows.Forms.GroupBox();
+            this.m_buttons_panel.SuspendLayout();
+            this.m_groupbox.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // m_radio_none
+            // 
+            resources.ApplyResources(this.m_radio_none, "m_radio_none");
+            this.m_radio_none.Checked = true;
+            this.m_radio_none.Name = "m_radio_none";
+            this.m_radio_none.TabStop = true;
+            this.m_radio_none.UseVisualStyleBackColor = true;
+            // 
+            // m_radio_entropy
+            // 
+            resources.ApplyResources(this.m_radio_entropy, "m_radio_entropy");
+            this.m_radio_entropy.Name = "m_radio_entropy";
+            this.m_radio_entropy.UseVisualStyleBackColor = true;
+            // 
+            // m_radio_gini
+            // 
+            resources.ApplyResources(this.m_radio_gini, "m_radio_gini");
+            this.m_radio_gini.Name = "m_radio_gini";
+            this.m_radio_gini.UseVisualStyleBackColor = true;
+            // 
+            // m_button_ok
+            // 
+            resources.ApplyResources(this.m_button_ok, "m_button_ok");
+            this.m_button_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.m_button_ok.Name = "m_button_ok";
+            this.m_button_ok.UseVisualStyleBackColor = true;
+            // 
+            // m_button_cancel
+            // 
+            resources.ApplyResources(this.m_button_cancel, "m_button_cancel");
+            this.m_button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.m_button_cancel.Name = "m_button_cancel";
+            this.m_button_cancel.UseVisualStyleBackColor = true;
+            // 
+            // m_buttons_panel
+            // 
+            resources.ApplyResources(this.m_buttons_panel, "m_buttons_panel");
+            this.m_buttons_panel.Controls.Add(this.m_button_ok);
+            this.m_buttons_panel.Controls.Add(this.m_button_cancel);
+            this.m_buttons_panel.Name = "m_buttons_panel";
+            // 
+            // m_groupbox
+            // 
+            resources.ApplyResources(this.m_groupbox, "m_groupbox");
+            this.m_groupbox.Controls.Add(this.m_radio_none);
+            this.m_groupbox.Controls.Add(this.m_radio_entropy);
+            this.m_groupbox.Controls.Add(this.m_radio_gini);
+            this.m_groupbox.Name = "m_groupbox";
+            this.m_groupbox.TabStop = false;
+            // 
+            // DiscriminantOptionsDialog
+            // 
+            resources.ApplyResources(this, "$this");
+            this.Controls.Add(this.m_groupbox);
+            this.Controls.Add(this.m_buttons_panel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "DiscriminantOptionsDialog";
+            this.m_buttons_panel.ResumeLayout(false);
+            this.m_groupbox.ResumeLayout(false);
+            this.m_groupbox.PerformLayout();
+            this.ResumeLayout(false);
 
-      // 
-      // m_radio_none
-      // 
-      this.m_radio_none.AutoSize = true;
-      this.m_radio_none.Location = new System.Drawing.Point(20, 20);
-      this.m_radio_none.Name = "m_radio_none";
-      this.m_radio_none.Size = new System.Drawing.Size(51, 17);
-      this.m_radio_none.Text = "None";
-      this.m_radio_none.Checked = true;
-      this.m_radio_none.UseVisualStyleBackColor = true;
-
-      // 
-      // m_radio_entropy
-      // 
-      this.m_radio_entropy.AutoSize = true;
-      this.m_radio_entropy.Location = new System.Drawing.Point(20, 45);
-      this.m_radio_entropy.Name = "m_radio_entropy";
-      this.m_radio_entropy.Size = new System.Drawing.Size(70, 17);
-      this.m_radio_entropy.Text = "Entropy";
-      this.m_radio_entropy.UseVisualStyleBackColor = true;
-
-      // 
-      // m_radio_gini
-      // 
-      this.m_radio_gini.AutoSize = true;
-      this.m_radio_gini.Location = new System.Drawing.Point(20, 70);
-      this.m_radio_gini.Name = "m_radio_gini";
-      this.m_radio_gini.Size = new System.Drawing.Size(44, 17);
-      this.m_radio_gini.Text = "Gini";
-      this.m_radio_gini.UseVisualStyleBackColor = true;
-
-      // 
-      // m_button_ok
-      // 
-      this.m_button_ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-      this.m_button_ok.Text = "OK";
-      this.m_button_ok.UseVisualStyleBackColor = true;
-
-      // 
-      // m_button_cancel
-      // 
-      this.m_button_cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-      this.m_button_cancel.Text = "Cancel";
-      this.m_button_cancel.UseVisualStyleBackColor = true;
-
-      // 
-      // m_buttons_panel
-      // 
-      this.m_buttons_panel.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-      this.m_buttons_panel.Dock = System.Windows.Forms.DockStyle.Bottom;
-      this.m_buttons_panel.Controls.Add(this.m_button_ok);
-      this.m_buttons_panel.Controls.Add(this.m_button_cancel);
-      this.m_buttons_panel.Height = 40;
-
-      // 
-      // m_groupbox
-      // 
-      this.m_groupbox.Text = "Split Criterion";
-      this.m_groupbox.Controls.Add(this.m_radio_none);
-      this.m_groupbox.Controls.Add(this.m_radio_entropy);
-      this.m_groupbox.Controls.Add(this.m_radio_gini);
-      this.m_groupbox.Dock = System.Windows.Forms.DockStyle.Fill;
-
-      // 
-      // DiscriminantOptionsDialog
-      // 
-      this.ClientSize = new System.Drawing.Size(300, 150);
-      this.Controls.Add(this.m_groupbox);
-      this.Controls.Add(this.m_buttons_panel);
-      this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-      this.MaximizeBox = false;
-      this.MinimizeBox = false;
-      this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-      this.Location = System.Windows.Forms.Cursor.Position; // появится около курсора
-      this.Name = "DiscriminantOptionsDialog";
-      this.Text = "Discriminant Options";
     }
   }
 }
