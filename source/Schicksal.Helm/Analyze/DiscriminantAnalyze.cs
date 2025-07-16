@@ -14,7 +14,7 @@ namespace Schicksal.Helm.Analyze
   {
     public Type OptionsType
     {
-      get { return null; }
+      get { return typeof(DiscriminantOptionsDialog); }
     }
 
     public override string ToString()
