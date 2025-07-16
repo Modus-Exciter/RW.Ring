@@ -97,82 +97,14 @@ namespace Schicksal.Discriminant
     /// Прогнозирует класс для одного объекта.
     /// </summary>
     private string Predict(DiscriminantTreeNode node, Dictionary<string, object> sample)
-    {
-      while (!node.End)
       {
-        var featureValue = sample[node.FeatureName];
-
-        if (featureValue == null)
-          return "Unknown";
-
-        if (node.SplitType == SplitType.Numeric)
+        while (!node.End)
         {
-          if (TryGetNumericValue(featureValue, out double val))
-          {
-            node = val <= node.Znach ? node.Left : node.Right;
-          }
-          else
-          {
-            return "Unknown"; // не удалось привести к числу
-          }
+          double value = Convert.ToDouble(sample[node.FeatureName]);
+          node = value <= node.Znach ? node.Left : node.Right;
         }
-        else if (node.SplitType == SplitType.Categorical)
-        {
-          string strVal = featureValue.ToString();
-          if (node.Categories.TryGetValue(strVal, out var next))
-          {
-            node = next;
-          }
-          else if (node.Categories.TryGetValue("Unknown", out var fallback))
-          {
-            node = fallback;
-          }
-          else
-          {
-            return "Unknown";
-          }
-        }
-        else
-        {
-          return "Unknown"; // неизвестный тип
-        }
-      }
-
-      return node.ClassName;
-    }
-    /// <summary>
-    /// Пробует привести значение к числу (double), безопасно обрабатывая null и ошибки приведения.
-    /// </summary>
-    private bool TryGetNumericValue(object value, out double result)
-    {
-      if (value == null || value is DBNull)
-      {
-        result = double.NaN;
-        return false;
-      }
-
-      switch (value)
-      {
-        case string s when double.TryParse(s, out var dbl):
-          result = dbl;
-          return true;
-        case IConvertible convertible:
-          try
-          {
-            result = convertible.ToDouble(null);
-            return true;
-          }
-          catch
-          {
-            result = double.NaN;
-            return false;
-          }
-        default:
-          result = double.NaN;
-          return false;
+        return node.ClassName;
       }
     }
-
   }
-}
  
