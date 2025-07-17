@@ -51,8 +51,15 @@ namespace Schicksal.Discriminant
 
           this.ReportProgress(25);
         // Строим дерево
-        var builder = new DecisionTreeBuilder(m_parameters.Criterion);
-          var tree = builder.BuildTree(data, featureColumns, targetColumn);
+        // Строим дерево
+        var builder = new DecisionTreeBuilder(); // <-- убираем параметр
+
+        var tree = builder.BuildTree(
+            data,
+            featureColumns,
+            targetColumn,
+            m_parameters.Criterion, // <-- передаём критерий
+            maxDepth: 5); // <-- необязательно, но можно указать
 
           this.ReportProgress(75);
 
