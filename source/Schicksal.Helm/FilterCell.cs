@@ -97,7 +97,7 @@ namespace Schicksal.Helm
           {
             suggestions[index++] = string.Format("{0}{1}", prefix, value);
             var size = (int)g.MeasureString(suggestions[index - 1], m_text_box.Font).Width;
-              m_autocomplete_width = Math.Max(size, m_autocomplete_width);
+            m_autocomplete_width = Math.Max(size, m_autocomplete_width);
           }
         }
       }
