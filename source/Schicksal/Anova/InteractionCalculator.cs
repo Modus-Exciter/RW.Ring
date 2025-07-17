@@ -32,7 +32,7 @@ namespace Schicksal.Anova
       if (source.Count == 0 || totalObservations == 0)
         return default(SampleVariance);
 
-      var splitted = predictors.Split(false, 4).ToArray();
+      var splitted = predictors.Split(false).Where(factors => factors.Count <= 4).ToArray();
       var keys = new KeyedArray<FactorInfo>(splitted);
       var list = new List<FactorVariance>();
       var ei = new EffectKey { Factor = predictors, GradationCount = source.Sum(g => g.Count) };
@@ -54,7 +54,7 @@ namespace Schicksal.Anova
         if (result.Factor.Count == 1)
           continue;
 
-        foreach (var p in splitted[index].Split(false, 4))
+        foreach (var p in splitted[index].Split(false).Where(factors => factors.Count <= 4))
         {
           if (!keys.Contains(p))
             continue;
@@ -98,7 +98,7 @@ namespace Schicksal.Anova
         if (splitted[i].Count == 1)
           continue;
 
-        foreach (var p in splitted[i].Split(false, 4))
+        foreach (var p in splitted[i].Split(false).Where(factors => factors.Count <= 4))
         {
           if (keys.Contains(p))
             graph.AddArc(keys.GetIndex(p), i);
@@ -165,12 +165,11 @@ namespace Schicksal.Anova
 
           factorFound = true;
           object value = key[factor];
-          int groupSize = source[groupIndex].Count;
 
           if (freqDict.ContainsKey(value))
-            freqDict[value] += groupSize;
+            freqDict[value] ++;
           else
-            freqDict[value] = groupSize;
+            freqDict[value] = 1;
         }
 
         if (factorFound)
@@ -183,21 +182,22 @@ namespace Schicksal.Anova
     /// <summary>
     /// Выбор для каждого фактора его самой редкой градаций
     /// </summary>
-    private static Dictionary<string, KeyValuePair<object, int>> GetMinFrequencyCandidates(Dictionary<string, Dictionary<object, int>> frequencyInfo, FactorInfo predictors)
+    private static Dictionary<string, MinFrequencyData> GetMinFrequencyCandidates(Dictionary<string, Dictionary<object, int>> frequencyInfo, FactorInfo predictors)
     {
-      var result = new Dictionary<string, KeyValuePair<object, int>>();
-
+      var result = new Dictionary<string, MinFrequencyData>();
       foreach (var factor in predictors)
       {
-        if (!frequencyInfo.ContainsKey(factor) || frequencyInfo[factor].Count == 0)
+        if (!frequencyInfo.TryGetValue(factor, out var factorDict))
           continue;
 
-        int minFreq = frequencyInfo[factor].Values.Min();
-        var minEntry = frequencyInfo[factor].First(kv => kv.Value == minFreq);
+        int minFreq = factorDict.Values.Min();
+        var minGradations = factorDict
+            .Where(kv => kv.Value == minFreq)
+            .Select(kv => kv.Key)
+            .ToList();
 
-        result[factor] = new KeyValuePair<object, int>(minEntry.Key, minEntry.Value);
+        result.Add(factor, new MinFrequencyData(minGradations, minFreq));
       }
-
       return result;
     }
 
@@ -257,24 +257,30 @@ namespace Schicksal.Anova
 
         foreach (var factor in minFrequencyCandidates) //Обходим все минимальные градации каждого фактора
         {
-          IDividedSample<GroupKey> newDataset; //Копия датасета без минимальной градаци
-          int removedObservations = CreateDatasetWithoutLevelPrediction(repacked, factor.Key, factor.Value.Key, out newDataset);
+          string factorName = factor.Key;
+          int frequency = factor.Value.frequency;
 
-          //Расчет новой полноты
-          var newFrequencyInfo = GetFrequencyMap(newDataset, predictors);
-          int newCartesianSize = newFrequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
-          int difference = Math.Abs(newCartesianSize - newDataset.Count);
-
-          //Если нашли полное декартово произведение - это результат
-          if (difference == 0 && IsFull(newDataset, predictors))
-            return newDataset;
-
-          if (difference < minDifference || (difference == minDifference && removedObservations < bestRemovedObservations))
+          foreach (var gradation in factor.Value.gradations)
           {
-            minDifference = difference;
-            bestRemovedObservations = removedObservations;
-            bestCandidate = newDataset;
-            bestFactor = new KeyValuePair<string, object>(factor.Key, factor.Value.Key);
+            IDividedSample<GroupKey> newDataset; //Копия датасета без минимальной градаци
+            int removedObservations = CreateDatasetWithoutLevelPrediction(repacked, factorName, gradation, out newDataset);
+
+            //Расчет новой полноты
+            var newFrequencyInfo = GetFrequencyMap(newDataset, predictors);
+            int newCartesianSize = newFrequencyInfo.Values.Aggregate(1, (acc, dict) => acc * dict.Keys.Count);
+            int difference = Math.Abs(newCartesianSize - newDataset.Count);
+
+            //Если нашли полное декартово произведение - это результат
+            if (difference == 0 && IsFull(newDataset, predictors))
+              return newDataset;
+
+            if (difference < minDifference || (difference == minDifference && removedObservations < bestRemovedObservations))
+            {
+              minDifference = difference;
+              bestRemovedObservations = removedObservations;
+              bestCandidate = newDataset;
+              bestFactor = new KeyValuePair<string, object>(factorName, gradation);
+            }
           }
         }
 
@@ -310,6 +316,18 @@ namespace Schicksal.Anova
         expectedCount *= set.Count;
       }
       return source.Count == expectedCount;
+    }
+
+    public struct MinFrequencyData
+    {
+      public List<object> gradations;
+      public int frequency;
+      
+      public MinFrequencyData(List<object> gradations, int frequency)
+      {
+        this.gradations = gradations;
+        this.frequency = frequency;
+      }
     }
 
     private struct EffectKey
