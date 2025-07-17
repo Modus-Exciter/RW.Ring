@@ -43,8 +43,30 @@ namespace Schicksal.Helm.Analyze
         Bitmap = Resources.column_chart
       };
     }
+    //вот это момент
+    private DiscriminantParameters.SplitCriterion GetCriterionFromXml(string xml)
+    {
+      if (string.IsNullOrEmpty(xml))
+        return DiscriminantParameters.SplitCriterion.Entropy;
+
+      var doc = new System.Xml.XmlDocument();
+      doc.LoadXml(xml);
+
+      var criterionNode = doc.DocumentElement?.Attributes["Criterion"];
+      if (criterionNode == null)
+        return DiscriminantParameters.SplitCriterion.Entropy;
+
+      switch (criterionNode.Value)
+      {
+        case "Gini":
+          return DiscriminantParameters.SplitCriterion.Gini;
+        default:
+          return DiscriminantParameters.SplitCriterion.Entropy;
+      }
+    }
     public IRunBase GetProcessor(DataTable table, StatisticsParameters data)
     {
+      var criterion = GetCriterionFromXml(data.OptionsXML);
       return new DiscriminantProcessor(
           new DiscriminantParameters(
               table,
@@ -52,7 +74,7 @@ namespace Schicksal.Helm.Analyze
               new Basic.FactorInfo(data.Predictors),
               data.Result,
               data.Probability,
-              DiscriminantParameters.SplitCriterion.Gini)); // или Entropy
+              criterion)); //вот тут критерий
     }
 
     public Dictionary<string, string[]> GetSettings()

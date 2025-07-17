@@ -56,5 +56,7 @@ namespace Schicksal.Helm.Dialogs
     {
       return this.ShowDialog() == DialogResult.OK;
     }
+
+   
   }
 }

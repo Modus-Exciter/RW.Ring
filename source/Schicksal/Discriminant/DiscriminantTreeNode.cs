@@ -23,7 +23,7 @@ namespace Schicksal.Discriminant
         public override string ToString()
         {
             return this.End
-                ? $"Класс: {this.ClassName}"
+                ? $" Класс: {this.ClassName} "
                 : $"{this.FeatureName} ≤ {this.Znach:F2}";
         }
     }

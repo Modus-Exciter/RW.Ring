@@ -94,7 +94,7 @@ namespace Schicksal.Discriminant
         return (double)correct / data.Count;
       }
     /// <summary>
-    /// Прогнозирует класс для одного объекта.
+    /// Прогнозирует класс для одного объекта
     /// </summary>
     private string Predict(DiscriminantTreeNode node, Dictionary<string, object> sample)
     {
@@ -141,7 +141,7 @@ namespace Schicksal.Discriminant
       return node.ClassName;
     }
     /// <summary>
-    /// Пробует привести значение к числу (double), безопасно обрабатывая null и ошибки приведения.
+    /// Пробует привести значение к числу (double), обрабатывая null и ошибки приведения
     /// </summary>
     private bool TryGetNumericValue(object value, out double result)
     {

@@ -11,7 +11,7 @@ namespace Schicksal.Discriminant
     public class DiscriminantResult
     {
     /// <summary>
-    /// Корень дерева решений.
+    /// Корень дерева решений
     /// </summary>
     public DiscriminantTreeNode DecisionTree { get; set; }
     /// <summary>
@@ -29,8 +29,8 @@ namespace Schicksal.Discriminant
     public string Summary()
       {
         return $"Точность модели: {this.Accuracy:P2}\n" +
-               "Распределение классов:\n" +
-               string.Join("\n", this.Classandelement.Select(kv => $"Класс {kv.Key}: {kv.Value} элементов"));
+               " Распределение классов:\n" +
+               string.Join("\n", this.Classandelement.Select(kv => $" Класс {kv.Key}: {kv.Value} элементов"));
       }
     }
   }
