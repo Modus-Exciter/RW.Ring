@@ -43,7 +43,7 @@ namespace Schicksal.Helm.Analyze
         Bitmap = Resources.column_chart
       };
     }
-    //вот это момент
+    
     private DiscriminantParameters.SplitCriterion GetCriterionFromXml(string xml)
     {
       if (string.IsNullOrEmpty(xml))
@@ -74,7 +74,7 @@ namespace Schicksal.Helm.Analyze
               new Basic.FactorInfo(data.Predictors),
               data.Result,
               data.Probability,
-              criterion)); //вот тут критерий
+              criterion));
     }
 
     public Dictionary<string, string[]> GetSettings()
