@@ -7,13 +7,16 @@ namespace Schicksal.Regression
 {
   public class WilliamsKlootResult
   {
-    public CorrelationFormula ModelA { get; set; }
-    public CorrelationFormula ModelB { get; set; }
+    public CorrelationFormula ModelA { get; internal set; }
+    public CorrelationFormula ModelB { get; internal set; }
 
-    public double TStatistic { get; set; }
-    public double PValue { get; set; }
+    public double TStatistic { get; internal set; }
+    public double PValue { get; internal set; }
 
-    public bool IsSignificant { get; set; }
-    public CorrelationFormula BetterModel { get; set; }
+    public bool IsSignificant { get; internal set; }
+    public CorrelationFormula BetterModel
+    {
+      get { return this.TStatistic < 0 ? this.ModelA : this.ModelB; }
+    }
   }
 }

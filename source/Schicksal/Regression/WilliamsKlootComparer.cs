@@ -66,8 +66,7 @@ namespace Schicksal.Regression
         ModelB = modelB,
         TStatistic = t,
         PValue = pValue,
-        IsSignificant = pValue < threshold,
-        BetterModel = t < 0 ? modelA : modelB
+        IsSignificant = pValue < threshold
       };
     }
 
