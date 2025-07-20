@@ -102,6 +102,8 @@
     <Compile Include="Regression\RegressionHtmlSaver.cs" />
     <Compile Include="Regression\RegressionMath.cs" />
     <Compile Include="Regression\Residual.cs" />
+	<Compile Include="Regression\WilliamsKlootComparer.cs" />
+	<Compile Include="Regression\WilliamsKlootResult.cs" />
     <Compile Include="SchicksalResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
