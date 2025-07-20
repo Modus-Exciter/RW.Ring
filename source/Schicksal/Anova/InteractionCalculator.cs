@@ -260,6 +260,10 @@ namespace Schicksal.Anova
           string factorName = factor.Key;
           int frequency = factor.Value.frequency;
 
+          var factorFrequencies = frequencyInfo[factorName].Values;
+          if (factorFrequencies.All(f => f == frequency)) //пропускаем фактор если все градации одинаковы по редкости
+              continue;
+
           foreach (var gradation in factor.Value.gradations)
           {
             IDividedSample<GroupKey> newDataset; //Копия датасета без минимальной градаци
