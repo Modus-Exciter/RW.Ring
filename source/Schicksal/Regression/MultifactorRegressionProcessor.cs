@@ -56,9 +56,7 @@ namespace Schicksal.Regression
         var xSamples = new List<IPlainSample>();
 
         foreach (string predictorName in m_parameters.Predictors)
-        {
           xSamples.Add(new DataColumnSample(m_parameters.Table.Columns[predictorName], m_parameters.Filter));
-        }
 
         this.ReportProgress(25);
 
