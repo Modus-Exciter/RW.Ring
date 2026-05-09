@@ -250,4 +250,25 @@
   <data name="MULTIFACTOR_REGRESSION" xml:space="preserve">
     <value>Multifactor Regression Analysis</value>
   </data>
+  <data name="FEW_OBSERVATIONS" xml:space="preserve">
+    <value>Not enough observations ({0}) for calculating parabolic regression model with с {1} predictors. At least {2} observations is nessesary</value>
+  </data>
+  <data name="FEW_OBSERVATIONS_LINEAR" xml:space="preserve">
+    <value>Not enough observations ({0}). At least {1} observations is nessesary</value>
+  </data>
+  <data name="FEW_PREDICTORS" xml:space="preserve">
+    <value>At least two predictors required. If only one predictor exists, use single-way regression analysis</value>
+  </data>
+  <data name="FREE_MEMBER" xml:space="preserve">
+    <value>Free member</value>
+  </data>
+  <data name="MULTICOLLINEARITY" xml:space="preserve">
+    <value>The factor matrix is ​​degenerate, multicollinearity is possible</value>
+  </data>
+  <data name="NO_PREDICTOR_DATA" xml:space="preserve">
+    <value>No samples in pdredictor data</value>
+  </data>
+  <data name="REGRESSION_ERROR" xml:space="preserve">
+    <value>Regression analysis error</value>
+  </data>
 </root>

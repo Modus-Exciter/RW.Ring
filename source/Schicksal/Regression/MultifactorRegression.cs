@@ -1,5 +1,6 @@
 ﻿using Notung.Data;
 using Schicksal.Basic;
+using Schicksal.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -78,11 +79,10 @@ namespace Schicksal.Regression
       var x1Squared = x1Values.Select(v => v * v).ToArray();
       var x2Squared = x2Values.Select(v => v * v).ToArray();
       var x1x2Interaction = new double[n];
-      for (int i = 0; i < n; i++)
-      {
-        x1x2Interaction[i] = x1Values[i] * x2Values[i];
-      }
 
+      for (int i = 0; i < n; i++)
+        x1x2Interaction[i] = x1Values[i] * x2Values[i];
+      
       var parabolic_x_samples_list = new List<double[]>
       {
         x1Values,
@@ -104,18 +104,16 @@ namespace Schicksal.Regression
 
       int k = parabolicFactorNames.Count;
       if (n <= k + 1)
-      {
-        throw new ArgumentException($"Недостаточно наблюдений ({n}) для выполнения параболической регрессии с {k} производными факторами. Требуется минимум {k + 2} наблюдений.");
-      }
+        throw new ArgumentException(string.Format(Resources.FEW_OBSERVATIONS, n, k, k + 2));
 
       var xMatrix = new RectangleMatrix<double>(n, k + 1);
+
       for (int i = 0; i < n; i++)
       {
         xMatrix[i, 0] = 1.0;
+
         for (int j = 0; j < k; j++)
-        {
           xMatrix[i, j + 1] = parabolic_x_samples_list[j][i];
-        }
       }
 
       var result = this.CalculateRegressionMetrics(xMatrix, yValues, parabolicFactorNames, n, k, p);
@@ -137,17 +135,13 @@ namespace Schicksal.Regression
       int k = factors.Count;
 
       if (n == 0)
-      {
-        throw new ArgumentException("Выборка зависимой переменной пуста.");
-      }
+        throw new ArgumentException(Resources.NO_PREDICTOR_DATA);
+
       if (k < 2)
-      {
-        throw new ArgumentException("Требуется минимум два фактора. Для анализа с одним фактором используйте модуль простой линейной регрессии.");
-      }
+        throw new ArgumentException(Resources.FEW_PREDICTORS);
+
       if (n <= k + 1)
-      {
-        throw new ArgumentException($"Недостаточно наблюдений ({n}). Требуется минимум {k + 2} наблюдений.");
-      }
+        throw new ArgumentException(string.Format(Resources.FEW_OBSERVATIONS_LINEAR, n, k + 2));
 
       var yValues = ySample.ToArray();
       var xValuesList = new List<double[]>();
@@ -155,7 +149,7 @@ namespace Schicksal.Regression
       {
         if (sample.Count() != n)
         {
-          throw new InvalidOperationException($"Выборка предиктора имеет другое количество наблюдений ({sample.Count()}) по сравнению с зависимой переменной ({n}). Убедитесь, что фильтры согласованы.");
+          throw new InvalidOperationException(Resources.DATA_SAMPLE_SIZE_MISMATCH);
         }
         xValuesList.Add(sample.ToArray());
       }
@@ -182,10 +176,9 @@ namespace Schicksal.Regression
     private MultifactorRegressionResult CalculateRegressionMetrics(RectangleMatrix<double> xMatrix, double[] yValues, List<string> factorNames, int n, int k, double p)
     {
       var yMatrix = new RectangleMatrix<double>(n, 1);
+
       for (int i = 0; i < n; i++)
-      {
         yMatrix[i, 0] = yValues[i];
-      }
 
       var culture = CultureInfo.InvariantCulture;
       var xTranspose = MatrixFunctions.Transpose(xMatrix);
@@ -194,7 +187,7 @@ namespace Schicksal.Regression
 
       if (xtxInverse == null)
       {
-        throw new Exception("Матрица факторов вырождена, возможна мультиколлинеарность.");
+        throw new Exception(Resources.MULTICOLLINEARITY);
       }
 
       var xty = MatrixFunctions.Multiply(xTranspose, yMatrix, culture);
@@ -271,7 +264,7 @@ namespace Schicksal.Regression
       }
 
       var factorNamesResult = new string[factorNames.Count + 1];
-      factorNamesResult[0] = "Свободный член";
+      factorNamesResult[0] = Resources.FREE_MEMBER;
       for (int i = 0; i < factorNames.Count; i++)
       {
         factorNamesResult[i + 1] = factorNames[i];
@@ -305,20 +298,15 @@ namespace Schicksal.Regression
       foreach (var colName in columnNames)
       {
         if (table.Columns.Contains(colName) && table.Columns[colName].AllowDBNull)
-        {
           expressions.Add(string.Format("[{0}] is not null", colName));
-        }
       }
 
       if (!string.IsNullOrEmpty(generalFilter))
-      {
         expressions.Add(generalFilter);
-      }
 
       if (expressions.Count > 0)
-      {
         return string.Join(" and ", expressions);
-      }
+
       return null;
     }
   }

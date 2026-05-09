@@ -192,6 +192,9 @@
   <data name="PARABOLIC" xml:space="preserve">
     <value>Парабола</value>
   </data>
+  <data name="RESPONSE" xml:space="preserve">
+    <value>Отклик</value>
+  </data>
   <data name="RMS_ERROR" xml:space="preserve">
     <value>Среднеквадратичное отклонение</value>
   </data>

@@ -1,5 +1,6 @@
 ﻿using Notung;
 using Schicksal.Basic;
+using Schicksal.Properties;
 using System;
 using System.Collections.Generic;
 
@@ -49,7 +50,7 @@ namespace Schicksal.Regression
     {
       try
       {
-        MultifactorRegression regression = new MultifactorRegression();
+        var regression = new MultifactorRegression();
         var factorInfo = new FactorInfo(m_parameters.Predictors);
         var ySample = new DataColumnSample(m_parameters.Table.Columns[m_parameters.Response], m_parameters.Filter);
         var xSamples = new List<IPlainSample>();
@@ -74,7 +75,7 @@ namespace Schicksal.Regression
       }
       catch (Exception ex)
       {
-        throw new Exception($"Ошибка регрессионного анализа: {ex.Message}");
+        throw new Exception($"{Resources.REGRESSION_ERROR}: {ex.Message}");
       }
     }
   }

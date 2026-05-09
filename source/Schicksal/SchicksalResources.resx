@@ -192,6 +192,9 @@
   <data name="PARABOLIC" xml:space="preserve">
     <value>Parabola</value>
   </data>
+  <data name="RESPONSE" xml:space="preserve">
+    <value>Response</value>
+  </data>
   <data name="RMS_ERROR" xml:space="preserve">
     <value>Average error</value>
   </data>

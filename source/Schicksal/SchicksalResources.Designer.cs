@@ -286,6 +286,15 @@ namespace Schicksal {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Response.
+        /// </summary>
+        public static string RESPONSE {
+            get {
+                return ResourceManager.GetString("RESPONSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Average error.
         /// </summary>
         public static string RMS_ERROR {

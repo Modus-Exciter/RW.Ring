@@ -150,6 +150,18 @@
   <data name="FACTOR" xml:space="preserve">
     <value>Фактор</value>
   </data>
+  <data name="FEW_OBSERVATIONS" xml:space="preserve">
+    <value>Недостаточно наблюдений ({0}) для выполнения параболической регрессии с {1} производными факторами. Требуется минимум {2} наблюдений.</value>
+  </data>
+  <data name="FEW_OBSERVATIONS_LINEAR" xml:space="preserve">
+    <value>Недостаточно наблюдений ({0}). Требуется минимум {1} наблюдений.</value>
+  </data>
+  <data name="FEW_PREDICTORS" xml:space="preserve">
+    <value>Требуется минимум два фактора. Для анализа с одним фактором используйте модуль простой линейной регрессии</value>
+  </data>
+  <data name="FREE_MEMBER" xml:space="preserve">
+    <value>Свободный член</value>
+  </data>
   <data name="F_CRITERIA" xml:space="preserve">
     <value>Дисперсионный анализ, F-критерий</value>
   </data>
@@ -180,11 +192,17 @@
   <data name="MOST_SIGNIFICAT_DIFFERENCE" xml:space="preserve">
     <value>Наиболее статистически значимая разница наблюдалась между вариантами</value>
   </data>
+  <data name="MULTICOLLINEARITY" xml:space="preserve">
+    <value>Матрица факторов вырождена, возможна мультиколлинеарность</value>
+  </data>
   <data name="NO_JOINT_BOX_COX" xml:space="preserve">
     <value>Невозможно получить функцию обратного преобразования Бокса-Кокса. Группы не преобразованы совместно</value>
   </data>
   <data name="NO_JOINT_RANKS" xml:space="preserve">
     <value>Невозможно получить функцию обратного ранжирования. Группы не ранжированы совместно</value>
+  </data>
+  <data name="NO_PREDICTOR_DATA" xml:space="preserve">
+    <value>Выборка зависимой переменной пуста</value>
   </data>
   <data name="OTHER_UNSIGNIFICAT" xml:space="preserve">
     <value>а прочие различия оказались несущественными.</value>
@@ -200,6 +218,9 @@
   </data>
   <data name="REGRESSION_DETAILS" xml:space="preserve">
     <value>Детальные результаты регрессионного анализа</value>
+  </data>
+  <data name="REGRESSION_ERROR" xml:space="preserve">
+    <value>Ошибка регрессионного анализа</value>
   </data>
   <data name="REGRESSION_RESULTS" xml:space="preserve">
     <value>Результаты регрессионного анализа</value>

@@ -43,7 +43,7 @@ namespace Schicksal.Helm
 
     private string GenerateEquationString(MultifactorRegressionResult result)
     {
-      string responseName = string.IsNullOrEmpty(this.ResponseVariableName) ? "Отклик" : this.ResponseVariableName;
+      string responseName = string.IsNullOrEmpty(this.ResponseVariableName) ? SchicksalResources.RESPONSE : this.ResponseVariableName;
 
       StringBuilder sb = new StringBuilder();
       sb.AppendFormat("{0} = {1:F4}", responseName, result.Coefficients[0]);

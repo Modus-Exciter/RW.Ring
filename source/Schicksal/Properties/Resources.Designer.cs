@@ -189,6 +189,42 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Not enough observations ({0}) for calculating parabolic regression model with с {1} predictors. At least {2} observations is nessesary.
+        /// </summary>
+        internal static string FEW_OBSERVATIONS {
+            get {
+                return ResourceManager.GetString("FEW_OBSERVATIONS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Not enough observations ({0}). At least {1} observations is nessesary.
+        /// </summary>
+        internal static string FEW_OBSERVATIONS_LINEAR {
+            get {
+                return ResourceManager.GetString("FEW_OBSERVATIONS_LINEAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на At least two predictors required. If only one predictor exists, use single-way regression analysis.
+        /// </summary>
+        internal static string FEW_PREDICTORS {
+            get {
+                return ResourceManager.GetString("FEW_PREDICTORS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Free member.
+        /// </summary>
+        internal static string FREE_MEMBER {
+            get {
+                return ResourceManager.GetString("FREE_MEMBER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to determine dependency!.
         /// </summary>
         internal static string IMPOSSSIBLE_DEPENDENCY {
@@ -270,6 +306,15 @@ namespace Schicksal.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The factor matrix is ​​degenerate, multicollinearity is possible.
+        /// </summary>
+        internal static string MULTICOLLINEARITY {
+            get {
+                return ResourceManager.GetString("MULTICOLLINEARITY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Multifactor Regression Analysis.
         /// </summary>
         internal static string MULTIFACTOR_REGRESSION {
@@ -293,6 +338,15 @@ namespace Schicksal.Properties {
         internal static string NO_JOINT_RANKS {
             get {
                 return ResourceManager.GetString("NO_JOINT_RANKS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No samples in pdredictor data.
+        /// </summary>
+        internal static string NO_PREDICTOR_DATA {
+            get {
+                return ResourceManager.GetString("NO_PREDICTOR_DATA", resourceCulture);
             }
         }
         
@@ -338,6 +392,15 @@ namespace Schicksal.Properties {
         internal static string REGRESSION_DETAILS {
             get {
                 return ResourceManager.GetString("REGRESSION_DETAILS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Regression analysis error.
+        /// </summary>
+        internal static string REGRESSION_ERROR {
+            get {
+                return ResourceManager.GetString("REGRESSION_ERROR", resourceCulture);
             }
         }
         

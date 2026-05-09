@@ -55,7 +55,6 @@ namespace Schicksal.Helm.Analyze
       };
     }
 
-
     /// <summary>
     /// Создает процессор для выполнения анализа.
     /// </summary>

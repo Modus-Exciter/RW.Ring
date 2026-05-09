@@ -735,6 +735,36 @@
   <data name="&gt;&gt;m_linearModelBindingSource.Type" xml:space="preserve">
     <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="&gt;&gt;factorDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>factorDataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;factorDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;coefficientDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>coefficientDataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;coefficientDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;standardErrorDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>standardErrorDataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;standardErrorDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tStatisticDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>tStatisticDataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;tStatisticDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;pValueDataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>pValueDataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;pValueDataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;m_parabolicCoefficientsBindingSource.Name" xml:space="preserve">
     <value>m_parabolicCoefficientsBindingSource</value>
   </data>
@@ -776,36 +806,6 @@
   </data>
   <data name="&gt;&gt;m_parabolicModelBindingSource.Type" xml:space="preserve">
     <value>System.Windows.Forms.BindingSource, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>factorDataGridViewTextBoxColumn1</value>
-  </data>
-  <data name="&gt;&gt;factorDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;coefficientDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>coefficientDataGridViewTextBoxColumn1</value>
-  </data>
-  <data name="&gt;&gt;coefficientDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;standardErrorDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>standardErrorDataGridViewTextBoxColumn1</value>
-  </data>
-  <data name="&gt;&gt;standardErrorDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tStatisticDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>tStatisticDataGridViewTextBoxColumn1</value>
-  </data>
-  <data name="&gt;&gt;tStatisticDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pValueDataGridViewTextBoxColumn1.Name" xml:space="preserve">
-    <value>pValueDataGridViewTextBoxColumn1</value>
-  </data>
-  <data name="&gt;&gt;pValueDataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>MultifactorRegressionResultsForm</value>
