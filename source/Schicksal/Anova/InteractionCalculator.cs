@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using Notung.Data;
 using Schicksal.Basic;
 
@@ -18,7 +17,6 @@ namespace Schicksal.Anova
       if (data is null)
         throw new ArgumentNullException(nameof(data));
 
-      // Добавили в словарь все главные эффекты
       m_variance_cache = new ConcurrentDictionary<EffectKey, SampleVariance>();
     }
 
@@ -29,6 +27,7 @@ namespace Schicksal.Anova
       Debug.Assert(IsFull(source, predictors));
 
       int totalObservations = source.Sum(g => g.Count);
+
       if (source.Count == 0 || totalObservations == 0)
         return default(SampleVariance);
 
@@ -125,7 +124,8 @@ namespace Schicksal.Anova
       if (predictors.Count < 2 || source.Count == 0)
         return source;
 
-      var uniqueValues = new Dictionary<string, HashSet<object>>(); // Ключ - фактор, значение - множество всех его уникальных значений во всех группах
+      // Ключ - фактор, значение - множество всех его уникальных значений во всех группах
+      var uniqueValues = new Dictionary<string, HashSet<object>>();
 
       foreach (var p in predictors)
       {
@@ -230,6 +230,7 @@ namespace Schicksal.Anova
 
       return removedObservations;
     }
+
     private static IDividedSample<GroupKey> PerformFilter(IDividedSample<GroupKey> source, Dictionary<string, HashSet<object>> uniqueValues, FactorInfo predictors)
     {
       var data = source;
@@ -302,10 +303,10 @@ namespace Schicksal.Anova
       foreach (var p in predictors)
       {
         var set = new HashSet<object>();
+
         for (int i = 0; i < source.Count; i++)
-        {
           set.Add(source.GetKey(i)[p]);
-        }
+
         uniqueValues[p] = set;
         expectedCount *= set.Count;
       }
