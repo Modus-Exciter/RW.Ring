@@ -123,8 +123,7 @@ namespace Schicksal.Basic
           if ((i & (1ul << j)) != 0)
             details.Add(factors[j]);
         }
-
-        yield return new FactorInfo(details);
+        yield return new FactorInfo(details);    
       }
     }
 

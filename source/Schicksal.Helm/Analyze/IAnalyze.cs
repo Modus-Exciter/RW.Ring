@@ -1,11 +1,9 @@
-﻿using Notung.Services;
-using Notung;
+﻿using Notung;
+using Notung.Services;
 using Schicksal.Helm.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 
 namespace Schicksal.Helm.Analyze
 {

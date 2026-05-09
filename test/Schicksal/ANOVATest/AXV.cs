@@ -4,6 +4,7 @@ using Schicksal.Basic;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace ANOVATest
 {
@@ -11,7 +12,134 @@ namespace ANOVATest
   public class AXV
   {
     [TestMethod]
-    public void GroupKeyIndex()
+    public void ComplexDataFiltering()
+    {
+      var table = new DataTable();
+      table.Columns.Add("F1", typeof(string));
+      table.Columns.Add("F2", typeof(string));
+      table.Columns.Add("F3", typeof(string));
+      table.Columns.Add("Value", typeof(double));
+      table.Columns.Add("Repeat", typeof(int));
+
+      var f1Levels = new[] { "A", "B", "C", "D", "E" };
+      var f2Levels = new[] { "X", "Y", "Z", "W", "V" };
+      var f3Levels = new[] { "L1", "L2", "L3", "L4", "L5" };
+
+      int repeatCounter = 1;
+      int totalRows = 0;
+
+      //Чтоб данные были с разным количеством наблюдений в группах
+      foreach (var f1 in f1Levels)
+      {
+        foreach (var f2 in f2Levels)
+        {
+          foreach (var f3 in f3Levels)
+          {
+            if ((f1 == "E" && f2 == "V") || (f1 == "C" && f3 == "L3"))
+              continue;
+
+            int observations = f1 == "E" ? 1 : (f2 == "Z" ? 4 : 3);
+
+            for (int i = 0; i < observations; i++)
+            {
+              table.Rows.Add(f1, f2, f3, 1.0, repeatCounter++);
+              totalRows++;
+            }
+          }
+        }
+      }
+
+      foreach (var f1 in f1Levels)
+      {
+        if (f1 == "C") continue;
+
+        foreach (var f3 in f3Levels)
+        {
+          table.Rows.Add(f1, "Z", f3, 1.0, repeatCounter++);
+          totalRows++;
+        }
+      }
+
+      table.AcceptChanges();
+
+      var sample = SampleRepack.Wrap(
+          new TableDividedSample(
+              new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2+F3"), "Value")));
+
+      var filtered = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2+F3"));
+      Assert.IsTrue(InteractionCalculator.IsFull(filtered, FactorInfo.Parse("F1+F2+F3")));
+      int totalObservations = filtered.Sum(g => g.Count);
+      int expectedRemoved = 25 + 75;
+      int expectedObservations = totalRows - expectedRemoved;
+      Assert.IsTrue(totalObservations >= expectedObservations,
+          $"Удалено слишком много данных. Ожидалось минимум {expectedObservations}, осталось {totalObservations}");
+    }
+
+    [TestMethod]
+    public void OptimalDataFiltering()
+    {
+      var table = new DataTable();
+      table.Columns.Add("F1", typeof(string));
+      table.Columns.Add("F2", typeof(string));
+      table.Columns.Add("Value", typeof(double));
+      table.Columns.Add("Repeat", typeof(int));
+
+      table.Rows.Add("A", "X", 10, 1);
+      table.Rows.Add("A", "X", 11, 2);
+      table.Rows.Add("A", "Y", 20, 1);
+      table.Rows.Add("A", "Y", 21, 2);
+      table.Rows.Add("A", "Z", 30, 1);
+      table.Rows.Add("A", "Z", 31, 2);
+      table.Rows.Add("A", "Z", 32, 3);
+
+      table.Rows.Add("B", "X", 40, 1);
+      table.Rows.Add("B", "X", 41, 2);
+      table.Rows.Add("B", "Y", 50, 1);
+      table.Rows.Add("B", "Y", 51, 2);
+      table.Rows.Add("B", "Z", 60, 1);
+      table.Rows.Add("B", "Z", 61, 2);
+      table.Rows.Add("B", "Z", 62, 3);
+
+      table.Rows.Add("C", "X", 70, 1); //Группа C-X (единственное наблюдение)
+      table.Rows.Add("C", "Y", 80, 1); //Группа C-Y (единственное наблюдение)
+
+      table.AcceptChanges();
+
+      var sample = SampleRepack.Wrap(
+          new TableDividedSample(
+              new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2"), "Value")));
+
+      var filtered = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2"));
+
+      Assert.IsTrue(InteractionCalculator.IsFull(filtered, FactorInfo.Parse("F1+F2")));
+
+      //Ожидаем 6 групп после очистки (A-X, A-Y, A-Z, B-X, B-Y, B-Z)
+      Assert.AreEqual(6, filtered.Count);
+
+      int totalObservations = 0;
+      bool hasC = false;
+      bool hasZ = true;
+
+      for (int i = 0; i < filtered.Count; i++)
+      {
+        var key = filtered.GetKey(i);
+        totalObservations += filtered[i].Count;
+
+        if ("C".Equals(key["F1"]))
+          hasC = true;
+
+        if ("Z".Equals(key["F2"]))  
+          hasZ = true;
+      }
+
+      Assert.IsFalse(hasC, "Градация 'C' должна быть удалена");
+      Assert.IsTrue(hasZ, "Градация 'Z' должна быть сохранена");
+      Assert.AreEqual(14, totalObservations,
+          "Удалено неверное количество наблюдений. Ожидалось 14");
+    }
+
+    [TestMethod]
+    public void BaseDataFiltering()
     {
       var table = GenerateTable();
       table.Rows.Add("C", "X", 18, 1);
@@ -20,13 +148,28 @@ namespace ANOVATest
       table.Rows.Add("C", "X", 19, 4);
       table.AcceptChanges();
 
-      var sample = SampleRepack.Wrap( new TableDividedSample(new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2"), "Value")));
+      var sample = SampleRepack.Wrap(
+          new TableDividedSample(
+              new PredictedResponseParameters(table, null, FactorInfo.Parse("F1+F2"), "Value")));
 
-      var s = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2"));
-      s.ToString();
+      var filtered = InteractionCalculator.Filter(sample, FactorInfo.Parse("F1+F2"));
+      Assert.IsTrue(InteractionCalculator.IsFull(filtered, FactorInfo.Parse("F1+F2")));
+
+      Assert.AreEqual(4, filtered.Count); //ожидаем 4 группы: A-X, A-Y, B-X, B-Y
+
+      int totalCount = 0;
+      for (int i = 0; i < filtered.Count; i++)
+      {
+        var key = filtered.GetKey(i);
+        Assert.AreNotEqual("C", key["F1"]); //ни в одной группе не должно быть градации С
+        totalCount += filtered[i].Count;
+      }
+
+      //Должно быть 16 наблюдений (изначальные данные до добавления строчек с С)
+      Assert.AreEqual(16, totalCount);
     }
 
-   [TestMethod]
+    [TestMethod]
     public void NoNormalizationIndependentCommon()
     {
       Utils.CheckMultipleFactors
