@@ -145,23 +145,23 @@ namespace Schicksal.Regression
 
       var yValues = ySample.ToArray();
       var xValuesList = new List<double[]>();
+
       foreach (var sample in xSamples)
       {
-        if (sample.Count() != n)
-        {
+        if (sample.Count != n)
           throw new InvalidOperationException(Resources.DATA_SAMPLE_SIZE_MISMATCH);
-        }
+
         xValuesList.Add(sample.ToArray());
       }
 
       var xMatrix = new RectangleMatrix<double>(n, k + 1);
+
       for (int i = 0; i < n; i++)
       {
         xMatrix[i, 0] = 1.0;
+
         for (int j = 0; j < k; j++)
-        {
           xMatrix[i, j + 1] = xValuesList[j][i];
-        }
       }
 
       var factorNames = factors.ToList();
@@ -186,31 +186,28 @@ namespace Schicksal.Regression
       var xtxInverse = MatrixFunctions.Invert(xtx, culture);
 
       if (xtxInverse == null)
-      {
         throw new Exception(Resources.MULTICOLLINEARITY);
-      }
 
       var xty = MatrixFunctions.Multiply(xTranspose, yMatrix, culture);
       var betaMatrix = MatrixFunctions.Multiply(xtxInverse, xty, culture);
 
       var coefficients = new double[k + 1];
+
       for (int i = 0; i < k + 1; i++)
-      {
         coefficients[i] = betaMatrix[i, 0];
-      }
 
       var yHatMatrix = MatrixFunctions.Multiply(xMatrix, betaMatrix, culture);
       var yHatValues = new double[n];
+
       for (int i = 0; i < n; i++)
-      {
         yHatValues[i] = yHatMatrix[i, 0];
-      }
+
 
       double ySum = 0;
+
       for (int i = 0; i < n; i++)
-      {
         ySum += yValues[i];
-      }
+
       double yMean = ySum / n;
 
       double sst = 0;
@@ -221,6 +218,7 @@ namespace Schicksal.Regression
       }
 
       double sse = 0;
+
       for (int i = 0; i < n; i++)
       {
         double diff = yHatValues[i] - yMean;
@@ -228,6 +226,7 @@ namespace Schicksal.Regression
       }
 
       double ssr = 0;
+
       for (int i = 0; i < n; i++)
       {
         double diff = yValues[i] - yHatValues[i];
@@ -251,9 +250,7 @@ namespace Schicksal.Regression
       for (int row = 0; row < xtxInverse.RowCount; row++)
       {
         for (int col = 0; col < xtxInverse.ColumnCount; col++)
-        {
           covarianceMatrix[row, col] = xtxInverse[row, col] * msr;
-        }
       }
 
       for (int i = 0; i < k + 1; i++)
@@ -265,10 +262,9 @@ namespace Schicksal.Regression
 
       var factorNamesResult = new string[factorNames.Count + 1];
       factorNamesResult[0] = Resources.FREE_MEMBER;
+
       for (int i = 0; i < factorNames.Count; i++)
-      {
         factorNamesResult[i + 1] = factorNames[i];
-      }
 
       return new MultifactorRegressionResult
       {
